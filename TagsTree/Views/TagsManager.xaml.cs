@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Xml;
 using System.Xml.Linq;
 using ModernWpf.Controls;
+using TagsTree.Services;
 using Service = TagsTree.Services.TagsManagerServices;
 using TagsTree.ViewModels;
 using static TagsTree.Properties.Settings;
@@ -72,11 +73,6 @@ namespace TagsTree
 			e.Handled = true;
 			Service.MoveTag(origin, TagsTreeStatic.XdpRoot!);
 		}
-
-		#endregion
-
-		#region 按钮
-		
 
 		#endregion
 

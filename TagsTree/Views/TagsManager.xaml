@@ -11,7 +11,7 @@
 		mc:Ignorable="d"
 		ui:WindowHelper.UseModernWindowStyle="True" 
 		Title="标签管理" Height="600" Width="800" MinHeight="600" MinWidth="800"
-		WindowStartupLocation="CenterOwner">
+		WindowStartupLocation="CenterOwner" x:Name="Window1">
 	<Window.CommandBindings>
         <CommandBinding Command="{x:Static commands:TagsManagerCommand.NewCommand}"	CanExecute="True_CanExecute"  Executed="New_Execute"/>
 		<CommandBinding Command="{x:Static commands:TagsManagerCommand.NewXCommand}"	CanExecute="True_CanExecute"  Executed="NewX_Execute"/>
@@ -35,12 +35,12 @@
 			<EventSetter Event="Drop" Handler="TbTag_Drop" />
 			<Setter Property="ContextMenu">
 				<Setter.Value>
-					<ContextMenu DataContext="{Binding PlacementTarget,RelativeSource={RelativeSource Mode=Self}}">
-						<MenuItem Header="新建"		Command="{x:Static commands:TagsManagerCommand.NewCommand}" 	CommandParameter="{Binding}"/>
-						<MenuItem Header="剪切"		Command="{x:Static commands:TagsManagerCommand.CutCommand}" 	CommandParameter="{Binding}"/>
-						<MenuItem Header="粘贴"		Command="{x:Static commands:TagsManagerCommand.PasteCommand}" 	CommandParameter="{Binding}"/>
-						<MenuItem Header="重命名"	Command="{x:Static commands:TagsManagerCommand.RenameCommand}"	CommandParameter="{Binding}"/>
-						<MenuItem Header="删除"		Command="{x:Static commands:TagsManagerCommand.DeleteCommand}"	CommandParameter="{Binding}"/>
+                    <ContextMenu DataContext="{Binding PlacementTarget,RelativeSource={RelativeSource Mode=Self}}">
+                        <MenuItem Header="新建"		Command="{x:Static commands:TagsManagerCommand.NewCommand}" 	CommandParameter="{Binding}"/>
+                        <MenuItem Header="剪切"		Command="{x:Static commands:TagsManagerCommand.CutCommand}" 	CommandParameter="{Binding}"/>
+                        <MenuItem Header="粘贴"		Command="{x:Static commands:TagsManagerCommand.PasteCommand}" 	CommandParameter="{Binding}"/>
+                        <MenuItem Header="重命名"	Command="{x:Static commands:TagsManagerCommand.RenameCommand}"	CommandParameter="{Binding}"/>
+                        <MenuItem Header="删除"		Command="{x:Static commands:TagsManagerCommand.DeleteCommand}"	CommandParameter="{Binding}"/>
 					</ContextMenu>
 				</Setter.Value>
 			</Setter>
@@ -67,14 +67,14 @@
                     </TextBlock>
                 </ui:AppBarButton.ToolTip>
             </ui:AppBarButton>
-            <ui:AppBarButton Icon="Save" Label="保存" Command="{Binding SaveBClick}" IsEnabled="{Binding Changed}"/>
+            <ui:AppBarButton Icon="Save" Label="保存" Command="{Binding SaveBClick}" IsEnabled="{Binding Changed,Mode=TwoWay}"/>
         </ui:CommandBar>
 
-        <ui:AutoSuggestBox	 VerticalAlignment="Center" Text="{Binding Name}" x:Name="TbName" PlaceholderText="标签名称" LostFocus="TbName_OnLostFocus"/>
-        <ui:AutoSuggestBox	 VerticalAlignment="Center" Text="{Binding Path}" x:Name="TbPath" PlaceholderText="标签路径" LostFocus="TbPath_OnLostFocus"/>
+        <ui:AutoSuggestBox	 VerticalAlignment="Center" Text="{Binding Name,Mode=TwoWay}" x:Name="TbName" PlaceholderText="标签名称" LostFocus="TbName_OnLostFocus"/>
+        <ui:AutoSuggestBox	 VerticalAlignment="Center" Text="{Binding Path,Mode=TwoWay}" x:Name="TbPath" PlaceholderText="标签路径" LostFocus="TbPath_OnLostFocus"/>
         <TreeView			BorderThickness="1" BorderBrush="Black"  MinHeight="400"
                             SelectedItemChanged="TvTags_OnSelectedItemChanged" Drop="TvTags_Drop" AllowDrop="True" x:Name="TvTags"
-							ItemsSource="{Binding Xdp}" ItemContainerStyle="{StaticResource TvItemStyle}" >
+							ItemsSource="{Binding Xdp,Mode=TwoWay}" ItemContainerStyle="{StaticResource TvItemStyle}" >
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding XPath=Tag}">
                     <TextBlock x:Name="TbTags" Text="{Binding XPath=@name}"/>

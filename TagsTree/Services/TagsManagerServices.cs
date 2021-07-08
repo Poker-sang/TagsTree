@@ -74,6 +74,11 @@ namespace TagsTree.Services
 		}
 		public static void DeleteBClick(object? parameter)
 		{
+			if (Vm.Path == string.Empty)
+			{
+				TagsTreeStatic.ErrorMessageBox("未输入希望删除的标签");
+				return;
+			}
 			DeleteTag(TagsTreeStatic.RecursiveSearchXmlElement(Vm.Path)!);
 			Vm.Name = "";
 		}

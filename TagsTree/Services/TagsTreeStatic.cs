@@ -72,13 +72,13 @@ namespace TagsTree.Services
 		{
 			if (!new Regex(@"^[^\\\/\:\*\?\""\<\>\|\s]+$").IsMatch(name))
 			{
-				TagsTreeStatic.ErrorMessageBox("标签名称错误！请填写正确的名称！\n" + @"（不包含\/:*?\""<>|,和空白字符且不为空）");
+				ErrorMessageBox("标签名称错误！请填写正确的名称！\n" + @"（不包含\/:*?\""<>|,和空白字符且不为空）");
 				return false;
 			}
 
-			if (TagsTreeStatic.TagPathComplete(name) is not null)
+			if (TagPathComplete(name) is not null)
 			{
-				TagsTreeStatic.ErrorMessageBox("与现有标签重名！");
+				ErrorMessageBox("与现有标签重名！");
 				return false;
 			}
 

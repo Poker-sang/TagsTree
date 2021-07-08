@@ -22,15 +22,40 @@ namespace TagsTree.ViewModels
 
 		public XmlElement? ClipBoard { get; set; }
 
+		public TagsManagerViewModel()
+		{
+			static bool Func1(object? _) => true;
+			//bool Func2(object? _) => ClipBoard is not null;
+			_newBClick = new TagsManagerButtonCommand(Func1, Services.TagsManagerServices.NewBClick);
+			_moveBClick = new TagsManagerButtonCommand(Func1, Services.TagsManagerServices.MoveBClick);
+			_renameBClick = new TagsManagerButtonCommand(Func1, Services.TagsManagerServices.RenameBClick);
+			_deleteBClick = new TagsManagerButtonCommand(Func1, Services.TagsManagerServices.DeleteBClick);
+			_saveBClick = new TagsManagerButtonCommand(Func1, Services.TagsManagerServices.SaveBClick);
+			//_newCmClick = new TagsManagerButtonCommand(Func1, Services.TagsManagerServices.NewCmClick);
+			//_newXCmClick = new TagsManagerButtonCommand(Func1, Services.TagsManagerServices.NewXCmClick);
+			//_cutCmClick = new TagsManagerButtonCommand(Func1, Services.TagsManagerServices.CutCmClick);
+			//_pasteCmClick = new TagsManagerButtonCommand(Func2, Services.TagsManagerServices.PasteCmClick);
+			//_pasteXCmClick = new TagsManagerButtonCommand(Func2, Services.TagsManagerServices.PasteXCmClick);
+			//_renameCmClick = new TagsManagerButtonCommand(Func1, Services.TagsManagerServices.RenameCmClick);
+			//_deleteCmClick = new TagsManagerButtonCommand(Func1, Services.TagsManagerServices.DeleteCmClick);
+		}
+
 		private string _name = "";
 		private string _path = "";
 		private bool _changed;
 		private XmlDataProvider? _xdp;
-		private TagsManagerButtonCommand _newBClick = new(_ => true, Services.TagsManagerServices.NewBClick);
-		private TagsManagerButtonCommand _moveBClick = new(_ => true, Services.TagsManagerServices.MoveBClick);
-		private TagsManagerButtonCommand _renameBClick = new(_ => true, Services.TagsManagerServices.RenameBClick);
-		private TagsManagerButtonCommand _deleteBClick = new(_ => true, Services.TagsManagerServices.DeleteBClick);
-		private TagsManagerButtonCommand _saveBClick = new(_ => true, Services.TagsManagerServices.SaveBClick);
+		private TagsManagerButtonCommand _newBClick;
+		private TagsManagerButtonCommand _moveBClick;
+		private TagsManagerButtonCommand _renameBClick;
+		private TagsManagerButtonCommand _deleteBClick;
+		private TagsManagerButtonCommand _saveBClick;
+		//private TagsManagerButtonCommand _newCmClick;
+		//private TagsManagerButtonCommand _newXCmClick;
+		//private TagsManagerButtonCommand _cutCmClick;
+		//private TagsManagerButtonCommand _pasteCmClick;
+		//private TagsManagerButtonCommand _pasteXCmClick;
+		//private TagsManagerButtonCommand _renameCmClick;
+		//private TagsManagerButtonCommand _deleteCmClick;
 
 		public string Name
 		{
@@ -113,14 +138,8 @@ namespace TagsTree.ViewModels
 				OnPropertyChanged(nameof(SaveBClick));
 			}
 		}
+
 		/*
-		private TagsManagerButtonCommand _newCmClick = new(_ => true, Services.TagsManagerServices.NewCmClick);
-		private TagsManagerButtonCommand _newXCmClick = new(_ => true, Services.TagsManagerServices.NewXCmClick);
-		private TagsManagerButtonCommand _cutCmClick = new(_ => true, Services.TagsManagerServices.CutCmClick);
-		private TagsManagerButtonCommand _pasteCmClick = new(_ => ClipBoard is not null, Services.TagsManagerServices.PasteCmClick);
-		private TagsManagerButtonCommand _pasteXCmClick = new(_ => ClipBoard is not null, Services.TagsManagerServices.PasteXCmClick);
-		private TagsManagerButtonCommand _renameCmClick = new(_ => true, Services.TagsManagerServices.RenameCmClick);
-		private TagsManagerButtonCommand _deleteCmClick = new(_ => true, Services.TagsManagerServices.DeleteCmClick);
 		public TagsManagerButtonCommand NewCmClick
 		{
 			get => _newCmClick;
