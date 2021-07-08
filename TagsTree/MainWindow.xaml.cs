@@ -1,0 +1,45 @@
+﻿using System.Text.RegularExpressions;
+using System.Windows;
+using static TagsTree.Properties.Settings;
+
+namespace TagsTree
+{
+	/// <summary>
+	/// Interaction logic for MainWindow.xaml
+	/// </summary>
+	public partial class MainWindow : Window
+	{
+		public MainWindow()
+		{
+			while (true)
+			{
+				if (Default.IsSet) //如果之前有储存过用户配置，则判断是否符合
+				{
+					var legalPath = new Regex(@"^[a-zA-Z]:\\[^\/\:\*\?\""\<\>\|\,]+$");
+					if (legalPath.IsMatch(Default.ConfigPath) && legalPath.IsMatch(Default.LibraryPath))
+					{
+						if (TagsTreeStatic.LoadConfig(Default.ConfigPath))
+							break;
+					}
+					else
+					{
+						TagsTreeStatic.ErrorMessageBox("配置文件损坏！请重新输入");
+						Default.IsSet = false;
+					}
+				}
+				else if (new NewConfig().ShowDialog() == false)
+				{
+					Close();
+					return;
+				}
+			}
+			InitializeComponent();
+		}
+
+		private void ChangeConfig_Click(object sender, RoutedEventArgs e) => _ = new NewConfig().ShowDialog();
+
+		private void TagsManager_Click(object sender, RoutedEventArgs e) => _ = new TagsManager().ShowDialog();
+
+		private void FileAdder_OnClick(object sender, RoutedEventArgs e) => _ = new FileAdder().ShowDialog();
+	}
+}
