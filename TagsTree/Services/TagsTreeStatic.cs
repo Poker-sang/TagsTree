@@ -9,7 +9,7 @@ using System.Xml;
 using System.Xml.Linq;
 using static TagsTree.Properties.Settings;
 
-namespace TagsTree
+namespace TagsTree.Services
 {
 	public static class TagsTreeStatic
 	{
@@ -54,7 +54,7 @@ namespace TagsTree
 		/// <summary>
 		/// 由TreeViewItem的sender得到其中的XmlElement
 		/// </summary>
-		public static XmlElement TvItemGetHeader(object sender) => (XmlElement)((TreeViewItem)sender).Header;
+		public static XmlElement TvItemGetHeader(object? sender) => (XmlElement)((TreeViewItem)sender!).Header;
 
 		/// <summary>
 		/// 是否鼠标位移超过一定距离
