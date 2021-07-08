@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using System.Windows;
+using TagsTree.Services;
 using static TagsTree.Properties.Settings;
 
 namespace TagsTree

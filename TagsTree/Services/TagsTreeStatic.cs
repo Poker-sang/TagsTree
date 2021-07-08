@@ -9,7 +9,7 @@ using System.Xml;
 using System.Xml.Linq;
 using static TagsTree.Properties.Settings;
 
-namespace TagsTree
+namespace TagsTree.Services
 {
 	public static class TagsTreeStatic
 	{
@@ -54,7 +54,7 @@ namespace TagsTree
 		/// <summary>
 		/// 由TreeViewItem的sender得到其中的XmlElement
 		/// </summary>
-		public static XmlElement TvItemGetHeader(object sender) => (XmlElement)((TreeViewItem)sender).Header;
+		public static XmlElement TvItemGetHeader(object? sender) => (XmlElement)((TreeViewItem)sender!).Header;
 
 		/// <summary>
 		/// 是否鼠标位移超过一定距离
@@ -72,13 +72,13 @@ namespace TagsTree
 		{
 			if (!new Regex(@"^[^\\\/\:\*\?\""\<\>\|\s]+$").IsMatch(name))
 			{
-				TagsTreeStatic.ErrorMessageBox("标签名称错误！请填写正确的名称！\n" + @"（不包含\/:*?\""<>|,和空白字符且不为空）");
+				ErrorMessageBox("标签名称错误！请填写正确的名称！\n" + @"（不包含\/:*?\""<>|,和空白字符且不为空）");
 				return false;
 			}
 
-			if (TagsTreeStatic.TagPathComplete(name) is not null)
+			if (TagPathComplete(name) is not null)
 			{
-				TagsTreeStatic.ErrorMessageBox("与现有标签重名！");
+				ErrorMessageBox("与现有标签重名！");
 				return false;
 			}
 
