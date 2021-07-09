@@ -1,10 +1,10 @@
-﻿using Microsoft.WindowsAPICodePack.Dialogs;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Windows;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using TagsTree.Services;
 using static TagsTree.Properties.Settings;
 
-namespace TagsTree
+namespace TagsTree.Views
 {
 	/// <summary>
 	/// NewConfig.xaml 的交互逻辑
@@ -22,7 +22,7 @@ namespace TagsTree
 
 		private void BConfigPath_Click(object sender, RoutedEventArgs e)
 		{
-			var dialog = new CommonOpenFileDialog("选择配置文件存放的文件夹") { IsFolderPicker = true };
+			var dialog = new CommonOpenFileDialog("选择存放配置文件的文件夹") { IsFolderPicker = true };
 			if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
 				TbConfigPath.Text = dialog.FileName;
 		}

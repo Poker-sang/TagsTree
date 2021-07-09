@@ -2,7 +2,7 @@
 using System.Windows.Controls.Primitives;
 using ModernWpf.Controls;
 
-namespace TagsTree
+namespace TagsTree.Views
 {
 	/// <summary>
 	/// FileAdder.xaml 的交互逻辑

@@ -1,53 +1,44 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Xml;
-using System.Xml.Linq;
-using ModernWpf.Controls;
-using TagsTree.Services;
-using Service = TagsTree.Services.TagsManagerServices;
-using TagsTree.ViewModels;
-using static TagsTree.Properties.Settings;
 
-namespace TagsTree
+namespace TagsTree.Views
 {
 	public partial class TagsManager : Window
 	{
 		public TagsManager()
 		{
 			InitializeComponent();
+			var vm = Services.TagsManagerServices.Vm;
 			MouseLeftButtonDown += (_, _) => DragMove();
-			DataContext = Service.Load(TvTags);
+			_ = TvTags.SetBinding(ItemsControl.ItemsSourceProperty, new Binding(".") { Mode = BindingMode.TwoWay, Source = vm.Xdp });
+
+			DataContext = vm;
+			_moveTag = vm.MoveTag;
+			TbName.LostFocus += vm.NameComplement;
+			TbPath.LostFocus += vm.PathComplement;
+			TvTags.SelectedItemChanged += (_, _) => vm.TvSelectItemChanged(TvTags.SelectedItem);
 		}
 
-		#region 被动反应
-
-		private void TbName_OnLostFocus(object sender, RoutedEventArgs e) => Service.NameComplement();
-		private void TbPath_OnLostFocus(object sender, RoutedEventArgs e) => Service.PathComplement();
-		private void TvTags_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => Service.TreeViewComplement(TvTags);
-
-		#endregion
+		private readonly Action<XmlElement, XmlElement?> _moveTag;
+		private static XmlElement TvItemGetHeader(object? sender) => (XmlElement)((TreeViewItem)sender!).Header;
 
 		#region 拖拽
 
-		private void TbTag_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			TagsTreeStatic.LastMousePos = e.GetPosition(TvTags);
-		}
+		private void TbTag_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e) => App.LastMousePos = e.GetPosition(TvTags);
 		private void TbTag_MouseMove(object sender, MouseEventArgs e)
 		{
-			if (e.LeftButton == MouseButtonState.Pressed && TagsTreeStatic.MouseDisplace(4, e.GetPosition(TvTags)))
-				_ = DragDrop.DoDragDrop((TreeViewItem)sender, TagsTreeStatic.TvItemGetHeader(sender), DragDropEffects.Move);
+			if (e.LeftButton == MouseButtonState.Pressed && App.MouseDisplace(4, e.GetPosition(TvTags)))
+				_ = DragDrop.DoDragDrop((TreeViewItem)sender, TvItemGetHeader(sender), DragDropEffects.Move);
 		}
 		private void TbTag_DragEnter(object sender, DragEventArgs e)
 		{
 			if (e.Data.GetData(typeof(XmlElement)) is XmlElement origin)
-				if (origin != TagsTreeStatic.TvItemGetHeader(sender))
+				if (origin != TvItemGetHeader(sender))
 					((TreeViewItem)sender).Foreground = new SolidColorBrush(Colors.Orange);
 			e.Handled = true;
 		}
@@ -62,8 +53,8 @@ namespace TagsTree
 				return;
 			e.Effects = DragDropEffects.None;
 			e.Handled = true;
-			if (origin != TagsTreeStatic.TvItemGetHeader(sender))
-				Service.MoveTag(origin,TagsTreeStatic.TvItemGetHeader(sender));
+			if (origin != TvItemGetHeader(sender))
+				_moveTag(origin,TvItemGetHeader(sender));
 		}
 		private void TvTags_Drop(object sender, DragEventArgs e)
 		{
@@ -71,54 +62,8 @@ namespace TagsTree
 				return;
 			e.Effects = DragDropEffects.None;
 			e.Handled = true;
-			Service.MoveTag(origin, TagsTreeStatic.XdpRoot!);
+			_moveTag(origin, null);
 		}
-
-		#endregion
-
-		#region 命令
-
-		private void True_CanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = true;
-		private void Paste_CanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = ClipBoard is not null;
-
-		private XmlElement? ClipBoard { get; set; }
-
-		private void New_Execute(object sender, ExecutedRoutedEventArgs e)
-		{
-			var dialog = new InputName();
-			if (dialog.ShowDialog() == false || !TagsTreeStatic.NewTagCheck(dialog.Message))
-				return;
-
-			Service.NewTag(dialog.Message, TagsTreeStatic.TvItemGetHeader(e.Parameter)!);
-		}
-		private void NewX_Execute(object sender, ExecutedRoutedEventArgs e)
-		{
-			var dialog = new InputName();
-			if (dialog.ShowDialog() == false || !TagsTreeStatic.NewTagCheck(dialog.Message))
-				return;
-
-			Service.NewTag(dialog.Message, TagsTreeStatic.XdpRoot!);
-		}
-		private void Cut_Execute(object sender, ExecutedRoutedEventArgs e) => ClipBoard = TagsTreeStatic.TvItemGetHeader(e.Parameter);
-		private void Paste_Execute(object sender, ExecutedRoutedEventArgs e)
-		{
-			Service.MoveTag(ClipBoard!, TagsTreeStatic.TvItemGetHeader(e.Parameter));
-			ClipBoard = null;
-		}
-		private void PasteX_Execute(object sender, ExecutedRoutedEventArgs e)
-		{
-			Service.MoveTag(ClipBoard!, TagsTreeStatic.XdpRoot!);
-			ClipBoard = null;
-		}
-		private void Rename_Execute(object sender, ExecutedRoutedEventArgs e)
-		{
-			var dialog = new InputName();
-			if (dialog.ShowDialog() == false || !TagsTreeStatic.NewTagCheck(dialog.Message))
-				return;
-
-			Service.RenameTag(dialog.Message, TagsTreeStatic.TvItemGetHeader(e.Parameter)!);
-		}
-		private void Delete_Execute(object sender, ExecutedRoutedEventArgs e) => Service.DeleteTag(TagsTreeStatic.TvItemGetHeader(e.Parameter));
 
 		#endregion
 	}
