@@ -5,11 +5,17 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
+using System.Windows.Media;
 using System.Xml;
 using TagsTree.Annotations;
 using TagsTree.Commands;
+using TagsTree.Services;
+using Service = TagsTree.Services.TagsManagerServices;
+using static TagsTree.Properties.Settings;
 
 namespace TagsTree.ViewModels
 {
@@ -25,37 +31,48 @@ namespace TagsTree.ViewModels
 		public TagsManagerViewModel()
 		{
 			static bool Func1(object? _) => true;
-			//bool Func2(object? _) => ClipBoard is not null;
-			_newBClick = new TagsManagerButtonCommand(Func1, Services.TagsManagerServices.NewBClick);
-			_moveBClick = new TagsManagerButtonCommand(Func1, Services.TagsManagerServices.MoveBClick);
-			_renameBClick = new TagsManagerButtonCommand(Func1, Services.TagsManagerServices.RenameBClick);
-			_deleteBClick = new TagsManagerButtonCommand(Func1, Services.TagsManagerServices.DeleteBClick);
-			_saveBClick = new TagsManagerButtonCommand(Func1, Services.TagsManagerServices.SaveBClick);
-			//_newCmClick = new TagsManagerButtonCommand(Func1, Services.TagsManagerServices.NewCmClick);
-			//_newXCmClick = new TagsManagerButtonCommand(Func1, Services.TagsManagerServices.NewXCmClick);
-			//_cutCmClick = new TagsManagerButtonCommand(Func1, Services.TagsManagerServices.CutCmClick);
-			//_pasteCmClick = new TagsManagerButtonCommand(Func2, Services.TagsManagerServices.PasteCmClick);
-			//_pasteXCmClick = new TagsManagerButtonCommand(Func2, Services.TagsManagerServices.PasteXCmClick);
-			//_renameCmClick = new TagsManagerButtonCommand(Func1, Services.TagsManagerServices.RenameCmClick);
-			//_deleteCmClick = new TagsManagerButtonCommand(Func1, Services.TagsManagerServices.DeleteCmClick);
+			bool Func2(object? _) => ClipBoard is not null;
+			_newBClick = new TagsManagerCommand(Func1, Service.NewBClick);
+			_moveBClick = new TagsManagerCommand(Func1, Service.MoveBClick);
+			_renameBClick = new TagsManagerCommand(Func1, Service.RenameBClick);
+			_deleteBClick = new TagsManagerCommand(Func1, Service.DeleteBClick);
+			_saveBClick = new TagsManagerCommand(Func1, Service.SaveBClick);
+			_newCmClick = new TagsManagerCommand(Func1, Service.NewCmClick);
+			_newXCmClick = new TagsManagerCommand(Func1, Service.NewXCmClick);
+			_cutCmClick = new TagsManagerCommand(Func1, Service.CutCmClick);
+			_pasteCmClick = new TagsManagerCommand(Func2, Service.PasteCmClick);
+			_pasteXCmClick = new TagsManagerCommand(Func2, Service.PasteXCmClick);
+			_renameCmClick = new TagsManagerCommand(Func1, Service.RenameCmClick);
+			_deleteCmClick = new TagsManagerCommand(Func1, Service.DeleteCmClick);
+			var xdpDocument = new XmlDocument();
+			xdpDocument.Load(Default.ConfigPath + @"\TagsTree.xml");
+			_xdp = new XmlDataProvider { Document = xdpDocument, XPath = @"TagsTree/Tag" };
 		}
+
+		public readonly RoutedEventHandler NameComplement = Service.NameComplement;
+		public readonly RoutedEventHandler PathComplement = Service.PathComplement;
+		public readonly Action<object?> TvSelectItemChanged = Service.TvSelectItemChanged;
+		public readonly Action<XmlElement, XmlElement?> MoveTag = Service.MoveTag;
 
 		private string _name = "";
 		private string _path = "";
 		private bool _changed;
-		private XmlDataProvider? _xdp;
-		private TagsManagerButtonCommand _newBClick;
-		private TagsManagerButtonCommand _moveBClick;
-		private TagsManagerButtonCommand _renameBClick;
-		private TagsManagerButtonCommand _deleteBClick;
-		private TagsManagerButtonCommand _saveBClick;
-		//private TagsManagerButtonCommand _newCmClick;
-		//private TagsManagerButtonCommand _newXCmClick;
-		//private TagsManagerButtonCommand _cutCmClick;
-		//private TagsManagerButtonCommand _pasteCmClick;
-		//private TagsManagerButtonCommand _pasteXCmClick;
-		//private TagsManagerButtonCommand _renameCmClick;
-		//private TagsManagerButtonCommand _deleteCmClick;
+		private XmlDataProvider _xdp;
+
+		private TagsManagerCommand _newBClick;
+		private TagsManagerCommand _moveBClick;
+		private TagsManagerCommand _renameBClick;
+		private TagsManagerCommand _deleteBClick;
+		private TagsManagerCommand _saveBClick;
+
+		private TagsManagerCommand _newCmClick;
+		private TagsManagerCommand _newXCmClick;
+		private TagsManagerCommand _cutCmClick;
+		private TagsManagerCommand _pasteCmClick;
+		private TagsManagerCommand _pasteXCmClick;
+		private TagsManagerCommand _renameCmClick;
+		private TagsManagerCommand _deleteCmClick;
+
 
 		public string Name
 		{
@@ -84,7 +101,7 @@ namespace TagsTree.ViewModels
 				OnPropertyChanged(nameof(Changed));
 			}
 		}
-		public XmlDataProvider? Xdp
+		public XmlDataProvider Xdp
 		{
 			get => _xdp;
 			set
@@ -93,7 +110,8 @@ namespace TagsTree.ViewModels
 				OnPropertyChanged(nameof(Xdp));
 			}
 		}
-		public TagsManagerButtonCommand NewBClick
+
+		public TagsManagerCommand NewBClick
 		{
 			get => _newBClick;
 			set
@@ -102,7 +120,7 @@ namespace TagsTree.ViewModels
 				OnPropertyChanged(nameof(NewBClick));
 			}
 		}
-		public TagsManagerButtonCommand MoveBClick
+		public TagsManagerCommand MoveBClick
 		{
 			get => _moveBClick;
 			set
@@ -111,7 +129,7 @@ namespace TagsTree.ViewModels
 				OnPropertyChanged(nameof(MoveBClick));
 			}
 		}
-		public TagsManagerButtonCommand RenameBClick
+		public TagsManagerCommand RenameBClick
 		{
 			get => _renameBClick;
 			set
@@ -120,7 +138,7 @@ namespace TagsTree.ViewModels
 				OnPropertyChanged(nameof(RenameBClick));
 			}
 		}
-		public TagsManagerButtonCommand DeleteBClick
+		public TagsManagerCommand DeleteBClick
 		{
 			get => _deleteBClick;
 			set
@@ -129,7 +147,7 @@ namespace TagsTree.ViewModels
 				OnPropertyChanged(nameof(DeleteBClick));
 			}
 		}
-		public TagsManagerButtonCommand SaveBClick
+		public TagsManagerCommand SaveBClick
 		{
 			get => _saveBClick;
 			set
@@ -139,8 +157,7 @@ namespace TagsTree.ViewModels
 			}
 		}
 
-		/*
-		public TagsManagerButtonCommand NewCmClick
+		public TagsManagerCommand NewCmClick
 		{
 			get => _newCmClick;
 			set
@@ -149,7 +166,7 @@ namespace TagsTree.ViewModels
 				OnPropertyChanged(nameof(NewCmClick));
 			}
 		}
-		public TagsManagerButtonCommand NewXCmClick
+		public TagsManagerCommand NewXCmClick
 		{
 			get => _newXCmClick;
 			set
@@ -158,7 +175,7 @@ namespace TagsTree.ViewModels
 				OnPropertyChanged(nameof(NewXCmClick));
 			}
 		}
-		public TagsManagerButtonCommand CutCmClick
+		public TagsManagerCommand CutCmClick
 		{
 			get => _cutCmClick;
 			set
@@ -167,7 +184,7 @@ namespace TagsTree.ViewModels
 				OnPropertyChanged(nameof(CutCmClick));
 			}
 		}
-		public TagsManagerButtonCommand PasteCmClick
+		public TagsManagerCommand PasteCmClick
 		{
 			get => _pasteCmClick;
 			set
@@ -176,7 +193,7 @@ namespace TagsTree.ViewModels
 				OnPropertyChanged(nameof(PasteCmClick));
 			}
 		}
-		public TagsManagerButtonCommand PasteXCmClick
+		public TagsManagerCommand PasteXCmClick
 		{
 			get => _pasteXCmClick;
 			set
@@ -185,7 +202,7 @@ namespace TagsTree.ViewModels
 				OnPropertyChanged(nameof(PasteXCmClick));
 			}
 		}
-		public TagsManagerButtonCommand RenameCmClick
+		public TagsManagerCommand RenameCmClick
 		{
 			get => _renameCmClick;
 			set
@@ -194,7 +211,7 @@ namespace TagsTree.ViewModels
 				OnPropertyChanged(nameof(RenameCmClick));
 			}
 		}
-		public TagsManagerButtonCommand DeleteCmClick
+		public TagsManagerCommand DeleteCmClick
 		{
 			get => _deleteCmClick;
 			set
@@ -203,6 +220,5 @@ namespace TagsTree.ViewModels
 				OnPropertyChanged(nameof(DeleteCmClick));
 			}
 		}
-		*/
 	}
 }

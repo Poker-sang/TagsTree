@@ -6,7 +6,7 @@
 		xmlns:local="clr-namespace:TagsTree"
 		xmlns:ui="http://schemas.modernwpf.com/2019"
 		xmlns:sys="clr-namespace:System;assembly=mscorlib"
-		x:Class="TagsTree.MainWindow"
+		x:Class="TagsTree.Views.MainWindow"
 		mc:Ignorable="d"
 		Title="MainWindow"  Height="720" Width="1280" MinHeight="720" MinWidth="1280"
         WindowStartupLocation="CenterScreen">

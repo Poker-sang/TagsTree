@@ -4,31 +4,27 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
 using System.Xml;
 using ModernWpf.Controls;
 using TagsTree.ViewModels;
+using TagsTree.Views;
 using TreeView = System.Windows.Controls.TreeView;
+using static TagsTree.Properties.Settings;
 
 namespace TagsTree.Services
 {
 	internal static class TagsManagerServices
 	{
-		private static readonly TagsManagerViewModel Vm = new();
-
-		public static TagsManagerViewModel Load(TreeView treeView)
-		{
-			TagsTreeStatic.XdpLoad(treeView);
-			return Vm;
-		}
-
-		#region 补全
-
-		public static void NameComplement()
-		{
-			Vm.Name = Regex.Replace(Vm.Name, @"\s", "");
-		}
-		public static void PathComplement()
+		public static readonly TagsManagerViewModel Vm = new();
+		
+		public static void NameComplement(object sender, RoutedEventArgs e) => Vm.Name = Regex.Replace(Vm.Name, @"\s", "");
+		public static void PathComplement(object sender, RoutedEventArgs e)
 		{
 			Vm.Path = Regex.Replace(Vm.Path, @"\s", "");
 			var path = TagsTreeStatic.TagPathComplete(Vm.Path);
@@ -36,13 +32,9 @@ namespace TagsTree.Services
 				TagsTreeStatic.ErrorMessageBox("标签路径不存在！请填写正确的单个标签或完整的路径！\n" + @"（不包含/:*?\""<>|,和空白字符）");
 			else Vm.Path = path;
 		}
-		public static void TreeViewComplement(TreeView treeView)
-		{
-			Vm.Path = TagsTreeStatic.TagsTree_OnSelectedItemChanged(treeView) ?? Vm.Path;
-		}
-
-		#endregion
-
+		public static void TvSelectItemChanged(object? selectElement) => Vm.Path = TagsTreeStatic.TagsTree_OnSelectedItemChanged((XmlElement?)selectElement) ?? Vm.Path;
+		private static XmlElement TvItemGetHeader(object? sender) => (XmlElement)((TreeViewItem)sender!).Header;
+		
 		#region 命令
 
 		public static void NewBClick(object? parameter)
@@ -84,7 +76,7 @@ namespace TagsTree.Services
 		}
 		public static void SaveBClick(object? parameter)
 		{
-			TagsTreeStatic.XdpSave();
+			Vm.Xdp.Document.Save(Default.ConfigPath + @"\TagsTree.xml");
 			Vm.Changed = false;
 		}
 
@@ -94,7 +86,7 @@ namespace TagsTree.Services
 			if (dialog.ShowDialog() == false || !TagsTreeStatic.NewTagCheck(dialog.Message))
 				return;
 
-			NewTag(dialog.Message, TagsTreeStatic.TvItemGetHeader(parameter)!);
+			NewTag(dialog.Message, TvItemGetHeader(parameter)!);
 		}
 		public static void NewXCmClick(object? parameter)
 		{
@@ -104,10 +96,10 @@ namespace TagsTree.Services
 
 			NewTag(dialog.Message, TagsTreeStatic.XdpRoot!);
 		}
-		public static void CutCmClick(object? parameter) => Vm.ClipBoard = TagsTreeStatic.TvItemGetHeader(parameter);
+		public static void CutCmClick(object? parameter) => Vm.ClipBoard = TvItemGetHeader(parameter);
 		public static void PasteCmClick(object? parameter)
 		{
-			MoveTag(Vm.ClipBoard!, TagsTreeStatic.TvItemGetHeader(parameter));
+			MoveTag(Vm.ClipBoard!, TvItemGetHeader(parameter));
 			Vm.ClipBoard = null;
 		}
 		public static void PasteXCmClick(object? parameter)
@@ -121,26 +113,27 @@ namespace TagsTree.Services
 			if (dialog.ShowDialog() == false || !TagsTreeStatic.NewTagCheck(dialog.Message))
 				return;
 
-			RenameTag(dialog.Message, TagsTreeStatic.TvItemGetHeader(parameter)!);
+			RenameTag(dialog.Message, TvItemGetHeader(parameter)!);
 		}
-		public static void DeleteCmClick(object? parameter) => DeleteTag(TagsTreeStatic.TvItemGetHeader(parameter));
+		public static void DeleteCmClick(object? parameter) => DeleteTag(TvItemGetHeader(parameter));
 
 		#endregion
 
 		#region 操作
 
-		public static void NewTag(string name, XmlElement path)
+		private static void NewTag(string name, XmlElement path)
 		{
-			var element = TagsTreeStatic.XdpDocument.CreateElement("Tag");
+			var element = Vm.Xdp.Document.CreateElement("Tag");
 			element.SetAttribute("name", name);
 			_ = path.AppendChild(element);
 			Vm.Changed = true;
 		}
-		public static void MoveTag(XmlElement name, XmlElement path)
+		public static void MoveTag(XmlElement name, XmlElement? path)
 		{
 			try
 			{
-				_ = path.AppendChild(name); //原位置自动被删除
+				path ??= (XmlElement?)Vm.Xdp.Document.LastChild;
+				_ = path!.AppendChild(name); //原位置自动被删除
 				Vm.Changed = true;
 			}
 			catch (ArgumentException)
@@ -148,7 +141,7 @@ namespace TagsTree.Services
 				TagsTreeStatic.ErrorMessageBox("禁止将标签移动到自己目录下");
 			}
 		}
-		public static void RenameTag(string name, XmlElement path)
+		private static void RenameTag(string name, XmlElement path)
 		{
 			path.RemoveAllAttributes();
 			path.SetAttribute("name", name);
@@ -156,7 +149,7 @@ namespace TagsTree.Services
 			Vm.Name = "";
 			Vm.Path = "";
 		}
-		public static void DeleteTag(XmlElement path)
+		private static void DeleteTag(XmlElement path)
 		{
 			_ = path.ParentNode!.RemoveChild(path);
 			Vm.Changed = true;

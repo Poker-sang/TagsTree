@@ -3,7 +3,7 @@ using System.Windows;
 using TagsTree.Services;
 using static TagsTree.Properties.Settings;
 
-namespace TagsTree
+namespace TagsTree.Views
 {
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml

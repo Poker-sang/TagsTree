@@ -14,23 +14,12 @@ namespace TagsTree.Services
 	public static class TagsTreeStatic
 	{
 		public static XmlDocument TagsTreeDocument { get; } = new();
-		public static XmlDocument XdpDocument { get; } = new();
 
 		/// <summary>
 		/// XmlDataProvider根元素
 		/// </summary>
-		public static XmlElement? XdpRoot => (XmlElement?)XdpDocument!.LastChild;
-
-		/// <summary>
-		/// 加载XmlDataProvider并绑定TreeView
-		/// </summary>
-		public static void XdpLoad(TreeView treeView)
-		{
-			XdpDocument.Load(Default.ConfigPath + @"\TagsTree.xml");
-			treeView.DataContext = new XmlDataProvider { Document = XdpDocument, XPath = @"TagsTree/Tag" };
-			_ = treeView.SetBinding(ItemsControl.ItemsSourceProperty, new Binding());
-		}
-
+		public static XmlElement? XdpRoot => (XmlElement?)TagsManagerServices.Vm.Xdp.Document.LastChild;
+		
 		/// <summary>
 		/// 保存文件
 		/// </summary>
@@ -39,30 +28,12 @@ namespace TagsTree.Services
 		/// <summary>
 		/// 保存文件
 		/// </summary>
-		public static void XdpSave() => XdpDocument.Save(Default.ConfigPath + @"\TagsTree.xml");
 
 		/// <summary>
 		/// 显示一条错误信息
 		/// </summary>
 		public static void ErrorMessageBox(string message) => _ = MessageBox.Show(message, "错误", MessageBoxButton.OK, MessageBoxImage.Error);
-
-		/// <summary>
-		/// 上次鼠标点击位置
-		/// </summary>
-		public static Point LastMousePos { get; set; }
-
-		/// <summary>
-		/// 由TreeViewItem的sender得到其中的XmlElement
-		/// </summary>
-		public static XmlElement TvItemGetHeader(object? sender) => (XmlElement)((TreeViewItem)sender!).Header;
-
-		/// <summary>
-		/// 是否鼠标位移超过一定距离
-		/// </summary>
-		public static bool MouseDisplace(double distance, Point currentPos)
-			=> Math.Abs(currentPos.X - LastMousePos.X) > distance ||
-			   Math.Abs(currentPos.Y - LastMousePos.Y) > distance;
-
+		
 		/// <summary>
 		/// 检查新的标签名语法和是否重复（已被删除空白字符）
 		/// </summary>
@@ -136,13 +107,12 @@ namespace TagsTree.Services
 		/// </summary>
 		/// <param name="treeView">TreeView控件</param>
 		/// <returns>string类型，显示所选Xml元素的路径，为null则是没有选择项目</returns>
-		public static string? TagsTree_OnSelectedItemChanged(TreeView treeView)
+		public static string? TagsTree_OnSelectedItemChanged(XmlElement? selectedItem)
 		{
-			var xmlElement = (XmlElement?)treeView.SelectedItem;
-			if (xmlElement is null)
+			if (selectedItem is null)
 				return null;
-			var text = xmlElement.GetAttribute("name");
-			var currentElement = (XmlElement?)xmlElement.ParentNode;
+			var text = selectedItem.GetAttribute("name");
+			var currentElement = (XmlElement?)selectedItem.ParentNode;
 			while (currentElement!.Name == "Tag")
 			{
 				text = currentElement.GetAttribute("name") + @"\" + text;
