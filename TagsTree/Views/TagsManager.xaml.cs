@@ -13,11 +13,11 @@ namespace TagsTree.Views
 		public TagsManager()
 		{
 			InitializeComponent();
-			var vm = Services.TagsManagerServices.Vm;
 			MouseLeftButtonDown += (_, _) => DragMove();
+			var vm = Services.TagsManagerService.Vm;
 			_ = TvTags.SetBinding(ItemsControl.ItemsSourceProperty, new Binding(".") { Mode = BindingMode.TwoWay, Source = vm.Xdp });
-
 			DataContext = vm;
+
 			_moveTag = vm.MoveTag;
 			TbName.LostFocus += vm.NameComplement;
 			TbPath.LostFocus += vm.PathComplement;

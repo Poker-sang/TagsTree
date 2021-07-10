@@ -6,20 +6,14 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Xml;
-using ModernWpf.Controls;
 using TagsTree.ViewModels;
 using TagsTree.Views;
-using TreeView = System.Windows.Controls.TreeView;
 using static TagsTree.Properties.Settings;
 
 namespace TagsTree.Services
 {
-	internal static class TagsManagerServices
+	public static class TagsManagerService
 	{
 		public static readonly TagsManagerViewModel Vm = new();
 		

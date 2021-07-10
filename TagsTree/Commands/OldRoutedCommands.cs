@@ -20,13 +20,13 @@ namespace TagsTree.Commands
 		
 
 		<Window.CommandBindings>
-			<CommandBinding Command = "{x:Static commands:TagsManagerCommand.NewCommand}" CanExecute="True_CanExecute"  Executed="New_Execute"/>
-			<CommandBinding Command = "{x:Static commands:TagsManagerCommand.NewXCommand}"    CanExecute="True_CanExecute"  Executed="NewX_Execute"/>
-			<CommandBinding Command = "{x:Static commands:TagsManagerCommand.CutCommand}" CanExecute="True_CanExecute"  Executed="Cut_Execute"/>
-			<CommandBinding Command = "{x:Static commands:TagsManagerCommand.PasteCommand}"   CanExecute="Paste_CanExecute" Executed="Paste_Execute"/>
-			<CommandBinding Command = "{x:Static commands:TagsManagerCommand.PasteXCommand}"  CanExecute="Paste_CanExecute" Executed="PasteX_Execute"/>
-			<CommandBinding Command = "{x:Static commands:TagsManagerCommand.RenameCommand}"  CanExecute="True_CanExecute"  Executed="Rename_Execute"/>
-			<CommandBinding Command = "{x:Static commands:TagsManagerCommand.DeleteCommand}"  CanExecute="True_CanExecute"  Executed="Delete_Execute"/>
+			<CommandBinding Command = "{x:Static commands:RelayCommand.NewCommand}" CanExecute="True_CanExecute"  Executed="New_Execute"/>
+			<CommandBinding Command = "{x:Static commands:RelayCommand.NewXCommand}"    CanExecute="True_CanExecute"  Executed="NewX_Execute"/>
+			<CommandBinding Command = "{x:Static commands:RelayCommand.CutCommand}" CanExecute="True_CanExecute"  Executed="Cut_Execute"/>
+			<CommandBinding Command = "{x:Static commands:RelayCommand.PasteCommand}"   CanExecute="Paste_CanExecute" Executed="Paste_Execute"/>
+			<CommandBinding Command = "{x:Static commands:RelayCommand.PasteXCommand}"  CanExecute="Paste_CanExecute" Executed="PasteX_Execute"/>
+			<CommandBinding Command = "{x:Static commands:RelayCommand.RenameCommand}"  CanExecute="True_CanExecute"  Executed="Rename_Execute"/>
+			<CommandBinding Command = "{x:Static commands:RelayCommand.DeleteCommand}"  CanExecute="True_CanExecute"  Executed="Delete_Execute"/>
 		</Window.CommandBindings>
 		#region 命令
 

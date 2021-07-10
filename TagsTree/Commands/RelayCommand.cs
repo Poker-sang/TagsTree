@@ -3,9 +3,9 @@ using System.Windows.Input;
 
 namespace TagsTree.Commands
 {
-	public class TagsManagerCommand : ICommand
+	public class RelayCommand : ICommand
 	{
-		public TagsManagerCommand(Func<object?, bool> canExecute, Action<object?> execute)
+		public RelayCommand(Func<object?, bool> canExecute, Action<object?> execute)
 		{
 			_canExecuteFunc = canExecute;
 			_executeAction = execute;
@@ -17,5 +17,7 @@ namespace TagsTree.Commands
 		public bool CanExecute(object? parameter) => _canExecuteFunc(parameter);
 		public void Execute(object? parameter) => _executeAction(parameter);
 		public event EventHandler? CanExecuteChanged;
+
+		public void OnCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
 	}
 }

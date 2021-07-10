@@ -41,6 +41,6 @@ namespace TagsTree.Views
 
 		private void TagsManager_Click(object sender, RoutedEventArgs e) => _ = new TagsManager().ShowDialog();
 
-		private void FileAdder_OnClick(object sender, RoutedEventArgs e) => _ = new FileAdder().ShowDialog();
+		private void FileAdder_OnClick(object sender, RoutedEventArgs e) => _ = new FileImporter().ShowDialog();
 	}
 }
