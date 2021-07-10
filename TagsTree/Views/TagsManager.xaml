@@ -67,12 +67,11 @@
 
 
 
-    <StackPanel Margin="48,27,48,27">
-
-        <ui:CommandBar>
+    <DockPanel Margin="40,30">
+        <ui:CommandBar DockPanel.Dock="Top">
             <ui:AppBarButton
                 Command="{Binding NewBClick}"
-                Icon="Add"
+                Icon="Import"
                 Label="添加" />
             <ui:AppBarButton
                 Command="{Binding MoveBClick}"
@@ -99,26 +98,25 @@
             <ui:AppBarButton
                 Command="{Binding SaveBClick}"
                 Icon="Save"
-                IsEnabled="{Binding Changed, Mode=TwoWay}"
                 Label="保存" />
         </ui:CommandBar>
 
         <ui:AutoSuggestBox
             x:Name="TbName"
             VerticalAlignment="Center"
+            DockPanel.Dock="Top"
             PlaceholderText="标签名称"
             Text="{Binding Name, Mode=TwoWay}" />
         <ui:AutoSuggestBox
             x:Name="TbPath"
             VerticalAlignment="Center"
+            DockPanel.Dock="Top"
             PlaceholderText="标签路径"
             Text="{Binding Path, Mode=TwoWay}" />
         <TreeView
             x:Name="TvTags"
             MinHeight="400"
             AllowDrop="True"
-            BorderBrush="Black"
-            BorderThickness="1"
             Drop="TvTags_Drop"
             ItemContainerStyle="{StaticResource TvItemStyle}">
             <TreeView.ItemTemplate>
@@ -128,10 +126,10 @@
             </TreeView.ItemTemplate>
             <TreeView.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Command="{Binding Value.DataContext.NewXCmClick, Source={StaticResource WinBindingProxy}}" Header="新建" />
-                    <MenuItem Command="{Binding Value.DataContext.PasteXCmClick, Source={StaticResource WinBindingProxy}}" Header="粘贴" />
+                    <MenuItem Command="{Binding NewXCmClick}" Header="新建" />
+                    <MenuItem Command="{Binding PasteXCmClick}" Header="粘贴" />
                 </ContextMenu>
             </TreeView.ContextMenu>
         </TreeView>
-    </StackPanel>
+    </DockPanel>
 </Window>

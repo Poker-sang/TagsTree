@@ -18,7 +18,7 @@ namespace TagsTree.Services
 		/// <summary>
 		/// XmlDataProvider根元素
 		/// </summary>
-		public static XmlElement? XdpRoot => (XmlElement?)TagsManagerServices.Vm.Xdp.Document.LastChild;
+		public static XmlElement? XdpRoot => (XmlElement?)TagsManagerService.Vm.Xdp.Document.LastChild;
 		
 		/// <summary>
 		/// 保存文件
