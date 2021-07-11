@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Xml;
@@ -10,17 +12,20 @@ namespace TagsTree.Views
 {
 	public partial class TagsManager : Window
 	{
-		public TagsManager()
+		public TagsManager(Window owner)
 		{
+			Owner = owner;
 			InitializeComponent();
 			MouseLeftButtonDown += (_, _) => DragMove();
-			var vm = Services.TagsManagerService.Vm;
+			var vm = Services.TagsManagerService.Load(this);
 			_ = TvTags.SetBinding(ItemsControl.ItemsSourceProperty, new Binding(".") { Mode = BindingMode.TwoWay, Source = vm.Xdp });
 			DataContext = vm;
 
 			_moveTag = vm.MoveTag;
-			TbName.LostFocus += vm.NameComplement;
 			TbPath.LostFocus += vm.PathComplement;
+			TbPath.SuggestionChosen += vm.SuggestionChosen;
+			TbName.TextChanged += vm.NameChanged;
+			TbPath.TextChanged += vm.PathChanged;
 			TvTags.SelectedItemChanged += (_, _) => vm.TvSelectItemChanged(TvTags.SelectedItem);
 		}
 

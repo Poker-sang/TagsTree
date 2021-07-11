@@ -9,13 +9,12 @@ namespace TagsTree.Views
 	/// </summary>
 	public partial class FileImporter : Window
 	{
-		public FileImporter()
+		public FileImporter(Window owner)
 		{
+			Owner = owner;
 			InitializeComponent();
-			var vm = Services.FileImporterService.Vm;
-			Services.FileImporterService.Win = this;
+			DataContext = Services.FileImporterService.Load(this);
 			MouseLeftButtonDown += (_, _) => DragMove();
-			DataContext = vm;
 		}
 	}
 }

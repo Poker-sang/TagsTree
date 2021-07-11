@@ -7,16 +7,28 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:viewModels="clr-namespace:TagsTree.ViewModels"
     Title="MainWindow"
     Width="1280"
     Height="720"
-    MinWidth="1280"
-    MinHeight="720"
+    d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
     ui:WindowHelper.UseModernWindowStyle="True"
+    ResizeMode="CanMinimize"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.191*" />
+            <ColumnDefinition Width="0.618*" />
+            <ColumnDefinition Width="0.191*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="3*" />
+        </Grid.RowDefinitions>
         <Button
+            Grid.Row="0"
+            Grid.Column="2"
             Width="40"
             Height="40"
             HorizontalAlignment="Right"
@@ -52,5 +64,66 @@
                 </ui:MenuFlyout>
             </ui:FlyoutService.Flyout>
         </Button>
+        <TextBlock
+            x:Name="TbBanner"
+            Grid.Row="1"
+            Grid.Column="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            FontSize="80"
+            Text="TagsTree" />
+
+        <Grid
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="1">
+            <ui:AutoSuggestBox
+                x:Name="TbInput"
+                Margin="0,300,0,0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Top"
+                PlaceholderText="输入标签以搜索相应文件（标签间以空格隔开）"
+                QueryIcon="Find"
+                Text="{Binding Search, Mode=OneWay}"
+                UpdateTextOnSelect="False">
+                <ui:AutoSuggestBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Path}" />
+                    </DataTemplate>
+                </ui:AutoSuggestBox.ItemTemplate>
+            </ui:AutoSuggestBox>
+        </Grid>
+        <DataGrid
+            x:Name="DgResult"
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="3"
+            VerticalAlignment="Stretch"
+            AutoGenerateColumns="False"
+            CanUserAddRows="False"
+            CanUserReorderColumns="False"
+            CanUserResizeRows="False"
+            IsHitTestVisible="False"
+            Opacity="0">
+            <DataGrid.Columns>
+                <DataGridCheckBoxColumn
+                    Width="45"
+                    CanUserResize="False"
+                    CanUserSort="False"
+                    IsReadOnly="True">
+                    <DataGridCheckBoxColumn.Header>
+                        <ui:FontIcon Glyph="&#xF12B;" />
+                    </DataGridCheckBoxColumn.Header>
+                </DataGridCheckBoxColumn>
+                <DataGridTextColumn
+                    Width="2*"
+                    Header="名称"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Width="*"
+                    Header="标签"
+                    IsReadOnly="True" />
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>

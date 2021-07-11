@@ -11,8 +11,9 @@ namespace TagsTree.Views
 	/// </summary>
 	public partial class NewConfig : Window
 	{
-		public NewConfig()
+		public NewConfig(Window owner)
 		{
+			Owner = owner;
 			InitializeComponent();
 			MouseLeftButtonDown += (_, _) => DragMove();
 			TbConfigPath.Text = Default.ConfigPath;
@@ -38,8 +39,8 @@ namespace TagsTree.Views
 		{
 			var legalPath = new Regex(@"^[a-zA-Z]:\\[^\/\:\*\?\""\<\>\|]+$");
 			if (!legalPath.IsMatch(TbConfigPath.Text) || !legalPath.IsMatch(TbLibraryPath.Text))
-				TagsTreeStatic.ErrorMessageBox("路径错误！请填写正确完整的文件夹路径！");
-			else if (TagsTreeStatic.LoadConfig(TbConfigPath.Text))
+				App.ErrorMessageBox("路径错误！请填写正确完整的文件夹路径！");
+			else if (App.LoadConfig(TbConfigPath.Text))
 			{
 				Default.ConfigPath = TbConfigPath.Text;
 				Default.LibraryPath = TbLibraryPath.Text;

@@ -7,54 +7,65 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Xml;
+using ModernWpf.Controls;
+using TagsTree.Models;
 using TagsTree.ViewModels;
 using TagsTree.Views;
-using static TagsTree.Properties.Settings;
 
 namespace TagsTree.Services
 {
 	public static class TagsManagerService
 	{
 		public static readonly TagsManagerViewModel Vm = new();
+		private static TagsManager Win;
+		public static TagsManagerViewModel Load(TagsManager window)
+		{
+			Win = window;
+			return Vm;
+		}
 		
-		public static void NameComplement(object sender, RoutedEventArgs e) => Vm.Name = Regex.Replace(Vm.Name, @"\s", "");
 		public static void PathComplement(object sender, RoutedEventArgs e)
 		{
-			Vm.Path = Regex.Replace(Vm.Path, @"\s", "");
-			var path = TagsTreeStatic.TagPathComplete(Vm.Path);
-			if (path is null)
-				TagsTreeStatic.ErrorMessageBox("标签路径不存在！请填写正确的单个标签或完整的路径！\n" + @"（不包含/:*?\""<>|,和空白字符）");
-			else Vm.Path = path;
+			var path = App.TagPathComplete(Vm.Path);
+			if (path is not null)
+				Vm.Path = path;
 		}
-		public static void TvSelectItemChanged(object? selectElement) => Vm.Path = TagsTreeStatic.TagsTree_OnSelectedItemChanged((XmlElement?)selectElement) ?? Vm.Path;
+		public static void NameChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e) => Vm.Name = Regex.Replace(Vm.Name, @"[\\\/\:\*\?\""\<\>\|\s]+", "");
+		public static void PathChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
+		{
+			Vm.Path = Regex.Replace(Vm.Path, @"[\/\:\*\?\""\<\>\|\s]+", "");
+			sender.ItemsSource = App.TagSuggest(sender.Text.Split('\\', StringSplitOptions.RemoveEmptyEntries).LastOrDefault());
+		}
+		public static void SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs e) => sender.Text = e.SelectedItem.ToString();
+		public static void TvSelectItemChanged(object? selectElement) => Vm.Path = App.TagsTree_OnSelectedItemChanged((XmlElement?)selectElement) ?? Vm.Path;
 		private static XmlElement TvItemGetHeader(object? sender) => (XmlElement)((TreeViewItem)sender!).Header;
 		
 		#region 命令
 
 		public static void NewBClick(object? parameter)
 		{
-			if (!TagsTreeStatic.NewTagCheck(Vm.Name))
+			if (!App.NewTagCheck(Vm.Name))
 				return;
 
-			NewTag(Vm.Name, TagsTreeStatic.RecursiveSearchXmlElement(Vm.Path)!);
+			NewTag(Vm.Name, App.GetXmlElement(Vm.Path)!);
 			Vm.Name = "";
 		}
 		public static void MoveBClick(object? parameter)
 		{
-			var element = TagsTreeStatic.RecursiveSearchXmlElement(Vm.Name);
+			var element = App.GetXmlElement(Vm.Name);
 			if (element is null)
-				TagsTreeStatic.ErrorMessageBox("标签名称不存在！请填写正确的单个标签或完整的路径！");
+				App.ErrorMessageBox("标签名称不存在！请填写正确的单个标签或完整的路径！");
 			else
 			{
-				MoveTag(element, TagsTreeStatic.RecursiveSearchXmlElement(Vm.Path)!);
+				MoveTag(element, App.GetXmlElement(Vm.Path)!);
 				Vm.Name = "";
 			}
 		}
 		public static void RenameBClick(object? parameter)
 		{
-			if (!TagsTreeStatic.NewTagCheck(Vm.Name))
+			if (!App.NewTagCheck(Vm.Name))
 				return;
-			RenameTag(Vm.Name, TagsTreeStatic.RecursiveSearchXmlElement(Vm.Path)!);
+			RenameTag(Vm.Name, App.GetXmlElement(Vm.Path)!);
 			Vm.Name = "";
 			Vm.Path = "";
 		}
@@ -62,33 +73,33 @@ namespace TagsTree.Services
 		{
 			if (Vm.Path == string.Empty)
 			{
-				TagsTreeStatic.ErrorMessageBox("未输入希望删除的标签");
+				App.ErrorMessageBox("未输入希望删除的标签");
 				return;
 			}
-			DeleteTag(TagsTreeStatic.RecursiveSearchXmlElement(Vm.Path)!);
+			DeleteTag(App.GetXmlElement(Vm.Path)!);
 			Vm.Name = "";
 		}
 		public static void SaveBClick(object? parameter)
 		{
-			Vm.Xdp.Document.Save(Default.ConfigPath + @"\TagsTree.xml");
+			App.SaveXdTags();
 			Vm.Changed = false;
 		}
 
 		public static void NewCmClick(object? parameter)
 		{
-			var dialog = new InputName();
-			if (dialog.ShowDialog() == false || !TagsTreeStatic.NewTagCheck(dialog.Message))
+			var dialog = new InputName(Win);
+			if (dialog.ShowDialog() == false || !App.NewTagCheck(dialog.Message))
 				return;
 
 			NewTag(dialog.Message, TvItemGetHeader(parameter)!);
 		}
 		public static void NewXCmClick(object? parameter)
 		{
-			var dialog = new InputName();
-			if (dialog.ShowDialog() == false || !TagsTreeStatic.NewTagCheck(dialog.Message))
+			var dialog = new InputName(Win);
+			if (dialog.ShowDialog() == false || !App.NewTagCheck(dialog.Message))
 				return;
 
-			NewTag(dialog.Message, TagsTreeStatic.XdpRoot!);
+			NewTag(dialog.Message, App.XdpRoot!);
 		}
 		public static void CutCmClick(object? parameter) => Vm.ClipBoard = TvItemGetHeader(parameter);
 		public static void PasteCmClick(object? parameter)
@@ -98,13 +109,13 @@ namespace TagsTree.Services
 		}
 		public static void PasteXCmClick(object? parameter)
 		{
-			MoveTag(Vm.ClipBoard!, TagsTreeStatic.XdpRoot!);
+			MoveTag(Vm.ClipBoard!, App.XdpRoot!);
 			Vm.ClipBoard = null;
 		}
 		public static void RenameCmClick(object? parameter)
 		{
-			var dialog = new InputName();
-			if (dialog.ShowDialog() == false || !TagsTreeStatic.NewTagCheck(dialog.Message))
+			var dialog = new InputName(Win);
+			if (dialog.ShowDialog() == false || !App.NewTagCheck(dialog.Message))
 				return;
 
 			RenameTag(dialog.Message, TvItemGetHeader(parameter)!);
@@ -120,7 +131,7 @@ namespace TagsTree.Services
 			var element = Vm.Xdp.Document.CreateElement("Tag");
 			element.SetAttribute("name", name);
 			_ = path.AppendChild(element);
-			Vm.Changed = true;
+			TagsChanged();
 		}
 		public static void MoveTag(XmlElement name, XmlElement? path)
 		{
@@ -128,26 +139,31 @@ namespace TagsTree.Services
 			{
 				path ??= (XmlElement?)Vm.Xdp.Document.LastChild;
 				_ = path!.AppendChild(name); //原位置自动被删除
-				Vm.Changed = true;
+				TagsChanged();
 			}
 			catch (ArgumentException)
 			{
-				TagsTreeStatic.ErrorMessageBox("禁止将标签移动到自己目录下");
+				App.ErrorMessageBox("禁止将标签移动到自己目录下");
 			}
 		}
 		private static void RenameTag(string name, XmlElement path)
 		{
 			path.RemoveAllAttributes();
 			path.SetAttribute("name", name);
-			Vm.Changed = true;
+			TagsChanged();
 			Vm.Name = "";
 			Vm.Path = "";
 		}
 		private static void DeleteTag(XmlElement path)
 		{
 			_ = path.ParentNode!.RemoveChild(path);
-			Vm.Changed = true;
+			TagsChanged();
 			Vm.Name = "";
+		}
+		private static void TagsChanged()
+		{
+			Vm.Changed = true;
+			App.RecursiveLoadTags(); 
 		}
 
 		#endregion
