@@ -24,11 +24,11 @@ namespace TagsTree.Views
 					}
 					else
 					{
-						TagsTreeStatic.ErrorMessageBox("配置文件损坏！请重新输入");
+						App.ErrorMessageBox("配置文件损坏！请重新输入");
 						Default.IsSet = false;
 					}
 				}
-				else if (new NewConfig().ShowDialog() == false)
+				else if (new NewConfig(this).ShowDialog() == false)
 				{
 					Close();
 					return;
@@ -37,10 +37,10 @@ namespace TagsTree.Views
 			InitializeComponent();
 		}
 
-		private void ChangeConfig_Click(object sender, RoutedEventArgs e) => _ = new NewConfig().ShowDialog();
+		private void ChangeConfig_Click(object sender, RoutedEventArgs e) => _ = new NewConfig(this).ShowDialog();
 
-		private void TagsManager_Click(object sender, RoutedEventArgs e) => _ = new TagsManager().ShowDialog();
+		private void TagsManager_Click(object sender, RoutedEventArgs e) => _ = new TagsManager(this).ShowDialog();
 
-		private void FileAdder_OnClick(object sender, RoutedEventArgs e) => _ = new FileImporter().ShowDialog();
+		private void FileAdder_OnClick(object sender, RoutedEventArgs e) => _ = new FileImporter(this).ShowDialog();
 	}
 }

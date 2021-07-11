@@ -18,7 +18,7 @@ namespace TagsTree.Services
 	public static class FileImporterService
 	{
 		public static readonly FileImporterViewModel Vm = new();
-		public static Views.FileImporter? Win;
+		public static Views.FileImporter Win;
 
 		public static void Import(object? parameter)
 		{
@@ -129,7 +129,7 @@ namespace TagsTree.Services
 					break;
 			}
 			if (wrongPath)
-				TagsTreeStatic.ErrorMessageBox("只允许导入文件路径下的文件或文件夹，不符合的已被剔除");
+				App.ErrorMessageBox("只允许导入文件路径下的文件或文件夹，不符合的已被剔除");
 		}
 
 		public static void DeleteBClick(object? parameter) => Vm.FileModels.Clear();

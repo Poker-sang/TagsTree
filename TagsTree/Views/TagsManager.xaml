@@ -67,7 +67,7 @@
 
 
 
-    <DockPanel Margin="40,30">
+    <DockPanel>
         <ui:CommandBar DockPanel.Dock="Top">
             <ui:AppBarButton
                 Command="{Binding NewBClick}"

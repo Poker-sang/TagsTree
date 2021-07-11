@@ -16,14 +16,15 @@ namespace TagsTree.Services
 	public static class TagsManagerService
 	{
 		public static readonly TagsManagerViewModel Vm = new();
-		
+		public static TagsManager Win;
+
 		public static void NameComplement(object sender, RoutedEventArgs e) => Vm.Name = Regex.Replace(Vm.Name, @"\s", "");
 		public static void PathComplement(object sender, RoutedEventArgs e)
 		{
 			Vm.Path = Regex.Replace(Vm.Path, @"\s", "");
 			var path = TagsTreeStatic.TagPathComplete(Vm.Path);
 			if (path is null)
-				TagsTreeStatic.ErrorMessageBox("标签路径不存在！请填写正确的单个标签或完整的路径！\n" + @"（不包含/:*?\""<>|,和空白字符）");
+				App.ErrorMessageBox("标签路径不存在！请填写正确的单个标签或完整的路径！\n" + @"（不包含/:*?\""<>|,和空白字符）");
 			else Vm.Path = path;
 		}
 		public static void TvSelectItemChanged(object? selectElement) => Vm.Path = TagsTreeStatic.TagsTree_OnSelectedItemChanged((XmlElement?)selectElement) ?? Vm.Path;
@@ -43,7 +44,7 @@ namespace TagsTree.Services
 		{
 			var element = TagsTreeStatic.RecursiveSearchXmlElement(Vm.Name);
 			if (element is null)
-				TagsTreeStatic.ErrorMessageBox("标签名称不存在！请填写正确的单个标签或完整的路径！");
+				App.ErrorMessageBox("标签名称不存在！请填写正确的单个标签或完整的路径！");
 			else
 			{
 				MoveTag(element, TagsTreeStatic.RecursiveSearchXmlElement(Vm.Path)!);
@@ -62,7 +63,7 @@ namespace TagsTree.Services
 		{
 			if (Vm.Path == string.Empty)
 			{
-				TagsTreeStatic.ErrorMessageBox("未输入希望删除的标签");
+				App.ErrorMessageBox("未输入希望删除的标签");
 				return;
 			}
 			DeleteTag(TagsTreeStatic.RecursiveSearchXmlElement(Vm.Path)!);
@@ -76,7 +77,7 @@ namespace TagsTree.Services
 
 		public static void NewCmClick(object? parameter)
 		{
-			var dialog = new InputName();
+			var dialog = new InputName(Win);
 			if (dialog.ShowDialog() == false || !TagsTreeStatic.NewTagCheck(dialog.Message))
 				return;
 
@@ -84,7 +85,7 @@ namespace TagsTree.Services
 		}
 		public static void NewXCmClick(object? parameter)
 		{
-			var dialog = new InputName();
+			var dialog = new InputName(Win);
 			if (dialog.ShowDialog() == false || !TagsTreeStatic.NewTagCheck(dialog.Message))
 				return;
 
@@ -103,7 +104,7 @@ namespace TagsTree.Services
 		}
 		public static void RenameCmClick(object? parameter)
 		{
-			var dialog = new InputName();
+			var dialog = new InputName(Win);
 			if (dialog.ShowDialog() == false || !TagsTreeStatic.NewTagCheck(dialog.Message))
 				return;
 
@@ -132,7 +133,7 @@ namespace TagsTree.Services
 			}
 			catch (ArgumentException)
 			{
-				TagsTreeStatic.ErrorMessageBox("禁止将标签移动到自己目录下");
+				App.ErrorMessageBox("禁止将标签移动到自己目录下");
 			}
 		}
 		private static void RenameTag(string name, XmlElement path)

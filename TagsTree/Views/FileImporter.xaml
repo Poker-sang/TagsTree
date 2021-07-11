@@ -17,12 +17,8 @@
     ui:WindowHelper.UseModernWindowStyle="True"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
-    <Window.Resources>
-        <ui:BindingProxy x:Key="WinBindingProxy" Value="{x:Reference FileImporterWindow}" />
-    </Window.Resources>
-    <DockPanel Margin="0,0">
+    <DockPanel>
         <ui:CommandBar DockPanel.Dock="Top">
-
             <ui:AppBarButton Label="选择">
                 <ui:AppBarButton.Icon>
                     <ui:FontIcon Glyph="&#xE7C3;" />

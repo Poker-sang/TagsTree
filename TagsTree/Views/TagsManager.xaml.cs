@@ -10,10 +10,12 @@ namespace TagsTree.Views
 {
 	public partial class TagsManager : Window
 	{
-		public TagsManager()
+		public TagsManager(Window owner)
 		{
+			Owner = owner;
 			InitializeComponent();
 			MouseLeftButtonDown += (_, _) => DragMove();
+			Services.TagsManagerService.Win = this;
 			var vm = Services.TagsManagerService.Vm;
 			_ = TvTags.SetBinding(ItemsControl.ItemsSourceProperty, new Binding(".") { Mode = BindingMode.TwoWay, Source = vm.Xdp });
 			DataContext = vm;

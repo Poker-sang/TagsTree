@@ -26,15 +26,6 @@ namespace TagsTree.Services
 		public static void Save() => TagsTreeDocument.Save(Default.ConfigPath + @"\TagsTree.xml");
 
 		/// <summary>
-		/// 保存文件
-		/// </summary>
-
-		/// <summary>
-		/// 显示一条错误信息
-		/// </summary>
-		public static void ErrorMessageBox(string message) => _ = MessageBox.Show(message, "错误", MessageBoxButton.OK, MessageBoxImage.Error);
-		
-		/// <summary>
 		/// 检查新的标签名语法和是否重复（已被删除空白字符）
 		/// </summary>
 		/// <param name="name"></param>
@@ -43,13 +34,13 @@ namespace TagsTree.Services
 		{
 			if (!new Regex(@"^[^\\\/\:\*\?\""\<\>\|\s]+$").IsMatch(name))
 			{
-				ErrorMessageBox("标签名称错误！请填写正确的名称！\n" + @"（不包含\/:*?\""<>|,和空白字符且不为空）");
+				App.ErrorMessageBox("标签名称错误！请填写正确的名称！\n" + @"（不包含\/:*?\""<>|,和空白字符且不为空）");
 				return false;
 			}
 
 			if (TagPathComplete(name) is not null)
 			{
-				ErrorMessageBox("与现有标签重名！");
+				App.ErrorMessageBox("与现有标签重名！");
 				return false;
 			}
 
@@ -105,7 +96,7 @@ namespace TagsTree.Services
 		/// 用法：<code>private void treeView_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs&lt;object&gt; e)<br/>
 		/// => textBox.Text = TagsTreeStatic.TagsTree_OnSelectedItemChanged(treeView) ?? textBox.Text;</code>
 		/// </summary>
-		/// <param name="treeView">TreeView控件</param>
+		/// <param name="selectedItem">TreeView控件的SelectedItem</param>
 		/// <returns>string类型，显示所选Xml元素的路径，为null则是没有选择项目</returns>
 		public static string? TagsTree_OnSelectedItemChanged(XmlElement? selectedItem)
 		{

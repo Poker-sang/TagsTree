@@ -7,8 +7,9 @@ namespace TagsTree.Views
 	/// </summary>
 	public partial class InputName : Window
 	{
-		public InputName()
+		public InputName(Window owner)
 		{
+			Owner = owner;
 			InitializeComponent();
 		}
 
