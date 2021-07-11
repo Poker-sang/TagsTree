@@ -20,7 +20,7 @@
     <Window.Resources>
         <ui:BindingProxy x:Key="WinBindingProxy" Value="{x:Reference FileImporterWindow}" />
     </Window.Resources>
-    <DockPanel Margin="40,30">
+    <DockPanel Margin="0,0">
         <ui:CommandBar DockPanel.Dock="Top">
 
             <ui:AppBarButton Label="选择">
@@ -95,7 +95,8 @@
                     <TextBlock>
                         选择引入：引入文件或文件夹<LineBreak />
                         目录引入：引入目录下一级所有文件或文件夹或全部<LineBreak />
-                        全部引入：引入目录下所有深度所有文件</TextBlock>
+                        全部引入：引入目录下所有深度所有文件<LineBreak />
+                        可以按Del删除选定行</TextBlock>
                 </ui:AppBarButton.ToolTip>
             </ui:AppBarButton>
             <ui:AppBarButton
@@ -111,11 +112,14 @@
         <DataGrid
             AutoGenerateColumns="False"
             CanUserAddRows="False"
+            CanUserReorderColumns="False"
+            CanUserResizeRows="False"
             ItemsSource="{Binding FileModels, Mode=TwoWay}">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn
                     Width="45"
                     Binding="{Binding IsFolder}"
+                    CanUserResize="False"
                     CanUserSort="False"
                     IsReadOnly="True">
                     <DataGridCheckBoxColumn.Header>
@@ -129,7 +133,7 @@
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Path}"
+                    Binding="{Binding PartialPath}"
                     Header="路径"
                     IsReadOnly="True" />
             </DataGrid.Columns>

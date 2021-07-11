@@ -28,13 +28,18 @@ namespace TagsTree.ViewModels
 			_import = new RelayCommand(Func1, FileImporterService.Import);
 			_deleteBClick = new RelayCommand(Func2, FileImporterService.DeleteBClick);
 			_saveBClick = new RelayCommand(Func2, FileImporterService.SaveBClick);
+			_fileModels.CollectionChanged += (_, _) =>
+			{
+				_deleteBClick.OnCanExecuteChanged();
+				_saveBClick.OnCanExecuteChanged();
+			};
 		}
 
 		private ObservableCollection<FileModel> _fileModels = new();
 		private RelayCommand _import;
 		private RelayCommand _deleteBClick;
 		private RelayCommand _saveBClick;
-		
+
 		public ObservableCollection<FileModel> FileModels
 		{
 			get => _fileModels;
@@ -45,6 +50,7 @@ namespace TagsTree.ViewModels
 				OnPropertyChanged(nameof(FileModels));
 			}
 		}
+
 		public RelayCommand Import
 		{
 			get => _import;
