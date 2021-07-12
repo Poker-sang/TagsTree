@@ -19,7 +19,7 @@ namespace TagsTree.Views
 					var legalPath = new Regex(@"^[a-zA-Z]:\\[^\/\:\*\?\""\<\>\|\,]+$");
 					if (legalPath.IsMatch(Default.ConfigPath) && legalPath.IsMatch(Default.LibraryPath))
 					{
-						if (TagsTreeStatic.LoadConfig(Default.ConfigPath))
+						if (App.LoadConfig(Default.ConfigPath))
 							break;
 					}
 					else

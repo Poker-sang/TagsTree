@@ -42,9 +42,7 @@ namespace TagsTree.ViewModels
 			_pasteXCmClick = new RelayCommand(Func2, TagsManagerService.PasteXCmClick);
 			_renameCmClick = new RelayCommand(Func1, TagsManagerService.RenameCmClick);
 			_deleteCmClick = new RelayCommand(Func1, TagsManagerService.DeleteCmClick);
-			var xdpDocument = new XmlDocument();
-			xdpDocument.Load(Default.ConfigPath + @"\TagsTree.xml");
-			_xdp = new XmlDataProvider { Document = xdpDocument, XPath = @"TagsTree/Tag" };
+			_xdp = new XmlDataProvider { Document = App.XdTags, XPath = @"TagsTree/Tag" };
 		}
 
 		public readonly RoutedEventHandler NameComplement = TagsManagerService.NameComplement;
