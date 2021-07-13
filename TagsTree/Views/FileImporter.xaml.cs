@@ -13,10 +13,8 @@ namespace TagsTree.Views
 		{
 			Owner = owner;
 			InitializeComponent();
-			Services.FileImporterService.Win = this;
-			var vm = Services.FileImporterService.Vm;
+			DataContext = Services.FileImporterService.Load(this);
 			MouseLeftButtonDown += (_, _) => DragMove();
-			DataContext = vm;
 		}
 	}
 }

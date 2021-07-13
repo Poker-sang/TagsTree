@@ -12,10 +12,11 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Xml;
+using ModernWpf;
+using ModernWpf.Controls;
 using TagsTree.Annotations;
 using TagsTree.Commands;
 using TagsTree.Services;
-using static TagsTree.Properties.Settings;
 
 namespace TagsTree.ViewModels
 {
@@ -44,11 +45,13 @@ namespace TagsTree.ViewModels
 			_deleteCmClick = new RelayCommand(Func1, TagsManagerService.DeleteCmClick);
 			_xdp = new XmlDataProvider { Document = App.XdTags, XPath = @"TagsTree/Tag" };
 		}
-
-		public readonly RoutedEventHandler NameComplement = TagsManagerService.NameComplement;
+		
 		public readonly RoutedEventHandler PathComplement = TagsManagerService.PathComplement;
 		public readonly Action<object?> TvSelectItemChanged = TagsManagerService.TvSelectItemChanged;
 		public readonly Action<XmlElement, XmlElement?> MoveTag = TagsManagerService.MoveTag;
+		public readonly TypedEventHandler<AutoSuggestBox, AutoSuggestBoxSuggestionChosenEventArgs> SuggestionChosen = MainWindowService.SuggestionChosen;
+		public readonly TypedEventHandler<AutoSuggestBox, AutoSuggestBoxTextChangedEventArgs> NameChanged = TagsManagerService.NameChanged;
+		public readonly TypedEventHandler<AutoSuggestBox, AutoSuggestBoxTextChangedEventArgs> PathChanged = TagsManagerService.PathChanged;
 
 		private string _name = "";
 		private string _path = "";

@@ -11,14 +11,21 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using SQLite;
 using TagsTree.Models;
 using TagsTree.ViewModels;
+using TagsTree.Views;
 using static TagsTree.Properties.Settings;
 
 namespace TagsTree.Services
 {
 	public static class FileImporterService
 	{
-		public static readonly FileImporterViewModel Vm = new();
-		public static Views.FileImporter Win;
+		private static readonly FileImporterViewModel Vm = new();
+		private static FileImporter Win;
+
+		public static FileImporterViewModel Load(FileImporter window)
+		{
+			Win = window;
+			return Vm;
+		}
 
 		public static void Import(object? parameter)
 		{

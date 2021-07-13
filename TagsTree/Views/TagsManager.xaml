@@ -103,15 +103,22 @@
                 x:Name="TbName"
                 VerticalAlignment="Center"
                 DockPanel.Dock="Left"
-                PlaceholderText="标签名称"
+                PlaceholderText="标签名称（不包含\/:*?&quot;&lt;&gt;|,和空白字符且不为空）"
                 Text="{Binding Name, Mode=TwoWay}" />
         </DockPanel>
         <ui:AutoSuggestBox
             x:Name="TbPath"
             VerticalAlignment="Center"
             DockPanel.Dock="Top"
-            PlaceholderText="标签路径"
-            Text="{Binding Path, Mode=TwoWay}" />
+            PlaceholderText="标签路径（不包含/:*?&quot;&lt;&gt;|,和空白字符且不为空）"
+            Text="{Binding Path, Mode=TwoWay}"
+            UpdateTextOnSelect="False">
+            <ui:AutoSuggestBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Path}" />
+                </DataTemplate>
+            </ui:AutoSuggestBox.ItemTemplate>
+        </ui:AutoSuggestBox>
         <TreeView
             x:Name="TvTags"
             MinHeight="400"

@@ -7,26 +7,36 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Xml;
+using ModernWpf.Controls;
+using TagsTree.Models;
 using TagsTree.ViewModels;
 using TagsTree.Views;
-using static TagsTree.Properties.Settings;
 
 namespace TagsTree.Services
 {
 	public static class TagsManagerService
 	{
 		public static readonly TagsManagerViewModel Vm = new();
-		public static TagsManager Win;
-
-		public static void NameComplement(object sender, RoutedEventArgs e) => Vm.Name = Regex.Replace(Vm.Name, @"\s", "");
+		private static TagsManager Win;
+		public static TagsManagerViewModel Load(TagsManager window)
+		{
+			Win = window;
+			return Vm;
+		}
+		
 		public static void PathComplement(object sender, RoutedEventArgs e)
 		{
-			Vm.Path = Regex.Replace(Vm.Path, @"\s", "");
 			var path = App.TagPathComplete(Vm.Path);
-			if (path is null)
-				App.ErrorMessageBox("标签路径不存在！请填写正确的单个标签或完整的路径！\n" + @"（不包含/:*?\""<>|,和空白字符）");
-			else Vm.Path = path;
+			if (path is not null)
+				Vm.Path = path;
 		}
+		public static void NameChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e) => Vm.Name = Regex.Replace(Vm.Name, @"[\\\/\:\*\?\""\<\>\|\s]+", "");
+		public static void PathChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
+		{
+			Vm.Path = Regex.Replace(Vm.Path, @"[\/\:\*\?\""\<\>\|\s]+", "");
+			sender.ItemsSource = App.TagSuggest(sender.Text.Split('\\', StringSplitOptions.RemoveEmptyEntries).LastOrDefault());
+		}
+		public static void SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs e) => sender.Text = e.SelectedItem.ToString();
 		public static void TvSelectItemChanged(object? selectElement) => Vm.Path = App.TagsTree_OnSelectedItemChanged((XmlElement?)selectElement) ?? Vm.Path;
 		private static XmlElement TvItemGetHeader(object? sender) => (XmlElement)((TreeViewItem)sender!).Header;
 		
@@ -37,17 +47,17 @@ namespace TagsTree.Services
 			if (!App.NewTagCheck(Vm.Name))
 				return;
 
-			NewTag(Vm.Name, App.RecursiveSearchXmlElement(Vm.Path)!);
+			NewTag(Vm.Name, App.GetXmlElement(Vm.Path)!);
 			Vm.Name = "";
 		}
 		public static void MoveBClick(object? parameter)
 		{
-			var element = App.RecursiveSearchXmlElement(Vm.Name);
+			var element = App.GetXmlElement(Vm.Name);
 			if (element is null)
 				App.ErrorMessageBox("标签名称不存在！请填写正确的单个标签或完整的路径！");
 			else
 			{
-				MoveTag(element, App.RecursiveSearchXmlElement(Vm.Path)!);
+				MoveTag(element, App.GetXmlElement(Vm.Path)!);
 				Vm.Name = "";
 			}
 		}
@@ -55,7 +65,7 @@ namespace TagsTree.Services
 		{
 			if (!App.NewTagCheck(Vm.Name))
 				return;
-			RenameTag(Vm.Name, App.RecursiveSearchXmlElement(Vm.Path)!);
+			RenameTag(Vm.Name, App.GetXmlElement(Vm.Path)!);
 			Vm.Name = "";
 			Vm.Path = "";
 		}
@@ -66,7 +76,7 @@ namespace TagsTree.Services
 				App.ErrorMessageBox("未输入希望删除的标签");
 				return;
 			}
-			DeleteTag(App.RecursiveSearchXmlElement(Vm.Path)!);
+			DeleteTag(App.GetXmlElement(Vm.Path)!);
 			Vm.Name = "";
 		}
 		public static void SaveBClick(object? parameter)
@@ -121,7 +131,7 @@ namespace TagsTree.Services
 			var element = Vm.Xdp.Document.CreateElement("Tag");
 			element.SetAttribute("name", name);
 			_ = path.AppendChild(element);
-			Vm.Changed = true;
+			TagsChanged();
 		}
 		public static void MoveTag(XmlElement name, XmlElement? path)
 		{
@@ -129,7 +139,7 @@ namespace TagsTree.Services
 			{
 				path ??= (XmlElement?)Vm.Xdp.Document.LastChild;
 				_ = path!.AppendChild(name); //原位置自动被删除
-				Vm.Changed = true;
+				TagsChanged();
 			}
 			catch (ArgumentException)
 			{
@@ -140,15 +150,20 @@ namespace TagsTree.Services
 		{
 			path.RemoveAllAttributes();
 			path.SetAttribute("name", name);
-			Vm.Changed = true;
+			TagsChanged();
 			Vm.Name = "";
 			Vm.Path = "";
 		}
 		private static void DeleteTag(XmlElement path)
 		{
 			_ = path.ParentNode!.RemoveChild(path);
-			Vm.Changed = true;
+			TagsChanged();
 			Vm.Name = "";
+		}
+		private static void TagsChanged()
+		{
+			Vm.Changed = true;
+			App.RecursiveLoadTags(); 
 		}
 
 		#endregion

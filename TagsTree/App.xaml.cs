@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Xml;
 using System.Xml.Linq;
 using TagsTree.Services;
+using System.Collections.Generic;
+using TagsTree.Models;
 using static TagsTree.Properties.Settings;
 
 namespace TagsTree
@@ -16,19 +19,34 @@ namespace TagsTree
 	/// </summary>
 	public partial class App : Application
 	{
+		/// <summary>
+		/// 鼠标上一次的位置
+		/// </summary>
 		public static Point LastMousePos { get; set; }
-		public static bool MouseDisplace(double distance, Point currentPos)
-			=> Math.Abs(currentPos.X - LastMousePos.X) > distance ||
-			   Math.Abs(currentPos.Y - LastMousePos.Y) > distance;
+
+		/// <summary>
+		/// 鼠标位移是否超过一定距离
+		/// </summary>
+		/// <param name="distance">位移阈值</param>
+		/// <param name="currentPos">现在鼠标位置</param>
+		/// <returns>是否超过阈值</returns>
+		public static bool MouseDisplace(double distance, Point currentPos) => Math.Abs(currentPos.X - LastMousePos.X) > distance || Math.Abs(currentPos.Y - LastMousePos.Y) > distance;
+
 		/// <summary>
 		/// 显示一条错误信息
 		/// </summary>
 		public static void ErrorMessageBox(string message) => _ = MessageBox.Show(message, "错误", MessageBoxButton.OK, MessageBoxImage.Error);
 
-
+		/// <summary>
+		/// 存储标签结构的Xml文档
+		/// </summary>
 		public static XmlDocument XdTags { get; } = new();
 
-		static App() => XdTags.Load(Default.ConfigPath + @"\TagsTree.xml");
+		static App()
+		{
+			XdTags.Load(Default.ConfigPath + @"\TagsTree.xml");
+			RecursiveLoadTags();
+		}
 
 		/// <summary>
 		/// XmlDataProvider根元素
@@ -41,18 +59,22 @@ namespace TagsTree
 		public static void SaveXdTags() => XdTags.Save(Default.ConfigPath + @"\TagsTree.xml");
 
 		/// <summary>
-		/// 检查新的标签名语法和是否重复（已被删除空白字符）
+		/// 所有标签
+		/// </summary>
+		public static readonly List<Tag> TagsList = new();
+
+		/// <summary>
+		/// 检查新的标签名语法和与已有标签是否重复（已被删除空白字符）
 		/// </summary>
 		/// <param name="name"></param>
 		/// <returns></returns>
 		public static bool NewTagCheck(string name)
 		{
-			if (!new Regex(@"^[^\\\/\:\*\?\""\<\>\|\s]+$").IsMatch(name))
+			if (name == string.Empty)
 			{
-				ErrorMessageBox("标签名称错误！请填写正确的名称！\n" + @"（不包含\/:*?\""<>|,和空白字符且不为空）");
+				ErrorMessageBox("标签名称不能为空！）");
 				return false;
 			}
-
 			if (TagPathComplete(name) is not null)
 			{
 				ErrorMessageBox("与现有标签重名！");
@@ -128,6 +150,31 @@ namespace TagsTree
 		}
 
 		/// <summary>
+		/// 清空并重新读取标签
+		/// </summary>
+		public static void RecursiveLoadTags()
+		{
+			TagsList.Clear();
+			RecursiveLoadTags("", XdpRoot);
+		}
+
+		/// <summary>
+		/// 递归读取标签
+		/// </summary>
+		/// <param name="path">标签所在路径</param>
+		/// <param name="xmlElement">标签所在路径对应的元素</param>
+		private static void RecursiveLoadTags(string path, XmlElement? xmlElement)
+		{
+			if (xmlElement is { HasChildNodes: true })
+				foreach (XmlElement? element in xmlElement.ChildNodes)
+					if (element!.GetAttribute("name") is { } attribute)
+					{
+						TagsList.Add(new Tag(attribute, @$"{path}\{attribute}"[1..], element));
+						RecursiveLoadTags(@$"{path}\{attribute}", element);
+					}
+		}
+
+		/// <summary>
 		/// 补全标签的路径（为空则不补）
 		/// </summary>
 		/// <param name="name">需要找的单个标签</param>
@@ -141,46 +188,23 @@ namespace TagsTree
 			var legal = new Regex(@"^[^\\\/\:\*\?\""\<\>\|\s]+$");
 			if (!legal.IsMatch(name))
 				throw new InvalidDataException();
-			var xmlElement = XdpRoot;
-			var path = RecursiveSearchTags(xmlElement, name);
-			return path?[1..];
-		}
-
-		/// <summary>
-		/// 递归查找标签所在路径
-		/// </summary>
-		private static string? RecursiveSearchTags(XmlElement? xmlElement, string name, string path = "")
-		{
-			if (xmlElement is { HasChildNodes: true })
-				foreach (XmlElement? element in xmlElement.ChildNodes)
-					if (element!.GetAttribute("name") is { } attribute)
-					{
-						if (attribute == name)
-							return @$"{path}\{attribute}";
-						var result = RecursiveSearchTags(element, name, @$"{path}\{attribute}");
-						if (result is not null)
-							return result;
-					}
-			return null;
+			return TagsList.Where(tag => tag.Name == name).Select(tag => tag.Path).FirstOrDefault();
 		}
 
 		/// <summary>
 		/// 递归用路径查找标签所在元素
 		/// </summary>
 		/// <param name="path">需要查找的元素所在路径（已由TagPathComplete()补全）</param>
-		/// <param name="xmlElement">在该元素下查找，默认为根元素</param>
-		/// <param name="series">递归层数（外部不需要传值）</param>
-		/// <returns></returns>
-		public static XmlElement? RecursiveSearchXmlElement(string path, XmlElement? xmlElement = null, int series = 0)
+		/// <returns>标签所在元素</returns>
+		public static XmlElement? GetXmlElement(string path) => TagsList.Where(tag => tag.Path == path).Select(tag => tag.XmlElement).FirstOrDefault();
+
+		public static IEnumerable<Tag> TagSuggest(string? name)
 		{
-			xmlElement ??= XdpRoot;//默认为根元素
-			if (series == path.Split('\\', StringSplitOptions.RemoveEmptyEntries).Length)
-				return xmlElement;
-			else if (xmlElement is { HasChildNodes: true })
-				foreach (XmlElement? element in xmlElement.ChildNodes)
-					if (element?.GetAttribute("name") == path.Split('\\', StringSplitOptions.RemoveEmptyEntries)[series])
-						return RecursiveSearchXmlElement(path, element, series + 1);
-			return null;//理论上不会到达此代码
+			if (name is "" or null)
+				return new List<Tag>();
+			var temp = TagsList.Where(tag => tag.Name.Contains(name)).ToList();
+			temp.AddRange(TagsList.Where(tag => tag.Path.Contains(name) && !tag.Name.Contains(name)));
+			return temp;
 		}
 	}
 }
