@@ -7,7 +7,6 @@ using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using ModernWpf.Controls;
 using TagsTree.ViewModels;
-using static TagsTree.Properties.Settings;
 
 namespace TagsTree.Views
 {
@@ -18,29 +17,12 @@ namespace TagsTree.Views
 	{
 		public MainWindow()
 		{
-			while (true)
+			var vm = Services.MainWindowService.Load(this);
+			if (!vm.CheckConfig())
 			{
-				if (Default.IsSet) //如果之前有储存过用户配置，则判断是否符合
-				{
-					var legalPath = new Regex(@"^[a-zA-Z]:\\[^\/\:\*\?\""\<\>\|\,]+$");
-					if (legalPath.IsMatch(Default.ConfigPath) && legalPath.IsMatch(Default.LibraryPath))
-					{
-						if (App.LoadConfig(Default.ConfigPath))
-							break;
-					}
-					else
-					{
-						App.ErrorMessageBox("配置文件损坏！请重新输入");
-						Default.IsSet = false;
-					}
-				}
-				else if (new NewConfig(this).ShowDialog() == false)
-				{
-					Close();
-					return;
-				}
+				Close();
+				return;
 			}
-			var vm= Services.MainWindowService.Load(this);
 			DataContext = vm;
 			MouseLeftButtonDown += (_, _) => DragMove();
 			InitializeComponent();

@@ -19,6 +19,7 @@ namespace TagsTree.ViewModels
 		[NotifyPropertyChangedInvocator]
 		private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
+		public readonly Func<bool> CheckConfig = MainWindowService.CheckConfig;
 		public readonly TypedEventHandler<AutoSuggestBox, AutoSuggestBoxSuggestionChosenEventArgs> SuggestionChosen = MainWindowService.SuggestionChosen;
 		public readonly TypedEventHandler<AutoSuggestBox, AutoSuggestBoxTextChangedEventArgs> TextChanged = MainWindowService.TextChanged;
 		public readonly TypedEventHandler<AutoSuggestBox, AutoSuggestBoxQuerySubmittedEventArgs> QuerySubmitted = MainWindowService.QuerySubmitted;

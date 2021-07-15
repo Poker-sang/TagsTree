@@ -51,7 +51,7 @@ namespace TagsTree.Services
 								continue;
 							}
 							var index = fileName.LastIndexOf('\\');
-							Vm.FileModels.Add(new FileModel().NewFile(fileName[(index + 1)..], fileName[..index], false));
+							Vm.FileModels.Add(new FileModel(fileName[(index + 1)..], fileName[..index], false));
 						}
 					break;
 				case "Select_Folders":
@@ -65,7 +65,7 @@ namespace TagsTree.Services
 								continue;
 							}
 							var index = directoryName.LastIndexOf('\\');
-							Vm.FileModels.Add(new FileModel().NewFile(directoryName[(index + 1)..], directoryName[..index], true));
+							Vm.FileModels.Add(new FileModel(directoryName[(index + 1)..], directoryName[..index], true));
 						}
 					break;
 				case "Path_Files":
@@ -79,7 +79,7 @@ namespace TagsTree.Services
 								continue;
 							}
 							foreach (var fileInfo in new DirectoryInfo(directoryName).GetFiles())
-								Vm.FileModels.Add(new FileModel().NewFile(fileInfo.Name, directoryName, false));
+								Vm.FileModels.Add(new FileModel(fileInfo.Name, directoryName, false));
 						}
 					break;
 				case "Path_Folders":
@@ -93,7 +93,7 @@ namespace TagsTree.Services
 								continue;
 							}
 							foreach (var directoryInfo in new DirectoryInfo(directoryName).GetDirectories())
-								Vm.FileModels.Add(new FileModel().NewFile(directoryInfo.Name, directoryName, true));
+								Vm.FileModels.Add(new FileModel(directoryInfo.Name, directoryName, true));
 						}
 					break;
 				case "Path_Both":
@@ -107,9 +107,9 @@ namespace TagsTree.Services
 								continue;
 							}
 							foreach (var fileInfo in new DirectoryInfo(directoryName).GetFiles())
-								Vm.FileModels.Add(new FileModel().NewFile(fileInfo.Name, directoryName, false));
+								Vm.FileModels.Add(new FileModel(fileInfo.Name, directoryName, false));
 							foreach (var directoryInfo in new DirectoryInfo(directoryName).GetDirectories())
-								Vm.FileModels.Add(new FileModel().NewFile(directoryInfo.Name, directoryName, true));
+								Vm.FileModels.Add(new FileModel(directoryInfo.Name, directoryName, true));
 						}
 					break;
 				case "All":
@@ -119,7 +119,7 @@ namespace TagsTree.Services
 						static void RecursiveReadFiles(string folderName)
 						{
 							foreach (var fileInfo in new DirectoryInfo(folderName).GetFiles())
-								Vm.FileModels.Add(new FileModel().NewFile(fileInfo.Name, folderName, false));
+								Vm.FileModels.Add(new FileModel(fileInfo.Name, folderName, false));
 							foreach (var directoryInfo in new DirectoryInfo(folderName).GetDirectories())
 								RecursiveReadFiles(directoryInfo.FullName);
 						}

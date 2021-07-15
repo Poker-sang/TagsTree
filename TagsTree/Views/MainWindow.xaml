@@ -82,10 +82,10 @@
                 Margin="0,300,0,0"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Top"
-                UpdateTextOnSelect="False"
                 PlaceholderText="输入标签以搜索相应文件（标签间以空格隔开）"
                 QueryIcon="Find"
-                Text="{Binding Search, Mode=OneWay}">
+                Text="{Binding Search, Mode=OneWay}"
+                UpdateTextOnSelect="False">
                 <ui:AutoSuggestBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Path}" />
@@ -121,7 +121,7 @@
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Width="*"
-                    Header="路径"
+                    Header="标签"
                     IsReadOnly="True" />
             </DataGrid.Columns>
         </DataGrid>

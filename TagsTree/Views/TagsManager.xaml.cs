@@ -7,8 +7,6 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Xml;
-using TagsTree.Annotations;
-using TagsTree.Models;
 
 namespace TagsTree.Views
 {

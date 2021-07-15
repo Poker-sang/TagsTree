@@ -19,6 +19,10 @@ namespace TagsTree
 	/// </summary>
 	public partial class App : Application
 	{
+		public static string TagsPath => Default.ConfigPath + @"\TagsTree.xml";
+		public static string FilesPath => Default.ConfigPath + @"\Files.bin";
+		public static string RelationPath => Default.ConfigPath + @"\Relation.bin";
+
 		/// <summary>
 		/// 鼠标上一次的位置
 		/// </summary>
@@ -44,7 +48,7 @@ namespace TagsTree
 
 		static App()
 		{
-			XdTags.Load(Default.ConfigPath + @"\TagsTree.xml");
+			XdTags.Load(TagsPath);
 			RecursiveLoadTags();
 		}
 
@@ -56,7 +60,7 @@ namespace TagsTree
 		/// <summary>
 		/// 保存文件
 		/// </summary>
-		public static void SaveXdTags() => XdTags.Save(Default.ConfigPath + @"\TagsTree.xml");
+		public static void SaveXdTags() => XdTags.Save(TagsPath);
 
 		/// <summary>
 		/// 所有标签
@@ -206,5 +210,7 @@ namespace TagsTree
 			temp.AddRange(TagsList.Where(tag => tag.Path.Contains(name) && !tag.Name.Contains(name)));
 			return temp;
 		}
+
+
 	}
 }

@@ -8,6 +8,7 @@ using ModernWpf.Controls;
 using TagsTree.Models;
 using TagsTree.ViewModels;
 using TagsTree.Views;
+using static TagsTree.Properties.Settings;
 
 namespace TagsTree.Services
 {
@@ -20,6 +21,20 @@ namespace TagsTree.Services
 		{
 			Win = window;
 			return Vm;
+		}
+
+		public static bool CheckConfig()
+		{
+			while (true)
+			{
+				if (Default.IsSet) //如果之前有储存过用户配置，则判断是否符合
+				{
+					if (App.LoadConfig(Default.ConfigPath))
+						return true;
+				}
+				else if (new NewConfig(Win).ShowDialog() == false)
+					return false;
+			}
 		}
 
 		public static void SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs e)
