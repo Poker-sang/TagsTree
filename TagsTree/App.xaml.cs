@@ -9,6 +9,9 @@ using System.Xml;
 using System.Xml.Linq;
 using TagsTree.Services;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Runtime.Serialization;
+using System.Text.Json;
 using TagsTree.Models;
 using static TagsTree.Properties.Settings;
 
@@ -20,7 +23,7 @@ namespace TagsTree
 	public partial class App : Application
 	{
 		public static string TagsPath => Default.ConfigPath + @"\TagsTree.xml";
-		public static string FilesPath => Default.ConfigPath + @"\Files.bin";
+		public static string FilesPath => Default.ConfigPath + @"\Files.json";
 		public static string RelationPath => Default.ConfigPath + @"\Relation.bin";
 
 		/// <summary>
@@ -45,12 +48,6 @@ namespace TagsTree
 		/// 存储标签结构的Xml文档
 		/// </summary>
 		public static XmlDocument XdTags { get; } = new();
-
-		static App()
-		{
-			XdTags.Load(TagsPath);
-			RecursiveLoadTags();
-		}
 
 		/// <summary>
 		/// XmlDataProvider根元素
@@ -91,39 +88,59 @@ namespace TagsTree
 		/// <summary>
 		/// 重新加载新的配置文件
 		/// </summary>
-		///<returns>是否已经处理</returns>
-		public static bool LoadConfig(string configPath)
+		///<returns>true：已填写正确地址，进入软件；false：打开设置页面编辑；null：关闭软件</returns>
+		public static bool? LoadConfig(string configPath)
 		{
+			var fullpath = configPath + @"\TagsTree.xml";
 			try
 			{
-				XdTags.Load(configPath + @"\TagsTree.xml");
+				XdTags.Load(fullpath);
+				RecursiveLoadTags();
 			}
 			catch (FileNotFoundException)
 			{
-				var result = MessageBox.Show("未检测到TagsTree.xml\n是否自动创建新的文件", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question);
-				if (result == MessageBoxResult.Yes)
-					new XDocument(new XElement("TagsTree", new XAttribute("name", ""))).Save(configPath + @"\TagsTree.xml");
-				else return false;
+				var result = MessageBox.Show($"未检测到{fullpath}\n按“是”自动创建新的文件\n按“否”修改设置\n按“取消”关闭软件", "提示", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+				switch (result)
+				{
+					case MessageBoxResult.Yes: new XDocument(new XElement("TagsTree", new XAttribute("name", ""))).Save(fullpath); break;
+					case MessageBoxResult.No: return false;
+					case MessageBoxResult.Cancel: return null;
+				}
 			}
 			catch (XmlException)
 			{
-				var result = MessageBox.Show("TagsTree.xml文件损坏，\n是否自动创建新的文件覆盖", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question);
-				if (result == MessageBoxResult.Yes)
+				var result = MessageBox.Show($"{fullpath}文件损坏，\n按“是”自动覆盖新的文件\n按“否”修改设置\n按“取消”关闭软件", "提示", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+				switch (result)
 				{
-					File.Delete(configPath + @"\TagsTree.xml");
-					new XDocument(new XElement("TagsTree", new XAttribute("name", ""))).Save(configPath + @"\TagsTree.xml");
+					case MessageBoxResult.Yes:
+						File.Delete(fullpath);
+						new XDocument(new XElement("TagsTree", new XAttribute("name", ""))).Save(fullpath);
+						break;
+					case MessageBoxResult.No: return false;
+					case MessageBoxResult.Cancel: return null;
 				}
-				else return false;
+			}
+			catch (DirectoryNotFoundException)
+			{
+				var result = MessageBox.Show($"TagsTree.xml所在路径{configPath}未找到，\n按“确认”修改设置\n按“取消”关闭软件", "提示", MessageBoxButton.OKCancel, MessageBoxImage.Question);
+				switch (result)
+				{
+					case MessageBoxResult.Yes: return false;
+					case MessageBoxResult.Cancel: return null;
+				}
 			}
 			catch (Exception)
 			{
-				var result = MessageBox.Show("TagsTree.xml文件未知错误，\n是否自动创建新的文件覆盖", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question);
-				if (result == MessageBoxResult.Yes)
+				var result = MessageBox.Show($"{fullpath}文件发生其他错误，\n按“是”自动覆盖新的文件\n按“否”修改设置\n按“取消”关闭软件", "提示", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+				switch (result)
 				{
-					File.Delete(configPath + @"\TagsTree.xml");
-					new XDocument(new XElement("TagsTree", new XAttribute("name", ""))).Save(configPath + @"\TagsTree.xml");
+					case MessageBoxResult.Yes:
+						File.Delete(fullpath);
+						new XDocument(new XElement("TagsTree", new XAttribute("name", ""))).Save(fullpath);
+						break;
+					case MessageBoxResult.No: return false;
+					case MessageBoxResult.Cancel: return null;
 				}
-				else return false;
 			}
 			finally
 			{
@@ -189,8 +206,7 @@ namespace TagsTree
 			if (temp.Length == 0)
 				return name;
 			name = temp.Last();
-			var legal = new Regex(@"^[^\\\/\:\*\?\""\<\>\|\s]+$");
-			if (!legal.IsMatch(name))
+			if (!new Regex(@"^[^\\\/\:\*\?\""\<\>\|\s]+$").IsMatch(name))
 				throw new InvalidDataException();
 			return TagsList.Where(tag => tag.Name == name).Select(tag => tag.Path).FirstOrDefault();
 		}
@@ -210,7 +226,23 @@ namespace TagsTree
 			temp.AddRange(TagsList.Where(tag => tag.Path.Contains(name) && !tag.Name.Contains(name)));
 			return temp;
 		}
-
-
+		
+		public static T? Deserialize<T>(string path)
+		{
+			try
+			{
+				var utf8Reader = new Utf8JsonReader(File.ReadAllBytes(path));
+				return JsonSerializer.Deserialize<T>(ref utf8Reader) ?? default;
+			}
+			catch (Exception)
+			{
+				return default;
+			}
+		}
+		public static void Serialize<T>(string path,T item)
+		{
+			var jsonUtf8Bytes = JsonSerializer.SerializeToUtf8Bytes(item);
+			File.WriteAllBytes(path, jsonUtf8Bytes);
+		}
 	}
 }

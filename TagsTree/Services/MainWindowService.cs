@@ -29,8 +29,12 @@ namespace TagsTree.Services
 			{
 				if (Default.IsSet) //如果之前有储存过用户配置，则判断是否符合
 				{
-					if (App.LoadConfig(Default.ConfigPath))
-						return true;
+					var result = App.LoadConfig(Default.ConfigPath);
+					switch (result)
+					{
+						case null: return false;
+						case true: return true;
+					}
 				}
 				else if (new NewConfig(Win).ShowDialog() == false)
 					return false;
@@ -55,5 +59,5 @@ namespace TagsTree.Services
 		{
 
 		}
-    }
+	}
 }
