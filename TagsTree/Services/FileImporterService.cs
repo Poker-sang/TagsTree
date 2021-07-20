@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -142,16 +144,31 @@ namespace TagsTree.Services
 		public static void DeleteBClick(object? parameter) => Vm.FileModels.Clear();
 		public static void SaveBClick(object? parameter)
 		{
-			var db = new SQLiteConnection(Default.ConfigPath + @"\Files.db");
-			_ = db.CreateTable<FileModel>();
+			var fileModels = App.Deserialize<ObservableCollection<FileModel>>(App.FilesPath) ?? new ObservableCollection<FileModel>();
+
 			var former = Vm.FileModels.Count;
-			foreach (var dbFileModel in db.Table<FileModel>())
+			foreach (var dbFileModel in fileModels)
 				for (var i = 0; i < Vm.FileModels.Count; i++)
 					if (Vm.FileModels[i].Name == dbFileModel.Name && Vm.FileModels[i].Path == dbFileModel.Path)
 						Vm.FileModels.RemoveAt(i);
-			var add = db.InsertAll(Vm.FileModels);
-			_ = MessageBox.Show($"共导入 {former} 个文件，其中成功导入 {add} 个，有 {former - add} 个因重复未导入", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+			foreach (var fileModel in Vm.FileModels)
+				fileModels.Add(fileModel);
+			var now = Vm.FileModels.Count;
+
+			App.Serialize(App.FilesPath, fileModels);
+
+			_ = MessageBox.Show($"共导入 {former} 个文件，其中成功导入 {now} 个，有 {former - now} 个因重复未导入", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
 			Vm.FileModels.Clear();
 		}
 	}
 }
+//var db = new SQLiteConnection(Default.ConfigPath + @"\Files.db");
+//_ = db.CreateTable<FileModel>();
+//var former = Vm.FileModels.Count;
+//foreach (var dbFileModel in db.Table<FileModel>())
+//	for (var i = 0; i < Vm.FileModels.Count; i++)
+//		if (Vm.FileModels[i].Name == dbFileModel.Name && Vm.FileModels[i].Path == dbFileModel.Path)
+//			Vm.FileModels.RemoveAt(i);
+//var add = db.InsertAll(Vm.FileModels);
+//_ = MessageBox.Show($"共导入 {former} 个文件，其中成功导入 {add} 个，有 {former - add} 个因重复未导入", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+//Vm.FileModels.Clear();
