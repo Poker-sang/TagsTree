@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Threading.Tasks;
 using TagsTree.Models;
 using static TagsTree.Properties.Settings;
 
@@ -218,6 +219,11 @@ namespace TagsTree
 		/// <returns>标签所在元素</returns>
 		public static XmlElement? GetXmlElement(string path) => TagsList.Where(tag => tag.Path == path).Select(tag => tag.XmlElement).FirstOrDefault();
 
+		/// <summary>
+		/// 输入标签时的建议列表
+		/// </summary>
+		/// <param name="name">目前输入的最后一个标签</param>
+		/// <returns>建议列表</returns>
 		public static IEnumerable<Tag> TagSuggest(string? name)
 		{
 			if (name is "" or null)
@@ -226,23 +232,33 @@ namespace TagsTree
 			temp.AddRange(TagsList.Where(tag => tag.Path.Contains(name) && !tag.Name.Contains(name)));
 			return temp;
 		}
-		
-		public static T? Deserialize<T>(string path)
+
+		/// <summary>
+		/// 异步将Json文件反序列化为某个类
+		/// </summary>
+		/// <typeparam name="T">泛型类</typeparam>
+		/// <param name="path">Json文件位置</param>
+		/// <returns>返回文件中的数据，如果没有则返回默认值</returns>
+		public static async ValueTask<T?> Deserialize<T>(string path)
 		{
 			try
 			{
-				var utf8Reader = new Utf8JsonReader(File.ReadAllBytes(path));
-				return JsonSerializer.Deserialize<T>(ref utf8Reader) ?? default;
+				await using var fileStream = File.OpenRead(path);
+				return await JsonSerializer.DeserializeAsync<T>(fileStream) ?? default;
 			}
 			catch (Exception)
 			{
 				return default;
 			}
 		}
-		public static void Serialize<T>(string path,T item)
-		{
-			var jsonUtf8Bytes = JsonSerializer.SerializeToUtf8Bytes(item);
-			File.WriteAllBytes(path, jsonUtf8Bytes);
-		}
+
+		/// <summary>
+		/// 异步将某个类序列化为Json文件
+		/// </summary>
+		/// <typeparam name="T">泛型；类</typeparam>
+		/// <param name="path">Json文件路径</param>
+		/// <param name="objectItem">需要转化的对象</param>
+		/// <returns></returns>
+		public static async Task Serialize<T>(string path,T objectItem) => await JsonSerializer.SerializeAsync(File.Create(path), objectItem);
 	}
 }
