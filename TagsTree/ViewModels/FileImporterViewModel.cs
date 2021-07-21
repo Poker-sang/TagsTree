@@ -28,6 +28,7 @@ namespace TagsTree.ViewModels
 			_import = new RelayCommand(Func1, FileImporterService.Import);
 			_deleteBClick = new RelayCommand(Func2, FileImporterService.DeleteBClick);
 			_saveBClick = new RelayCommand(Func2, FileImporterService.SaveBClick);
+			
 			_fileModels.CollectionChanged += (_, _) =>
 			{
 				_deleteBClick.OnCanExecuteChanged();

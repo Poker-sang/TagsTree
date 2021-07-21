@@ -8,12 +8,15 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Threading;
 using Windows.Foundation.Metadata;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using SQLite;
 using TagsTree.Models;
 using TagsTree.ViewModels;
 using TagsTree.Views;
+using static System.Windows.Application;
 using static TagsTree.Properties.Settings;
 
 namespace TagsTree.Services
@@ -142,33 +145,48 @@ namespace TagsTree.Services
 		}
 
 		public static void DeleteBClick(object? parameter) => Vm.FileModels.Clear();
-		public static void SaveBClick(object? parameter)
+		public static async void SaveBClick(object? parameter)
 		{
-			var fileModels = App.Deserialize<ObservableCollection<FileModel>>(App.FilesPath) ?? new ObservableCollection<FileModel>();
+			var border = new Border { Background = new SolidColorBrush(Color.FromArgb(0x88, 0x88, 0x88, 0x88)) };
+			var progressBar = new ModernWpf.Controls.ProgressBar { Width = 300, Height = 20 };
+			progressBar.ValueChanged += (_, _) => border.Child.UpdateLayout();
+			border.Child = progressBar;
+			_ = ((Grid)parameter!).Children.Add(border);
+			var fileModels = await App.Deserialize<ObservableCollection<FileModel>>(App.FilesPath) ?? new ObservableCollection<FileModel>();
+			progressBar.Value = 1;
 
 			var former = Vm.FileModels.Count;
-			foreach (var dbFileModel in fileModels)
+			var indexes = new List<int>();
+			await Task.Run(() =>
+			{
+				if (fileModels.Count * Vm.FileModels.Count != 0)
+				{
+					var total = 97.0 / fileModels.Count;
+					foreach (var fileModel in fileModels)
+					{
+						indexes.AddRange(Vm.FileModels
+							.Where(vmFileModel => vmFileModel.Name == fileModel.Name && vmFileModel.Path == fileModel.Path)
+							.Select(vmFileModel => Vm.FileModels.IndexOf(vmFileModel)));
+						_ = Current.Dispatcher.Invoke(() => progressBar.Value += total);
+					}
+				}
+				_ = Current.Dispatcher.Invoke(() => progressBar.Value = 98);
 				for (var i = 0; i < Vm.FileModels.Count; i++)
-					if (Vm.FileModels[i].Name == dbFileModel.Name && Vm.FileModels[i].Path == dbFileModel.Path)
-						Vm.FileModels.RemoveAt(i);
-			foreach (var fileModel in Vm.FileModels)
-				fileModels.Add(fileModel);
-			var now = Vm.FileModels.Count;
+					if (!indexes.Contains(i))
+						fileModels.Add(Vm.FileModels[i]);
+			});
+			progressBar.Value = 99;
+			await App.Serialize(App.FilesPath, fileModels);
+			progressBar.Value = 100;
 
-			App.Serialize(App.FilesPath, fileModels);
-
-			_ = MessageBox.Show($"共导入 {former} 个文件，其中成功导入 {now} 个，有 {former - now} 个因重复未导入", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+			var removed = indexes.Count;
 			Vm.FileModels.Clear();
+			((Grid)parameter!).Children.Remove(border);
+			_ = MessageBox.Show($"共导入 {former} 个文件，其中成功导入 {former - removed} 个，有 {removed} 个因重复未导入", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
 		}
 	}
 }
-//var db = new SQLiteConnection(Default.ConfigPath + @"\Files.db");
-//_ = db.CreateTable<FileModel>();
-//var former = Vm.FileModels.Count;
-//foreach (var dbFileModel in db.Table<FileModel>())
-//	for (var i = 0; i < Vm.FileModels.Count; i++)
-//		if (Vm.FileModels[i].Name == dbFileModel.Name && Vm.FileModels[i].Path == dbFileModel.Path)
-//			Vm.FileModels.RemoveAt(i);
-//var add = db.InsertAll(Vm.FileModels);
-//_ = MessageBox.Show($"共导入 {former} 个文件，其中成功导入 {add} 个，有 {former - add} 个因重复未导入", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
-//Vm.FileModels.Clear();
+//indexes.AddRange(fileModels
+//	.SelectMany(_ => Vm.FileModels, (dbFileModel, fileModel) => new { dbFileModel, fileModel })
+//	.Where(t => t.fileModel.Name == t.dbFileModel.Name && t.fileModel.Path == t.dbFileModel.Path)
+//	.Select(t => Vm.FileModels.IndexOf(t.fileModel)));
