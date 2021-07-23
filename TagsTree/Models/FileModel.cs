@@ -37,6 +37,7 @@ namespace TagsTree.Models
 			Tags = Tags[1..];
 		}
 		[JsonIgnore] public string PartialPath => "..." + Path[Default.LibraryPath.Length..]; //Path必然包含文件路径
+		[JsonIgnore] public string FullName => Path + '\\' + Name; //Path必然包含文件路径
 		[JsonIgnore] public string Tags { get; } = "";
 	}
 }
