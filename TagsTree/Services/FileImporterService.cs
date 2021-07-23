@@ -147,7 +147,7 @@ namespace TagsTree.Services
 		public static void DeleteBClick(object? parameter) => Vm.FileModels.Clear();
 		public static async void SaveBClick(object? parameter)
 		{
-			var border = new Border { Background = new SolidColorBrush(Color.FromArgb(0x88, 0x88, 0x88, 0x88)) };
+			var border = new Border { Background = new SolidColorBrush(Color.FromArgb(0x55, 0x88, 0x88, 0x88)) };
 			var progressBar = new ModernWpf.Controls.ProgressBar { Width = 300, Height = 20 };
 			progressBar.ValueChanged += (_, _) => border.Child.UpdateLayout();
 			border.Child = progressBar;
@@ -155,37 +155,30 @@ namespace TagsTree.Services
 			var fileModels = await App.Deserialize<ObservableCollection<FileModel>>(App.FilesPath) ?? new ObservableCollection<FileModel>();
 			progressBar.Value = 1;
 
-			var former = Vm.FileModels.Count;
-			Dictionary<string, string> index = new Dictionary<string, bool>();
-			var failCounter = 0;
-			await Task.Run(() =>
-			{
-				foreach(var fileModel in fileModels)
+			var duplicated = 0;
+			await Task.Run(() => {
+				if (fileModels.Count * Vm.FileModels.Count != 0)
 				{
-					var filePath=fileModel.Path + fileModel.Name;
-					index[filePath]=true;
-				}
-				foreach(var fileModel in Vm.FileModels)
-				{
-					var filePath=fileModel.Path + fileModel.Name;
-					if(!index.ContainsKey(filePath))
+					var index = new Dictionary<string, bool>();
+					foreach (var fileModel in fileModels)
+						index[fileModel.FullName + fileModel.IsFolder] = true;
+					_ = Current.Dispatcher.Invoke(() => progressBar.Value = 2);
+					var unit = 97.0 / Vm.FileModels.Count;
+					foreach (var fileModel in Vm.FileModels)
 					{
-						index[filePath]=true;
-						fileModels.Add(fileModel);
+						if (!index.ContainsKey(fileModel.FullName + fileModel.IsFolder))
+							fileModels.Add(fileModel);
+						else duplicated++;
+						_ = Current.Dispatcher.Invoke(() => progressBar.Value += unit);
 					}
-					else failCounter++;
 				}
 			});
-			progressBar.Value = 99;
 			await App.Serialize(App.FilesPath, fileModels);
 			progressBar.Value = 100;
+			var former = Vm.FileModels.Count;
 			Vm.FileModels.Clear();
 			((Grid)parameter!).Children.Remove(border);
-			_ = MessageBox.Show($"共导入 {former} 个文件，其中成功导入 {former - failCounter} 个，有 {failCounter} 个因重复未导入", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+			_ = MessageBox.Show($"共导入 {former} 个文件，其中成功导入 {former - duplicated} 个，有 {duplicated} 个因重复未导入", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
 		}
 	}
 }
-//indexes.AddRange(fileModels
-//	.SelectMany(_ => Vm.FileModels, (dbFileModel, fileModel) => new { dbFileModel, fileModel })
-//	.Where(t => t.fileModel.Name == t.dbFileModel.Name && t.fileModel.Path == t.dbFileModel.Path)
-//	.Select(t => Vm.FileModels.IndexOf(t.fileModel)));
