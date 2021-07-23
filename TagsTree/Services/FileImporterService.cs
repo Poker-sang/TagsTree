@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -32,7 +32,7 @@ namespace TagsTree.Services
 			return Vm;
 		}
 
-		public static void Import(object? parameter)
+		public static async void Import(object? parameter)
 		{
 			var dialog = new CommonOpenFileDialog
 			{
@@ -42,6 +42,9 @@ namespace TagsTree.Services
 				InitialDirectory = Default.LibraryPath
 			};
 			var wrongPath = false;
+			var dictionary = new Dictionary<string, bool>();
+			foreach (var fileModel in Vm.FileModels)
+				dictionary[fileModel.FullName + fileModel.IsFolder] = true;
 			switch (parameter!)
 			{
 				case "Select_Files":
@@ -50,13 +53,14 @@ namespace TagsTree.Services
 					if (dialog.ShowDialog(Win) == CommonFileDialogResult.Ok)
 						foreach (var fileName in dialog.FileNames)
 						{
-							if (!fileName.Contains(Default.LibraryPath))
+							if (!FileModel.ValidPath(fileName))
 							{
 								wrongPath = true;
 								continue;
 							}
 							var index = fileName.LastIndexOf('\\');
-							Vm.FileModels.Add(new FileModel(fileName[(index + 1)..], fileName[..index], false));
+							if (!dictionary.ContainsKey(fileName))
+								Vm.FileModels.Add(new FileModel(fileName[(index + 1)..], fileName[..index], false));
 						}
 					break;
 				case "Select_Folders":
@@ -64,13 +68,14 @@ namespace TagsTree.Services
 					if (dialog.ShowDialog(Win) == CommonFileDialogResult.Ok)
 						foreach (var directoryName in dialog.FileNames)
 						{
-							if (!directoryName.Contains(Default.LibraryPath) || directoryName == Default.LibraryPath)
+							if (!FileModel.ValidPath(directoryName) || directoryName == Default.LibraryPath)
 							{
 								wrongPath = true;
 								continue;
 							}
 							var index = directoryName.LastIndexOf('\\');
-							Vm.FileModels.Add(new FileModel(directoryName[(index + 1)..], directoryName[..index], true));
+							if (!dictionary.ContainsKey(directoryName))
+								Vm.FileModels.Add(new FileModel(directoryName[(index + 1)..], directoryName[..index], true));
 						}
 					break;
 				case "Path_Files":
@@ -78,13 +83,16 @@ namespace TagsTree.Services
 					if (dialog.ShowDialog(Win) == CommonFileDialogResult.Ok)
 						foreach (var directoryName in dialog.FileNames)
 						{
-							if (!directoryName.Contains(Default.LibraryPath))
+							if (!FileModel.ValidPath(directoryName))
 							{
 								wrongPath = true;
 								continue;
 							}
 							foreach (var fileInfo in new DirectoryInfo(directoryName).GetFiles())
-								Vm.FileModels.Add(new FileModel(fileInfo.Name, directoryName, false));
+							{
+								if (!dictionary.ContainsKey(fileInfo.FullName + false))
+									Vm.FileModels.Add(new FileModel(fileInfo.Name, directoryName, false));
+							}
 						}
 					break;
 				case "Path_Folders":
@@ -98,7 +106,10 @@ namespace TagsTree.Services
 								continue;
 							}
 							foreach (var directoryInfo in new DirectoryInfo(directoryName).GetDirectories())
-								Vm.FileModels.Add(new FileModel(directoryInfo.Name, directoryName, true));
+							{
+								if (!dictionary.ContainsKey(directoryInfo.FullName + true))
+									Vm.FileModels.Add(new FileModel(directoryInfo.Name, directoryName, true));
+							}
 						}
 					break;
 				case "Path_Both":
@@ -106,31 +117,40 @@ namespace TagsTree.Services
 					if (dialog.ShowDialog(Win) == CommonFileDialogResult.Ok)
 						foreach (var directoryName in dialog.FileNames)
 						{
-							if (!directoryName.Contains(Default.LibraryPath))
+							if (!FileModel.ValidPath(directoryName))
 							{
 								wrongPath = true;
 								continue;
 							}
 							foreach (var fileInfo in new DirectoryInfo(directoryName).GetFiles())
-								Vm.FileModels.Add(new FileModel(fileInfo.Name, directoryName, false));
+							{
+								if (!dictionary.ContainsKey(fileInfo.FullName + false))
+									Vm.FileModels.Add(new FileModel(fileInfo.Name, directoryName, false));
+							}
 							foreach (var directoryInfo in new DirectoryInfo(directoryName).GetDirectories())
-								Vm.FileModels.Add(new FileModel(directoryInfo.Name, directoryName, true));
+							{
+								if (!dictionary.ContainsKey(directoryInfo.FullName + true))
+									Vm.FileModels.Add(new FileModel(directoryInfo.Name, directoryName, true));
+							}
 						}
 					break;
 				case "All":
 					dialog.Title = "选择你需要引入的文件所在的根文件夹";
 					if (dialog.ShowDialog(Win) == CommonFileDialogResult.Ok)
 					{
-						static void RecursiveReadFiles(string folderName)
+						void RecursiveReadFiles(string folderName)
 						{
 							foreach (var fileInfo in new DirectoryInfo(folderName).GetFiles())
-								Vm.FileModels.Add(new FileModel(fileInfo.Name, folderName, false));
+							{
+								if (!dictionary.ContainsKey(fileInfo.FullName + false))
+									Vm.FileModels.Add(new FileModel(fileInfo.Name, folderName, false));
+							}
 							foreach (var directoryInfo in new DirectoryInfo(folderName).GetDirectories())
 								RecursiveReadFiles(directoryInfo.FullName);
 						}
 						foreach (var directoryName in dialog.FileNames)
 						{
-							if (!directoryName.Contains(Default.LibraryPath))
+							if (!FileModel.ValidPath(directoryName))
 							{
 								wrongPath = true;
 								continue;
@@ -144,10 +164,11 @@ namespace TagsTree.Services
 				App.ErrorMessageBox("只允许导入文件路径下的文件或文件夹，不符合的已被剔除");
 		}
 
+
 		public static void DeleteBClick(object? parameter) => Vm.FileModels.Clear();
 		public static async void SaveBClick(object? parameter)
 		{
-			var border = new Border { Background = new SolidColorBrush(Color.FromArgb(0x88, 0x88, 0x88, 0x88)) };
+			var border = new Border { Background = new SolidColorBrush(Color.FromArgb(0x55, 0x88, 0x88, 0x88)) };
 			var progressBar = new ModernWpf.Controls.ProgressBar { Width = 300, Height = 20 };
 			progressBar.ValueChanged += (_, _) => border.Child.UpdateLayout();
 			border.Child = progressBar;
@@ -155,37 +176,30 @@ namespace TagsTree.Services
 			var fileModels = await App.Deserialize<ObservableCollection<FileModel>>(App.FilesPath) ?? new ObservableCollection<FileModel>();
 			progressBar.Value = 1;
 
-			var former = Vm.FileModels.Count;
-			Dictionary<string, string> index = new Dictionary<string, bool>();
-			var failCounter = 0;
-			await Task.Run(() =>
-			{
-				foreach(var fileModel in fileModels)
+			var duplicated = 0;
+			await Task.Run(() => {
+				if (fileModels.Count * Vm.FileModels.Count != 0)
 				{
-					var filePath=fileModel.Path + fileModel.Name;
-					index[filePath]=true;
-				}
-				foreach(var fileModel in Vm.FileModels)
-				{
-					var filePath=fileModel.Path + fileModel.Name;
-					if(!index.ContainsKey(filePath))
+					var dictionary = new Dictionary<string, bool>();
+					foreach (var fileModel in fileModels)
+						dictionary[fileModel.FullName + fileModel.IsFolder] = true;
+					_ = Current.Dispatcher.Invoke(() => progressBar.Value = 2);
+					var unit = 97.0 / Vm.FileModels.Count;
+					foreach (var fileModel in Vm.FileModels)
 					{
-						index[filePath]=true;
-						fileModels.Add(fileModel);
+						if (!dictionary.ContainsKey(fileModel.FullName + fileModel.IsFolder))
+							fileModels.Add(fileModel);
+						else duplicated++;
+						_ = Current.Dispatcher.Invoke(() => progressBar.Value += unit);
 					}
-					else failCounter++;
 				}
 			});
-			progressBar.Value = 99;
 			await App.Serialize(App.FilesPath, fileModels);
 			progressBar.Value = 100;
+			var former = Vm.FileModels.Count;
 			Vm.FileModels.Clear();
 			((Grid)parameter!).Children.Remove(border);
-			_ = MessageBox.Show($"共导入 {former} 个文件，其中成功导入 {former - failCounter} 个，有 {failCounter} 个因重复未导入", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+			_ = MessageBox.Show($"共导入 {former} 个文件，其中成功导入 {former - duplicated} 个，有 {duplicated} 个因重复未导入", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
 		}
 	}
 }
-//indexes.AddRange(fileModels
-//	.SelectMany(_ => Vm.FileModels, (dbFileModel, fileModel) => new { dbFileModel, fileModel })
-//	.Where(t => t.fileModel.Name == t.dbFileModel.Name && t.fileModel.Path == t.dbFileModel.Path)
-//	.Select(t => Vm.FileModels.IndexOf(t.fileModel)));
