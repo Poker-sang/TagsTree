@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -32,7 +32,7 @@ namespace TagsTree.Services
 			return Vm;
 		}
 
-		public static async void Import(object? parameter)
+		public static void Import(object? parameter)
 		{
 			var dialog = new CommonOpenFileDialog
 			{
@@ -56,8 +56,6 @@ namespace TagsTree.Services
 								continue;
 							}
 							var index = fileName.LastIndexOf('\\');
-							if (Vm.FileModels.Any(fileModel => !fileModel.IsFolder && fileModel.FullName == fileName))
-								break;
 							Vm.FileModels.Add(new FileModel(fileName[(index + 1)..], fileName[..index], false));
 						}
 					break;
@@ -72,8 +70,6 @@ namespace TagsTree.Services
 								continue;
 							}
 							var index = directoryName.LastIndexOf('\\');
-							if (Vm.FileModels.Any(fileModel => fileModel.IsFolder && fileModel.FullName == directoryName))
-								break;
 							Vm.FileModels.Add(new FileModel(directoryName[(index + 1)..], directoryName[..index], true));
 						}
 					break;
@@ -88,11 +84,7 @@ namespace TagsTree.Services
 								continue;
 							}
 							foreach (var fileInfo in new DirectoryInfo(directoryName).GetFiles())
-							{
-								if (Vm.FileModels.Any(fileModel => !fileModel.IsFolder && fileModel.FullName == fileInfo.FullName))
-									break;
 								Vm.FileModels.Add(new FileModel(fileInfo.Name, directoryName, false));
-							}
 						}
 					break;
 				case "Path_Folders":
@@ -106,11 +98,7 @@ namespace TagsTree.Services
 								continue;
 							}
 							foreach (var directoryInfo in new DirectoryInfo(directoryName).GetDirectories())
-							{
-								if (Vm.FileModels.Any(fileModel => fileModel.IsFolder && fileModel.FullName == directoryInfo.FullName))
-									break;
 								Vm.FileModels.Add(new FileModel(directoryInfo.Name, directoryName, true));
-							}
 						}
 					break;
 				case "Path_Both":
@@ -124,17 +112,9 @@ namespace TagsTree.Services
 								continue;
 							}
 							foreach (var fileInfo in new DirectoryInfo(directoryName).GetFiles())
-							{
-								if (Vm.FileModels.Any(fileModel => !fileModel.IsFolder && fileModel.FullName == fileInfo.FullName))
-									break;
 								Vm.FileModels.Add(new FileModel(fileInfo.Name, directoryName, false));
-							}
 							foreach (var directoryInfo in new DirectoryInfo(directoryName).GetDirectories())
-							{
-								if (Vm.FileModels.Any(fileModel => fileModel.IsFolder && fileModel.FullName == directoryInfo.FullName))
-									break;
 								Vm.FileModels.Add(new FileModel(directoryInfo.Name, directoryName, true));
-							}
 						}
 					break;
 				case "All":
@@ -144,11 +124,7 @@ namespace TagsTree.Services
 						static void RecursiveReadFiles(string folderName)
 						{
 							foreach (var fileInfo in new DirectoryInfo(folderName).GetFiles())
-							{
-								if (Vm.FileModels.Any(fileModel => !fileModel.IsFolder && fileModel.FullName == fileInfo.FullName))
-									break;
 								Vm.FileModels.Add(new FileModel(fileInfo.Name, folderName, false));
-							}
 							foreach (var directoryInfo in new DirectoryInfo(folderName).GetDirectories())
 								RecursiveReadFiles(directoryInfo.FullName);
 						}
@@ -171,7 +147,7 @@ namespace TagsTree.Services
 		public static void DeleteBClick(object? parameter) => Vm.FileModels.Clear();
 		public static async void SaveBClick(object? parameter)
 		{
-			var border = new Border { Background = new SolidColorBrush(Color.FromArgb(0x88, 0x88, 0x88, 0x88)) };
+			var border = new Border { Background = new SolidColorBrush(Color.FromArgb(0x55, 0x88, 0x88, 0x88)) };
 			var progressBar = new ModernWpf.Controls.ProgressBar { Width = 300, Height = 20 };
 			progressBar.ValueChanged += (_, _) => border.Child.UpdateLayout();
 			border.Child = progressBar;
@@ -179,38 +155,30 @@ namespace TagsTree.Services
 			var fileModels = await App.Deserialize<ObservableCollection<FileModel>>(App.FilesPath) ?? new ObservableCollection<FileModel>();
 			progressBar.Value = 1;
 
-			var former = Vm.FileModels.Count;
-			var indexes = new List<int>();
-			await Task.Run(() =>
-			{
+			var duplicated = 0;
+			await Task.Run(() => {
 				if (fileModels.Count * Vm.FileModels.Count != 0)
 				{
-					var unit = 97.0 / fileModels.Count;
+					var index = new Dictionary<string, bool>();
 					foreach (var fileModel in fileModels)
+						index[fileModel.FullName + fileModel.IsFolder] = true;
+					_ = Current.Dispatcher.Invoke(() => progressBar.Value = 2);
+					var unit = 97.0 / Vm.FileModels.Count;
+					foreach (var fileModel in Vm.FileModels)
 					{
-						indexes.AddRange(Vm.FileModels
-							.Where(vmFileModel =>  vmFileModel.IsFolder == fileModel.IsFolder && vmFileModel.FullName == fileModel.FullName)
-							.Select(vmFileModel => Vm.FileModels.IndexOf(vmFileModel)));
+						if (!index.ContainsKey(fileModel.FullName + fileModel.IsFolder))
+							fileModels.Add(fileModel);
+						else duplicated++;
 						_ = Current.Dispatcher.Invoke(() => progressBar.Value += unit);
 					}
 				}
-				_ = Current.Dispatcher.Invoke(() => progressBar.Value = 98);
-				for (var i = 0; i < Vm.FileModels.Count; i++)
-					if (!indexes.Contains(i))
-						fileModels.Add(Vm.FileModels[i]);
 			});
-			progressBar.Value = 99;
 			await App.Serialize(App.FilesPath, fileModels);
 			progressBar.Value = 100;
-
-			var removed = indexes.Count;
+			var former = Vm.FileModels.Count;
 			Vm.FileModels.Clear();
 			((Grid)parameter!).Children.Remove(border);
-			_ = MessageBox.Show($"共导入 {former} 个文件，其中成功导入 {former - removed} 个，有 {removed} 个因重复未导入", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+			_ = MessageBox.Show($"共导入 {former} 个文件，其中成功导入 {former - duplicated} 个，有 {duplicated} 个因重复未导入", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
 		}
 	}
 }
-//indexes.AddRange(fileModels
-//	.SelectMany(_ => Vm.FileModels, (dbFileModel, fileModel) => new { dbFileModel, fileModel })
-//	.Where(t => t.fileModel.Name == t.dbFileModel.Name && t.fileModel.Path == t.dbFileModel.Path)
-//	.Select(t => Vm.FileModels.IndexOf(t.fileModel)));
