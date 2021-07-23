@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Xml;
@@ -44,7 +42,7 @@ namespace TagsTree.Views
 		{
 			if (e.Data.GetData(typeof(XmlElement)) is XmlElement origin)
 				if (origin != TvItemGetHeader(sender))
-					((TreeViewItem)sender).Foreground = new SolidColorBrush(Colors.Orange);
+					((TreeViewItem)sender).Foreground = new SolidColorBrush(Colors.LightGray);
 			e.Handled = true;
 		}
 		private void TbTag_DragLeave(object sender, DragEventArgs dragEventArgs)
