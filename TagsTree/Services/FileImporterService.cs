@@ -156,33 +156,32 @@ namespace TagsTree.Services
 			progressBar.Value = 1;
 
 			var former = Vm.FileModels.Count;
-			var indexes = new List<int>();
+			Dictionary<string, string> index = new Dictionary<string, bool>();
+			var failCounter = 0;
 			await Task.Run(() =>
 			{
-				if (fileModels.Count * Vm.FileModels.Count != 0)
+				foreach(var fileModel in fileModels)
 				{
-					var total = 97.0 / fileModels.Count;
-					foreach (var fileModel in fileModels)
-					{
-						indexes.AddRange(Vm.FileModels
-							.Where(vmFileModel => vmFileModel.Name == fileModel.Name && vmFileModel.Path == fileModel.Path)
-							.Select(vmFileModel => Vm.FileModels.IndexOf(vmFileModel)));
-						_ = Current.Dispatcher.Invoke(() => progressBar.Value += total);
-					}
+					var filePath=fileModel.Path + fileModel.Name;
+					index[filePath]=true;
 				}
-				_ = Current.Dispatcher.Invoke(() => progressBar.Value = 98);
-				for (var i = 0; i < Vm.FileModels.Count; i++)
-					if (!indexes.Contains(i))
-						fileModels.Add(Vm.FileModels[i]);
+				foreach(var fileModel in Vm.FileModels)
+				{
+					var filePath=fileModel.Path + fileModel.Name;
+					if(!index.ContainsKey(filePath))
+					{
+						index[filePath]=true;
+						fileModels.Add(fileModel);
+					}
+					else failCounter++;
+				}
 			});
 			progressBar.Value = 99;
 			await App.Serialize(App.FilesPath, fileModels);
 			progressBar.Value = 100;
-
-			var removed = indexes.Count;
 			Vm.FileModels.Clear();
 			((Grid)parameter!).Children.Remove(border);
-			_ = MessageBox.Show($"共导入 {former} 个文件，其中成功导入 {former - removed} 个，有 {removed} 个因重复未导入", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+			_ = MessageBox.Show($"共导入 {former} 个文件，其中成功导入 {former - failCounter} 个，有 {failCounter} 个因重复未导入", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
 		}
 	}
 }
