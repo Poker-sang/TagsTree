@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using ModernWpf.Controls;
+using System;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Xml;
-using ModernWpf.Controls;
 using TagsTree.Models;
 using TagsTree.ViewModels;
 using TagsTree.Views;
@@ -23,7 +19,7 @@ namespace TagsTree.Services
 			Win = window;
 			return Vm;
 		}
-		
+
 		public static void PathComplement(object sender, RoutedEventArgs e)
 		{
 			var path = App.TagPathComplete(Vm.Path);
@@ -34,12 +30,12 @@ namespace TagsTree.Services
 		public static void PathChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
 		{
 			Vm.Path = Regex.Replace(Vm.Path, @"[\/\:\*\?\""\<\>\|\s]+", "");
-			sender.ItemsSource = App.TagSuggest(sender.Text.Split('\\', StringSplitOptions.RemoveEmptyEntries).LastOrDefault());
+			sender.ItemsSource = App.TagSuggest(sender.Text);
 		}
 		public static void SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs e) => sender.Text = e.SelectedItem.ToString();
 		public static void TvSelectItemChanged(object? selectElement) => Vm.Path = App.TagsTree_OnSelectedItemChanged((XmlElement?)selectElement) ?? Vm.Path;
 		private static XmlElement TvItemGetHeader(object? sender) => (XmlElement)((TreeViewItem)sender!).Header;
-		
+
 		#region 命令
 
 		public static void NewBClick(object? parameter)
@@ -53,13 +49,12 @@ namespace TagsTree.Services
 		public static void MoveBClick(object? parameter)
 		{
 			var element = App.GetXmlElement(Vm.Name);
-			if (element is null)
-				App.ErrorMessageBox("标签名称不存在！请填写正确的单个标签或完整的路径！");
-			else
+			if (element is not null)
 			{
 				MoveTag(element, App.GetXmlElement(Vm.Path)!);
 				Vm.Name = "";
 			}
+			else App.ErrorMessageBox("标签名称不存在！请填写正确的单个标签或完整的路径！");
 		}
 		public static void RenameBClick(object? parameter)
 		{
@@ -126,10 +121,13 @@ namespace TagsTree.Services
 
 		#region 操作
 
-		private static void NewTag(string name, XmlElement path)
+		private static async void NewTag(string name, XmlElement path)
 		{
 			var element = Vm.Xdp.Document.CreateElement("Tag");
 			element.SetAttribute("name", name);
+			var relations = await FilesTagsDataTable.Load();
+			relations.NewColumn(name);
+			relations.Save();
 			_ = path.AppendChild(element);
 			TagsChanged();
 		}
@@ -146,24 +144,30 @@ namespace TagsTree.Services
 				App.ErrorMessageBox("禁止将标签移动到自己目录下");
 			}
 		}
-		private static void RenameTag(string name, XmlElement path)
+		private static async void RenameTag(string name, XmlElement path)
 		{
 			path.RemoveAllAttributes();
 			path.SetAttribute("name", name);
+			var relations = await FilesTagsDataTable.Load();
+			relations.RenameColumn(path.GetAttribute("Name"), name);
+			relations.Save();
 			TagsChanged();
 			Vm.Name = "";
 			Vm.Path = "";
 		}
-		private static void DeleteTag(XmlElement path)
+		private static async void DeleteTag(XmlElement path)
 		{
 			_ = path.ParentNode!.RemoveChild(path);
+			var relations = await FilesTagsDataTable.Load();
+			relations.DeleteColumn(path.GetAttribute("Name"));
+			relations.Save();
 			TagsChanged();
 			Vm.Name = "";
 		}
 		private static void TagsChanged()
 		{
 			Vm.Changed = true;
-			App.RecursiveLoadTags(); 
+			App.RecursiveLoadTags();
 		}
 
 		#endregion

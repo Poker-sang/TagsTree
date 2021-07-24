@@ -115,7 +115,7 @@
             UpdateTextOnSelect="False">
             <ui:AutoSuggestBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Path}" />
+                    <TextBlock Text="{Binding FullName}" />
                 </DataTemplate>
             </ui:AutoSuggestBox.ItemTemplate>
         </ui:AutoSuggestBox>

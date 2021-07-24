@@ -57,7 +57,7 @@ namespace TagsTree.Views
 			e.Effects = DragDropEffects.None;
 			e.Handled = true;
 			if (origin != TvItemGetHeader(sender))
-				_moveTag(origin,TvItemGetHeader(sender));
+				_moveTag(origin, TvItemGetHeader(sender));
 		}
 		private void TvTags_Drop(object sender, DragEventArgs e)
 		{

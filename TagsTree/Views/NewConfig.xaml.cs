@@ -1,7 +1,7 @@
-﻿using System.Text.RegularExpressions;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows;
-using Microsoft.WindowsAPICodePack.Dialogs;
-using TagsTree.Services;
 using static TagsTree.Properties.Settings;
 
 namespace TagsTree.Views
@@ -11,7 +11,7 @@ namespace TagsTree.Views
 	/// </summary>
 	public partial class NewConfig : Window
 	{
-		public NewConfig(Window owner)
+		public NewConfig(Window? owner = null)
 		{
 			Owner = owner;
 			InitializeComponent();
@@ -40,8 +40,20 @@ namespace TagsTree.Views
 			var legalPath = new Regex(@"^[a-zA-Z]:\\[^\/\:\*\?\""\<\>\|]+$");
 			if (!legalPath.IsMatch(TbConfigPath.Text) || !legalPath.IsMatch(TbLibraryPath.Text))
 				App.ErrorMessageBox("路径错误！请填写正确完整的文件夹路径！");
-			else if (App.LoadConfig(TbConfigPath.Text) == true)
+			else
 			{
+				if (new DirectoryInfo(TbConfigPath.Text).GetFiles().Length != 0)
+					_ = MessageBox.Show("请保证存放配置文件的文件夹里没有重要的文件，防止受到损坏", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+				if (Owner is not null && Default.ConfigPath != TbConfigPath.Text)
+					switch (MessageBox.Show("是否将原位置配置文件移动到新位置", "提示", MessageBoxButton.YesNoCancel, MessageBoxImage.Question))
+					{
+						case MessageBoxResult.Yes:
+							foreach (var file in new DirectoryInfo(Default.ConfigPath).GetFiles())
+								file.MoveTo(Path.Combine(TbConfigPath.Text, file.Name));
+							break;
+						case MessageBoxResult.Cancel:
+							return;
+					}
 				Default.ConfigPath = TbConfigPath.Text;
 				Default.LibraryPath = TbLibraryPath.Text;
 				Default.RootFoldersExist = CbRootFoldersExist.IsChecked!.Value;

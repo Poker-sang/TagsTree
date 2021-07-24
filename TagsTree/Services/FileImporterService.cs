@@ -1,11 +1,12 @@
+using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using TagsTree.Models;
 using TagsTree.ViewModels;
 using TagsTree.Views;
@@ -27,6 +28,7 @@ namespace TagsTree.Services
 
 		public static async void Import(object? parameter)
 		{
+			Vm.Importing = true;
 			var dialog = new CommonOpenFileDialog
 			{
 				Multiselect = true,
@@ -38,7 +40,7 @@ namespace TagsTree.Services
 			await Task.Run(() =>
 			{
 				foreach (var fileModel in Vm.FileModels)
-					dictionary[fileModel.FullName + fileModel.IsFolder] = true;
+					dictionary[fileModel.UniqueName] = true;
 			});
 			switch ((string)parameter!)
 			{
@@ -143,6 +145,7 @@ namespace TagsTree.Services
 						});
 					break;
 			}
+			Vm.Importing = false;
 		}
 
 		public static void DeleteBClick(object? parameter) => Vm.FileModels.Clear();
@@ -154,26 +157,30 @@ namespace TagsTree.Services
 			border.Child = progressBar;
 			_ = ((Grid)parameter!).Children.Add(border);
 			var fileModels = await App.Deserialize<ObservableCollection<FileModel>>(App.FilesPath);
+			var relations = await FilesTagsDataTable.Load();
 			progressBar.Value = 1;
 
 			var duplicated = 0;
-			if (fileModels.Count * Vm.FileModels.Count != 0)
-				await Task.Run(() =>
+			await Task.Run(() =>
+			{
+				var dictionary = new Dictionary<string, bool>();
+				foreach (var fileModel in fileModels)
+					dictionary[fileModel.UniqueName] = true;
+				_ = Current.Dispatcher.Invoke(() => progressBar.Value = 2);
+				var unit = 97.0 / Vm.FileModels.Count;
+				foreach (var fileModel in Vm.FileModels)
 				{
-					var dictionary = new Dictionary<string, bool>();
-					foreach (var fileModel in fileModels)
-						dictionary[fileModel.FullName + fileModel.IsFolder] = true;
-					_ = Current.Dispatcher.Invoke(() => progressBar.Value = 2);
-					var unit = 97.0 / Vm.FileModels.Count;
-					foreach (var fileModel in Vm.FileModels)
+					if (!dictionary.ContainsKey(fileModel.UniqueName))
 					{
-						if (!dictionary.ContainsKey(fileModel.FullName + fileModel.IsFolder))
-							fileModels.Add(fileModel);
-						else duplicated++;
-						_ = Current.Dispatcher.Invoke(() => progressBar.Value += unit);
+						fileModels.Add(fileModel);
+						relations.NewRow(fileModel);
 					}
-				});
+					else duplicated++;
+					_ = Current.Dispatcher.Invoke(() => progressBar.Value += unit);
+				}
+			});
 			App.Serialize(App.FilesPath, fileModels);
+			relations.Save();
 			progressBar.Value = 100;
 			var former = Vm.FileModels.Count;
 			Vm.FileModels.Clear();

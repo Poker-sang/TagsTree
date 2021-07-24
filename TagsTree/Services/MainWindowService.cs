@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using ModernWpf.Controls;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using ModernWpf.Controls;
-using TagsTree.Models;
 using TagsTree.ViewModels;
 using TagsTree.Views;
 using static TagsTree.Properties.Settings;
@@ -28,15 +22,12 @@ namespace TagsTree.Services
 			while (true)
 			{
 				if (Default.IsSet) //如果之前有储存过用户配置，则判断是否符合
-				{
-					var result = App.LoadConfig(Default.ConfigPath);
-					switch (result)
+					switch (App.LoadConfig(Default.ConfigPath))
 					{
 						case null: return false;
 						case true: return true;
 					}
-				}
-				else if (new NewConfig(Win).ShowDialog() == false)
+				else if (new NewConfig().ShowDialog() == false)
 					return false;
 			}
 		}
@@ -53,7 +44,7 @@ namespace TagsTree.Services
 		{
 			Vm.Search = Regex.Replace(Vm.Search, @"[\\\/\:\*\?\""\<\>\|]+", "");
 			Vm.Search = Regex.Replace(Vm.Search, @"  +", " ").TrimStart();
-			sender.ItemsSource = App.TagSuggest(sender.Text.Split(' ', StringSplitOptions.RemoveEmptyEntries).LastOrDefault());
+			sender.ItemsSource = App.TagSuggest(sender.Text);
 		}
 		public static void QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e)
 		{
