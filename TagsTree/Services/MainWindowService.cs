@@ -53,7 +53,7 @@ namespace TagsTree.Services
 		{
 			Vm.Search = Regex.Replace(Vm.Search, @"[\\\/\:\*\?\""\<\>\|]+", "");
 			Vm.Search = Regex.Replace(Vm.Search, @"  +", " ").TrimStart();
-			sender.ItemsSource = App.TagSuggest(sender.Text.Split(' ', StringSplitOptions.RemoveEmptyEntries).LastOrDefault());
+			sender.ItemsSource = App.TagSuggest(sender.Text);
 		}
 		public static void QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e)
 		{

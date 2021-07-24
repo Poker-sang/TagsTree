@@ -34,7 +34,7 @@ namespace TagsTree.Services
 		public static void PathChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
 		{
 			Vm.Path = Regex.Replace(Vm.Path, @"[\/\:\*\?\""\<\>\|\s]+", "");
-			sender.ItemsSource = App.TagSuggest(sender.Text.Split('\\', StringSplitOptions.RemoveEmptyEntries).LastOrDefault());
+			sender.ItemsSource = App.TagSuggest(sender.Text);
 		}
 		public static void SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs e) => sender.Text = e.SelectedItem.ToString();
 		public static void TvSelectItemChanged(object? selectElement) => Vm.Path = App.TagsTree_OnSelectedItemChanged((XmlElement?)selectElement) ?? Vm.Path;

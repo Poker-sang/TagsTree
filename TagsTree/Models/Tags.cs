@@ -14,6 +14,7 @@ namespace TagsTree.Models
 			XmlElement = xmlElement;
 		}
 
+		public string FullName => (Path is "" ? "" : Path + '\\') + Name;
 		public override string ToString() => Name;
 	}
 }

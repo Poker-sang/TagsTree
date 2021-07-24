@@ -63,7 +63,7 @@ namespace TagsTree
 		/// <summary>
 		/// 所有标签
 		/// </summary>
-		public static readonly List<Tag> TagsList = new();
+		public static readonly Dictionary<string, Tag> TagsList = new();
 
 		/// <summary>
 		/// 检查新的标签名语法和与已有标签是否重复（已被删除空白字符）
@@ -189,10 +189,10 @@ namespace TagsTree
 		{
 			if (xmlElement is { HasChildNodes: true })
 				foreach (XmlElement? element in xmlElement.ChildNodes)
-					if (element!.GetAttribute("name") is { } attribute)
+					if (element!.GetAttribute("name") is { } name)
 					{
-						TagsList.Add(new Tag(attribute, @$"{path}\{attribute}"[1..], element));
-						RecursiveLoadTags(@$"{path}\{attribute}", element);
+						TagsList[name] = new Tag(name, path, element);
+						RecursiveLoadTags((path is "" ? "" : path + '\\') + name, element);
 					}
 		}
 
@@ -209,27 +209,49 @@ namespace TagsTree
 			name = temp.Last();
 			if (!new Regex(@"^[^\\\/\:\*\?\""\<\>\|\s]+$").IsMatch(name))
 				throw new InvalidDataException();
-			return TagsList.Where(tag => tag.Name == name).Select(tag => tag.Path).FirstOrDefault();
+			try
+			{
+				return TagsList[name].FullName;
+			}
+			catch (KeyNotFoundException)
+			{
+				return null;
+			}
 		}
 
 		/// <summary>
 		/// 递归用路径查找标签所在元素
 		/// </summary>
-		/// <param name="path">需要查找的元素所在路径（已由TagPathComplete()补全）</param>
+		/// <param name="path">需要查找的元素所在路径</param>
 		/// <returns>标签所在元素</returns>
-		public static XmlElement? GetXmlElement(string path) => TagsList.Where(tag => tag.Path == path).Select(tag => tag.XmlElement).FirstOrDefault();
+		public static XmlElement? GetXmlElement(string path)
+		{
+			var temp = path.Split('\\', StringSplitOptions.RemoveEmptyEntries);
+			if (temp.Length == 0)
+				return null;
+			path = temp.Last();
+			try
+			{
+				return TagsList[path].XmlElement;
+			}
+			catch (KeyNotFoundException)
+			{
+				return null;
+			}
+		}
 
 		/// <summary>
 		/// 输入标签时的建议列表
 		/// </summary>
 		/// <param name="name">目前输入的最后一个标签</param>
 		/// <returns>建议列表</returns>
-		public static IEnumerable<Tag> TagSuggest(string? name)
+		public static IEnumerable<Tag> TagSuggest(string name)
 		{
-			if (name is "" or null)
+			var tempName = name.Split('\\', StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
+			if (tempName is "" or null)
 				return new List<Tag>();
-			var temp = TagsList.Where(tag => tag.Name.Contains(name)).ToList();
-			temp.AddRange(TagsList.Where(tag => tag.Path.Contains(name) && !tag.Name.Contains(name)));
+			var temp = TagsList.Values.Where(tag => tag.Name.Contains(tempName)).ToList();
+			temp.AddRange(TagsList.Values.Where(tag => tag.Path.Contains(tempName) && !tag.Name.Contains(tempName)));
 			return temp;
 		}
 
