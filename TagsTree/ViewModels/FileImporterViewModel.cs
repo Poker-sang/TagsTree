@@ -1,16 +1,10 @@
-﻿using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using TagsTree.Annotations;
-using TagsTree.Services;
 using TagsTree.Commands;
 using TagsTree.Models;
+using TagsTree.Services;
 
 namespace TagsTree.ViewModels
 {
@@ -23,12 +17,12 @@ namespace TagsTree.ViewModels
 
 		public FileImporterViewModel()
 		{
-			static bool Func1(object? _) => true;
-			bool Func2(object? _) => _fileModels.Count != 0;
-			_import = new RelayCommand(Func1, FileImporterService.Import);
+			bool Func(object? _) => !Importing;
+			bool Func2(object? _) => _fileModels.Count != 0 && !Importing;
+			_import = new RelayCommand(Func, FileImporterService.Import);
 			_deleteBClick = new RelayCommand(Func2, FileImporterService.DeleteBClick);
 			_saveBClick = new RelayCommand(Func2, FileImporterService.SaveBClick);
-			
+
 			_fileModels.CollectionChanged += (_, _) =>
 			{
 				_deleteBClick.OnCanExecuteChanged();
@@ -36,10 +30,24 @@ namespace TagsTree.ViewModels
 			};
 		}
 
+		private bool _importing;
 		private ObservableCollection<FileModel> _fileModels = new();
 		private RelayCommand _import;
 		private RelayCommand _deleteBClick;
 		private RelayCommand _saveBClick;
+
+		public bool Importing
+		{ 
+			get => _importing;
+			set
+			{
+				if (Equals(_importing, value)) return;
+				_importing = value;
+				_import.OnCanExecuteChanged();
+				_deleteBClick.OnCanExecuteChanged();
+				_saveBClick.OnCanExecuteChanged();
+			}
+		}
 
 		public ObservableCollection<FileModel> FileModels
 		{

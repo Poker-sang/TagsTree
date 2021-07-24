@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using ModernWpf.Controls;
+using System;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Xml;
-using ModernWpf.Controls;
-using TagsTree.Models;
 using TagsTree.ViewModels;
 using TagsTree.Views;
 
@@ -23,7 +18,7 @@ namespace TagsTree.Services
 			Win = window;
 			return Vm;
 		}
-		
+
 		public static void PathComplement(object sender, RoutedEventArgs e)
 		{
 			var path = App.TagPathComplete(Vm.Path);
@@ -39,7 +34,7 @@ namespace TagsTree.Services
 		public static void SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs e) => sender.Text = e.SelectedItem.ToString();
 		public static void TvSelectItemChanged(object? selectElement) => Vm.Path = App.TagsTree_OnSelectedItemChanged((XmlElement?)selectElement) ?? Vm.Path;
 		private static XmlElement TvItemGetHeader(object? sender) => (XmlElement)((TreeViewItem)sender!).Header;
-		
+
 		#region 命令
 
 		public static void NewBClick(object? parameter)
@@ -163,7 +158,7 @@ namespace TagsTree.Services
 		private static void TagsChanged()
 		{
 			Vm.Changed = true;
-			App.RecursiveLoadTags(); 
+			App.RecursiveLoadTags();
 		}
 
 		#endregion

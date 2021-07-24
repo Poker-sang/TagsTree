@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ModernWpf;
 using ModernWpf.Controls;
-using ModernWpf;
+using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using TagsTree.Annotations;
 using TagsTree.Services;
 

@@ -1,6 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Controls.Primitives;
-using ModernWpf.Controls;
 
 namespace TagsTree.Views
 {

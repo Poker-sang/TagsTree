@@ -1,19 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Xml;
 using System.Xml.Linq;
-using TagsTree.Services;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Runtime.Serialization;
-using System.Text.Json;
-using System.Threading.Tasks;
 using TagsTree.Models;
+using TagsTree.Services;
 using static TagsTree.Properties.Settings;
 
 namespace TagsTree
@@ -25,7 +21,7 @@ namespace TagsTree
 	{
 		public static string TagsPath => Default.ConfigPath + @"\TagsTree.xml";
 		public static string FilesPath => Default.ConfigPath + @"\Files.json";
-		public static string RelationPath => Default.ConfigPath + @"\Relation.bin";
+		public static string RelationsPath => Default.ConfigPath + @"\Relations.xml";
 
 		/// <summary>
 		/// 鼠标上一次的位置
@@ -281,6 +277,6 @@ namespace TagsTree
 		/// <param name="path">Json文件路径</param>
 		/// <param name="objectItem">需要转化的对象</param>
 		/// <returns></returns>
-		public static async void Serialize<T>(string path,T objectItem) => await JsonSerializer.SerializeAsync(File.Create(path), objectItem);
+		public static async void Serialize<T>(string path, T objectItem) => await JsonSerializer.SerializeAsync(File.Create(path), objectItem);
 	}
 }

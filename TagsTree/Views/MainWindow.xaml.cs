@@ -1,12 +1,8 @@
-﻿using System;
-using System.Text.RegularExpressions;
+﻿using ModernWpf.Controls;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media.Animation;
-using System.Windows.Threading;
-using ModernWpf.Controls;
-using TagsTree.ViewModels;
 
 namespace TagsTree.Views
 {
@@ -31,7 +27,7 @@ namespace TagsTree.Views
 			TbInput.TextChanged += vm.TextChanged;
 			TbInput.QuerySubmitted += TbInput_OnQuerySubmitted + vm.QuerySubmitted;
 		}
-		
+
 		private static async void Search(IAnimatable textBlock, IAnimatable textBox, UIElement dataGrid)
 		{
 			textBlock.BeginAnimation(MarginProperty, new ThicknessAnimation
