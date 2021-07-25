@@ -41,7 +41,7 @@ namespace TagsTree.ViewModels
 		public readonly RoutedEventHandler PathComplement = TagsManagerService.PathComplement;
 		public readonly Action<object?> TvSelectItemChanged = TagsManagerService.TvSelectItemChanged;
 		public readonly Action<XmlElement, XmlElement?> MoveTag = TagsManagerService.MoveTag;
-		public readonly TypedEventHandler<AutoSuggestBox, AutoSuggestBoxSuggestionChosenEventArgs> SuggestionChosen = MainWindowService.SuggestionChosen;
+		public readonly TypedEventHandler<AutoSuggestBox, AutoSuggestBoxSuggestionChosenEventArgs> SuggestionChosen = TagsManagerService.SuggestionChosen;
 		public readonly TypedEventHandler<AutoSuggestBox, AutoSuggestBoxTextChangedEventArgs> NameChanged = TagsManagerService.NameChanged;
 		public readonly TypedEventHandler<AutoSuggestBox, AutoSuggestBoxTextChangedEventArgs> PathChanged = TagsManagerService.PathChanged;
 

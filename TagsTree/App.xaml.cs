@@ -99,7 +99,11 @@ namespace TagsTree
 				var result = MessageBox.Show($"未检测到{fullpath}\n按“是”自动创建新的文件\n按“否”修改设置\n按“取消”关闭软件", "提示", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
 				switch (result)
 				{
-					case MessageBoxResult.Yes: new XDocument(new XElement("TagsTree", new XAttribute("name", ""))).Save(fullpath); break;
+					case MessageBoxResult.Yes: 
+						new XDocument(new XElement("TagsTree", new XAttribute("name", ""))).Save(fullpath);
+						XdTags.Load(fullpath);
+						RecursiveLoadTags();
+						break;
 					case MessageBoxResult.No: return false;
 					case MessageBoxResult.Cancel: return null;
 				}
@@ -112,6 +116,8 @@ namespace TagsTree
 					case MessageBoxResult.Yes:
 						File.Delete(fullpath);
 						new XDocument(new XElement("TagsTree", new XAttribute("name", ""))).Save(fullpath);
+						XdTags.Load(fullpath);
+						RecursiveLoadTags();
 						break;
 					case MessageBoxResult.No: return false;
 					case MessageBoxResult.Cancel: return null;
@@ -134,6 +140,8 @@ namespace TagsTree
 					case MessageBoxResult.Yes:
 						File.Delete(fullpath);
 						new XDocument(new XElement("TagsTree", new XAttribute("name", ""))).Save(fullpath);
+						XdTags.Load(fullpath);
+						RecursiveLoadTags();
 						break;
 					case MessageBoxResult.No: return false;
 					case MessageBoxResult.Cancel: return null;
@@ -224,7 +232,7 @@ namespace TagsTree
 		{
 			var temp = path.Split('\\', StringSplitOptions.RemoveEmptyEntries);
 			if (temp.Length == 0)
-				return null;
+				return XdpRoot;
 			path = temp.Last();
 			try
 			{
