@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Shapes;
 using System.Xml;
 using System.Xml.Linq;
 using TagsTree.Models;
@@ -52,105 +53,75 @@ namespace TagsTree
 		public static XmlElement? XdpRoot => (XmlElement?)TagsManagerService.Vm.Xdp.Document.LastChild;
 
 		/// <summary>
-		/// 保存文件
+		/// 保存标签
 		/// </summary>
 		public static void SaveXdTags() => XdTags.Save(TagsPath);
 
 		/// <summary>
-		/// 所有标签
+		/// 保存文件
 		/// </summary>
-		public static readonly Dictionary<string, Tag> TagsList = new();
+		public static void SaveFiles() => Serialize(FilesPath, IdToFile);
 
 		/// <summary>
-		/// 检查新的标签名语法和与已有标签是否重复（已被删除空白字符）
+		/// 保存关系
 		/// </summary>
-		/// <param name="name"></param>
-		/// <returns></returns>
-		public static bool NewTagCheck(string name)
-		{
-			if (name == string.Empty)
-			{
-				ErrorMessageBox("标签名称不能为空！）");
-				return false;
-			}
-			if (TagPathComplete(name) is not null)
-			{
-				ErrorMessageBox("与现有标签重名！");
-				return false;
-			}
+		public static void SaveRelations() => Relations.Save();
 
-			return true;
-		}
+		/// <summary>
+		/// 所有标签
+		/// </summary>
+		public static readonly Dictionary<string, TagModel> Tags = new();
+
+		/// <summary>
+		/// 所有标签
+		/// </summary>
+		public static readonly Dictionary<int, FileModel> IdToFile = new();
+
+		/// <summary>
+		/// 所有关系
+		/// </summary>
+		public static RelationsDataTable Relations;
 
 		/// <summary>
 		/// 重新加载新的配置文件
 		/// </summary>
-		///<returns>true：已填写正确地址，进入软件；false：打开设置页面编辑；null：关闭软件</returns>
+		///<returns>true：已填写正确地址，进入软件；false：打开设置页面；null：关闭软件</returns>
 		public static bool? LoadConfig(string configPath)
 		{
 			var fullpath = configPath + @"\TagsTree.xml";
+
+			if (!Directory.Exists(configPath))
+			{
+				var result = MessageBox.Show($"路径{configPath}不存在，\n按“确认”修改设置\n按“取消”关闭软件", "提示", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+				switch (result)
+				{
+					case MessageBoxResult.OK: Default.IsSet = false; return false;
+					case MessageBoxResult.Cancel: Default.IsSet = false; return null;
+				}
+			}
+
+			if (!File.Exists(configPath + @"\TagsTree.xml"))
+				new XDocument(new XElement("TagsTree", new XAttribute("name", ""))).Save(fullpath);
 			try
 			{
-				XdTags.Load(fullpath);
-				RecursiveLoadTags();
-			}
-			catch (FileNotFoundException)
-			{
-				var result = MessageBox.Show($"未检测到{fullpath}\n按“是”自动创建新的文件\n按“否”修改设置\n按“取消”关闭软件", "提示", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
-				switch (result)
-				{
-					case MessageBoxResult.Yes: 
-						new XDocument(new XElement("TagsTree", new XAttribute("name", ""))).Save(fullpath);
-						XdTags.Load(fullpath);
-						RecursiveLoadTags();
-						break;
-					case MessageBoxResult.No: return false;
-					case MessageBoxResult.Cancel: return null;
-				}
-			}
-			catch (XmlException)
-			{
-				var result = MessageBox.Show($"{fullpath}文件损坏，\n按“是”自动覆盖新的文件\n按“否”修改设置\n按“取消”关闭软件", "提示", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
-				switch (result)
-				{
-					case MessageBoxResult.Yes:
-						File.Delete(fullpath);
-						new XDocument(new XElement("TagsTree", new XAttribute("name", ""))).Save(fullpath);
-						XdTags.Load(fullpath);
-						RecursiveLoadTags();
-						break;
-					case MessageBoxResult.No: return false;
-					case MessageBoxResult.Cancel: return null;
-				}
-			}
-			catch (DirectoryNotFoundException)
-			{
-				var result = MessageBox.Show($"TagsTree.xml所在路径{configPath}未找到，\n按“确认”修改设置\n按“取消”关闭软件", "提示", MessageBoxButton.OKCancel, MessageBoxImage.Question);
-				switch (result)
-				{
-					case MessageBoxResult.Yes: return false;
-					case MessageBoxResult.Cancel: return null;
-				}
+				XdTags.Load(configPath + @"\TagsTree.xml");
 			}
 			catch (Exception)
 			{
-				var result = MessageBox.Show($"{fullpath}文件发生其他错误，\n按“是”自动覆盖新的文件\n按“否”修改设置\n按“取消”关闭软件", "提示", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
-				switch (result)
-				{
-					case MessageBoxResult.Yes:
-						File.Delete(fullpath);
-						new XDocument(new XElement("TagsTree", new XAttribute("name", ""))).Save(fullpath);
-						XdTags.Load(fullpath);
-						RecursiveLoadTags();
-						break;
-					case MessageBoxResult.No: return false;
-					case MessageBoxResult.Cancel: return null;
-				}
+				File.Delete(fullpath);
+				new XDocument(new XElement("TagsTree", new XAttribute("name", ""))).Save(fullpath);
 			}
-			finally
-			{
-				Default.IsSet = false;
-			}
+			RecursiveLoadTags();
+
+			if (!File.Exists(configPath + @"\Relations.xml"))
+				_ = File.Create(configPath + @"\Relations.xml");
+			Relations = RelationsDataTable.Load()!; //异常在内部处理
+
+			var fileModels = Task.Run(async () => await Deserialize<Dictionary<int, FileModel>>(FilesPath)).GetAwaiter().GetResult();
+
+			foreach (var fileModel in fileModels)
+				IdToFile[fileModel.Key] = fileModel.Value;
+			FileModel.Num = IdToFile.Keys.Last() + 1;
 			return true;
 		}
 
@@ -180,7 +151,7 @@ namespace TagsTree
 		/// </summary>
 		public static void RecursiveLoadTags()
 		{
-			TagsList.Clear();
+			Tags.Clear();
 			RecursiveLoadTags("", XdpRoot);
 		}
 
@@ -195,7 +166,7 @@ namespace TagsTree
 				foreach (XmlElement? element in xmlElement.ChildNodes)
 					if (element!.GetAttribute("name") is { } name)
 					{
-						TagsList[name] = new Tag(name, path, element);
+						Tags[name] = new TagModel(name, path, element);
 						RecursiveLoadTags((path is "" ? "" : path + '\\') + name, element);
 					}
 		}
@@ -204,23 +175,16 @@ namespace TagsTree
 		/// 补全标签的路径（为空则不补）
 		/// </summary>
 		/// <param name="name">需要找的单个标签</param>
-		/// <returns>找到的完整路径，若返回null即没找到路径</returns>
-		public static string? TagPathComplete(string name)
+		/// <returns>找到的标签，若返回null即没找到路径</returns>
+		public static TagModel? TagPathComplete(string name)
 		{
 			var temp = name.Split('\\', StringSplitOptions.RemoveEmptyEntries);
 			if (temp.Length == 0)
-				return name;
+				return null;
 			name = temp.Last();
 			if (!new Regex(@"^[^\\\/\:\*\?\""\<\>\|\s]+$").IsMatch(name))
 				throw new InvalidDataException();
-			try
-			{
-				return TagsList[name].FullName;
-			}
-			catch (KeyNotFoundException)
-			{
-				return null;
-			}
+			return Tags.ContainsKey(name) ? Tags[name] : null;
 		}
 
 		/// <summary>
@@ -234,14 +198,7 @@ namespace TagsTree
 			if (temp.Length == 0)
 				return XdpRoot;
 			path = temp.Last();
-			try
-			{
-				return TagsList[path].XmlElement;
-			}
-			catch (KeyNotFoundException)
-			{
-				return null;
-			}
+			return Tags.ContainsKey(path) ? Tags[path].XmlElement : null;
 		}
 
 		/// <summary>
@@ -249,14 +206,15 @@ namespace TagsTree
 		/// </summary>
 		/// <param name="name">目前输入的最后一个标签</param>
 		/// <returns>建议列表</returns>
-		public static IEnumerable<Tag> TagSuggest(string name)
+		public static IEnumerable<TagModel> TagSuggest(string name)
 		{
 			var tempName = name.Split('\\', StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
 			if (tempName is "" or null)
-				return new List<Tag>();
-			var temp = TagsList.Values.Where(tag => tag.Name.Contains(tempName)).ToList();
-			temp.AddRange(TagsList.Values.Where(tag => tag.Path.Contains(tempName) && !tag.Name.Contains(tempName)));
-			return temp;
+				yield break;
+			foreach (var tag in Tags.Values.Where(tag => tag.Name.Contains(tempName)))
+				yield return tag;
+			foreach (var tag in Tags.Values.Where(tag => tag.Path.Contains(tempName) && !tag.Name.Contains(tempName)))
+				yield return tag;
 		}
 
 		/// <summary>

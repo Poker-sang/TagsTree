@@ -1,5 +1,10 @@
 ﻿using ModernWpf.Controls;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Windows.Controls;
 using TagsTree.ViewModels;
 using TagsTree.Views;
 using static TagsTree.Properties.Settings;
@@ -45,10 +50,19 @@ namespace TagsTree.Services
 			Vm.Search = Regex.Replace(Vm.Search, @"[\\\/\:\*\?\""\<\>\|]+", "");
 			Vm.Search = Regex.Replace(Vm.Search, @"  +", " ").TrimStart();
 			sender.ItemsSource = App.TagSuggest(sender.Text);
+			var textBox = (TextBox)typeof(AutoSuggestBox).GetField("m_textBox", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(sender)!;
+			textBox.SelectionStart = textBox.Text.Length;
 		}
 		public static void QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e)
 		{
-
+			Vm.FileModels.Clear();
+			var tags = sender.Text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+			var validTags = new Dictionary<string, bool>();
+			foreach (var tag in tags)
+				if (App.TagPathComplete(tag) is not null && !validTags.ContainsKey(tag))
+					validTags[tag] = true;
+			foreach (var fileModel in App.Relations.GetFileModels(validTags.Keys.ToList()))
+				Vm.FileModels.Add(fileModel);
 		}
 	}
 }

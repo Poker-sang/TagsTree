@@ -1,7 +1,5 @@
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
@@ -156,15 +154,13 @@ namespace TagsTree.Services
 			progressBar.ValueChanged += (_, _) => border.Child.UpdateLayout();
 			border.Child = progressBar;
 			_ = ((Grid)parameter!).Children.Add(border);
-			var fileModels = await App.Deserialize<ObservableCollection<FileModel>>(App.FilesPath);
-			var relations = await FilesTagsDataTable.Load();
 			progressBar.Value = 1;
 
 			var duplicated = 0;
 			await Task.Run(() =>
 			{
 				var dictionary = new Dictionary<string, bool>();
-				foreach (var fileModel in fileModels)
+				foreach (var fileModel in App.IdToFile.Values)
 					dictionary[fileModel.UniqueName] = true;
 				_ = Current.Dispatcher.Invoke(() => progressBar.Value = 2);
 				var unit = 97.0 / Vm.FileModels.Count;
@@ -172,15 +168,15 @@ namespace TagsTree.Services
 				{
 					if (!dictionary.ContainsKey(fileModel.UniqueName))
 					{
-						fileModels.Add(fileModel);
-						relations.NewRow(fileModel);
+						App.Relations.NewRow(fileModel);
+						App.IdToFile[fileModel.Id] = fileModel;
 					}
 					else duplicated++;
 					_ = Current.Dispatcher.Invoke(() => progressBar.Value += unit);
 				}
 			});
-			App.Serialize(App.FilesPath, fileModels);
-			relations.Save();
+			App.SaveFiles();
+			App.SaveRelations();
 			progressBar.Value = 100;
 			var former = Vm.FileModels.Count;
 			Vm.FileModels.Clear();

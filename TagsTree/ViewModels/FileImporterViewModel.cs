@@ -17,9 +17,9 @@ namespace TagsTree.ViewModels
 
 		public FileImporterViewModel()
 		{
-			bool Func(object? _) => !Importing;
-			bool Func2(object? _) => _fileModels.Count != 0 && !Importing;
-			_import = new RelayCommand(Func, FileImporterService.Import);
+			bool Func1(object? _) => !Importing;
+			bool Func2(object? _) => !Importing && _fileModels.Count != 0;
+			_import = new RelayCommand(Func1, FileImporterService.Import);
 			_deleteBClick = new RelayCommand(Func2, FileImporterService.DeleteBClick);
 			_saveBClick = new RelayCommand(Func2, FileImporterService.SaveBClick);
 
@@ -37,7 +37,7 @@ namespace TagsTree.ViewModels
 		private RelayCommand _saveBClick;
 
 		public bool Importing
-		{ 
+		{
 			get => _importing;
 			set
 			{

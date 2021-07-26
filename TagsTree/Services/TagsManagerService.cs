@@ -1,10 +1,10 @@
 ﻿using ModernWpf.Controls;
 using System;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Xml;
-using TagsTree.Models;
 using TagsTree.ViewModels;
 using TagsTree.Views;
 
@@ -20,17 +20,20 @@ namespace TagsTree.Services
 			return Vm;
 		}
 
-		public static void PathComplement(object sender, RoutedEventArgs e)
+		public static void PathComplement(object sender, RoutedEventArgs e) => Vm.Path = App.TagPathComplete(Vm.Path)?.FullName ?? Vm.Path;
+		public static void NameChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
 		{
-			var path = App.TagPathComplete(Vm.Path);
-			if (path is not null)
-				Vm.Path = path;
+			Vm.Name = Regex.Replace(Vm.Name, @"[\\\/\:\*\?\""\<\>\|\s]+", "");
+			var textBox = (TextBox)typeof(AutoSuggestBox).GetField("m_textBox", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(sender)!;
+			textBox.SelectionStart = textBox.Text.Length;
 		}
-		public static void NameChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e) => Vm.Name = Regex.Replace(Vm.Name, @"[\\\/\:\*\?\""\<\>\|\s]+", "");
+
 		public static void PathChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
 		{
 			Vm.Path = Regex.Replace(Vm.Path, @"[\/\:\*\?\""\<\>\|\s]+", "");
 			sender.ItemsSource = App.TagSuggest(sender.Text);
+			var textBox = (TextBox)typeof(AutoSuggestBox).GetField("m_textBox", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(sender)!;
+			textBox.SelectionStart = textBox.Text.Length;
 		}
 		public static void SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs e) => sender.Text = e.SelectedItem.ToString();
 		public static void TvSelectItemChanged(object? selectElement) => Vm.Path = App.TagsTree_OnSelectedItemChanged((XmlElement?)selectElement) ?? Vm.Path;
@@ -40,7 +43,7 @@ namespace TagsTree.Services
 
 		public static void NewBClick(object? parameter)
 		{
-			if (!App.NewTagCheck(Vm.Name))
+			if (!NewTagCheck(Vm.Name))
 				return;
 
 			NewTag(Vm.Name, App.GetXmlElement(Vm.Path)!);
@@ -58,7 +61,7 @@ namespace TagsTree.Services
 		}
 		public static void RenameBClick(object? parameter)
 		{
-			if (!App.NewTagCheck(Vm.Name))
+			if (!NewTagCheck(Vm.Name))
 				return;
 			RenameTag(Vm.Name, App.GetXmlElement(Vm.Path)!);
 			Vm.Name = "";
@@ -83,7 +86,7 @@ namespace TagsTree.Services
 		public static void NewCmClick(object? parameter)
 		{
 			var dialog = new InputName(Win);
-			if (dialog.ShowDialog() == false || !App.NewTagCheck(dialog.Message))
+			if (dialog.ShowDialog() == false || !NewTagCheck(dialog.Message))
 				return;
 
 			NewTag(dialog.Message, TvItemGetHeader(parameter)!);
@@ -91,7 +94,7 @@ namespace TagsTree.Services
 		public static void NewXCmClick(object? parameter)
 		{
 			var dialog = new InputName(Win);
-			if (dialog.ShowDialog() == false || !App.NewTagCheck(dialog.Message))
+			if (dialog.ShowDialog() == false || !NewTagCheck(dialog.Message))
 				return;
 
 			NewTag(dialog.Message, App.XdpRoot!);
@@ -110,7 +113,7 @@ namespace TagsTree.Services
 		public static void RenameCmClick(object? parameter)
 		{
 			var dialog = new InputName(Win);
-			if (dialog.ShowDialog() == false || !App.NewTagCheck(dialog.Message))
+			if (dialog.ShowDialog() == false || !NewTagCheck(dialog.Message))
 				return;
 
 			RenameTag(dialog.Message, TvItemGetHeader(parameter)!);
@@ -121,13 +124,12 @@ namespace TagsTree.Services
 
 		#region 操作
 
-		private static async void NewTag(string name, XmlElement path)
+		private static void NewTag(string name, XmlElement path)
 		{
 			var element = Vm.Xdp.Document.CreateElement("Tag");
 			element.SetAttribute("name", name);
-			var relations = await FilesTagsDataTable.Load();
-			relations.NewColumn(name);
-			relations.Save();
+			App.Relations.NewColumn(name);
+			App.SaveRelations();
 			_ = path.AppendChild(element);
 			TagsChanged();
 		}
@@ -144,23 +146,21 @@ namespace TagsTree.Services
 				App.ErrorMessageBox("禁止将标签移动到自己目录下");
 			}
 		}
-		private static async void RenameTag(string name, XmlElement path)
+		private static void RenameTag(string name, XmlElement path)
 		{
 			path.RemoveAllAttributes();
 			path.SetAttribute("name", name);
-			var relations = await FilesTagsDataTable.Load();
-			relations.RenameColumn(path.GetAttribute("Name"), name);
-			relations.Save();
+			App.Relations.RenameColumn(path.GetAttribute("Name"), name);
+			App.SaveRelations();
 			TagsChanged();
 			Vm.Name = "";
 			Vm.Path = "";
 		}
-		private static async void DeleteTag(XmlElement path)
+		private static void DeleteTag(XmlElement path)
 		{
 			_ = path.ParentNode!.RemoveChild(path);
-			var relations = await FilesTagsDataTable.Load();
-			relations.DeleteColumn(path.GetAttribute("Name"));
-			relations.Save();
+			App.Relations.DeleteColumn(path.GetAttribute("Name"));
+			App.SaveRelations();
 			TagsChanged();
 			Vm.Name = "";
 		}
@@ -168,6 +168,20 @@ namespace TagsTree.Services
 		{
 			Vm.Changed = true;
 			App.RecursiveLoadTags();
+		}
+		public static bool NewTagCheck(string name)
+		{
+			if (name == string.Empty)
+			{
+				App.ErrorMessageBox("标签名称不能为空！");
+				return false;
+			}
+			if (App.TagPathComplete(name) is not null)
+			{
+				App.ErrorMessageBox("与现有标签重名！");
+				return false;
+			}
+			return true;
 		}
 
 		#endregion
