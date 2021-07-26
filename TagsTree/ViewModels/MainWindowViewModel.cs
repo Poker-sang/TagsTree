@@ -1,9 +1,11 @@
 ﻿using ModernWpf;
 using ModernWpf.Controls;
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using TagsTree.Annotations;
+using TagsTree.Models;
 using TagsTree.Services;
 
 
@@ -19,6 +21,7 @@ namespace TagsTree.ViewModels
 		public readonly TypedEventHandler<AutoSuggestBox, AutoSuggestBoxSuggestionChosenEventArgs> SuggestionChosen = MainWindowService.SuggestionChosen;
 		public readonly TypedEventHandler<AutoSuggestBox, AutoSuggestBoxTextChangedEventArgs> TextChanged = MainWindowService.TextChanged;
 		public readonly TypedEventHandler<AutoSuggestBox, AutoSuggestBoxQuerySubmittedEventArgs> QuerySubmitted = MainWindowService.QuerySubmitted;
+		private ObservableCollection<FileModel> _fileModels = new();
 
 		private string _search = "";
 
@@ -30,6 +33,16 @@ namespace TagsTree.ViewModels
 				if (Equals(_search, value)) return;
 				_search = value;
 				OnPropertyChanged(nameof(Search));
+			}
+		}
+		public ObservableCollection<FileModel> FileModels
+		{
+			get => _fileModels;
+			set
+			{
+				if (Equals(_fileModels, value)) return;
+				_fileModels = value;
+				OnPropertyChanged(nameof(FileModels));
 			}
 		}
 

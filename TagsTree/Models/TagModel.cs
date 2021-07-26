@@ -2,12 +2,12 @@
 
 namespace TagsTree.Models
 {
-	public class Tag
+	public class TagModel
 	{
 		public string Name { get; }
 		public string Path { get; }
 		public XmlElement XmlElement { get; }
-		public Tag(string name, string path, XmlElement xmlElement)
+		public TagModel(string name, string path, XmlElement xmlElement)
 		{
 			Name = name;
 			Path = path;

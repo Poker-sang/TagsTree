@@ -84,7 +84,7 @@
                 VerticalAlignment="Top"
                 PlaceholderText="输入标签以搜索相应文件（标签间以空格隔开）"
                 QueryIcon="Find"
-                Text="{Binding Search, Mode=OneWay}"
+                Text="{Binding Search, Mode=TwoWay}"
                 UpdateTextOnSelect="False">
                 <ui:AutoSuggestBox.ItemTemplate>
                     <DataTemplate>
@@ -104,24 +104,32 @@
             CanUserReorderColumns="False"
             CanUserResizeRows="False"
             IsHitTestVisible="False"
+            ItemsSource="{Binding FileModels, Mode=TwoWay}"
             Opacity="0">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn
-                    Width="45"
-                    CanUserResize="False"
-                    CanUserSort="False"
-                    IsReadOnly="True">
+                        Width="45"
+                        Binding="{Binding IsFolder}"
+                        CanUserResize="False"
+                        CanUserSort="False"
+                        IsReadOnly="True">
                     <DataGridCheckBoxColumn.Header>
                         <ui:FontIcon Glyph="&#xF12B;" />
                     </DataGridCheckBoxColumn.Header>
                 </DataGridCheckBoxColumn>
                 <DataGridTextColumn
                     Width="2*"
+                    Binding="{Binding Name}"
                     Header="名称"
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Width="*"
                     Header="标签"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding PartialPath}"
+                    Header="路径"
                     IsReadOnly="True" />
             </DataGrid.Columns>
         </DataGrid>
