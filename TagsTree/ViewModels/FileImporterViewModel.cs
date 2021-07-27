@@ -37,7 +37,7 @@ namespace TagsTree.ViewModels
 		private RelayCommand _saveBClick;
 
 		public bool Importing
-		{ 
+		{
 			get => _importing;
 			set
 			{

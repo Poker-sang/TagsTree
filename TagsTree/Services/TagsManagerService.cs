@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Xml;
-using TagsTree.Models;
 using TagsTree.ViewModels;
 using TagsTree.Views;
 

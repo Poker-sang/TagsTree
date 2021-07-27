@@ -1,7 +1,5 @@
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
@@ -162,7 +160,7 @@ namespace TagsTree.Services
 			await Task.Run(() =>
 			{
 				var dictionary = new Dictionary<string, bool>();
-				foreach (var fileModel in App.HashFiles.Values)
+				foreach (var fileModel in App.IdToFile.Values)
 					dictionary[fileModel.UniqueName] = true;
 				_ = Current.Dispatcher.Invoke(() => progressBar.Value = 2);
 				var unit = 97.0 / Vm.FileModels.Count;
@@ -170,8 +168,8 @@ namespace TagsTree.Services
 				{
 					if (!dictionary.ContainsKey(fileModel.UniqueName))
 					{
-						App.HashFiles[fileModel.GetHashCode()] = fileModel;
 						App.Relations.NewRow(fileModel);
+						App.IdToFile[fileModel.Id] = fileModel;
 					}
 					else duplicated++;
 					_ = Current.Dispatcher.Invoke(() => progressBar.Value += unit);

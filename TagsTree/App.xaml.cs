@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Shapes;
 using System.Xml;
 using System.Xml.Linq;
 using TagsTree.Models;
@@ -61,7 +60,7 @@ namespace TagsTree
 		/// <summary>
 		/// 保存文件
 		/// </summary>
-		public static void SaveFiles() => Serialize(FilesPath, HashFiles);
+		public static void SaveFiles() => Serialize(FilesPath, IdToFile);
 
 		/// <summary>
 		/// 保存关系
@@ -76,7 +75,7 @@ namespace TagsTree
 		/// <summary>
 		/// 所有标签
 		/// </summary>
-		public static readonly Dictionary<int, FileModel> HashFiles = new();
+		public static readonly Dictionary<int, FileModel> IdToFile = new();
 
 		/// <summary>
 		/// 所有关系
@@ -86,12 +85,12 @@ namespace TagsTree
 		/// <summary>
 		/// 重新加载新的配置文件
 		/// </summary>
-		///<returns>true：已填写正确地址，进入软件；false：打开设置页面编辑；null：关闭软件</returns>
+		///<returns>true：已填写正确地址，进入软件；false：打开设置页面；null：关闭软件</returns>
 		public static bool? LoadConfig(string configPath)
 		{
 			var fullpath = configPath + @"\TagsTree.xml";
 
-			if(!Directory.Exists( configPath))
+			if (!Directory.Exists(configPath))
 			{
 				var result = MessageBox.Show($"路径{configPath}不存在，\n按“确认”修改设置\n按“取消”关闭软件", "提示", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
 				switch (result)
@@ -121,7 +120,8 @@ namespace TagsTree
 			var fileModels = Task.Run(async () => await Deserialize<Dictionary<int, FileModel>>(FilesPath)).GetAwaiter().GetResult();
 
 			foreach (var fileModel in fileModels)
-				HashFiles[fileModel.Key] = fileModel.Value;
+				IdToFile[fileModel.Key] = fileModel.Value;
+			FileModel.Num = IdToFile.Keys.Last() + 1;
 			return true;
 		}
 
@@ -184,14 +184,7 @@ namespace TagsTree
 			name = temp.Last();
 			if (!new Regex(@"^[^\\\/\:\*\?\""\<\>\|\s]+$").IsMatch(name))
 				throw new InvalidDataException();
-			try
-			{
-				return Tags[name];
-			}
-			catch (KeyNotFoundException)
-			{
-				return null;
-			}
+			return Tags.ContainsKey(name) ? Tags[name] : null;
 		}
 
 		/// <summary>
@@ -205,14 +198,7 @@ namespace TagsTree
 			if (temp.Length == 0)
 				return XdpRoot;
 			path = temp.Last();
-			try
-			{
-				return Tags[path].XmlElement;
-			}
-			catch (KeyNotFoundException)
-			{
-				return null;
-			}
+			return Tags.ContainsKey(path) ? Tags[path].XmlElement : null;
 		}
 
 		/// <summary>

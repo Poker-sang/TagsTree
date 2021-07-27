@@ -1,61 +1,57 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.Data;
-using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Linq;
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace TagsTree.Models
 {
 	public class RelationsDataTable : DataTable
 	{
-		private Dictionary<int, DataRow> RowsDict = new();
+		private readonly Dictionary<int, DataRow> RowsDict = new();
 		public bool this[FileModel rowKey, string columnKey]
 		{
-			get => (bool)RowsDict[rowKey.GetHashCode()][columnKey];
-			set => RowsDict[rowKey.GetHashCode()][columnKey] = value;
+			get => (bool)RowsDict[rowKey.Id][columnKey];
+			set => RowsDict[rowKey.Id][columnKey] = value;
 		}
-		public DataRow GetRowAt(FileModel rowKey) => RowsDict[rowKey.GetHashCode()];
-		public IEnumerable<FileModel> GetFileModels(string tag)
-		{
-			foreach (DataRow row in Rows)
-				if ((bool)row[tag])
-					yield return App.HashFiles[(int)row[0]];
-		}
+		public DataRow RowAt(FileModel rowKey) => RowsDict[rowKey.Id];
+		public IEnumerable<FileModel> GetFileModels(string tag) => from DataRow row in Rows where (bool)row[tag] select App.IdToFile[(int)row[0]];
+
 		public IEnumerable<string> GetTags(FileModel file)
 		{
-			foreach (DataColumn column in Columns)
-				if ((bool)RowsDict[file.GetHashCode()][column])
-					yield return column.ColumnName;
+			for (var i = 1; i < Columns.Count; i++)
+				if ((bool)RowsDict[file.Id][Columns[i]])
+					yield return Columns[i].ColumnName;
 		}
-		public IEnumerable<FileModel> GetFileModels(IEnumerable<string> tags)
+		public IEnumerable<FileModel> GetFileModels(List<string> tags)
 		{
-			var a= tags.GetEnumerator();
-			a.MoveNext();
-			foreach (var row in GetFileModels(a))
-				yield return App.HashFiles[(int)row[0]];
+			if (tags.Count == 0)
+				return new List<FileModel>();
+			var enumerator = tags.GetEnumerator();
+			_ = enumerator.MoveNext();
+			return GetFileModels(enumerator).Select(row => App.IdToFile[(int)row[0]]).ToList();
 		}
-		private IEnumerable<DataRow> GetFileModels(IEnumerator<string> tags)
+		private List<DataRow> GetFileModels(IEnumerator<string> tags)
 		{
 			var tag = tags.Current;
-			IEnumerable<DataRow> range;
-			if (tags.MoveNext())
-				range = GetFileModels(tags);
-			else range = RowsDict.Values;
-			foreach (var row in range)
-				if ((bool)row[tag])
-					yield return row;
+			List<DataRow> range = tags.MoveNext() ? GetFileModels(tags) : RowsDict.Values.ToList();
+			var tempList = range.Where(row => (bool) row[tag]).ToList();
+			tempList.AddRange(App.Tags.Values.Where(childTag => App.Tags[tag].HasChildTag(childTag))
+				.SelectMany(_ => range, (childTag, row) => new {childTag, row})
+				.Where(t => (bool) t.row[t.childTag.Name])
+				.Select(t => t.row));
+			return tempList;
 		}
 		public void NewRow(FileModel fileModel)
 		{
 			var newRow = NewRow();
-			newRow["FileHash"] = fileModel.GetHashCode();
+			newRow[0] = fileModel.Id;
+			RowsDict[(int)newRow[0]] = newRow;
 			Rows.Add(newRow);
 		}
 		public void NewColumn(string name)
 		{
-			var column = new DataColumn()
+			var column = new DataColumn //不拎出来会因为"False"无法转化为bool类型而抛异常
 			{
 				AllowDBNull = false,
 				AutoIncrement = false,
@@ -63,9 +59,9 @@ namespace TagsTree.Models
 				Caption = name,
 				DataType = typeof(bool),
 				ReadOnly = false,
-				Unique = false
+				Unique = false,
+				DefaultValue = false
 			};
-			column.DefaultValue = false;    //不拎出来会因为"False"无法转化为bool类型而抛异常
 			Columns.Add(column);
 		}
 		public void RenameColumn(string originalName, string newName)
@@ -102,7 +98,7 @@ namespace TagsTree.Models
 				var temp = new RelationsDataTable("Relations");
 				_ = temp.ReadXml(App.RelationsPath);
 				foreach (DataRow row in temp.Rows)
-					temp.RowsDict[(int)row[0]] = row; //row[0]即为row["FileHash"]
+					temp.RowsDict[(int)row[0]] = row; //row[0]即为row["FileId"]
 				return temp;
 			}
 			catch (Exception)
@@ -112,8 +108,8 @@ namespace TagsTree.Models
 				{
 					AllowDBNull = false,
 					AutoIncrement = false,
-					ColumnName = "FileHash",
-					Caption = "FileHash",
+					ColumnName = "FileId",
+					Caption = "FileId",
 					DataType = typeof(int),
 					ReadOnly = false,
 					Unique = true

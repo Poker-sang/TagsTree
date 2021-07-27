@@ -103,6 +103,7 @@
             CanUserAddRows="False"
             CanUserReorderColumns="False"
             CanUserResizeRows="False"
+            CanUserDeleteRows="False"
             IsHitTestVisible="False"
             ItemsSource="{Binding FileModels, Mode=TwoWay}"
             Opacity="0">
@@ -124,6 +125,7 @@
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Width="*"
+                    Binding="{Binding Tags}"
                     Header="标签"
                     IsReadOnly="True" />
                 <DataGridTextColumn

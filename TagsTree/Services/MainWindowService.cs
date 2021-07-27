@@ -1,11 +1,10 @@
 ﻿using ModernWpf.Controls;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Controls;
-using System.Xml.Linq;
-using TagsTree.Models;
 using TagsTree.ViewModels;
 using TagsTree.Views;
 using static TagsTree.Properties.Settings;
@@ -56,15 +55,14 @@ namespace TagsTree.Services
 		}
 		public static void QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e)
 		{
-			var tags = sender.Text.Split('\\', StringSplitOptions.RemoveEmptyEntries);
+			Vm.FileModels.Clear();
+			var tags = sender.Text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 			var validTags = new Dictionary<string, bool>();
 			foreach (var tag in tags)
 				if (App.TagPathComplete(tag) is not null && !validTags.ContainsKey(tag))
 					validTags[tag] = true;
-			foreach (var fileModel in App.Relations.GetFileModels(validTags.Keys))
-			{
+			foreach (var fileModel in App.Relations.GetFileModels(validTags.Keys.ToList()))
 				Vm.FileModels.Add(fileModel);
-			}
 		}
 	}
 }
