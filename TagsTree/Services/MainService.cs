@@ -5,36 +5,30 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Controls;
+using System.Windows.Input;
 using TagsTree.ViewModels;
 using TagsTree.Views;
 using static TagsTree.Properties.Settings;
 
 namespace TagsTree.Services
 {
-	public static class MainWindowService
+	public static class MainService
 	{
-		private static readonly MainWindowViewModel Vm = new();
-		private static MainWindow Win;
+		private static readonly MainViewModel Vm = new();
+		private static Main Win;
 
-		public static MainWindowViewModel Load(MainWindow window)
+		public static MainViewModel Load(Main window)
 		{
 			Win = window;
 			return Vm;
 		}
 
-		public static bool CheckConfig()
+
+		#region 事件处理
+
+		public static void DgItemMouseDoubleClick(object sender, MouseButtonEventArgs e)
 		{
-			while (true)
-			{
-				if (Default.IsSet) //如果之前有储存过用户配置，则判断是否符合
-					switch (App.LoadConfig(Default.ConfigPath))
-					{
-						case null: return false;
-						case true: return true;
-					}
-				else if (new NewConfig().ShowDialog() == false)
-					return false;
-			}
+			throw new NotImplementedException();
 		}
 
 		public static void SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs e)
@@ -64,5 +58,53 @@ namespace TagsTree.Services
 			foreach (var fileModel in App.Relations.GetFileModels(validTags.Keys.ToList()))
 				Vm.FileModels.Add(fileModel);
 		}
+
+		#endregion
+
+		#region 命令
+
+		public static void OpenCmClick(object? parameter)
+		{
+			throw new NotImplementedException();
+		}
+		public static void OpenExplorerCmClick(object? parameter)
+		{
+			throw new NotImplementedException();
+		}
+		public static void RemoveFileCmClick(object? parameter)
+		{
+			throw new NotImplementedException();
+		}
+		public static void RemoveTagCmClick(object? parameter)
+		{
+			throw new NotImplementedException();
+		}
+		public static void PropertiesCmClick(object? parameter)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+
+		#region 操作
+
+		public static bool CheckConfig()
+		{
+			while (true)
+			{
+				if (Default.IsSet) //如果之前有储存过用户配置，则判断是否符合
+					switch (App.LoadConfig(Default.ConfigPath))
+					{
+						case null: return false;
+						case true: return true;
+					}
+				else if (new NewConfig().ShowDialog() == false)
+					return false;
+			}
+		}
+
+		#endregion
+
+		
 	}
 }
