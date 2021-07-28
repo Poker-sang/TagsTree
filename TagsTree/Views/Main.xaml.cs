@@ -2,18 +2,20 @@
 using System;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media.Animation;
 
 namespace TagsTree.Views
 {
 	/// <summary>
-	/// Interaction logic for MainWindow.xaml
+	/// Interaction logic for Main.xaml
 	/// </summary>
-	public partial class MainWindow : Window
+	public partial class Main : Window
 	{
-		public MainWindow()
+		public Main()
 		{
-			var vm = Services.MainWindowService.Load(this);
+			var vm = Services.MainService.Load(this);
 			if (!vm.CheckConfig())
 			{
 				Close();
@@ -23,6 +25,7 @@ namespace TagsTree.Views
 			MouseLeftButtonDown += (_, _) => DragMove();
 			InitializeComponent();
 
+			((Style)Resources["DgRowStyle"]).Setters.Add(new EventSetter(MouseDoubleClickEvent, vm.DgItemMouseDoubleClick));
 			TbInput.SuggestionChosen += vm.SuggestionChosen;
 			TbInput.TextChanged += vm.TextChanged;
 			TbInput.QuerySubmitted += TbInput_OnQuerySubmitted + vm.QuerySubmitted;
@@ -64,6 +67,5 @@ namespace TagsTree.Views
 		private void ChangeConfig_Click(object sender, RoutedEventArgs e) => _ = new NewConfig(this).ShowDialog();
 		private void TagsManager_Click(object sender, RoutedEventArgs e) => _ = new TagsManager(this).ShowDialog();
 		private void FileAdder_OnClick(object sender, RoutedEventArgs e) => _ = new FileImporter(this).ShowDialog();
-
 	}
 }

@@ -26,7 +26,7 @@ namespace TagsTree.Models
 		public IEnumerable<FileModel> GetFileModels(List<string> tags)
 		{
 			if (tags.Count == 0)
-				return new List<FileModel>();
+				return App.IdToFile.Values.ToList();
 			var enumerator = tags.GetEnumerator();
 			_ = enumerator.MoveNext();
 			return GetFileModels(enumerator).Select(row => App.IdToFile[(int)row[0]]).ToList();

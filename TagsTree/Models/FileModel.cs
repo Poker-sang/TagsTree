@@ -30,7 +30,15 @@ namespace TagsTree.Models
 		[JsonIgnore] public string PartialPath => "..." + Path[Default.LibraryPath.Length..]; //Path必然包含文件路径
 		[JsonIgnore] public string FullName => Path + '\\' + Name; //Path必然包含文件路径
 		[JsonIgnore] public string UniqueName => IsFolder + FullName;
-		[JsonIgnore] public string Tags => App.Relations.GetTags(this).Aggregate("", (current, tag) => current + " " + tag)[1..];
+		[JsonIgnore]
+		public string Tags
+		{
+			get
+			{
+				var tags = App.Relations.GetTags(this).Aggregate("", (current, tag) => current + " " + tag);
+				return tags is "" ? "" : tags[1..];
+			}
+		}
 	}
 }
 
