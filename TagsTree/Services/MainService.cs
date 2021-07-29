@@ -1,11 +1,14 @@
 ﻿using ModernWpf.Controls;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Controls;
 using System.Windows.Input;
+using TagsTree.Models;
 using TagsTree.ViewModels;
 using TagsTree.Views;
 using static TagsTree.Properties.Settings;
@@ -63,21 +66,21 @@ namespace TagsTree.Services
 
 		#region 命令
 
-		public static void OpenCmClick(object? parameter)
-		{
-			throw new NotImplementedException();
-		}
-		public static void OpenExplorerCmClick(object? parameter)
-		{
-			throw new NotImplementedException();
-		}
+		public static void OpenCmClick(object? parameter) => Open(((FileModel)((DataGridRow)parameter!).DataContext).FullName);
+		public static void OpenExplorerCmClick(object? parameter) => Open(((FileModel)((DataGridRow)parameter!).DataContext).Path);
+
 		public static void RemoveFileCmClick(object? parameter)
 		{
-			throw new NotImplementedException();
-		}
-		public static void RemoveTagCmClick(object? parameter)
-		{
-			throw new NotImplementedException();
+			
+			foreach (var (key, file) in App.IdToFile)
+				if (file == (FileModel)((DataGridRow)parameter!).DataContext)
+				{
+					_ = App.IdToFile.Remove(key);
+					App.Relations.Rows.Remove(App.Relations.RowAt(file));
+					App.Relations.RefreshRowsDict();
+					App.SaveFiles();
+				}
+			_ = Vm.FileModels.Remove((FileModel)((DataGridRow)parameter!).DataContext);
 		}
 		public static void PropertiesCmClick(object? parameter)
 		{
@@ -103,8 +106,23 @@ namespace TagsTree.Services
 			}
 		}
 
+		private static void Open(string fileName)
+		{
+
+			try
+			{
+				var process = new Process { StartInfo = new ProcessStartInfo(fileName) };
+				process.StartInfo.UseShellExecute = true;
+				process.Start();
+			}
+			catch (System.ComponentModel.Win32Exception)
+			{
+				App.ErrorMessageBox("找不到文件夹，源文件可能已被更改");
+			}
+		}
+
 		#endregion
 
-		
+
 	}
 }

@@ -2,7 +2,6 @@
 using System;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 
@@ -22,14 +21,20 @@ namespace TagsTree.Views
 				return;
 			}
 			DataContext = vm;
-			MouseLeftButtonDown += (_, _) => DragMove();
 			InitializeComponent();
+			MouseLeftButtonDown += (sender, e) =>
+			{
+				if (e.GetPosition((Main)sender).X is < 215 or > 1065)
+					Cd.Hide();
+			};
 
+			Cd.ShowAsync(ContentDialogPlacement.Popup);
 			((Style)Resources["DgRowStyle"]).Setters.Add(new EventSetter(MouseDoubleClickEvent, vm.DgItemMouseDoubleClick));
 			TbInput.SuggestionChosen += vm.SuggestionChosen;
 			TbInput.TextChanged += vm.TextChanged;
 			TbInput.QuerySubmitted += TbInput_OnQuerySubmitted + vm.QuerySubmitted;
 		}
+
 
 		private static async void Search(IAnimatable textBlock, IAnimatable textBox, UIElement dataGrid)
 		{
@@ -67,5 +72,10 @@ namespace TagsTree.Views
 		private void ChangeConfig_Click(object sender, RoutedEventArgs e) => _ = new NewConfig(this).ShowDialog();
 		private void TagsManager_Click(object sender, RoutedEventArgs e) => _ = new TagsManager(this).ShowDialog();
 		private void FileAdder_OnClick(object sender, RoutedEventArgs e) => _ = new FileImporter(this).ShowDialog();
+
+		private void UIElement_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			Cd.Hide();
+		}
 	}
 }

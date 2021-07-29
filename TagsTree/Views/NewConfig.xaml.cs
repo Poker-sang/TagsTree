@@ -43,7 +43,7 @@ namespace TagsTree.Views
 			else
 			{
 				if (new DirectoryInfo(TbConfigPath.Text).GetFiles().Length != 0)
-					_ = MessageBox.Show("请保证存放配置文件的文件夹里没有重要的文件，防止受到损坏", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+					App.InformationMessageBox("请保证存放配置文件的文件夹里没有重要的文件，防止受到损坏");
 				if (Owner is not null && Default.ConfigPath != TbConfigPath.Text)
 					switch (MessageBox.Show("是否将原位置配置文件移动到新位置", "提示", MessageBoxButton.YesNoCancel, MessageBoxImage.Question))
 					{
@@ -51,8 +51,7 @@ namespace TagsTree.Views
 							foreach (var file in new DirectoryInfo(Default.ConfigPath).GetFiles())
 								file.MoveTo(Path.Combine(TbConfigPath.Text, file.Name));
 							break;
-						case MessageBoxResult.Cancel:
-							return;
+						case MessageBoxResult.Cancel: return;
 					}
 				Default.ConfigPath = TbConfigPath.Text;
 				Default.LibraryPath = TbLibraryPath.Text;
