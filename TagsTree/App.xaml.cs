@@ -6,7 +6,6 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Shapes;
 using System.Xml;
 using System.Xml.Linq;
 using TagsTree.Models;
@@ -40,7 +39,28 @@ namespace TagsTree
 		/// <summary>
 		/// 显示一条错误信息
 		/// </summary>
+		/// <param name="message">错误信息</param>
 		public static void ErrorMessageBox(string message) => _ = MessageBox.Show(message, "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+
+		/// <summary>
+		/// 显示一条可选择的警告信息
+		/// </summary>
+		/// <param name="message">警告信息</param>
+		/// <param name="okHint">选择确认结果</param>
+		/// <param name="cancelHint">选择取消结果</param>
+		/// <returns>只可能有Ok或Cancel两种结果（直接关闭结果为Cancel）</returns>
+		private static MessageBoxResult WarningMessageBox(string message, string okHint = "", string cancelHint = "")
+		{
+			var ok = okHint is "" ? "" : $"\n按“确认”{okHint}";
+			var cancel = okHint is "" ? "" : $"\n按“取消”{cancelHint}";
+			return MessageBox.Show(message + ok + cancel, "提示", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+		}
+
+		/// <summary>
+		/// 显示一条信息
+		/// </summary>
+		/// <param name="message">信息</param>
+		public static void InformationMessageBox(string message) => _ = MessageBox.Show(message, "提示", MessageBoxButton.OK, MessageBoxImage.Information);
 
 		/// <summary>
 		/// 存储标签结构的Xml文档
@@ -88,28 +108,26 @@ namespace TagsTree
 		///<returns>true：已填写正确地址，进入软件；false：打开设置页面；null：关闭软件</returns>
 		public static bool? LoadConfig(string configPath)
 		{
-			var fullpath = configPath + @"\TagsTree.xml";
+			var fullPath = configPath + @"\TagsTree.xml";
 
 			if (!Directory.Exists(configPath))
-			{
-				var result = MessageBox.Show($"路径{configPath}不存在，\n按“确认”修改设置\n按“取消”关闭软件", "提示", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
-				switch (result)
+				switch (WarningMessageBox($"路径{configPath}不存在", "修改设置", "关闭软件"))
 				{
 					case MessageBoxResult.OK: Default.IsSet = false; return false;
 					case MessageBoxResult.Cancel: Default.IsSet = false; return null;
+					default: throw new ArgumentOutOfRangeException();
 				}
-			}
 
 			if (!File.Exists(configPath + @"\TagsTree.xml"))
-				new XDocument(new XElement("TagsTree", new XAttribute("name", ""))).Save(fullpath);
+				new XDocument(new XElement("TagsTree", new XAttribute("name", ""))).Save(fullPath);
 			try
 			{
 				XdTags.Load(configPath + @"\TagsTree.xml");
 			}
 			catch (Exception)
 			{
-				File.Delete(fullpath);
-				new XDocument(new XElement("TagsTree", new XAttribute("name", ""))).Save(fullpath);
+				File.Delete(fullPath);
+				new XDocument(new XElement("TagsTree", new XAttribute("name", ""))).Save(fullPath);
 			}
 			RecursiveLoadTags();
 
@@ -117,11 +135,24 @@ namespace TagsTree
 				_ = File.Create(configPath + @"\Relations.xml");
 			Relations = RelationsDataTable.Load()!; //异常在内部处理
 
-			var fileModels = Task.Run(async () => await Deserialize<Dictionary<int, FileModel>>(FilesPath)).GetAwaiter().GetResult();
+			foreach (var (key, file) in Task.Run(async () => await Deserialize<Dictionary<int, FileModel>>(FilesPath)).GetAwaiter().GetResult())
+				IdToFile[key] = file;
+			FileModel.Num = IdToFile.Keys.LastOrDefault() + 1;
 
-			foreach (var fileModel in fileModels)
-				IdToFile[fileModel.Key] = fileModel.Value;
-			FileModel.Num = IdToFile.Keys.Last() + 1;
+			if (Tags.Count != Relations.Columns.Count - 1) //第一列是文件Id
+				return WarningMessageBox($"路径{configPath}下，TagsTree.xml和Relations.xml存储的标签数不同", "删除标签与文件的配置文件", "直接关闭软件") switch
+				{
+					MessageBoxResult.OK => false,
+					MessageBoxResult.Cancel => null,
+					_ => throw new ArgumentOutOfRangeException()
+				};
+			if (IdToFile.Count != Relations.Rows.Count)
+				return WarningMessageBox($"路径{configPath}下，Files.json和Relations.xml存储的文件数不同", "删除标签与文件的配置文件", "直接关闭软件") switch
+				{
+					MessageBoxResult.OK => false,
+					MessageBoxResult.Cancel => null,
+					_ => throw new ArgumentOutOfRangeException()
+				};
 			return true;
 		}
 
@@ -223,7 +254,7 @@ namespace TagsTree
 		/// <typeparam name="T">带无参构造的类</typeparam>
 		/// <param name="path">Json文件位置</param>
 		/// <returns>返回文件中的数据，如果没有则返回新实例</returns>
-		public static async ValueTask<T> Deserialize<T>(string path) where T : new()
+		private static async ValueTask<T> Deserialize<T>(string path) where T : new()
 		{
 			try
 			{
@@ -243,6 +274,6 @@ namespace TagsTree
 		/// <param name="path">Json文件路径</param>
 		/// <param name="objectItem">需要转化的对象</param>
 		/// <returns></returns>
-		public static async void Serialize<T>(string path, T objectItem) => await JsonSerializer.SerializeAsync(File.Create(path), objectItem);
+		private static async void Serialize<T>(string path, T objectItem) => await JsonSerializer.SerializeAsync(File.Create(path), objectItem);
 	}
 }

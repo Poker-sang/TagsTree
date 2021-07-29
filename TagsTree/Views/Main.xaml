@@ -39,10 +39,6 @@
                             CommandParameter="{Binding}"
                             Header="移除该文件" />
                         <MenuItem
-                            Command="{Binding Value.DataContext.RemoveTagCmClick, Source={StaticResource WinBindingProxy}}"
-                            CommandParameter="{Binding}"
-                            Header="移除标签" />
-                        <MenuItem
                             Command="{Binding Value.DataContext.PropertiesCmClick, Source={StaticResource WinBindingProxy}}"
                             CommandParameter="{Binding}"
                             Header="属性" />
@@ -113,7 +109,7 @@
                 Margin="0,300,0,0"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Top"
-                PlaceholderText="输入标签以搜索相应文件（标签间以空格隔开）"
+                PlaceholderText="输入标签以搜索相应文件（标签间以空格隔开，不输入显示全部文件）"
                 QueryIcon="Find"
                 Text="{Binding Search, Mode=TwoWay}"
                 UpdateTextOnSelect="False">
@@ -168,5 +164,14 @@
                     IsReadOnly="True" />
             </DataGrid.Columns>
         </DataGrid>
+        <ui:ContentDialog
+            x:Name="Cd"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="1">
+            <Grid
+                Width="800"
+                Height="600" />
+        </ui:ContentDialog>
     </Grid>
 </Window>
