@@ -135,7 +135,7 @@ namespace TagsTree
 				_ = File.Create(configPath + @"\Relations.xml");
 			Relations = RelationsDataTable.Load()!; //异常在内部处理
 
-			foreach (var (key, file) in Task.Run(async () => await Deserialize<Dictionary<int, FileModel>>(FilesPath)).GetAwaiter().GetResult())
+			foreach (var (key, file) in Task.Run(async () => await Deserialize<Dictionary<int, FileModel>>(FilesPath)).Result)
 				IdToFile[key] = file;
 			FileModel.Num = IdToFile.Keys.LastOrDefault() + 1;
 

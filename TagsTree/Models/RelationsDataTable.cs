@@ -15,7 +15,7 @@ namespace TagsTree.Models
 			set => _rowsDict[rowKey.Id][columnKey] = value;
 		}
 		public DataRow RowAt(FileModel rowKey) => _rowsDict[rowKey.Id];
-		public IEnumerable<FileModel> GetFileModels(string tag) => Rows.Cast<DataRow>().Where(row => (bool) row[tag]).Select(row => App.IdToFile[(int) row[0]]);
+		public IEnumerable<FileModel> GetFileModels(string tag) => Rows.Cast<DataRow>().Where(row => (bool)row[tag]).Select(row => App.IdToFile[(int)row[0]]);
 
 		public IEnumerable<string> GetTags(FileModel file)
 		{
@@ -35,10 +35,10 @@ namespace TagsTree.Models
 		{
 			var tag = tags.Current;
 			List<DataRow> range = tags.MoveNext() ? GetFileModels(tags) : _rowsDict.Values.ToList();
-			var tempList = range.Where(row => (bool) row[tag]).ToList();
+			var tempList = range.Where(row => (bool)row[tag]).ToList();
 			tempList.AddRange(App.Tags.Values.Where(childTag => App.Tags[tag].HasChildTag(childTag))
-				.SelectMany(_ => range, (childTag, row) => new {childTag, row})
-				.Where(t => (bool) t.row[t.childTag.Name])
+				.SelectMany(_ => range, (childTag, row) => new { childTag, row })
+				.Where(t => (bool)t.row[t.childTag.Name])
 				.Select(t => t.row));
 			return tempList;
 		}

@@ -29,6 +29,7 @@ namespace TagsTree.ViewModels
 		}
 
 		public readonly Func<bool> CheckConfig = MainService.CheckConfig;
+		public readonly MouseButtonEventHandler MainMouseLeftButtonDown = MainService.MainMouseLeftButtonDown;
 		public readonly MouseButtonEventHandler DgItemMouseDoubleClick = MainService.DgItemMouseDoubleClick;
 		public readonly TypedEventHandler<AutoSuggestBox, AutoSuggestBoxSuggestionChosenEventArgs> SuggestionChosen = MainService.SuggestionChosen;
 		public readonly TypedEventHandler<AutoSuggestBox, AutoSuggestBoxTextChangedEventArgs> TextChanged = MainService.TextChanged;
