@@ -11,13 +11,9 @@ namespace TagsTree.Views
 	{
 		public FileProperties(FileModel file)
 		{
+			var vm = Services.FilePropertiesService.Load(this, file);
+			DataContext = vm;
 			InitializeComponent();
-			Icon.Source = GetIcon(file.FullName);
-			Title = "属性：" + file.Name;
-		}
-		public static ImageSource GetIcon(string fileName)
-		{
-			return CIconOfPath.IconOfPath(fileName, true, true,false);
 		}
 	}
 }
