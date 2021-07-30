@@ -2,10 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
 using TagsTree.Models;
@@ -26,13 +26,20 @@ namespace TagsTree.Services
 			return Vm;
 		}
 
+		private static FileProperties? _fileProperties;
+		private static bool IsShowed;
 
 		#region 事件处理
 
-		public static void DgItemMouseDoubleClick(object sender, MouseButtonEventArgs e)
+		public static void MainMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			throw new NotImplementedException();
+			if (!IsShowed|| _fileProperties is null || e.GetPosition((Main)sender).X is >= 215 and <= 1065) return;
+			_fileProperties.Hide();
+			((Main)sender).Grid.Children.Remove(_fileProperties);
+			IsShowed = false;
 		}
+
+		public static void DgItemMouseDoubleClick(object sender, MouseButtonEventArgs e) => PropertiesCmClick(sender);
 
 		public static void SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs e)
 		{
@@ -71,7 +78,7 @@ namespace TagsTree.Services
 
 		public static void RemoveFileCmClick(object? parameter)
 		{
-			
+
 			foreach (var (key, file) in App.IdToFile)
 				if (file == (FileModel)((DataGridRow)parameter!).DataContext)
 				{
@@ -82,9 +89,16 @@ namespace TagsTree.Services
 				}
 			_ = Vm.FileModels.Remove((FileModel)((DataGridRow)parameter!).DataContext);
 		}
-		public static void PropertiesCmClick(object? parameter)
+		public static async void PropertiesCmClick(object? parameter)
 		{
-			throw new NotImplementedException();
+			_ = Win.Grid.Children.Add(new FileProperties((FileModel)((DataGridRow)parameter!).DataContext));
+			_fileProperties = (FileProperties)Win.Grid.Children[4];
+			Grid.SetRow(_fileProperties, 0);
+			Grid.SetRowSpan(_fileProperties, 2);
+			Grid.SetColumn(_fileProperties, 1);
+			_ = _fileProperties.ShowAsync(ContentDialogPlacement.Popup);
+			await Task.Delay(100);
+			IsShowed = true;
 		}
 
 		#endregion

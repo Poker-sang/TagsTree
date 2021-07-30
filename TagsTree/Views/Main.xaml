@@ -8,6 +8,7 @@
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:ui="http://schemas.modernwpf.com/2019"
     xmlns:viewModels="clr-namespace:TagsTree.ViewModels"
+    xmlns:views="clr-namespace:TagsTree.Views"
     x:Name="MainWindow"
     Title="Main"
     Width="1280"
@@ -48,7 +49,7 @@
         </Style>
     </Window.Resources>
 
-    <Grid>
+    <Grid x:Name="Grid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.191*" />
             <ColumnDefinition Width="0.618*" />
@@ -164,14 +165,5 @@
                     IsReadOnly="True" />
             </DataGrid.Columns>
         </DataGrid>
-        <ui:ContentDialog
-            x:Name="Cd"
-            Grid.Row="0"
-            Grid.RowSpan="2"
-            Grid.Column="1">
-            <Grid
-                Width="800"
-                Height="600" />
-        </ui:ContentDialog>
     </Grid>
 </Window>

@@ -22,13 +22,8 @@ namespace TagsTree.Views
 			}
 			DataContext = vm;
 			InitializeComponent();
-			MouseLeftButtonDown += (sender, e) =>
-			{
-				if (e.GetPosition((Main)sender).X is < 215 or > 1065)
-					Cd.Hide();
-			};
 
-			Cd.ShowAsync(ContentDialogPlacement.Popup);
+			MouseLeftButtonDown += vm.MainMouseLeftButtonDown;
 			((Style)Resources["DgRowStyle"]).Setters.Add(new EventSetter(MouseDoubleClickEvent, vm.DgItemMouseDoubleClick));
 			TbInput.SuggestionChosen += vm.SuggestionChosen;
 			TbInput.TextChanged += vm.TextChanged;
@@ -72,10 +67,5 @@ namespace TagsTree.Views
 		private void ChangeConfig_Click(object sender, RoutedEventArgs e) => _ = new NewConfig(this).ShowDialog();
 		private void TagsManager_Click(object sender, RoutedEventArgs e) => _ = new TagsManager(this).ShowDialog();
 		private void FileAdder_OnClick(object sender, RoutedEventArgs e) => _ = new FileImporter(this).ShowDialog();
-
-		private void UIElement_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			Cd.Hide();
-		}
 	}
 }

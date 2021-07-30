@@ -1,10 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Text;
-using System.Linq;
+﻿using System.Linq;
 using System.Text.Json.Serialization;
 using static TagsTree.Properties.Settings;
-using System;
 
 namespace TagsTree.Models
 {
