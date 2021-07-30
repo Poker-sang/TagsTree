@@ -2,8 +2,8 @@
 using System;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Media.Animation;
+using TagsTree.ViewModels;
 
 namespace TagsTree.Views
 {
@@ -14,20 +14,20 @@ namespace TagsTree.Views
 	{
 		public Main()
 		{
-			var vm = Services.MainService.Load(this);
-			if (!vm.CheckConfig())
+			InitializeComponent();
+			Services.MainService.Load(this);
+			if (!((MainViewModel)DataContext).CheckConfig())
 			{
 				Close();
 				return;
 			}
-			DataContext = vm;
-			InitializeComponent();
+			Services.MainService.LoadFileProperties();
 
-			MouseLeftButtonDown += vm.MainMouseLeftButtonDown;
-			((Style)Resources["DgRowStyle"]).Setters.Add(new EventSetter(MouseDoubleClickEvent, vm.DgItemMouseDoubleClick));
-			TbInput.SuggestionChosen += vm.SuggestionChosen;
-			TbInput.TextChanged += vm.TextChanged;
-			TbInput.QuerySubmitted += TbInput_OnQuerySubmitted + vm.QuerySubmitted;
+			MouseLeftButtonDown += ((MainViewModel)DataContext).MainMouseLeftButtonDown;
+			((Style)Resources["DgRowStyle"]).Setters.Add(new EventSetter(MouseDoubleClickEvent, ((MainViewModel)DataContext).DgItemMouseDoubleClick));
+			TbInput.SuggestionChosen += ((MainViewModel)DataContext).SuggestionChosen;
+			TbInput.TextChanged += ((MainViewModel)DataContext).TextChanged;
+			TbInput.QuerySubmitted += TbInput_OnQuerySubmitted + ((MainViewModel)DataContext).QuerySubmitted;
 		}
 
 

@@ -5,12 +5,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:TagsTree"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:TagsTree.Models"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:ui="http://schemas.modernwpf.com/2019"
     xmlns:viewModels="clr-namespace:TagsTree.ViewModels"
     xmlns:views="clr-namespace:TagsTree.Views"
     x:Name="MainWindow"
-    Title="Main"
+    Title="TagsTree"
     Width="1280"
     Height="720"
     d:DataContext="{d:DesignInstance viewModels:MainViewModel}"
@@ -18,6 +19,9 @@
     ResizeMode="CanMinimize"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
+    <Window.DataContext>
+        <viewModels:MainViewModel />
+    </Window.DataContext>
     <Window.Resources>
         <ui:BindingProxy x:Key="WinBindingProxy" Value="{x:Reference MainWindow}" />
         <Style
@@ -116,7 +120,7 @@
                 UpdateTextOnSelect="False">
                 <ui:AutoSuggestBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding FullName}" />
+                        <TextBlock d:DataContext="{d:DesignInstance models:FileModel}" Text="{Binding FullName}" />
                     </DataTemplate>
                 </ui:AutoSuggestBox.ItemTemplate>
             </ui:AutoSuggestBox>
@@ -165,5 +169,10 @@
                     IsReadOnly="True" />
             </DataGrid.Columns>
         </DataGrid>
+        <views:FileProperties
+            x:Name="FileProperties"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="1" />
     </Grid>
 </Window>

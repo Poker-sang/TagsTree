@@ -6,9 +6,49 @@
     xmlns:local="clr-namespace:TagsTree"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:viewModels="clr-namespace:TagsTree.ViewModels"
+    Title="属性"
     mc:Ignorable="d">
 
-    <Grid Width="800" Height="600">
-        <Image x:Name="Icon" Margin="0,0,619,422" />
+    <Grid
+        x:Name="Grid"
+        Width="800"
+        Height="600">
+        <Grid.DataContext>
+            <viewModels:FilePropertiesViewModel />
+        </Grid.DataContext>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="2*" />
+        </Grid.RowDefinitions>
+        <Image
+            Grid.Row="0"
+            Grid.Column="0"
+            Source="{Binding Icon}" />
+        <StackPanel
+            Grid.Row="0"
+            Grid.Column="1"
+            Orientation="Vertical">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontSize="20" Text="名称：" />
+                <TextBlock FontSize="20" Text="{Binding Name}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontSize="20" Text="路径：" />
+                <TextBlock FontSize="20" Text="{Binding Path}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontSize="20" Text="类型：" />
+                <TextBlock FontSize="20" Text="{Binding Extension}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontSize="20" Text="标签：" />
+                <TextBlock FontSize="20" Text="{Binding Tags}" />
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </ui:ContentDialog>

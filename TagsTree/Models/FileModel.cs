@@ -10,7 +10,6 @@ namespace TagsTree.Models
 		public int Id { get; }
 		public string Name { get; set; }
 		public string Path { get; set; }
-
 		public bool IsFolder { get; set; }
 
 		public FileModel(string name, string path, bool isFolder)

@@ -1,6 +1,4 @@
 ﻿using ModernWpf.Controls;
-using System.Windows.Media;
-using TagsTree.Models;
 
 namespace TagsTree.Views
 {
@@ -9,15 +7,10 @@ namespace TagsTree.Views
 	/// </summary>
 	public partial class FileProperties : ContentDialog
 	{
-		public FileProperties(FileModel file)
+		public FileProperties()
 		{
+			Services.FilePropertiesService.Load(this);
 			InitializeComponent();
-			Icon.Source = GetIcon(file.FullName);
-			Title = "属性：" + file.Name;
-		}
-		public static ImageSource GetIcon(string fileName)
-		{
-			return CIconOfPath.IconOfPath(fileName, true, true,false);
 		}
 	}
 }

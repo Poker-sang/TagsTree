@@ -14,13 +14,13 @@ namespace TagsTree.Services
 {
 	public static class FileImporterService
 	{
-		private static readonly FileImporterViewModel Vm = new();
+		private static FileImporterViewModel Vm;
 		private static FileImporter Win;
 
-		public static FileImporterViewModel Load(FileImporter window)
+		public static void Load(FileImporter window)
 		{
 			Win = window;
-			return Vm;
+			Vm = (FileImporterViewModel)window.DataContext;
 		}
 
 		public static async void Import(object? parameter)
@@ -180,7 +180,7 @@ namespace TagsTree.Services
 			var former = Vm.FileModels.Count;
 			Vm.FileModels.Clear();
 			((Grid)parameter!).Children.Remove(border);
-			App.InformationMessageBox($"共导入 {former} 个文件，其中成功导入 {former - duplicated} 个，有 {duplicated} 个因重复未导入");
+			App.MessageBox.InformationMessageBox($"共导入 {former} 个文件，其中成功导入 {former - duplicated} 个，有 {duplicated} 个因重复未导入");
 		}
 	}
 }
