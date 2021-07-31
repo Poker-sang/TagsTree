@@ -13,10 +13,12 @@
     Height="600"
     MinWidth="800"
     MinHeight="600"
-    d:DataContext="{d:DesignInstance viewModels:FileImporterViewModel}"
     ui:WindowHelper.UseModernWindowStyle="True"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
+    <Window.DataContext>
+        <viewModels:FileImporterViewModel />
+    </Window.DataContext>
     <Grid>
         <DockPanel>
             <ui:CommandBar DockPanel.Dock="Top">

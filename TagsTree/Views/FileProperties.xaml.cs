@@ -9,10 +9,9 @@ namespace TagsTree.Views
 	/// </summary>
 	public partial class FileProperties : ContentDialog
 	{
-		public FileProperties(FileModel file)
+		public FileProperties()
 		{
-			var vm = Services.FilePropertiesService.Load(this, file);
-			DataContext = vm;
+			Services.FilePropertiesService.Load(this);
 			InitializeComponent();
 		}
 	}

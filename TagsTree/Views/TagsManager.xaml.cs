@@ -5,6 +5,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Xml;
+using TagsTree.ViewModels;
 
 namespace TagsTree.Views
 {
@@ -14,17 +15,16 @@ namespace TagsTree.Views
 		{
 			Owner = owner;
 			InitializeComponent();
+			Services.TagsManagerService.Load(this);
 			MouseLeftButtonDown += (_, _) => DragMove();
-			var vm = Services.TagsManagerService.Load(this);
-			_ = TvTags.SetBinding(ItemsControl.ItemsSourceProperty, new Binding(".") { Mode = BindingMode.TwoWay, Source = vm.Xdp });
-			DataContext = vm;
+			_ = TvTags.SetBinding(ItemsControl.ItemsSourceProperty, new Binding(".") { Mode = BindingMode.TwoWay, Source = ((TagsManagerViewModel)DataContext).Xdp });
 
-			_moveTag = vm.MoveTag;
-			TbPath.LostFocus += vm.PathComplement;
-			TbPath.SuggestionChosen += vm.SuggestionChosen;
-			TbName.TextChanged += vm.NameChanged;
-			TbPath.TextChanged += vm.PathChanged;
-			TvTags.SelectedItemChanged += (_, _) => vm.TvSelectItemChanged(TvTags.SelectedItem);
+			_moveTag = ((TagsManagerViewModel)DataContext).MoveTag;
+			TbPath.LostFocus += ((TagsManagerViewModel)DataContext).PathComplement;
+			TbPath.SuggestionChosen += ((TagsManagerViewModel)DataContext).SuggestionChosen;
+			TbName.TextChanged += ((TagsManagerViewModel)DataContext).NameChanged;
+			TbPath.TextChanged += ((TagsManagerViewModel)DataContext).PathChanged;
+			TvTags.SelectedItemChanged += (_, _) => ((TagsManagerViewModel)DataContext).TvSelectItemChanged(TvTags.SelectedItem);
 		}
 
 		private readonly Action<XmlElement, XmlElement?> _moveTag;

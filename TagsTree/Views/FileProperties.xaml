@@ -8,10 +8,15 @@
     xmlns:ui="http://schemas.modernwpf.com/2019"
     xmlns:viewModels="clr-namespace:TagsTree.ViewModels"
     Title="属性"
-    d:DataContext="{d:DesignInstance viewModels:FilePropertiesViewModel}"
     mc:Ignorable="d">
 
-    <Grid Width="800" Height="600">
+    <Grid
+        x:Name="Grid"
+        Width="800"
+        Height="600">
+        <Grid.DataContext>
+            <viewModels:FilePropertiesViewModel />
+        </Grid.DataContext>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
             <ColumnDefinition Width="3*" />

@@ -41,7 +41,18 @@ namespace TagsTree.ViewModels
 		private RelayCommand _removeFileCmClick;
 		private RelayCommand _propertiesCmClick;
 
+		private FilePropertiesViewModel _fpViewModel = new();
 		private string _search = "";
+		public FilePropertiesViewModel FpViewModel
+		{
+			get => _fpViewModel;
+			set
+			{
+				if (Equals(_fpViewModel, value)) return;
+				_fpViewModel = value;
+				OnPropertyChanged(nameof(FpViewModel));
+			}
+		}
 		public string Search
 		{
 			get => _search;

@@ -17,26 +17,27 @@ namespace TagsTree.Services
 {
 	public static class MainService
 	{
-		private static readonly MainViewModel Vm = new();
+		private static MainViewModel Vm;
 		private static Main Win;
 
-		public static MainViewModel Load(Main window)
+		public static void Load(Main window)
 		{
 			Win = window;
-			return Vm;
+			Vm = (MainViewModel)window.DataContext;
 		}
 
-		private static FileProperties? _fileProperties;
-		private static bool IsShowed;
+		public static void LoadFileProperties() => _fileProperties = Win.FileProperties;
+
+		private static FileProperties _fileProperties;
+		private static bool _isShowed;
 
 		#region 事件处理
 
 		public static void MainMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			if (!IsShowed|| _fileProperties is null || e.GetPosition((Main)sender).X is >= 215 and <= 1065) return;
+			if (!_isShowed || e.GetPosition((Main)sender).X is >= 215 and <= 1065) return;
 			_fileProperties.Hide();
-			((Main)sender).Grid.Children.Remove(_fileProperties);
-			IsShowed = false;
+			_isShowed = false;
 		}
 
 		public static void DgItemMouseDoubleClick(object sender, MouseButtonEventArgs e) => PropertiesCmClick(sender);
@@ -91,14 +92,10 @@ namespace TagsTree.Services
 		}
 		public static async void PropertiesCmClick(object? parameter)
 		{
-			_ = Win.Grid.Children.Add(new FileProperties((FileModel)((DataGridRow)parameter!).DataContext));
-			_fileProperties = (FileProperties)Win.Grid.Children[4];
-			Grid.SetRow(_fileProperties, 0);
-			Grid.SetRowSpan(_fileProperties, 2);
-			Grid.SetColumn(_fileProperties, 1);
-			_ = _fileProperties.ShowAsync(ContentDialogPlacement.Popup);
+			((FilePropertiesViewModel)Win.FileProperties.Grid.DataContext).Load((FileModel)((DataGridRow)parameter!).DataContext);
+			_ = _fileProperties!.ShowAsync(ContentDialogPlacement.Popup);
 			await Task.Delay(100);
-			IsShowed = true;
+			_isShowed = true;
 		}
 
 		#endregion

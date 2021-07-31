@@ -17,29 +17,29 @@ namespace TagsTree.ViewModels
 		[NotifyPropertyChangedInvocator]
 		private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-		public FilePropertiesViewModel(FileModel file)
+		public void Load(FileModel file)
 		{
 			if (file.IsFolder)
 			{
-				_name = file.Name;
-				_extension = "文件夹";
+				Extension = "文件夹";
+				Name = file.Name;
 			}
 			else
 			{
-				_extension = file.Name.Split('.', StringSplitOptions.RemoveEmptyEntries).Last().ToUpper();
-				_name = file.Name[..(file.Name.Length - _extension.Length - 1)];
+				Extension = file.Name.Split('.', StringSplitOptions.RemoveEmptyEntries).Last().ToUpper();
+				Name = file.Name[..(file.Name.Length - _extension.Length - 1)];
 			}
-			_path = file.PartialPath;
-			_icon = CIconOfPath.IconOfPathLarge(file.FullName, true, true);
+			Path = file.PartialPath;
+			Icon = CIconOfPath.IconOfPathLarge(file.FullName, true, true);
 			var tags = App.Relations.GetTags(file).Aggregate("", (current, tag) => current + " " + tag);
-			_tags = tags is "" ? "" : tags[1..];
+			Tags = tags is "" ? "" : tags[1..];
 		}
 
 		private ImageSource _icon;
-		private string _name;
-		private string _path;
-		private string _extension;
-		private string _tags;
+		private string _name = "";
+		private string _path = "";
+		private string _extension = "";
+		private string _tags = "";
 
 		public ImageSource Icon
 		{

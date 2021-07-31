@@ -12,12 +12,12 @@ namespace TagsTree.Services
 {
 	public static class TagsManagerService
 	{
-		public static readonly TagsManagerViewModel Vm = new();
+		public static TagsManagerViewModel Vm;
 		private static TagsManager Win;
-		public static TagsManagerViewModel Load(TagsManager window)
+		public static void Load(TagsManager window)
 		{
 			Win = window;
-			return Vm;
+			Vm = (TagsManagerViewModel)window.DataContext;
 		}
 
 		#region 事件处理

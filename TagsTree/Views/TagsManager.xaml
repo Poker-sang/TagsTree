@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:TagsTree"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:properties="clr-namespace:TagsTree.Properties"
+    xmlns:models="clr-namespace:TagsTree.Models"
     xmlns:ui="http://schemas.modernwpf.com/2019"
     xmlns:viewModels="clr-namespace:TagsTree.ViewModels"
     x:Name="TagsManagerWindow"
@@ -14,13 +14,12 @@
     Height="600"
     MinWidth="800"
     MinHeight="600"
-    d:DataContext="{d:DesignInstance viewModels:TagsManagerViewModel}"
     ui:WindowHelper.UseModernWindowStyle="True"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
-
-
-
+    <Window.DataContext>
+        <viewModels:TagsManagerViewModel />
+    </Window.DataContext>
     <Window.Resources>
         <ui:BindingProxy x:Key="WinBindingProxy" Value="{x:Reference TagsManagerWindow}" />
         <Style
@@ -115,7 +114,7 @@
             UpdateTextOnSelect="False">
             <ui:AutoSuggestBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding FullName}" />
+                    <TextBlock d:DataContext="{d:DesignInstance models:FileModel}" Text="{Binding FullName}" />
                 </DataTemplate>
             </ui:AutoSuggestBox.ItemTemplate>
         </ui:AutoSuggestBox>

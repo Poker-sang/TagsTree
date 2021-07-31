@@ -11,14 +11,11 @@ namespace TagsTree.Services
 {
 	public static class FilePropertiesService
 	{
-		private static FilePropertiesViewModel Vm;
 		private static FileProperties ContentDialog;
 
-		public static FilePropertiesViewModel Load(FileProperties contentDialog,FileModel file)
+		public static void Load(FileProperties contentDialog)
 		{
 			ContentDialog = contentDialog;
-			Vm = new FilePropertiesViewModel(file);
-			return Vm;
 		}
 	}
 }

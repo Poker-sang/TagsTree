@@ -11,7 +11,7 @@ namespace TagsTree.Views
 		{
 			Owner = owner;
 			InitializeComponent();
-			DataContext = Services.FileImporterService.Load(this);
+			Services.FileImporterService.Load(this);
 			MouseLeftButtonDown += (_, _) => DragMove();
 		}
 	}

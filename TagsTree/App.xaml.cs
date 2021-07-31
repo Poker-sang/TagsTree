@@ -70,7 +70,7 @@ namespace TagsTree
 		/// <summary>
 		/// XmlDataProvider根元素
 		/// </summary>
-		public static XmlElement? XdpRoot => (XmlElement?)TagsManagerService.Vm.Xdp.Document.LastChild;
+		public static XmlElement? XdpRoot => (XmlElement?)XdTags.LastChild;
 
 		/// <summary>
 		/// 保存标签
@@ -137,19 +137,26 @@ namespace TagsTree
 
 			foreach (var (key, file) in Task.Run(async () => await Deserialize<Dictionary<int, FileModel>>(FilesPath)).Result)
 				IdToFile[key] = file;
-			FileModel.Num = IdToFile.Keys.LastOrDefault() + 1;
+			FileModel.Num = IdToFile.Count is 0 ? 0 : IdToFile.Keys.Last() + 1;
 
+			bool DeleteAll()
+			{
+				File.Delete(configPath + @"\TagsTree.xml");
+				File.Delete(configPath + @"\Files.json");
+				File.Delete(configPath + @"\Relations.xml");
+				return false;
+			}
 			if (Tags.Count != Relations.Columns.Count - 1) //第一列是文件Id
 				return WarningMessageBox($"路径{configPath}下，TagsTree.xml和Relations.xml存储的标签数不同", "删除标签与文件的配置文件", "直接关闭软件") switch
 				{
-					MessageBoxResult.OK => false,
+					MessageBoxResult.OK => DeleteAll(),
 					MessageBoxResult.Cancel => null,
 					_ => throw new ArgumentOutOfRangeException()
 				};
 			if (IdToFile.Count != Relations.Rows.Count)
 				return WarningMessageBox($"路径{configPath}下，Files.json和Relations.xml存储的文件数不同", "删除标签与文件的配置文件", "直接关闭软件") switch
 				{
-					MessageBoxResult.OK => false,
+					MessageBoxResult.OK => DeleteAll(),
 					MessageBoxResult.Cancel => null,
 					_ => throw new ArgumentOutOfRangeException()
 				};
