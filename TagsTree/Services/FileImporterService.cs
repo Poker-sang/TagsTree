@@ -20,7 +20,7 @@ namespace TagsTree.Services
 		public static void Load(FileImporter window)
 		{
 			Win = window;
-			Vm = (FileImporterViewModel) window.DataContext;
+			Vm = (FileImporterViewModel)window.DataContext;
 		}
 
 		public static async void Import(object? parameter)
@@ -180,7 +180,7 @@ namespace TagsTree.Services
 			var former = Vm.FileModels.Count;
 			Vm.FileModels.Clear();
 			((Grid)parameter!).Children.Remove(border);
-			App.InformationMessageBox($"共导入 {former} 个文件，其中成功导入 {former - duplicated} 个，有 {duplicated} 个因重复未导入");
+			App.MessageBox.InformationMessageBox($"共导入 {former} 个文件，其中成功导入 {former - duplicated} 个，有 {duplicated} 个因重复未导入");
 		}
 	}
 }

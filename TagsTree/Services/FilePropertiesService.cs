@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TagsTree.Models;
-using TagsTree.ViewModels;
-using TagsTree.Views;
+﻿using TagsTree.Views;
 
 namespace TagsTree.Services
 {

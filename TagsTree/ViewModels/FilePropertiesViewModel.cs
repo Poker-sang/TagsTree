@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 using TagsTree.Annotations;
 using TagsTree.Models;
@@ -30,7 +27,7 @@ namespace TagsTree.ViewModels
 				Name = file.Name[..(file.Name.Length - _extension.Length - 1)];
 			}
 			Path = file.PartialPath;
-			Icon = CIconOfPath.IconOfPathLarge(file.FullName, true, true);
+			Icon = App.CIconOfPath.IconOfPathLarge(file.FullName, true, true);
 			var tags = App.Relations.GetTags(file).Aggregate("", (current, tag) => current + " " + tag);
 			Tags = tags is "" ? "" : tags[1..];
 		}

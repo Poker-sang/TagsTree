@@ -128,7 +128,7 @@ namespace TagsTree.Services
 			}
 			catch (System.ComponentModel.Win32Exception)
 			{
-				App.ErrorMessageBox("找不到文件夹，源文件可能已被更改");
+				App.MessageBox.ErrorMessageBox("找不到文件夹，源文件可能已被更改");
 			}
 		}
 

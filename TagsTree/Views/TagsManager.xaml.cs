@@ -32,10 +32,10 @@ namespace TagsTree.Views
 
 		#region 拖拽
 
-		private void TbTag_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e) => App.LastMousePos = e.GetPosition(TvTags);
+		private void TbTag_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e) => App.Mouse.LastMousePos = e.GetPosition(TvTags);
 		private void TbTag_MouseMove(object sender, MouseEventArgs e)
 		{
-			if (e.LeftButton == MouseButtonState.Pressed && App.MouseDisplace(4, e.GetPosition(TvTags)))
+			if (e.LeftButton == MouseButtonState.Pressed && App.Mouse.MouseDisplace(4, e.GetPosition(TvTags)))
 				_ = DragDrop.DoDragDrop((TreeViewItem)sender, TvItemGetHeader(sender), DragDropEffects.Move);
 		}
 		private void TbTag_DragEnter(object sender, DragEventArgs e)

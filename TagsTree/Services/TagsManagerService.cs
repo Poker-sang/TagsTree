@@ -61,7 +61,7 @@ namespace TagsTree.Services
 				MoveTag(element, App.GetXmlElement(Vm.Path)!);
 				Vm.Name = "";
 			}
-			else App.ErrorMessageBox("标签名称不存在！请填写正确的单个标签或完整的路径！");
+			else App.MessageBox.ErrorMessageBox("标签名称不存在！请填写正确的单个标签或完整的路径！");
 		}
 		public static void RenameBClick(object? parameter)
 		{
@@ -75,7 +75,7 @@ namespace TagsTree.Services
 		{
 			if (Vm.Path == string.Empty)
 			{
-				App.ErrorMessageBox("未输入希望删除的标签");
+				App.MessageBox.ErrorMessageBox("未输入希望删除的标签");
 				return;
 			}
 			DeleteTag(App.GetXmlElement(Vm.Path)!);
@@ -147,7 +147,7 @@ namespace TagsTree.Services
 			}
 			catch (ArgumentException)
 			{
-				App.ErrorMessageBox("禁止将标签移动到自己目录下");
+				App.MessageBox.ErrorMessageBox("禁止将标签移动到自己目录下");
 			}
 		}
 		private static void RenameTag(string name, XmlElement path)
@@ -177,12 +177,12 @@ namespace TagsTree.Services
 		{
 			if (name == string.Empty)
 			{
-				App.ErrorMessageBox("标签名称不能为空！");
+				App.MessageBox.ErrorMessageBox("标签名称不能为空！");
 				return false;
 			}
 			if (App.TagPathComplete(name) is not null)
 			{
-				App.ErrorMessageBox("与现有标签重名！");
+				App.MessageBox.ErrorMessageBox("与现有标签重名！");
 				return false;
 			}
 			return true;

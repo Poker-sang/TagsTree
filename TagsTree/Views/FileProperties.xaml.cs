@@ -1,6 +1,4 @@
 ﻿using ModernWpf.Controls;
-using System.Windows.Media;
-using TagsTree.Models;
 
 namespace TagsTree.Views
 {
