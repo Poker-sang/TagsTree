@@ -22,7 +22,7 @@ namespace TagsTree.ViewModels
 		public TagsManagerViewModel()
 		{
 			static bool Func1(object? _) => true;
-			bool Func2(object? _) => ClipBoard is not null;
+			bool Func2(object? _) => _clipBoard is not null;
 			_newBClick = new RelayCommand(Func1, TagsManagerService.NewBClick);
 			_moveBClick = new RelayCommand(Func1, TagsManagerService.MoveBClick);
 			_renameBClick = new RelayCommand(Func1, TagsManagerService.RenameBClick);

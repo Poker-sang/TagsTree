@@ -7,7 +7,7 @@ namespace TagsTree
 {
 	public partial class App
 	{
-		public static class SerializationAsync
+		public static class Serialization
 		{
 			/// <summary>
 			/// 异步将Json文件反序列化为某个类
@@ -15,12 +15,29 @@ namespace TagsTree
 			/// <typeparam name="T">带无参构造的类</typeparam>
 			/// <param name="path">Json文件位置</param>
 			/// <returns>返回文件中的数据，如果没有则返回新实例</returns>
-			public static async ValueTask<T> Deserialize<T>(string path) where T : new()
+			public static async ValueTask<T> DeserializeAsync<T>(string path) where T : new()
 			{
 				try
 				{
 					await using var fileStream = File.OpenRead(path);
 					return await JsonSerializer.DeserializeAsync<T>(fileStream) ?? new T();
+				}
+				catch (Exception)
+				{
+					return new T();
+				}
+			}
+			/// <summary>
+			/// 将Json文件反序列化为某个类
+			/// </summary>
+			/// <typeparam name="T">带无参构造的类</typeparam>
+			/// <param name="path">Json文件位置</param>
+			/// <returns>返回文件中的数据，如果没有则返回新实例</returns>
+			public static T Deserialize<T>(string path) where T : new()
+			{
+				try
+				{
+					return JsonSerializer.Deserialize<T>(File.ReadAllText(path)) ?? new T();
 				}
 				catch (Exception)
 				{

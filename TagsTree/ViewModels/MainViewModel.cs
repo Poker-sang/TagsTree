@@ -24,7 +24,7 @@ namespace TagsTree.ViewModels
 			static bool Func(object? _) => true;
 			_openCmClick = new RelayCommand(Func, MainService.OpenCmClick);
 			_openExplorerCmClick = new RelayCommand(Func, MainService.OpenExplorerCmClick);
-			_removeFileCmClick = new RelayCommand(Func, MainService.RemoveFileCmClick);
+			_removeCmClick = new RelayCommand(Func, MainService.RemoveCmClick);
 			_propertiesCmClick = new RelayCommand(Func, MainService.PropertiesCmClick);
 		}
 
@@ -38,7 +38,7 @@ namespace TagsTree.ViewModels
 
 		private RelayCommand _openCmClick;
 		private RelayCommand _openExplorerCmClick;
-		private RelayCommand _removeFileCmClick;
+		private RelayCommand _removeCmClick;
 		private RelayCommand _propertiesCmClick;
 
 		private FilePropertiesViewModel _fpViewModel = new();
@@ -95,11 +95,11 @@ namespace TagsTree.ViewModels
 		}
 		public RelayCommand RemoveFileCmClick
 		{
-			get => _removeFileCmClick;
+			get => _removeCmClick;
 			set
 			{
-				if (Equals(value, _removeFileCmClick)) return;
-				_removeFileCmClick = value;
+				if (Equals(value, _removeCmClick)) return;
+				_removeCmClick = value;
 				OnPropertyChanged(nameof(RemoveFileCmClick));
 			}
 		}
@@ -113,6 +113,5 @@ namespace TagsTree.ViewModels
 				OnPropertyChanged(nameof(PropertiesCmClick));
 			}
 		}
-
 	}
 }

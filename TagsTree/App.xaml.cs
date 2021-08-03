@@ -39,12 +39,12 @@ namespace TagsTree
 		/// <summary>
 		/// 保存文件
 		/// </summary>
-		public static void SaveFiles() => SerializationAsync.Serialize(FilesPath, IdToFile);
+		public static void SaveFiles() => IdFile.Serialize(FilesPath);
 
 		/// <summary>
 		/// 保存关系
 		/// </summary>
-		public static void SaveRelations() => Relations.Save();
+		public static void SaveRelations() => Relations.Save(RelationsPath);
 
 		/// <summary>
 		/// 所有标签
@@ -54,7 +54,7 @@ namespace TagsTree
 		/// <summary>
 		/// 所有标签
 		/// </summary>
-		public static readonly Dictionary<int, FileModel> IdToFile = new();
+		public static readonly BidirectionalDictionary<int ,FileModel> IdFile = new();
 
 		/// <summary>
 		/// 所有关系
@@ -77,7 +77,7 @@ namespace TagsTree
 					case MessageBoxResult.Cancel: Default.IsSet = false; return null;
 					default: throw new ArgumentOutOfRangeException(nameof(configPath), configPath, @"LoadConfig()第一处switch");
 				}
-
+			
 			if (!File.Exists(configPath + @"\TagsTree.xml"))
 				new XDocument(new XElement("TagsTree", new XAttribute("name", ""))).Save(fullPath);
 			try
@@ -96,10 +96,8 @@ namespace TagsTree
 				_ = File.Create(configPath + @"\Relations.xml");
 			Relations = RelationsDataTable.Load()!; //异常在内部处理
 
-			foreach (var (key, file) in Task.Run(async () =>
-				await SerializationAsync.Deserialize<Dictionary<int, FileModel>>(FilesPath)).Result)
-				IdToFile[key] = file;
-			FileModel.Num = IdToFile.Count is 0 ? 0 : IdToFile.Keys.Last() + 1;
+			IdFile.Deserialize(FilesPath);
+			FileModel.Num = IdFile.Count is 0 ? 0 : IdFile.Keys.Last() + 1;
 
 			bool DeleteAll()
 			{
@@ -109,20 +107,20 @@ namespace TagsTree
 				return false;
 			}
 
-			if (Tags.Count != Relations.Columns.Count - 1) //第一列是文件Id
+			if (Tags.Count != Relations.Columns.Count - 1) //第一列是文件Id 
 				return MessageBox.WarningMessageBox($"路径{configPath}下，TagsTree.xml和Relations.xml存储的标签数不同", "删除标签与文件的配置文件", "直接关闭软件") switch
-					{
-						MessageBoxResult.OK => DeleteAll(),
-						MessageBoxResult.Cancel => null,
-						_ => throw new ArgumentOutOfRangeException(nameof(configPath), configPath, @"LoadConfig()第二处switch")
-					};
-			if (IdToFile.Count != Relations.Rows.Count)
+				{
+					MessageBoxResult.OK => DeleteAll(),
+					MessageBoxResult.Cancel => null,
+					_ => throw new ArgumentOutOfRangeException(nameof(configPath), configPath, @"LoadConfig()第二处switch")
+				};
+			if (IdFile.Count != Relations.Rows.Count)
 				return MessageBox.WarningMessageBox($"路径{configPath}下，Files.json和Relations.xml存储的文件数不同", "删除标签与文件的配置文件", "直接关闭软件") switch
-					{
-						MessageBoxResult.OK => DeleteAll(),
-						MessageBoxResult.Cancel => null,
-						_ => throw new ArgumentOutOfRangeException(nameof(configPath), configPath, @"LoadConfig()第三处switch")
-					};
+				{
+					MessageBoxResult.OK => DeleteAll(),
+					MessageBoxResult.Cancel => null,
+					_ => throw new ArgumentOutOfRangeException(nameof(configPath), configPath, @"LoadConfig()第三处switch")
+				};
 			return true;
 		}
 

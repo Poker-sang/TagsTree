@@ -76,18 +76,17 @@ namespace TagsTree.Services
 
 		public static void OpenCmClick(object? parameter) => Open(((FileModel)((DataGridRow)parameter!).DataContext).FullName);
 		public static void OpenExplorerCmClick(object? parameter) => Open(((FileModel)((DataGridRow)parameter!).DataContext).Path);
-
-		public static void RemoveFileCmClick(object? parameter)
+		public static void RemoveCmClick(object? parameter)
 		{
+			var value = (FileModel)((DataGridRow)parameter!).DataContext;
+			if (App.IdFile.Contains(value))
+			{
+				_ = App.IdFile.Remove(value);
+				App.Relations.Rows.Remove(App.Relations.RowAt(value));
+				App.Relations.RefreshRowsDict();
+				App.SaveFiles();
+			}
 
-			foreach (var (key, file) in App.IdToFile)
-				if (file == (FileModel)((DataGridRow)parameter!).DataContext)
-				{
-					_ = App.IdToFile.Remove(key);
-					App.Relations.Rows.Remove(App.Relations.RowAt(file));
-					App.Relations.RefreshRowsDict();
-					App.SaveFiles();
-				}
 			_ = Vm.FileModels.Remove((FileModel)((DataGridRow)parameter!).DataContext);
 		}
 		public static async void PropertiesCmClick(object? parameter)

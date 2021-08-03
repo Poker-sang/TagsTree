@@ -15,7 +15,7 @@ namespace TagsTree.Models
 			set => _rowsDict[rowKey.Id][columnKey] = value;
 		}
 		public DataRow RowAt(FileModel rowKey) => _rowsDict[rowKey.Id];
-		public IEnumerable<FileModel> GetFileModels(string tag) => Rows.Cast<DataRow>().Where(row => (bool)row[tag]).Select(row => App.IdToFile[(int)row[0]]);
+		public IEnumerable<FileModel> GetFileModels(string tag) => Rows.Cast<DataRow>().Where(row => (bool)row[tag]).Select(row => App.IdFile[(int)row[0]]);
 
 		public IEnumerable<string> GetTags(FileModel file)
 		{
@@ -26,10 +26,10 @@ namespace TagsTree.Models
 		public IEnumerable<FileModel> GetFileModels(List<string> tags)
 		{
 			if (tags.Count == 0)
-				return App.IdToFile.Values.ToList();
+				return App.IdFile.Values.ToList();
 			var enumerator = tags.GetEnumerator();
 			_ = enumerator.MoveNext();
-			return GetFileModels(enumerator).Select(row => App.IdToFile[(int)row[0]]).ToList();
+			return GetFileModels(enumerator).Select(row => App.IdFile[(int)row[0]]).ToList();
 		}
 		private List<DataRow> GetFileModels(IEnumerator<string> tags)
 		{
@@ -125,6 +125,6 @@ namespace TagsTree.Models
 			}
 		}
 
-		public async void Save() => await Task.Run(() => WriteXml(App.RelationsPath, XmlWriteMode.WriteSchema));
+		public async void Save(string path) => await Task.Run(() => WriteXml(path, XmlWriteMode.WriteSchema));
 	}
 }
