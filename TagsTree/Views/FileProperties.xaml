@@ -50,5 +50,40 @@
                 <TextBlock FontSize="20" Text="{Binding Tags}" />
             </StackPanel>
         </StackPanel>
+        <ui:CommandBar
+            Grid.Row="1"
+            Grid.Column="1"
+            VerticalAlignment="Bottom">
+            <ui:AppBarButton
+                Command="{Binding OpenBClick}"
+                Icon="OpenFile"
+                Label="打开" />
+            <ui:AppBarButton
+                Command="{Binding OpenExplorerBClick}"
+                Icon="OpenLocal"
+                Label="移动" />
+            <ui:AppBarButton
+                Command="{Binding EditTagsBClick}"
+                Icon="Tag"
+                Label="编辑标签" />
+            <ui:AppBarButton Command="{Binding RemoveBClick}" Label="移除">
+                <ui:AppBarButton.Icon>
+                    <ui:FontIcon Glyph="&#xEDE1;" />
+                </ui:AppBarButton.Icon>
+            </ui:AppBarButton>
+            <ui:AppBarSeparator />
+            <ui:AppBarButton
+                Command="{Binding RenameBClick}"
+                Icon="Rename"
+                Label="重命名" />
+            <ui:AppBarButton
+                Command="{Binding MoveBClick}"
+                Icon="MoveToFolder"
+                Label="移动" />
+            <ui:AppBarButton
+                Command="{Binding DeleteBClick}"
+                Icon="Delete"
+                Label="删除" />
+        </ui:CommandBar>
     </Grid>
 </ui:ContentDialog>

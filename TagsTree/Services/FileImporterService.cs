@@ -159,7 +159,7 @@ namespace TagsTree.Services
 			await Task.Run(() =>
 			{
 				var dictionary = new Dictionary<string, bool>();
-				foreach (var fileModel in App.IdToFile.Values)
+				foreach (var fileModel in App.IdFile.Values)
 					dictionary[fileModel.UniqueName] = true;
 				_ = Current.Dispatcher.Invoke(() => progressBar.Value = 2);
 				var unit = 97.0 / Vm.FileModels.Count;
@@ -168,7 +168,7 @@ namespace TagsTree.Services
 					if (!dictionary.ContainsKey(fileModel.UniqueName))
 					{
 						App.Relations.NewRow(fileModel);
-						App.IdToFile[fileModel.Id] = fileModel;
+						App.IdFile[fileModel.Id] = fileModel;
 					}
 					else duplicated++;
 					_ = Current.Dispatcher.Invoke(() => progressBar.Value += unit);
