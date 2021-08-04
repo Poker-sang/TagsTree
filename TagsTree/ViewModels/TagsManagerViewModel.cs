@@ -35,6 +35,7 @@ namespace TagsTree.ViewModels
 			_pasteXCmClick = new RelayCommand(Func2, TagsManagerService.PasteXCmClick);
 			_renameCmClick = new RelayCommand(Func1, TagsManagerService.RenameCmClick);
 			_deleteCmClick = new RelayCommand(Func1, TagsManagerService.DeleteCmClick);
+			App.XdTagsReload();
 			_xdp = new XmlDataProvider { Document = App.XdTags, XPath = @"TagsTree/Tag" };
 		}
 
@@ -44,6 +45,7 @@ namespace TagsTree.ViewModels
 		public readonly TypedEventHandler<AutoSuggestBox, AutoSuggestBoxSuggestionChosenEventArgs> SuggestionChosen = TagsManagerService.SuggestionChosen;
 		public readonly TypedEventHandler<AutoSuggestBox, AutoSuggestBoxTextChangedEventArgs> NameChanged = TagsManagerService.NameChanged;
 		public readonly TypedEventHandler<AutoSuggestBox, AutoSuggestBoxTextChangedEventArgs> PathChanged = TagsManagerService.PathChanged;
+		public readonly CancelEventHandler Closing = TagsManagerService.Closing;
 
 		private string _name = "";
 		private string _path = "";

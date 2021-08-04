@@ -86,10 +86,10 @@
                 <ui:AppBarButton Icon="Help">
                     <ui:AppBarButton.ToolTip>
                         <TextBlock>
-                            新建：输入「标签名称」，该标签就会作为新标签加在「标签路径」目录下&quot;<LineBreak />
-                            移动：输入「标签名称」，该标签和其目录下的所有标签都会移动到「标签路径」目录下&quot;<LineBreak />
-                            重命名：输入「标签路径」，该标签名将会改成「标签名称」<LineBreak />
-                            删除：输入「标签路径」，该标签和其目录下的所有标签都会被删除</TextBlock>
+                            新建：输入「标签名称」，该标签就会作为新标签加在「配置路径」目录下&quot;<LineBreak />
+                            移动：输入「标签名称」，该标签和其目录下的所有标签都会移动到「配置路径」目录下&quot;<LineBreak />
+                            重命名：输入「配置路径」，该标签名将会改成「标签名称」<LineBreak />
+                            删除：输入「配置路径」，该标签和其目录下的所有标签都会被删除</TextBlock>
                     </ui:AppBarButton.ToolTip>
                 </ui:AppBarButton>
                 <ui:AppBarButton
@@ -109,7 +109,7 @@
             x:Name="TbPath"
             VerticalAlignment="Center"
             DockPanel.Dock="Top"
-            PlaceholderText="标签路径（不包含/:*?&quot;&lt;&gt;|,和空白字符且不为空）"
+            PlaceholderText="配置路径（不包含/:*?&quot;&lt;&gt;|,和空白字符且不为空）"
             Text="{Binding Path, Mode=TwoWay}"
             UpdateTextOnSelect="False">
             <ui:AutoSuggestBox.ItemTemplate>

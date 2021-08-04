@@ -38,11 +38,11 @@
                         <MenuItem
                             Command="{Binding Value.DataContext.OpenExplorerCmClick, Source={StaticResource WinBindingProxy}}"
                             CommandParameter="{Binding}"
-                            Header="打开所在文件夹" />
+                            Header="打开文件夹" />
                         <MenuItem
                             Command="{Binding Value.DataContext.RemoveFileCmClick, Source={StaticResource WinBindingProxy}}"
                             CommandParameter="{Binding}"
-                            Header="移除该文件" />
+                            Header="移除" />
                         <MenuItem
                             Command="{Binding Value.DataContext.PropertiesCmClick, Source={StaticResource WinBindingProxy}}"
                             CommandParameter="{Binding}"
@@ -137,14 +137,14 @@
             CanUserReorderColumns="False"
             CanUserResizeRows="False"
             IsHitTestVisible="False"
-            ItemsSource="{Binding FileModels, Mode=TwoWay}"
+            ItemsSource="{Binding FileModels,Mode=OneWay}"
             Opacity="0"
             RowStyle="{StaticResource DgRowStyle}"
             SelectionMode="Single">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn
                     Width="45"
-                    Binding="{Binding IsFolder}"
+                    Binding="{Binding IsFolder,Mode=OneWay}"
                     CanUserResize="False"
                     CanUserSort="False"
                     IsReadOnly="True">
@@ -154,17 +154,17 @@
                 </DataGridCheckBoxColumn>
                 <DataGridTextColumn
                     Width="2*"
-                    Binding="{Binding Name}"
+                    Binding="{Binding Name,Mode=OneWay}"
                     Header="名称"
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Tags}"
+                    Binding="{Binding Tags,Mode=OneWay}"
                     Header="标签"
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding PartialPath}"
+                    Binding="{Binding PartialPath,Mode=OneWay}"
                     Header="路径"
                     IsReadOnly="True" />
             </DataGrid.Columns>

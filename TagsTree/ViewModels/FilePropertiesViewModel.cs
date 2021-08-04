@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Media;
@@ -18,6 +19,8 @@ namespace TagsTree.ViewModels
 
 		public void Load(FileModel file)
 		{
+			FileModel = file;
+			_exists = File.Exists(file.FullName);
 			if (file.IsFolder)
 			{
 				Extension = "文件夹";
@@ -46,6 +49,9 @@ namespace TagsTree.ViewModels
 			_moveBClick = new RelayCommand(Func2, FilePropertiesService.MoveBClick);
 			_deleteBClick = new RelayCommand(Func2, FilePropertiesService.DeleteBClick);
 		}
+
+		public FileModel FileModel;
+
 		private RelayCommand _openBClick;
 		private RelayCommand _openExplorerBClick;
 		private RelayCommand _editTagsBClick;

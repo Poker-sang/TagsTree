@@ -8,7 +8,7 @@
     <Setting Name="LibraryPath" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="RootFoldersExist" Type="System.Boolean" Scope="User">
+    <Setting Name="PathTags" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="IsSet" Type="System.Boolean" Scope="User">

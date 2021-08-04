@@ -83,8 +83,7 @@ namespace TagsTree.Models
 					return;
 				}
 		}
-
-		private static bool _init;
+		
 		private RelationsDataTable() { }
 
 		private RelationsDataTable(string name) => TableName = name;
@@ -96,11 +95,8 @@ namespace TagsTree.Models
 				_rowsDict[(int)row[0]] = row; //row[0]即为row["FileId"]
 		}
 
-		public static RelationsDataTable? Load()
+		public static RelationsDataTable Load()
 		{
-			if (_init)
-				return null;
-			_init = true;
 			try
 			{
 				var temp = new RelationsDataTable("Relations");

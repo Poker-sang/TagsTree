@@ -52,21 +52,28 @@
         </StackPanel>
         <ui:CommandBar
             Grid.Row="1"
-            Grid.Column="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
             VerticalAlignment="Bottom">
             <ui:AppBarButton
                 Command="{Binding OpenBClick}"
+                CommandParameter="{Binding}"
                 Icon="OpenFile"
                 Label="打开" />
             <ui:AppBarButton
                 Command="{Binding OpenExplorerBClick}"
+                CommandParameter="{Binding}"
                 Icon="OpenLocal"
-                Label="移动" />
+                Label="打开文件夹" />
             <ui:AppBarButton
                 Command="{Binding EditTagsBClick}"
+                CommandParameter="{Binding}"
                 Icon="Tag"
                 Label="编辑标签" />
-            <ui:AppBarButton Command="{Binding RemoveBClick}" Label="移除">
+            <ui:AppBarButton
+                Command="{Binding RemoveBClick}"
+                CommandParameter="{Binding}"
+                Label="移除">
                 <ui:AppBarButton.Icon>
                     <ui:FontIcon Glyph="&#xEDE1;" />
                 </ui:AppBarButton.Icon>
@@ -74,14 +81,17 @@
             <ui:AppBarSeparator />
             <ui:AppBarButton
                 Command="{Binding RenameBClick}"
+                CommandParameter="{Binding}"
                 Icon="Rename"
                 Label="重命名" />
             <ui:AppBarButton
                 Command="{Binding MoveBClick}"
+                CommandParameter="{Binding}"
                 Icon="MoveToFolder"
                 Label="移动" />
             <ui:AppBarButton
                 Command="{Binding DeleteBClick}"
+                CommandParameter="{Binding}"
                 Icon="Delete"
                 Label="删除" />
         </ui:CommandBar>

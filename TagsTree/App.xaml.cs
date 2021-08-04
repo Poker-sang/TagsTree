@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Xml;
 using System.Xml.Linq;
@@ -25,6 +23,16 @@ namespace TagsTree
 		/// 存储标签结构的Xml文档
 		/// </summary>
 		public static XmlDocument XdTags { get; } = new();
+
+		/// <summary>
+		/// 重新加载标签
+		/// </summary>
+		public static void XdTagsReload()
+		{
+			XdTags.Load(TagsPath);
+			RecursiveLoadTags();
+			Relations = RelationsDataTable.Load()!;
+		}
 
 		/// <summary>
 		/// XmlDataProvider根元素
@@ -54,7 +62,7 @@ namespace TagsTree
 		/// <summary>
 		/// 所有标签
 		/// </summary>
-		public static readonly BidirectionalDictionary<int ,FileModel> IdFile = new();
+		public static readonly BidirectionalDictionary<int, FileModel> IdFile = new();
 
 		/// <summary>
 		/// 所有关系
@@ -64,74 +72,74 @@ namespace TagsTree
 		///  <summary>
 		///  重新加载新的配置文件
 		///  </summary>
-		///  <exception cref="ArgumentOutOfRangeException">理论上不会出现该异常</exception>
 		///  <returns>true：已填写正确地址，进入软件；false：打开设置页面；null：关闭软件</returns>
-		public static bool? LoadConfig(string configPath)
+		public static bool? LoadConfig()
 		{
-			var fullPath = configPath + @"\TagsTree.xml";
-
-			if (!Directory.Exists(configPath))
-				switch (MessageBox.WarningMessageBox($"路径{configPath}不存在", "修改设置", "关闭软件"))
+			if (!Directory.Exists(Default.ConfigPath))
+			{
+				if (MessageBoxX.Warning($"路径{Default.ConfigPath}不存在", "修改设置", "关闭软件"))
 				{
-					case MessageBoxResult.OK: Default.IsSet = false; return false;
-					case MessageBoxResult.Cancel: Default.IsSet = false; return null;
-					default: throw new ArgumentOutOfRangeException(nameof(configPath), configPath, @"LoadConfig()第一处switch");
+					Default.IsSet = false;
+					return false;
 				}
-			
-			if (!File.Exists(configPath + @"\TagsTree.xml"))
-				new XDocument(new XElement("TagsTree", new XAttribute("name", ""))).Save(fullPath);
+				else
+				{
+					Default.IsSet = false;
+					return null;
+				}
+			}
+
+			if (!File.Exists(TagsPath))
+				new XDocument(new XElement("TagsTree", new XAttribute("name", ""))).Save(TagsPath);
 			try
 			{
-				XdTags.Load(configPath + @"\TagsTree.xml");
+				XdTags.Load(TagsPath);
 			}
 			catch (Exception)
 			{
-				File.Delete(fullPath);
-				new XDocument(new XElement("TagsTree", new XAttribute("name", ""))).Save(fullPath);
+				File.Delete(TagsPath);
+				new XDocument(new XElement("TagsTree", new XAttribute("name", ""))).Save(TagsPath);
 			}
-
 			RecursiveLoadTags();
 
-			if (!File.Exists(configPath + @"\Relations.xml"))
-				_ = File.Create(configPath + @"\Relations.xml");
+			if (!File.Exists(RelationsPath))
+				_ = File.Create(RelationsPath);
 			Relations = RelationsDataTable.Load()!; //异常在内部处理
 
 			IdFile.Deserialize(FilesPath);
 			FileModel.Num = IdFile.Count is 0 ? 0 : IdFile.Keys.Last() + 1;
 
-			bool DeleteAll()
+			static bool DeleteAll()
 			{
-				File.Delete(configPath + @"\TagsTree.xml");
-				File.Delete(configPath + @"\Files.json");
-				File.Delete(configPath + @"\Relations.xml");
+				File.Delete(TagsPath);
+				File.Delete(FilesPath);
+				File.Delete(RelationsPath);
 				return false;
 			}
 
 			if (Tags.Count != Relations.Columns.Count - 1) //第一列是文件Id 
-				return MessageBox.WarningMessageBox($"路径{configPath}下，TagsTree.xml和Relations.xml存储的标签数不同", "删除标签与文件的配置文件", "直接关闭软件") switch
-				{
-					MessageBoxResult.OK => DeleteAll(),
-					MessageBoxResult.Cancel => null,
-					_ => throw new ArgumentOutOfRangeException(nameof(configPath), configPath, @"LoadConfig()第二处switch")
-				};
+			{
+				if (MessageBoxX.Warning($"路径{Default.ConfigPath}下，TagsTree.xml和Relations.xml存储的标签数不同", "删除标签与文件的配置文件", "直接关闭软件"))
+					return DeleteAll();
+				else return null;
+			}
 			if (IdFile.Count != Relations.Rows.Count)
-				return MessageBox.WarningMessageBox($"路径{configPath}下，Files.json和Relations.xml存储的文件数不同", "删除标签与文件的配置文件", "直接关闭软件") switch
-				{
-					MessageBoxResult.OK => DeleteAll(),
-					MessageBoxResult.Cancel => null,
-					_ => throw new ArgumentOutOfRangeException(nameof(configPath), configPath, @"LoadConfig()第三处switch")
-				};
+			{
+				if (MessageBoxX.Warning($"路径{Default.ConfigPath}下，Files.json和Relations.xml存储的文件数不同", "删除标签与文件的配置文件", "直接关闭软件"))
+					return DeleteAll();
+				else return null;
+			}
 			return true;
 		}
 
 		/// <summary>
 		/// TreeView控件选择的元素改变时，显示所选项目Xml元素的路径<br/>
 		/// 用法：<code>private void treeView_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs&lt;object&gt; e)<br/>
-		/// => textBox.Text = TagsTreeStatic.TagsTree_OnSelectedItemChanged(treeView) ?? textBox.Text;</code>
+		/// => textBox.Text = App.TvSelectedItemChanged(treeView) ?? textBox.Text;</code>
 		/// </summary>
 		/// <param name="selectedItem">TreeView控件的SelectedItem</param>
 		/// <returns>string类型，显示所选Xml元素的路径，为null则是没有选择项目</returns>
-		public static string? TagsTree_OnSelectedItemChanged(XmlElement? selectedItem)
+		public static string? TvSelectedItemChanged(XmlElement? selectedItem)
 		{
 			if (selectedItem is null)
 				return null;
@@ -181,8 +189,6 @@ namespace TagsTree
 			if (temp.Length == 0)
 				return null;
 			name = temp.Last();
-			if (!new Regex(@"^[^\\\/\:\*\?\""\<\>\|\s]+$").IsMatch(name))
-				throw new InvalidDataException();
 			return Tags.ContainsKey(name) ? Tags[name] : null;
 		}
 
