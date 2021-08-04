@@ -1,21 +1,13 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using Windows.Gaming.Input;
-using ABI.Windows.AI.MachineLearning;
-using TagsTree.Annotations;
-using TagsTree.Models;
+﻿using System.Collections.Generic;
 
 namespace TagsTree
 {
 	public partial class App
 	{
 		/// <summary>
-		/// 两个不同类型的双向字典
+		/// 包含两个不同类型的双向字典
 		/// </summary>
-		public class BidirectionalDictionary<TKey, TValue> where TKey : notnull where TValue : notnull 
+		public class BidirectionalDictionary<TKey, TValue> where TKey : notnull where TValue : notnull
 		{
 			private readonly Dictionary<TKey, TValue> _dict1 = new();
 			private readonly Dictionary<TValue, TKey> _dict2 = new();

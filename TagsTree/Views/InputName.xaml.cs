@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Windows;
 
 namespace TagsTree.Views
 {
@@ -7,17 +10,27 @@ namespace TagsTree.Views
 	/// </summary>
 	public partial class InputName : Window
 	{
-		public InputName(Window owner)
+		public InputName(Window owner, string hintMessage, string invalidRegex)
 		{
 			Owner = owner;
+			_invalidRegex = invalidRegex;
+			_hintMessage = hintMessage is "" ? invalidRegex : hintMessage;
 			InitializeComponent();
+			AsBox.PlaceholderText = _hintMessage;
 		}
 
 		public string Message = "";
+		private readonly string _invalidRegex;
+		private readonly string _hintMessage;
 
 		private void BConfirm_OnClick(object sender, RoutedEventArgs e)
 		{
-			Message = TextBox.Text;
+			if (!new Regex($@"^[^{_invalidRegex}]+$").IsMatch(AsBox.Text))
+			{
+				App.MessageBoxX.Error(_hintMessage);
+				return;
+			}
+			Message = AsBox.Text;
 			DialogResult = true;
 			Close();
 		}

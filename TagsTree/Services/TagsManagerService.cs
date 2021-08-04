@@ -1,5 +1,7 @@
 ﻿using ModernWpf.Controls;
 using System;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -12,7 +14,7 @@ namespace TagsTree.Services
 {
 	public static class TagsManagerService
 	{
-		public static TagsManagerViewModel Vm;
+		private static TagsManagerViewModel Vm;
 		private static TagsManager Win;
 		public static void Load(TagsManager window)
 		{
@@ -25,20 +27,20 @@ namespace TagsTree.Services
 		public static void PathComplement(object sender, RoutedEventArgs e) => Vm.Path = App.TagPathComplete(Vm.Path)?.FullName ?? Vm.Path;
 		public static void NameChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
 		{
-			Vm.Name = Regex.Replace(Vm.Name, @"[\\\/\:\*\?\""\<\>\|\s]+", "");
+			Vm.Name = Regex.Replace(Vm.Name, $@"[{App.FileX.GetInvalidNameChars}]+", "");
 			var textBox = (TextBox)typeof(AutoSuggestBox).GetField("m_textBox", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(sender)!;
 			textBox.SelectionStart = textBox.Text.Length;
 		}
 
 		public static void PathChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
 		{
-			Vm.Path = Regex.Replace(Vm.Path, @"[\/\:\*\?\""\<\>\|\s]+", "");
+			Vm.Path = Regex.Replace(Vm.Path, $@"[{App.FileX.GetInvalidPathChars}]+", "");
 			sender.ItemsSource = App.TagSuggest(sender.Text);
 			var textBox = (TextBox)typeof(AutoSuggestBox).GetField("m_textBox", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(sender)!;
 			textBox.SelectionStart = textBox.Text.Length;
 		}
 		public static void SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs e) => sender.Text = e.SelectedItem.ToString();
-		public static void TvSelectItemChanged(object? selectElement) => Vm.Path = App.TagsTree_OnSelectedItemChanged((XmlElement?)selectElement) ?? Vm.Path;
+		public static void TvSelectItemChanged(object? selectElement) => Vm.Path = App.TvSelectedItemChanged((XmlElement?)selectElement) ?? Vm.Path;
 		private static XmlElement TvItemGetHeader(object? sender) => (XmlElement)((TreeViewItem)sender!).Header;
 
 		#endregion
@@ -47,9 +49,7 @@ namespace TagsTree.Services
 
 		public static void NewBClick(object? parameter)
 		{
-			if (!NewTagCheck(Vm.Name))
-				return;
-
+			if (!NewTagCheck(Vm.Name)) return;
 			NewTag(Vm.Name, App.GetXmlElement(Vm.Path)!);
 			Vm.Name = "";
 		}
@@ -61,12 +61,11 @@ namespace TagsTree.Services
 				MoveTag(element, App.GetXmlElement(Vm.Path)!);
 				Vm.Name = "";
 			}
-			else App.MessageBox.ErrorMessageBox("标签名称不存在！请填写正确的单个标签或完整的路径！");
+			else App.MessageBoxX.Error("标签名称不存在！请填写正确的单个标签或完整的路径！");
 		}
 		public static void RenameBClick(object? parameter)
 		{
-			if (!NewTagCheck(Vm.Name))
-				return;
+			if (!NewTagCheck(Vm.Name)) return;
 			RenameTag(Vm.Name, App.GetXmlElement(Vm.Path)!);
 			Vm.Name = "";
 			Vm.Path = "";
@@ -75,7 +74,7 @@ namespace TagsTree.Services
 		{
 			if (Vm.Path == string.Empty)
 			{
-				App.MessageBox.ErrorMessageBox("未输入希望删除的标签");
+				App.MessageBoxX.Error("未输入希望删除的标签");
 				return;
 			}
 			DeleteTag(App.GetXmlElement(Vm.Path)!);
@@ -89,19 +88,15 @@ namespace TagsTree.Services
 
 		public static void NewCmClick(object? parameter)
 		{
-			var dialog = new InputName(Win);
-			if (dialog.ShowDialog() == false || !NewTagCheck(dialog.Message))
-				return;
-
-			NewTag(dialog.Message, TvItemGetHeader(parameter)!);
+			var dialog = new InputName(Win, @"不能包含\/:*?""<>|和除空格外的空白字符", App.FileX.GetInvalidNameChars);
+			if (dialog.ShowDialog() != false && NewTagCheck(dialog.Message))
+				NewTag(dialog.Message, TvItemGetHeader(parameter)!);
 		}
 		public static void NewXCmClick(object? parameter)
 		{
-			var dialog = new InputName(Win);
-			if (dialog.ShowDialog() == false || !NewTagCheck(dialog.Message))
-				return;
-
-			NewTag(dialog.Message, App.XdpRoot!);
+			var dialog = new InputName(Win, @"不能包含\/:*?""<>|和除空格外的空白字符", App.FileX.GetInvalidNameChars);
+			if (dialog.ShowDialog() != false && NewTagCheck(dialog.Message))
+				NewTag(dialog.Message, App.XdpRoot!);
 		}
 		public static void CutCmClick(object? parameter) => Vm.ClipBoard = TvItemGetHeader(parameter);
 		public static void PasteCmClick(object? parameter)
@@ -116,11 +111,9 @@ namespace TagsTree.Services
 		}
 		public static void RenameCmClick(object? parameter)
 		{
-			var dialog = new InputName(Win);
-			if (dialog.ShowDialog() == false || !NewTagCheck(dialog.Message))
-				return;
-
-			RenameTag(dialog.Message, TvItemGetHeader(parameter)!);
+			var dialog = new InputName(Win, @"\/:*?""<>|\s", @"\/:*?""<>|和空白字符");
+			if (dialog.ShowDialog() != false && NewTagCheck(dialog.Message))
+				RenameTag(dialog.Message, TvItemGetHeader(parameter)!);
 		}
 		public static void DeleteCmClick(object? parameter) => DeleteTag(TvItemGetHeader(parameter));
 
@@ -147,7 +140,7 @@ namespace TagsTree.Services
 			}
 			catch (ArgumentException)
 			{
-				App.MessageBox.ErrorMessageBox("禁止将标签移动到自己目录下");
+				App.MessageBoxX.Error("禁止将标签移动到自己目录下");
 			}
 		}
 		private static void RenameTag(string name, XmlElement path)
@@ -173,16 +166,16 @@ namespace TagsTree.Services
 			Vm.Changed = true;
 			App.RecursiveLoadTags();
 		}
-		public static bool NewTagCheck(string name)
+		private static bool NewTagCheck(string name)
 		{
 			if (name == string.Empty)
 			{
-				App.MessageBox.ErrorMessageBox("标签名称不能为空！");
+				App.MessageBoxX.Error("标签名称不能为空！");
 				return false;
 			}
 			if (App.TagPathComplete(name) is not null)
 			{
-				App.MessageBox.ErrorMessageBox("与现有标签重名！");
+				App.MessageBoxX.Error("与现有标签重名！");
 				return false;
 			}
 			return true;

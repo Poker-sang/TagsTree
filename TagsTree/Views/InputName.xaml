@@ -19,9 +19,6 @@
             Content="确定"
             DockPanel.Dock="Right" />
         <Separator Width="5" DockPanel.Dock="Right" />
-        <TextBox
-            x:Name="TextBox"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Center" />
+        <ui:AutoSuggestBox x:Name="AsBox" VerticalAlignment="Center"/>
     </DockPanel>
 </Window>

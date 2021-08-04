@@ -1,7 +1,7 @@
 ﻿using ModernWpf.Controls;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -18,7 +18,7 @@ namespace TagsTree.Services
 	public static class MainService
 	{
 		private static MainViewModel Vm;
-		private static Main Win;
+		public static Main Win;
 
 		public static void Load(Main window)
 		{
@@ -52,7 +52,7 @@ namespace TagsTree.Services
 
 		public static void TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
 		{
-			Vm.Search = Regex.Replace(Vm.Search, @"[\\\/\:\*\?\""\<\>\|]+", "");
+			Vm.Search = Regex.Replace(Vm.Search, $@"[{App.FileX.GetInvalidPathChars}]+", "");
 			Vm.Search = Regex.Replace(Vm.Search, @"  +", " ").TrimStart();
 			sender.ItemsSource = App.TagSuggest(sender.Text);
 			var textBox = (TextBox)typeof(AutoSuggestBox).GetField("m_textBox", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(sender)!;
@@ -74,10 +74,11 @@ namespace TagsTree.Services
 
 		#region 命令
 
-		public static void OpenCmClick(object? parameter) => Open(((FileModel)((DataGridRow)parameter!).DataContext).FullName);
-		public static void OpenExplorerCmClick(object? parameter) => Open(((FileModel)((DataGridRow)parameter!).DataContext).Path);
+		public static void OpenCmClick(object? parameter) => App.FileX.Open(((FileModel)((DataGridRow)parameter!).DataContext).FullName);
+		public static void OpenExplorerCmClick(object? parameter) => App.FileX.Open(((FileModel)((DataGridRow)parameter!).DataContext).Path);
 		public static void RemoveCmClick(object? parameter)
 		{
+			if (!App.MessageBoxX.Warning("是否从软件移除该文件？")) return;
 			var value = (FileModel)((DataGridRow)parameter!).DataContext;
 			if (App.IdFile.Contains(value))
 			{
@@ -106,7 +107,7 @@ namespace TagsTree.Services
 			while (true)
 			{
 				if (Default.IsSet) //如果之前有储存过用户配置，则判断是否符合
-					switch (App.LoadConfig(Default.ConfigPath))
+					switch (App.LoadConfig())
 					{
 						case null: return false;
 						case true: return true;
@@ -116,23 +117,6 @@ namespace TagsTree.Services
 			}
 		}
 
-		private static void Open(string fileName)
-		{
-
-			try
-			{
-				var process = new Process { StartInfo = new ProcessStartInfo(fileName) };
-				process.StartInfo.UseShellExecute = true;
-				process.Start();
-			}
-			catch (System.ComponentModel.Win32Exception)
-			{
-				App.MessageBox.ErrorMessageBox("找不到文件夹，源文件可能已被更改");
-			}
-		}
-
 		#endregion
-
-
 	}
 }
