@@ -39,13 +39,13 @@ namespace TagsTree.ViewModels
 			_xdp = new XmlDataProvider { Document = App.XdTags, XPath = @"TagsTree/Tag" };
 		}
 
-		public readonly RoutedEventHandler PathComplement = TagsManagerService.PathComplement;
-		public readonly Action<object?> TvSelectItemChanged = TagsManagerService.TvSelectItemChanged;
-		public readonly Action<XmlElement, XmlElement?> MoveTag = TagsManagerService.MoveTag;
-		public readonly TypedEventHandler<AutoSuggestBox, AutoSuggestBoxSuggestionChosenEventArgs> SuggestionChosen = TagsManagerService.SuggestionChosen;
-		public readonly TypedEventHandler<AutoSuggestBox, AutoSuggestBoxTextChangedEventArgs> NameChanged = TagsManagerService.NameChanged;
-		public readonly TypedEventHandler<AutoSuggestBox, AutoSuggestBoxTextChangedEventArgs> PathChanged = TagsManagerService.PathChanged;
-		public readonly CancelEventHandler Closing = TagsManagerService.Closing;
+		public static RoutedEventHandler PathComplement => TagsManagerService.PathComplement;
+		public static RoutedPropertyChangedEventHandler<object> TvSelectItemChanged => TagsManagerService.TvSelectItemChanged;
+		public static Action<XmlElement, XmlElement?> MoveTag => TagsManagerService.MoveTag;
+		public static TypedEventHandler<AutoSuggestBox, AutoSuggestBoxSuggestionChosenEventArgs> SuggestionChosen => TagsManagerService.SuggestionChosen;
+		public static TypedEventHandler<AutoSuggestBox, AutoSuggestBoxTextChangedEventArgs> NameChanged => TagsManagerService.NameChanged;
+		public static TypedEventHandler<AutoSuggestBox, AutoSuggestBoxTextChangedEventArgs> PathChanged => TagsManagerService.PathChanged;
+		public static CancelEventHandler Closing => TagsManagerService.Closing;
 
 		private string _name = "";
 		private string _path = "";

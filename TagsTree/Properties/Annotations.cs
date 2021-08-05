@@ -278,10 +278,10 @@ namespace TagsTree.Annotations
 	/// </code>
 	/// Examples of generated notifications:
 	/// <list>
-	/// <item><c>NotifyChanged("Property")</c></item>
-	/// <item><c>NotifyChanged(() =&gt; Property)</c></item>
-	/// <item><c>NotifyChanged((VM x) =&gt; x.Property)</c></item>
-	/// <item><c>SetProperty(ref myField, value, "Property")</c></item>
+	/// <item><c>NotifyChanged("Tag")</c></item>
+	/// <item><c>NotifyChanged(() =&gt; Tag)</c></item>
+	/// <item><c>NotifyChanged((VM x) =&gt; x.Tag)</c></item>
+	/// <item><c>SetProperty(ref myField, value, "Tag")</c></item>
 	/// </list>
 	/// </example>
 	[AttributeUsage(AttributeTargets.Method)]
@@ -1103,7 +1103,7 @@ namespace TagsTree.Annotations
 	/// enable the <c>DataContext</c> type resolve for XAML bindings for such properties.
 	/// </summary>
 	/// <remarks>
-	/// Property should have the tree ancestor of the <c>ItemsControl</c> type or
+	/// Tag should have the tree ancestor of the <c>ItemsControl</c> type or
 	/// marked with the <see cref="XamlItemsControlAttribute"/> attribute.
 	/// </remarks>
 	[AttributeUsage(AttributeTargets.Property)]
@@ -1115,7 +1115,7 @@ namespace TagsTree.Annotations
 	/// enable the <c>DataContext</c> type resolve for XAML bindings for such properties.
 	/// </summary>
 	/// <remarks>
-	/// Property should have the tree ancestor of the <c>ItemsControl</c> type or
+	/// Tag should have the tree ancestor of the <c>ItemsControl</c> type or
 	/// marked with the <see cref="XamlItemsControlAttribute"/> attribute.
 	/// </remarks>
 	[AttributeUsage(AttributeTargets.Property)]

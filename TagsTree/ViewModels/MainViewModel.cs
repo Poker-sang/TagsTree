@@ -28,21 +28,32 @@ namespace TagsTree.ViewModels
 			_propertiesCmClick = new RelayCommand(Func, MainService.PropertiesCmClick);
 		}
 
-		public readonly Func<bool> CheckConfig = MainService.CheckConfig;
-		public readonly MouseButtonEventHandler MainMouseLeftButtonDown = MainService.MainMouseLeftButtonDown;
-		public readonly MouseButtonEventHandler DgItemMouseDoubleClick = MainService.DgItemMouseDoubleClick;
-		public readonly TypedEventHandler<AutoSuggestBox, AutoSuggestBoxSuggestionChosenEventArgs> SuggestionChosen = MainService.SuggestionChosen;
-		public readonly TypedEventHandler<AutoSuggestBox, AutoSuggestBoxTextChangedEventArgs> TextChanged = MainService.TextChanged;
-		public readonly TypedEventHandler<AutoSuggestBox, AutoSuggestBoxQuerySubmittedEventArgs> QuerySubmitted = MainService.QuerySubmitted;
-		private ObservableCollection<FileModel> _fileModels = new();
+		public static Func<bool> CheckConfig => MainService.CheckConfig;
+		public static MouseButtonEventHandler MainMouseLeftButtonDown => MainService.MainMouseLeftButtonDown;
+		public static MouseButtonEventHandler DgItemMouseDoubleClick => MainService.DgItemMouseDoubleClick;
+		public static TypedEventHandler<AutoSuggestBox, AutoSuggestBoxSuggestionChosenEventArgs> SuggestionChosen => MainService.SuggestionChosen;
+		public static TypedEventHandler<AutoSuggestBox, AutoSuggestBoxTextChangedEventArgs> TextChanged => MainService.TextChanged;
+		public static TypedEventHandler<AutoSuggestBox, AutoSuggestBoxQuerySubmittedEventArgs> QuerySubmitted => MainService.QuerySubmitted;
+		
 
 		private RelayCommand _openCmClick;
 		private RelayCommand _openExplorerCmClick;
 		private RelayCommand _removeCmClick;
 		private RelayCommand _propertiesCmClick;
 
+		private ObservableCollection<FileModel> _fileModels = new();
 		private FilePropertiesViewModel _fpViewModel = new();
 		private string _search = "";
+		public ObservableCollection<FileModel> FileModels
+		{
+			get => _fileModels;
+			set
+			{
+				if (Equals(_fileModels, value)) return;
+				_fileModels = value;
+				OnPropertyChanged(nameof(FileModels));
+			}
+		}
 		public FilePropertiesViewModel FpViewModel
 		{
 			get => _fpViewModel;
@@ -61,16 +72,6 @@ namespace TagsTree.ViewModels
 				if (Equals(_search, value)) return;
 				_search = value;
 				OnPropertyChanged(nameof(Search));
-			}
-		}
-		public ObservableCollection<FileModel> FileModels
-		{
-			get => _fileModels;
-			set
-			{
-				if (Equals(_fileModels, value)) return;
-				_fileModels = value;
-				OnPropertyChanged(nameof(FileModels));
 			}
 		}
 		public RelayCommand OpenCmClick
