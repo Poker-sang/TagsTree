@@ -40,7 +40,7 @@ namespace TagsTree.Services
 			textBox.SelectionStart = textBox.Text.Length;
 		}
 		public static void SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs e) => sender.Text = e.SelectedItem.ToString();
-		public static void TvSelectItemChanged(object? selectElement) => Vm.Path = App.TvSelectedItemChanged((XmlElement?)selectElement) ?? Vm.Path;
+		public static void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => Vm.Path = App.TvSelectedItemChanged((XmlElement?)e.NewValue) ?? Vm.Path;
 		private static XmlElement TvItemGetHeader(object? sender) => (XmlElement)((TreeViewItem)sender!).Header;
 		public static void Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{

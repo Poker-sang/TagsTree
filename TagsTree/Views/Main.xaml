@@ -83,7 +83,7 @@
                             <ui:FontIcon Glyph="&#xEC50;" />
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="为标签添加文件">
+                    <MenuItem Click="TagAddFiles_OnClick" Header="为标签添加文件">
                         <MenuItem.Icon>
                             <ui:FontIcon Glyph="&#xECC8;" />
                         </MenuItem.Icon>
@@ -137,14 +137,14 @@
             CanUserReorderColumns="False"
             CanUserResizeRows="False"
             IsHitTestVisible="False"
-            ItemsSource="{Binding FileModels,Mode=OneWay}"
+            ItemsSource="{Binding FileModels, Mode=OneWay}"
             Opacity="0"
             RowStyle="{StaticResource DgRowStyle}"
             SelectionMode="Single">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn
                     Width="45"
-                    Binding="{Binding IsFolder,Mode=OneWay}"
+                    Binding="{Binding IsFolder, Mode=OneWay}"
                     CanUserResize="False"
                     CanUserSort="False"
                     IsReadOnly="True">
@@ -154,17 +154,17 @@
                 </DataGridCheckBoxColumn>
                 <DataGridTextColumn
                     Width="2*"
-                    Binding="{Binding Name,Mode=OneWay}"
+                    Binding="{Binding Name, Mode=OneWay}"
                     Header="名称"
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Tags,Mode=OneWay}"
+                    Binding="{Binding Tags, Mode=OneWay}"
                     Header="标签"
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding PartialPath,Mode=OneWay}"
+                    Binding="{Binding PartialPath, Mode=OneWay}"
                     Header="路径"
                     IsReadOnly="True" />
             </DataGrid.Columns>

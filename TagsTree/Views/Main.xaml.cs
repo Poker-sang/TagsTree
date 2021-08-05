@@ -16,18 +16,18 @@ namespace TagsTree.Views
 		{
 			InitializeComponent();
 			Services.MainService.Load(this);
-			if (!((MainViewModel)DataContext).CheckConfig())
+			if (!MainViewModel.CheckConfig())
 			{
 				Close();
 				return;
 			}
 			Services.MainService.LoadFileProperties();
 
-			MouseLeftButtonDown += ((MainViewModel)DataContext).MainMouseLeftButtonDown;
-			((Style)Resources["DgRowStyle"]).Setters.Add(new EventSetter(MouseDoubleClickEvent, ((MainViewModel)DataContext).DgItemMouseDoubleClick));
-			TbInput.SuggestionChosen += ((MainViewModel)DataContext).SuggestionChosen;
-			TbInput.TextChanged += ((MainViewModel)DataContext).TextChanged;
-			TbInput.QuerySubmitted += TbInput_OnQuerySubmitted + ((MainViewModel)DataContext).QuerySubmitted;
+			MouseLeftButtonDown += MainViewModel.MainMouseLeftButtonDown;
+			((Style)Resources["DgRowStyle"]).Setters.Add(new EventSetter(MouseDoubleClickEvent, MainViewModel.DgItemMouseDoubleClick));
+			TbInput.SuggestionChosen += MainViewModel.SuggestionChosen;
+			TbInput.TextChanged += MainViewModel.TextChanged;
+			TbInput.QuerySubmitted += TbInput_OnQuerySubmitted + MainViewModel.QuerySubmitted;
 		}
 
 
@@ -67,5 +67,6 @@ namespace TagsTree.Views
 		private void ChangeConfig_Click(object sender, RoutedEventArgs e) => _ = new NewConfig(this).ShowDialog();
 		private void TagsManager_Click(object sender, RoutedEventArgs e) => _ = new TagsManager(this).ShowDialog();
 		private void FileAdder_OnClick(object sender, RoutedEventArgs e) => _ = new FileImporter(this).ShowDialog();
+		private void TagAddFiles_OnClick(object sender, RoutedEventArgs e) => _ = new TagAddFiles(this).ShowDialog();
 	}
 }

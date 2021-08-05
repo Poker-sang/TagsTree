@@ -1,0 +1,89 @@
+﻿<Window
+    x:Class="TagsTree.Views.TagAddFiles"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:TagsTree.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:viewModels="clr-namespace:TagsTree.ViewModels"
+    Title="为标签添加文件"
+    Width="800"
+    Height="600"
+    ui:WindowHelper.UseModernWindowStyle="True"
+    WindowStartupLocation="CenterOwner"
+    mc:Ignorable="d">
+    <Window.DataContext>
+        <viewModels:TagAddFilesViewModel />
+    </Window.DataContext>
+    <StackPanel Orientation="Vertical">
+        <DockPanel>
+            <Button
+                x:Name="BConfirm"
+                Content="确定"
+                DockPanel.Dock="Right" />
+            <Separator Width="5" DockPanel.Dock="Right" />
+            <ui:AutoSuggestBox
+                IsEnabled="False"
+                PlaceholderText="选择标签"
+                Text="{Binding Tag}" />
+        </DockPanel>
+        <TreeView x:Name="Tags" VerticalAlignment="Stretch">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding XPath=Tag}">
+                    <TextBlock Text="{Binding XPath=@name}" />
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+        <DataGrid
+            x:Name="DgResult"
+            VerticalAlignment="Stretch"
+            AutoGenerateColumns="False"
+            CanUserAddRows="False"
+            CanUserDeleteRows="False"
+            CanUserReorderColumns="False"
+            CanUserResizeRows="False"
+            IsHitTestVisible="False"
+            ItemsSource="{Binding FileModels, Mode=OneWay}"
+            Opacity="0"
+            SelectionMode="Single">
+            <DataGrid.Columns>
+                <DataGridCheckBoxColumn
+                    Width="45"
+                    Binding="{Binding Mode=OneWay}"
+                    CanUserResize="False"
+                    CanUserSort="False"
+                    IsReadOnly="True">
+                    <DataGridCheckBoxColumn.Header>
+                        <ui:FontIcon Glyph="&#xF12B;" />
+                    </DataGridCheckBoxColumn.Header>
+                </DataGridCheckBoxColumn>
+                <DataGridCheckBoxColumn
+                    Width="45"
+                    Binding="{Binding IsFolder, Mode=OneWay}"
+                    CanUserResize="False"
+                    CanUserSort="False"
+                    IsReadOnly="True">
+                    <DataGridCheckBoxColumn.Header>
+                        <ui:FontIcon Glyph="&#xE9D5;" />
+                    </DataGridCheckBoxColumn.Header>
+                </DataGridCheckBoxColumn>
+                <DataGridTextColumn
+                    Width="2*"
+                    Binding="{Binding Name, Mode=OneWay}"
+                    Header="名称"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Tags, Mode=OneWay}"
+                    Header="标签"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding PartialPath, Mode=OneWay}"
+                    Header="路径"
+                    IsReadOnly="True" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </StackPanel>
+</Window>
