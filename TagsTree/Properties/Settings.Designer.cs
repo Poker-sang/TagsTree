@@ -11,11 +11,11 @@
 namespace TagsTree.Properties {
     
     
-    [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.10.0.0")]
-    internal sealed partial class Settings : System.Configuration.ApplicationSettingsBase {
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.10.0.0")]
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
-        private static Settings defaultInstance = ((Settings)(System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
+        private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
         
         public static Settings Default {
             get {
@@ -23,9 +23,9 @@ namespace TagsTree.Properties {
             }
         }
         
-        [System.Configuration.UserScopedSettingAttribute()]
-        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string ConfigPath {
             get {
                 return ((string)(this["ConfigPath"]));
@@ -35,9 +35,9 @@ namespace TagsTree.Properties {
             }
         }
         
-        [System.Configuration.UserScopedSettingAttribute()]
-        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string LibraryPath {
             get {
                 return ((string)(this["LibraryPath"]));
@@ -47,21 +47,21 @@ namespace TagsTree.Properties {
             }
         }
         
-        [System.Configuration.UserScopedSettingAttribute()]
-        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool RootFoldersExist {
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool PathTags {
             get {
-                return ((bool)(this["RootFoldersExist"]));
+                return ((bool)(this["PathTags"]));
             }
             set {
-                this["RootFoldersExist"] = value;
+                this["PathTags"] = value;
             }
         }
         
-        [System.Configuration.UserScopedSettingAttribute()]
-        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool IsSet {
             get {
                 return ((bool)(this["IsSet"]));

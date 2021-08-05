@@ -25,6 +25,7 @@ namespace TagsTree.Views
 			TbName.TextChanged += ((TagsManagerViewModel)DataContext).NameChanged;
 			TbPath.TextChanged += ((TagsManagerViewModel)DataContext).PathChanged;
 			TvTags.SelectedItemChanged += (_, _) => ((TagsManagerViewModel)DataContext).TvSelectItemChanged(TvTags.SelectedItem);
+			Closing += ((TagsManagerViewModel)DataContext).Closing;
 		}
 
 		private readonly Action<XmlElement, XmlElement?> _moveTag;

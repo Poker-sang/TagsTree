@@ -31,14 +31,14 @@
             Grid.Row="0"
             Grid.Column="0"
             VerticalAlignment="Center"
-            PlaceholderText="存放配置文件的文件夹"
+            PlaceholderText="「配置路径」（存放配置文件的文件夹）"
             Text="{Binding Path=ConfigPath, Source={x:Static properties:Settings.Default}}" />
         <ui:AutoSuggestBox
             x:Name="TbLibraryPath"
             Grid.Row="1"
             Grid.Column="0"
             VerticalAlignment="Center"
-            PlaceholderText="被归类文件的根目录文件夹"
+            PlaceholderText="「文件路径」（被归类文件的根目录文件夹）"
             Text="{Binding Path=LibraryPath, Source={x:Static properties:Settings.Default}}" />
         <Button
             Grid.Row="0"
@@ -63,8 +63,8 @@
             Grid.Row="2"
             Grid.Column="0"
             VerticalAlignment="Center"
-            Content="将文件路径根文件夹作为标签使用"
-            IsChecked="{Binding Path=RootFoldersExist, Source={x:Static properties:Settings.Default}}" />
+            Content="将所在路径文件夹名作为标签使用"
+            IsChecked="{Binding Path=PathTags, Source={x:Static properties:Settings.Default}}" />
         <Button
             Grid.Row="2"
             Grid.Column="1"

@@ -25,6 +25,16 @@ namespace TagsTree
 		public static XmlDocument XdTags { get; } = new();
 
 		/// <summary>
+		/// 重新加载标签
+		/// </summary>
+		public static void XdTagsReload()
+		{
+			XdTags.Load(TagsPath);
+			RecursiveLoadTags();
+			Relations = RelationsDataTable.Load()!;
+		}
+
+		/// <summary>
 		/// XmlDataProvider根元素
 		/// </summary>
 		public static XmlElement? XdpRoot => (XmlElement?)XdTags.LastChild;
@@ -90,7 +100,6 @@ namespace TagsTree
 				File.Delete(TagsPath);
 				new XDocument(new XElement("TagsTree", new XAttribute("name", ""))).Save(TagsPath);
 			}
-
 			RecursiveLoadTags();
 
 			if (!File.Exists(RelationsPath))
@@ -126,7 +135,7 @@ namespace TagsTree
 		/// <summary>
 		/// TreeView控件选择的元素改变时，显示所选项目Xml元素的路径<br/>
 		/// 用法：<code>private void treeView_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs&lt;object&gt; e)<br/>
-		/// => textBox.Text = TagsTreeStatic.TvSelectedItemChanged(treeView) ?? textBox.Text;</code>
+		/// => textBox.Text = App.TvSelectedItemChanged(treeView) ?? textBox.Text;</code>
 		/// </summary>
 		/// <param name="selectedItem">TreeView控件的SelectedItem</param>
 		/// <returns>string类型，显示所选Xml元素的路径，为null则是没有选择项目</returns>

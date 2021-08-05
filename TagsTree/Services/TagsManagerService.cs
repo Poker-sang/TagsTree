@@ -42,6 +42,15 @@ namespace TagsTree.Services
 		public static void SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs e) => sender.Text = e.SelectedItem.ToString();
 		public static void TvSelectItemChanged(object? selectElement) => Vm.Path = App.TvSelectedItemChanged((XmlElement?)selectElement) ?? Vm.Path;
 		private static XmlElement TvItemGetHeader(object? sender) => (XmlElement)((TreeViewItem)sender!).Header;
+		public static void Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			if (!Vm.Changed) return;
+			switch (App.MessageBoxX.Question("是否保存更改？"))
+			{
+				case true: SaveBClick(null);break;
+				case null: e.Cancel = true; break;
+			}
+		}
 
 		#endregion
 
@@ -83,6 +92,7 @@ namespace TagsTree.Services
 		public static void SaveBClick(object? parameter)
 		{
 			App.SaveXdTags();
+			App.SaveRelations();
 			Vm.Changed = false;
 		}
 
@@ -126,7 +136,6 @@ namespace TagsTree.Services
 			var element = Vm.Xdp.Document.CreateElement("Tag");
 			element.SetAttribute("name", name);
 			App.Relations.NewColumn(name);
-			App.SaveRelations();
 			_ = path.AppendChild(element);
 			TagsChanged();
 		}
@@ -148,7 +157,6 @@ namespace TagsTree.Services
 			path.RemoveAllAttributes();
 			path.SetAttribute("name", name);
 			App.Relations.RenameColumn(path.GetAttribute("Name"), name);
-			App.SaveRelations();
 			TagsChanged();
 			Vm.Name = "";
 			Vm.Path = "";
@@ -157,7 +165,6 @@ namespace TagsTree.Services
 		{
 			_ = path.ParentNode!.RemoveChild(path);
 			App.Relations.DeleteColumn(path.GetAttribute("Name"));
-			App.SaveRelations();
 			TagsChanged();
 			Vm.Name = "";
 		}
