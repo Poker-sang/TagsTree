@@ -121,13 +121,13 @@ namespace TagsTree
 			{
 				if (MessageBoxX.Warning($"路径{Default.ConfigPath}下，TagsTree.xml和Relations.xml存储的标签数不同", "删除标签与文件的配置文件", "直接关闭软件"))
 					return DeleteAll();
-				else return null;
+				return null;
 			}
 			if (IdFile.Count != Relations.Rows.Count)
 			{
 				if (MessageBoxX.Warning($"路径{Default.ConfigPath}下，Files.json和Relations.xml存储的文件数不同", "删除标签与文件的配置文件", "直接关闭软件"))
 					return DeleteAll();
-				else return null;
+				return null;
 			}
 			return true;
 		}

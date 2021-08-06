@@ -1,7 +1,5 @@
 ﻿using ModernWpf.Controls;
 using System;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -47,7 +45,7 @@ namespace TagsTree.Services
 			if (!Vm.Changed) return;
 			switch (App.MessageBoxX.Question("是否保存更改？"))
 			{
-				case true: SaveBClick(null);break;
+				case true: SaveBClick(null); break;
 				case null: e.Cancel = true; break;
 			}
 		}
@@ -121,7 +119,7 @@ namespace TagsTree.Services
 		}
 		public static void RenameCmClick(object? parameter)
 		{
-			var dialog = new InputName(Win, @"\/:*?""<>|\s", @"\/:*?""<>|和空白字符");
+			var dialog = new InputName(Win, @"不能包含\/:*?""<>|和空白字符", App.FileX.GetInvalidNameChars);
 			if (dialog.ShowDialog() != false && NewTagCheck(dialog.Message))
 				RenameTag(dialog.Message, TvItemGetHeader(parameter)!);
 		}

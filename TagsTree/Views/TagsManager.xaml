@@ -114,7 +114,7 @@
             UpdateTextOnSelect="False">
             <ui:AutoSuggestBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock d:DataContext="{d:DesignInstance models:FileModel}" Text="{Binding FullName}" />
+                    <TextBlock d:DataContext="{d:DesignInstance viewModels:FileViewModel}" Text="{Binding FullName, Mode=OneTime}" />
                 </DataTemplate>
             </ui:AutoSuggestBox.ItemTemplate>
         </ui:AutoSuggestBox>

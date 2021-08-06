@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:TagsTree.Models"
     xmlns:ui="http://schemas.modernwpf.com/2019"
     xmlns:viewModels="clr-namespace:TagsTree.ViewModels"
     Title="为标签添加文件"
@@ -16,17 +17,18 @@
     <Window.DataContext>
         <viewModels:TagAddFilesViewModel />
     </Window.DataContext>
-    <StackPanel Orientation="Vertical">
+    <StackPanel x:Name="StackPanel" Orientation="Vertical">
         <DockPanel>
             <Button
                 x:Name="BConfirm"
+                Command="{Binding ConfirmBClick}"
                 Content="确定"
                 DockPanel.Dock="Right" />
             <Separator Width="5" DockPanel.Dock="Right" />
             <ui:AutoSuggestBox
                 IsEnabled="False"
                 PlaceholderText="选择标签"
-                Text="{Binding Tag}" />
+                Text="{Binding SelectedTag, Mode=OneWay}" />
         </DockPanel>
         <TreeView x:Name="Tags" VerticalAlignment="Stretch">
             <TreeView.ItemTemplate>
@@ -35,6 +37,22 @@
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
+        <ui:AutoSuggestBox
+            x:Name="TbInput"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Top"
+            IsHitTestVisible="False"
+            Opacity="0"
+            PlaceholderText="输入标签以搜索相应文件（标签间以空格隔开，不输入显示全部文件）"
+            QueryIcon="Find"
+            Text="{Binding Search, Mode=TwoWay}"
+            UpdateTextOnSelect="False">
+            <ui:AutoSuggestBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock d:DataContext="{d:DesignInstance viewModels:FileViewModel}" Text="{Binding FullName, Mode=OneTime}" />
+                </DataTemplate>
+            </ui:AutoSuggestBox.ItemTemplate>
+        </ui:AutoSuggestBox>
         <DataGrid
             x:Name="DgResult"
             VerticalAlignment="Stretch"
@@ -44,28 +62,28 @@
             CanUserReorderColumns="False"
             CanUserResizeRows="False"
             IsHitTestVisible="False"
-            ItemsSource="{Binding FileModels, Mode=OneWay}"
+            ItemsSource="{Binding FileViewModels, Mode=OneTime}"
             Opacity="0"
             SelectionMode="Single">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn
                     Width="45"
-                    Binding="{Binding Mode=OneWay}"
-                    CanUserResize="False"
-                    CanUserSort="False"
-                    IsReadOnly="True">
-                    <DataGridCheckBoxColumn.Header>
-                        <ui:FontIcon Glyph="&#xF12B;" />
-                    </DataGridCheckBoxColumn.Header>
-                </DataGridCheckBoxColumn>
-                <DataGridCheckBoxColumn
-                    Width="45"
-                    Binding="{Binding IsFolder, Mode=OneWay}"
+                    Binding="{Binding Selected, Mode=TwoWay}"
                     CanUserResize="False"
                     CanUserSort="False"
                     IsReadOnly="True">
                     <DataGridCheckBoxColumn.Header>
                         <ui:FontIcon Glyph="&#xE9D5;" />
+                    </DataGridCheckBoxColumn.Header>
+                </DataGridCheckBoxColumn>
+                <DataGridCheckBoxColumn
+                    Width="45"
+                    Binding="{Binding IsFolder, Mode=OneTime}"
+                    CanUserResize="False"
+                    CanUserSort="False"
+                    IsReadOnly="True">
+                    <DataGridCheckBoxColumn.Header>
+                        <ui:FontIcon Glyph="&#xF12B;" />
                     </DataGridCheckBoxColumn.Header>
                 </DataGridCheckBoxColumn>
                 <DataGridTextColumn

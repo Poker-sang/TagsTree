@@ -14,7 +14,6 @@
     Title="TagsTree"
     Width="1280"
     Height="720"
-    d:DataContext="{d:DesignInstance viewModels:MainViewModel}"
     ui:WindowHelper.UseModernWindowStyle="True"
     ResizeMode="CanMinimize"
     WindowStartupLocation="CenterScreen"
@@ -53,7 +52,7 @@
         </Style>
     </Window.Resources>
 
-    <Grid x:Name="Grid">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.191*" />
             <ColumnDefinition Width="0.618*" />
@@ -120,7 +119,7 @@
                 UpdateTextOnSelect="False">
                 <ui:AutoSuggestBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock d:DataContext="{d:DesignInstance models:FileModel}" Text="{Binding FullName}" />
+                        <TextBlock d:DataContext="{d:DesignInstance viewModels:FileViewModel}" Text="{Binding FullName, Mode=OneTime}" />
                     </DataTemplate>
                 </ui:AutoSuggestBox.ItemTemplate>
             </ui:AutoSuggestBox>
@@ -137,14 +136,14 @@
             CanUserReorderColumns="False"
             CanUserResizeRows="False"
             IsHitTestVisible="False"
-            ItemsSource="{Binding FileModels, Mode=OneWay}"
+            ItemsSource="{Binding FileModels, Mode=OneTime}"
             Opacity="0"
             RowStyle="{StaticResource DgRowStyle}"
             SelectionMode="Single">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn
                     Width="45"
-                    Binding="{Binding IsFolder, Mode=OneWay}"
+                    Binding="{Binding IsFolder, Mode=OneTime}"
                     CanUserResize="False"
                     CanUserSort="False"
                     IsReadOnly="True">

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Windows;
 
 namespace TagsTree.Views
@@ -10,13 +8,15 @@ namespace TagsTree.Views
 	/// </summary>
 	public partial class InputName : Window
 	{
-		public InputName(Window owner, string hintMessage, string invalidRegex)
+		public InputName(Window owner, string hintMessage, string invalidRegex, string text = "")
 		{
 			Owner = owner;
 			_invalidRegex = invalidRegex;
 			_hintMessage = hintMessage is "" ? invalidRegex : hintMessage;
 			InitializeComponent();
 			AsBox.PlaceholderText = _hintMessage;
+			if (text is "") return;
+			AsBox.Text = text;
 		}
 
 		public string Message = "";

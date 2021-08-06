@@ -5,8 +5,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Xml;
-using TagsTree.ViewModels;
-using Vm= TagsTree.ViewModels.TagsManagerViewModel;
+using Vm = TagsTree.ViewModels.TagsManagerViewModel;
 
 namespace TagsTree.Views
 {
@@ -28,7 +27,7 @@ namespace TagsTree.Views
 			TvTags.SelectedItemChanged += Vm.TvSelectItemChanged;
 			Closing += Vm.Closing;
 		}
-		
+
 		private readonly Action<XmlElement, XmlElement?> _moveTag;
 		private static XmlElement TvItemGetHeader(object? sender) => (XmlElement)((TreeViewItem)sender!).Header;
 

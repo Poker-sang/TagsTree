@@ -115,11 +115,11 @@
                 CanUserAddRows="False"
                 CanUserReorderColumns="False"
                 CanUserResizeRows="False"
-                ItemsSource="{Binding FileModels,Mode=OneWay}">
+                ItemsSource="{Binding FileViewModels, Mode=OneTime}">
                 <DataGrid.Columns>
                     <DataGridCheckBoxColumn
                         Width="45"
-                        Binding="{Binding IsFolder,Mode=OneWay}"
+                        Binding="{Binding IsFolder, Mode=OneTime}"
                         CanUserResize="False"
                         CanUserSort="False"
                         IsReadOnly="True">
@@ -129,12 +129,12 @@
                     </DataGridCheckBoxColumn>
                     <DataGridTextColumn
                         Width="2*"
-                        Binding="{Binding Name,Mode=OneWay}"
+                        Binding="{Binding Name, Mode=OneWay}"
                         Header="名称"
                         IsReadOnly="True" />
                     <DataGridTextColumn
                         Width="*"
-                        Binding="{Binding PartialPath,Mode=OneWay}"
+                        Binding="{Binding PartialPath, Mode=OneWay}"
                         Header="路径"
                         IsReadOnly="True" />
                 </DataGrid.Columns>
