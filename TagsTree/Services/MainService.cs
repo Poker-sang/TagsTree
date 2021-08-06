@@ -1,14 +1,12 @@
 ﻿using ModernWpf.Controls;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
-using TagsTree.Models;
 using TagsTree.ViewModels;
 using TagsTree.Views;
 using static TagsTree.Properties.Settings;
@@ -64,22 +62,22 @@ namespace TagsTree.Services
 			var tags = sender.Text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 			var validTags = new Dictionary<string, bool>();
 			foreach (var tag in tags)
-				if (App.TagPathComplete(tag) is not null && !validTags.ContainsKey(tag))
+				if (!validTags.ContainsKey(tag))
 					validTags[tag] = true;
 			foreach (var fileModel in App.Relations.GetFileModels(validTags.Keys.ToList()))
-				Vm.FileModels.Add(fileModel);
+				Vm.FileModels.Add(new FileViewModel(fileModel));
 		}
 
 		#endregion
 
 		#region 命令
 
-		public static void OpenCmClick(object? parameter) => App.FileX.Open(((FileModel)((DataGridRow)parameter!).DataContext).FullName);
-		public static void OpenExplorerCmClick(object? parameter) => App.FileX.Open(((FileModel)((DataGridRow)parameter!).DataContext).Path);
+		public static void OpenCmClick(object? parameter) => App.FileX.Open(((FileViewModel)((DataGridRow)parameter!).DataContext).FullName);
+		public static void OpenExplorerCmClick(object? parameter) => App.FileX.Open(((FileViewModel)((DataGridRow)parameter!).DataContext).Path);
 		public static void RemoveCmClick(object? parameter)
 		{
 			if (!App.MessageBoxX.Warning("是否从软件移除该文件？")) return;
-			var value = (FileModel)((DataGridRow)parameter!).DataContext;
+			var value = (FileViewModel)((DataGridRow)parameter!).DataContext;
 			if (App.IdFile.Contains(value))
 			{
 				_ = App.IdFile.Remove(value);
@@ -88,12 +86,12 @@ namespace TagsTree.Services
 				App.SaveFiles();
 			}
 
-			_ = Vm.FileModels.Remove((FileModel)((DataGridRow)parameter!).DataContext);
+			_ = Vm.FileModels.Remove((FileViewModel)((DataGridRow)parameter).DataContext);
 		}
 		public static async void PropertiesCmClick(object? parameter)
 		{
-			((FilePropertiesViewModel)Win.FileProperties.Grid.DataContext).Load((FileModel)((DataGridRow)parameter!).DataContext);
-			_ = _fileProperties!.ShowAsync(ContentDialogPlacement.Popup);
+			((FilePropertiesViewModel)Win.FileProperties.Grid.DataContext).Load((FileViewModel)((DataGridRow)parameter!).DataContext);
+			_ = _fileProperties.ShowAsync(ContentDialogPlacement.Popup);
 			await Task.Delay(100);
 			_isShowed = true;
 		}

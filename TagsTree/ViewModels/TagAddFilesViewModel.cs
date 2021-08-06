@@ -1,10 +1,13 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using ModernWpf;
+using ModernWpf.Controls;
+using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Data;
-using System.Windows.Input;
-using TagsTree.Annotations;
+using TagsTree.Commands;
 using TagsTree.Services;
 
 namespace TagsTree.ViewModels
@@ -18,32 +21,52 @@ namespace TagsTree.ViewModels
 		public TagAddFilesViewModel()
 		{
 			App.XdTagsReload();
-			_xdp = new XmlDataProvider { Document = App.XdTags, XPath = @"TagsTree/Tag" };
+			Xdp = new XmlDataProvider { Document = App.XdTags, XPath = @"TagsTree/Tag" };
+			ConfirmBClick = new RelayCommand(_ => CanConfirm, TagAddFilesService.ConfirmBClick);
 		}
-		
-		public static RoutedPropertyChangedEventHandler<object> TvSelectItemChanged => TagAddFilesService.TvSelectItemChanged;
-		public static Action ConfirmBClick => TagAddFilesService.ConfirmBClick;
-		private string _tag = "";
-		private XmlDataProvider _xdp;
 
-		public string Tag
+		public static RoutedPropertyChangedEventHandler<object> TvSelectItemChanged => TagAddFilesService.TvSelectItemChanged;
+		public static Action<object> Selected => TagAddFilesService.Selected;
+		public RelayCommand ConfirmBClick { get; }
+		private bool _canConfirm;
+		public static TypedEventHandler<AutoSuggestBox, AutoSuggestBoxSuggestionChosenEventArgs> SuggestionChosen => TagAddFilesService.SuggestionChosen;
+		public static TypedEventHandler<AutoSuggestBox, AutoSuggestBoxTextChangedEventArgs> TextChanged => TagAddFilesService.TextChanged;
+		public static TypedEventHandler<AutoSuggestBox, AutoSuggestBoxQuerySubmittedEventArgs> QuerySubmitted => TagAddFilesService.QuerySubmitted;
+
+		private string _selectedTag = "";
+		private string _search = "";
+		public ObservableCollection<FileViewModel> FileViewModels { get; } = new();
+		public XmlDataProvider Xdp { get; }
+
+
+		public bool CanConfirm
 		{
-			get => _tag;
+			get => _canConfirm;
 			set
 			{
-				if (Equals(_tag, value)) return;
-				_tag = value;
-				OnPropertyChanged(nameof(Tag));
+				if (Equals(_canConfirm, value)) return;
+				_canConfirm = value;
+				ConfirmBClick.OnCanExecuteChanged();
 			}
 		}
-		public XmlDataProvider Xdp
+		public string SelectedTag
 		{
-			get => _xdp;
+			get => _selectedTag;
 			set
 			{
-				if (Equals(value, _xdp)) return;
-				_xdp = value;
-				OnPropertyChanged(nameof(Xdp));
+				if (Equals(_selectedTag, value)) return;
+				_selectedTag = value;
+				OnPropertyChanged(nameof(SelectedTag));
+			}
+		}
+		public string Search
+		{
+			get => _search;
+			set
+			{
+				if (Equals(_search, value)) return;
+				_search = value;
+				OnPropertyChanged(nameof(Search));
 			}
 		}
 	}

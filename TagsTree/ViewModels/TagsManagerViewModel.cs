@@ -1,4 +1,5 @@
-﻿using ModernWpf;
+﻿using JetBrains.Annotations;
+using ModernWpf;
 using ModernWpf.Controls;
 using System;
 using System.ComponentModel;
@@ -6,7 +7,6 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Data;
 using System.Xml;
-using TagsTree.Annotations;
 using TagsTree.Commands;
 using TagsTree.Services;
 
@@ -21,23 +21,27 @@ namespace TagsTree.ViewModels
 
 		public TagsManagerViewModel()
 		{
-			static bool Func1(object? _) => true;
-			bool Func2(object? _) => _clipBoard is not null;
-			_newBClick = new RelayCommand(Func1, TagsManagerService.NewBClick);
-			_moveBClick = new RelayCommand(Func1, TagsManagerService.MoveBClick);
-			_renameBClick = new RelayCommand(Func1, TagsManagerService.RenameBClick);
-			_deleteBClick = new RelayCommand(Func1, TagsManagerService.DeleteBClick);
-			_saveBClick = new RelayCommand(_ => Changed, TagsManagerService.SaveBClick);
-			_newCmClick = new RelayCommand(Func1, TagsManagerService.NewCmClick);
-			_newXCmClick = new RelayCommand(Func1, TagsManagerService.NewXCmClick);
-			_cutCmClick = new RelayCommand(Func1, TagsManagerService.CutCmClick);
-			_pasteCmClick = new RelayCommand(Func2, TagsManagerService.PasteCmClick);
-			_pasteXCmClick = new RelayCommand(Func2, TagsManagerService.PasteXCmClick);
-			_renameCmClick = new RelayCommand(Func1, TagsManagerService.RenameCmClick);
-			_deleteCmClick = new RelayCommand(Func1, TagsManagerService.DeleteCmClick);
+			SaveBClick = new RelayCommand(_ => Changed, TagsManagerService.SaveBClick);
+			PasteCmClick = new RelayCommand(_ => _clipBoard is not null, TagsManagerService.PasteCmClick);
+			PasteXCmClick = new RelayCommand(_ => _clipBoard is not null, TagsManagerService.PasteXCmClick);
 			App.XdTagsReload();
-			_xdp = new XmlDataProvider { Document = App.XdTags, XPath = @"TagsTree/Tag" };
+			Xdp = new XmlDataProvider { Document = App.XdTags, XPath = @"TagsTree/Tag" };
 		}
+
+		public RelayCommand NewBClick { get; } = new(_ => true, TagsManagerService.NewBClick);
+		public RelayCommand MoveBClick { get; } = new(_ => true, TagsManagerService.MoveBClick);
+		public RelayCommand RenameBClick { get; } = new(_ => true, TagsManagerService.RenameBClick);
+		public RelayCommand DeleteBClick { get; } = new(_ => true, TagsManagerService.DeleteBClick);
+		public RelayCommand SaveBClick { get; }
+		public RelayCommand NewCmClick { get; } = new(_ => true, TagsManagerService.NewCmClick);
+		public RelayCommand NewXCmClick { get; } = new(_ => true, TagsManagerService.NewXCmClick);
+		public RelayCommand CutCmClick { get; } = new(_ => true, TagsManagerService.CutCmClick);
+		public RelayCommand PasteCmClick { get; }
+		public RelayCommand PasteXCmClick { get; }
+		public RelayCommand RenameCmClick { get; } = new(_ => true, TagsManagerService.RenameCmClick);
+		public RelayCommand DeleteCmClick { get; } = new(_ => true, TagsManagerService.DeleteCmClick);
+
+		public XmlDataProvider Xdp { get; }
 
 		public static RoutedEventHandler PathComplement => TagsManagerService.PathComplement;
 		public static RoutedPropertyChangedEventHandler<object> TvSelectItemChanged => TagsManagerService.TvSelectItemChanged;
@@ -50,22 +54,8 @@ namespace TagsTree.ViewModels
 		private string _name = "";
 		private string _path = "";
 		private bool _changed;
-		private XmlDataProvider _xdp;
 		private XmlElement? _clipBoard;
 
-		private RelayCommand _newBClick;
-		private RelayCommand _moveBClick;
-		private RelayCommand _renameBClick;
-		private RelayCommand _deleteBClick;
-		private RelayCommand _saveBClick;
-
-		private RelayCommand _newCmClick;
-		private RelayCommand _newXCmClick;
-		private RelayCommand _cutCmClick;
-		private RelayCommand _pasteCmClick;
-		private RelayCommand _pasteXCmClick;
-		private RelayCommand _renameCmClick;
-		private RelayCommand _deleteCmClick;
 
 		public string Name
 		{
@@ -95,17 +85,7 @@ namespace TagsTree.ViewModels
 				if (Equals(value, _changed)) return;
 				_changed = value;
 				OnPropertyChanged(nameof(Changed));
-				_saveBClick.OnCanExecuteChanged();
-			}
-		}
-		public XmlDataProvider Xdp
-		{
-			get => _xdp;
-			set
-			{
-				if (Equals(value, _xdp)) return;
-				_xdp = value;
-				OnPropertyChanged(nameof(Xdp));
+				SaveBClick.OnCanExecuteChanged();
 			}
 		}
 		public XmlElement? ClipBoard
@@ -115,130 +95,8 @@ namespace TagsTree.ViewModels
 			{
 				if (Equals(value, _clipBoard)) return;
 				_clipBoard = value;
-				_pasteCmClick.OnCanExecuteChanged();
-				_pasteXCmClick.OnCanExecuteChanged();
-			}
-		}
-
-		public RelayCommand NewBClick
-		{
-			get => _newBClick;
-			set
-			{
-				if (Equals(value, _newBClick)) return;
-				_newBClick = value;
-				OnPropertyChanged(nameof(NewBClick));
-			}
-		}
-		public RelayCommand MoveBClick
-		{
-			get => _moveBClick;
-			set
-			{
-				if (Equals(value, _moveBClick)) return;
-				_moveBClick = value;
-				OnPropertyChanged(nameof(MoveBClick));
-			}
-		}
-		public RelayCommand RenameBClick
-		{
-			get => _renameBClick;
-			set
-			{
-				if (Equals(value, _renameBClick)) return;
-				_renameBClick = value;
-				OnPropertyChanged(nameof(RenameBClick));
-			}
-		}
-		public RelayCommand DeleteBClick
-		{
-			get => _deleteBClick;
-			set
-			{
-				if (Equals(value, _deleteBClick)) return;
-				_deleteBClick = value;
-				OnPropertyChanged(nameof(DeleteBClick));
-			}
-		}
-		public RelayCommand SaveBClick
-		{
-			get => _saveBClick;
-			set
-			{
-				if (Equals(value, _saveBClick)) return;
-				_saveBClick = value;
-				OnPropertyChanged(nameof(SaveBClick));
-			}
-		}
-
-		public RelayCommand NewCmClick
-		{
-			get => _newCmClick;
-			set
-			{
-				if (Equals(value, _newCmClick)) return;
-				_newCmClick = value;
-				OnPropertyChanged(nameof(NewCmClick));
-			}
-		}
-		public RelayCommand NewXCmClick
-		{
-			get => _newXCmClick;
-			set
-			{
-				if (Equals(value, _newXCmClick)) return;
-				_newXCmClick = value;
-				OnPropertyChanged(nameof(NewXCmClick));
-			}
-		}
-		public RelayCommand CutCmClick
-		{
-			get => _cutCmClick;
-			set
-			{
-				if (Equals(value, _cutCmClick)) return;
-				_cutCmClick = value;
-				OnPropertyChanged(nameof(CutCmClick));
-			}
-		}
-		public RelayCommand PasteCmClick
-		{
-			get => _pasteCmClick;
-			set
-			{
-				if (Equals(value, _pasteCmClick)) return;
-				_pasteCmClick = value;
-				OnPropertyChanged(nameof(PasteCmClick));
-			}
-		}
-		public RelayCommand PasteXCmClick
-		{
-			get => _pasteXCmClick;
-			set
-			{
-				if (Equals(value, _pasteXCmClick)) return;
-				_pasteXCmClick = value;
-				OnPropertyChanged(nameof(PasteXCmClick));
-			}
-		}
-		public RelayCommand RenameCmClick
-		{
-			get => _renameCmClick;
-			set
-			{
-				if (Equals(value, _renameCmClick)) return;
-				_renameCmClick = value;
-				OnPropertyChanged(nameof(RenameCmClick));
-			}
-		}
-		public RelayCommand DeleteCmClick
-		{
-			get => _deleteCmClick;
-			set
-			{
-				if (Equals(value, _deleteCmClick)) return;
-				_deleteCmClick = value;
-				OnPropertyChanged(nameof(DeleteCmClick));
+				PasteCmClick.OnCanExecuteChanged();
+				PasteXCmClick.OnCanExecuteChanged();
 			}
 		}
 	}

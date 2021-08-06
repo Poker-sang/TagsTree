@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using static TagsTree.Properties.Settings;
 
 namespace TagsTree.Models
 {
 	public class RelationsDataTable : DataTable
 	{
 		private readonly Dictionary<int, DataRow> _rowsDict = new();
-		public bool this[FileModel rowKey, string columnKey]
+		public bool this[FileModel fileModel, string tag]
 		{
-			get => (bool)_rowsDict[rowKey.Id][columnKey];
-			set => _rowsDict[rowKey.Id][columnKey] = value;
+			get => (bool)_rowsDict[fileModel.Id][tag];
+			set => _rowsDict[fileModel.Id][tag] = value;
 		}
 		public DataRow RowAt(FileModel rowKey) => _rowsDict[rowKey.Id];
-		public IEnumerable<FileModel> GetFileModels(string tag) => Rows.Cast<DataRow>().Where(row => (bool)row[tag]).Select(row => App.IdFile[(int)row[0]]);
 
 		public IEnumerable<string> GetTags(FileModel file)
 		{
@@ -34,13 +34,24 @@ namespace TagsTree.Models
 		private List<DataRow> GetFileModels(IEnumerator<string> tags)
 		{
 			var tag = tags.Current;
-			List<DataRow> range = tags.MoveNext() ? GetFileModels(tags) : _rowsDict.Values.ToList();
-			var tempList = range.Where(row => (bool)row[tag]).ToList();
-			tempList.AddRange(App.Tags.Values.Where(childTag => App.Tags[tag].HasChildTag(childTag))
-				.SelectMany(_ => range, (childTag, row) => new { childTag, row })
-				.Where(t => (bool)t.row[t.childTag.Name])
-				.Select(t => t.row));
-			return tempList;
+			var lastRange = tags.MoveNext() ? GetFileModels(tags) : _rowsDict.Values.ToList();
+			if (App.Tags.ContainsKey(tag))
+			{
+				var dataRows = lastRange.Where(row => (bool)row[tag]).ToList();
+				dataRows.AddRange(App.Tags.Values.Where(childTag => App.Tags[tag].HasChildTag(childTag))
+					.SelectMany(_ => lastRange, (childTag, row) => new { childTag, row })
+					.Where(t => (bool)t.row[t.childTag.Name])
+					.Select(t => t.row));
+				return dataRows;
+			}
+			if (Default.PathTags)
+			{
+				return lastRange
+					.SelectMany(dataRow => App.IdFile[(int)dataRow[0]].PartialPath[4..].Split('\\', StringSplitOptions.RemoveEmptyEntries), (dataRow, pathTag) => new { dataRow, pathTag })
+					.Where(t => t.pathTag == tag)
+					.Select(t => t.dataRow).ToList();
+			}
+			return new List<DataRow>();
 		}
 		public void NewRow(FileModel fileModel)
 		{
@@ -83,7 +94,7 @@ namespace TagsTree.Models
 					return;
 				}
 		}
-		
+
 		private RelationsDataTable() { }
 
 		private RelationsDataTable(string name) => TableName = name;

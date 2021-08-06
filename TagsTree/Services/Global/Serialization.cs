@@ -46,13 +46,22 @@ namespace TagsTree
 			}
 
 			/// <summary>
-			/// 异步将某个类序列化为Json文件
+			/// 将某个类序列化为Json文件
 			/// </summary>
-			/// <typeparam name="T">泛型；类</typeparam>
+			/// <typeparam name="T">泛型类</typeparam>
 			/// <param name="path">Json文件路径</param>
 			/// <param name="objectItem">需要转化的对象</param>
 			/// <returns></returns>
-			public static async void Serialize<T>(string path, T objectItem) => await JsonSerializer.SerializeAsync(File.Create(path), objectItem);
+			public static void Serialize<T>(string path, T objectItem) => File.WriteAllText(path, JsonSerializer.Serialize(objectItem));
+
+			/// <summary>
+			/// 异步将某个类序列化为Json文件
+			/// </summary>
+			/// <typeparam name="T">泛型类</typeparam>
+			/// <param name="path">Json文件路径</param>
+			/// <param name="objectItem">需要转化的对象</param>
+			/// <returns></returns>
+			public static async void SerializeAsync<T>(string path, T objectItem) => await JsonSerializer.SerializeAsync(File.Create(path), objectItem);
 		}
 	}
 }

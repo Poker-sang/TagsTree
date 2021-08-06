@@ -28,26 +28,27 @@
         <Image
             Grid.Row="0"
             Grid.Column="0"
-            Source="{Binding Icon}" />
+            Source="{Binding Icon, Mode=OneWay}" />
         <StackPanel
             Grid.Row="0"
             Grid.Column="1"
+            DataContext="{Binding FileViewModel, Mode=OneWay}"
             Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
                 <TextBlock FontSize="20" Text="名称：" />
-                <TextBlock FontSize="20" Text="{Binding Name}" />
+                <TextBlock FontSize="20" Text="{Binding Name, Mode=OneWay}" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <TextBlock FontSize="20" Text="路径：" />
-                <TextBlock FontSize="20" Text="{Binding Path}" />
+                <TextBlock FontSize="20" Text="{Binding PartialPath, Mode=OneWay}" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <TextBlock FontSize="20" Text="类型：" />
-                <TextBlock FontSize="20" Text="{Binding Extension}" />
+                <TextBlock FontSize="20" Text="{Binding Extension, Mode=OneWay}" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <TextBlock FontSize="20" Text="标签：" />
-                <TextBlock FontSize="20" Text="{Binding Tags}" />
+                <TextBlock FontSize="20" Text="{Binding Tags, Mode=OneWay}" />
             </StackPanel>
         </StackPanel>
         <ui:CommandBar

@@ -3,7 +3,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Animation;
-using TagsTree.ViewModels;
+using Vm = TagsTree.ViewModels.MainViewModel;
 
 namespace TagsTree.Views
 {
@@ -16,18 +16,18 @@ namespace TagsTree.Views
 		{
 			InitializeComponent();
 			Services.MainService.Load(this);
-			if (!MainViewModel.CheckConfig())
+			if (!Vm.CheckConfig())
 			{
 				Close();
 				return;
 			}
 			Services.MainService.LoadFileProperties();
 
-			MouseLeftButtonDown += MainViewModel.MainMouseLeftButtonDown;
-			((Style)Resources["DgRowStyle"]).Setters.Add(new EventSetter(MouseDoubleClickEvent, MainViewModel.DgItemMouseDoubleClick));
-			TbInput.SuggestionChosen += MainViewModel.SuggestionChosen;
-			TbInput.TextChanged += MainViewModel.TextChanged;
-			TbInput.QuerySubmitted += TbInput_OnQuerySubmitted + MainViewModel.QuerySubmitted;
+			MouseLeftButtonDown += Vm.MainMouseLeftButtonDown;
+			((Style)Resources["DgRowStyle"]).Setters.Add(new EventSetter(MouseDoubleClickEvent, Vm.DgItemMouseDoubleClick));
+			TbInput.SuggestionChosen += Vm.SuggestionChosen;
+			TbInput.TextChanged += Vm.TextChanged;
+			TbInput.QuerySubmitted += TbInput_OnQuerySubmitted + Vm.QuerySubmitted;
 		}
 
 

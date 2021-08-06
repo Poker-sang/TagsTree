@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using TagsTree.ViewModels;
+using System.Windows.Input;
+using System.Windows.Media.Animation;
+using Vm = TagsTree.ViewModels.TagAddFilesViewModel;
 
 namespace TagsTree.Views
 {
@@ -21,34 +20,44 @@ namespace TagsTree.Views
 			InitializeComponent();
 			Services.TagAddFilesService.Load(this);
 			MouseLeftButtonDown += (_, _) => DragMove();
-			_ = Tags.SetBinding(ItemsControl.ItemsSourceProperty, new Binding(".") { Mode = BindingMode.TwoWay, Source = ((TagAddFilesViewModel)DataContext).Xdp });
+			_ = Tags.SetBinding(ItemsControl.ItemsSourceProperty, new Binding(".") { Mode = BindingMode.TwoWay, Source = ((Vm)DataContext).Xdp });
 
-			Tags.SelectedItemChanged += TagAddFilesViewModel.TvSelectItemChanged;
-			Tags.MouseDoubleClick += (_, _) =>
-			{
-				BConfirmClick();
-				TagAddFilesViewModel.ConfirmBClick();
-			};
-			BConfirm.Click += (_, _) =>
-			{
-				BConfirmClick();
-				TagAddFilesViewModel.ConfirmBClick();
-			};
+			Tags.SelectedItemChanged += Vm.TvSelectItemChanged;
+			TbInput.SuggestionChosen += Vm.SuggestionChosen;
+			TbInput.TextChanged += Vm.TextChanged;
+			TbInput.QuerySubmitted += Vm.QuerySubmitted;
+
+			DgResult.RowStyle = new Style(typeof(DataGridRow), (Style)Application.Current.Resources["DefaultDataGridRowStyle"]);
+			DgResult.RowStyle.Setters.Add(new EventSetter(MouseLeftButtonDownEvent, new MouseButtonEventHandler((_, _) => Vm.Selected(DgResult.CurrentItem))));
+			DgResult.SelectionChanged += (_, _) => Vm.Selected(DgResult.CurrentItem);
 		}
 
-		public bool Mode = false;
 
-		private void BConfirmClick()
+		public async void BConfirmClick()
 		{
-			if (!Mode) //Mode变为true由ConfirmBClick()完成
+			Tags.BeginAnimation(OpacityProperty, new DoubleAnimation
 			{
-
-
-
-
-
-			}
-			else Close();
+				From = 1,
+				To = 0,
+				Duration = TimeSpan.FromMilliseconds(500)
+			});
+			await Task.Delay(500);
+			StackPanel.Children.Remove(Tags);
+			BConfirm.Content = "保存";
+			TbInput.BeginAnimation(OpacityProperty, new DoubleAnimation
+			{
+				From = 0,
+				To = 1,
+				Duration = TimeSpan.FromMilliseconds(500)
+			});
+			DgResult.BeginAnimation(OpacityProperty, new DoubleAnimation
+			{
+				From = 0,
+				To = 1,
+				Duration = TimeSpan.FromMilliseconds(500)
+			});
+			TbInput.IsHitTestVisible = true;
+			DgResult.IsHitTestVisible = true;
 		}
 
 	}

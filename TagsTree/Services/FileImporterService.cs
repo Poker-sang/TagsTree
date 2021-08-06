@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
-using TagsTree.Models;
 using TagsTree.ViewModels;
 using TagsTree.Views;
 using static System.Windows.Application;
@@ -48,46 +47,46 @@ namespace TagsTree.Services
 				await Task.Run(() =>
 				{
 					var dictionary = new Dictionary<string, bool>();
-					foreach (var fileModel in Vm.FileModels)
+					foreach (var fileModel in Vm.FileViewModels)
 						dictionary[fileModel.UniqueName] = true;
 					switch ((string)parameter!)
 					{
 						case "Select_Files":
-							if (FileModel.ValidPath(dialog.FileNames.First()[..dialog.FileNames.First().LastIndexOf('\\')]))
+							if (FileViewModel.ValidPath(dialog.FileNames.First()[..dialog.FileNames.First().LastIndexOf('\\')]))
 								foreach (var fileName in dialog.FileNames)
 									if (!dictionary.ContainsKey(fileName))
-										Current.Dispatcher.Invoke(() => Vm.FileModels.Add(new FileModel(fileName[(fileName.LastIndexOf('\\') + 1)..], fileName[..fileName.LastIndexOf('\\')], false)));
+										Current.Dispatcher.Invoke(() => Vm.FileViewModels.Add(new FileViewModel(fileName, false)));
 							break;
 						case "Select_Folders":
-							if (FileModel.ValidPath(dialog.FileNames.First()[..dialog.FileNames.First().LastIndexOf('\\')]))
+							if (FileViewModel.ValidPath(dialog.FileNames.First()[..dialog.FileNames.First().LastIndexOf('\\')]))
 								foreach (var directoryName in dialog.FileNames)
 									if (!dictionary.ContainsKey(directoryName))
-										Current.Dispatcher.Invoke(() => Vm.FileModels.Add(new FileModel(directoryName[(directoryName.LastIndexOf('\\') + 1)..], directoryName[..directoryName.LastIndexOf('\\')], true)));
+										Current.Dispatcher.Invoke(() => Vm.FileViewModels.Add(new FileViewModel(directoryName, true)));
 							break;
 						case "Path_Files":
-							if (FileModel.ValidPath(dialog.FileNames.First()))
+							if (FileViewModel.ValidPath(dialog.FileNames.First()))
 								foreach (var directoryName in dialog.FileNames)
 									foreach (var fileInfo in new DirectoryInfo(directoryName).GetFiles())
 										if (!dictionary.ContainsKey(fileInfo.FullName + false))
-											Current.Dispatcher.Invoke(() => Vm.FileModels.Add(new FileModel(fileInfo.Name, directoryName, false)));
+											Current.Dispatcher.Invoke(() => Vm.FileViewModels.Add(new FileViewModel(fileInfo.FullName, false)));
 							break;
 						case "Path_Folders":
-							if (FileModel.ValidPath(dialog.FileNames.First()))
+							if (FileViewModel.ValidPath(dialog.FileNames.First()))
 								foreach (var directoryName in dialog.FileNames)
 									foreach (var directoryInfo in new DirectoryInfo(directoryName).GetDirectories())
 										if (!dictionary.ContainsKey(directoryInfo.FullName + true))
-											Current.Dispatcher.Invoke(() => Vm.FileModels.Add(new FileModel(directoryInfo.Name, directoryName, true)));
+											Current.Dispatcher.Invoke(() => Vm.FileViewModels.Add(new FileViewModel(directoryInfo.FullName, true)));
 							break;
 						case "Path_Both":
-							if (FileModel.ValidPath(dialog.FileNames.First()))
+							if (FileViewModel.ValidPath(dialog.FileNames.First()))
 								foreach (var directoryName in dialog.FileNames)
 								{
 									foreach (var fileInfo in new DirectoryInfo(directoryName).GetFiles())
 										if (!dictionary.ContainsKey(fileInfo.FullName + false))
-											Current.Dispatcher.Invoke(() => Vm.FileModels.Add(new FileModel(fileInfo.Name, directoryName, false)));
+											Current.Dispatcher.Invoke(() => Vm.FileViewModels.Add(new FileViewModel(fileInfo.FullName, false)));
 									foreach (var directoryInfo in new DirectoryInfo(directoryName).GetDirectories())
 										if (!dictionary.ContainsKey(directoryInfo.FullName + true))
-											Current.Dispatcher.Invoke(() => Vm.FileModels.Add(new FileModel(directoryInfo.Name, directoryName, true)));
+											Current.Dispatcher.Invoke(() => Vm.FileViewModels.Add(new FileViewModel(directoryInfo.FullName, true)));
 								}
 							break;
 						case "All":
@@ -95,11 +94,11 @@ namespace TagsTree.Services
 							{
 								foreach (var fileInfo in new DirectoryInfo(folderName).GetFiles())
 									if (!dictionary!.ContainsKey(fileInfo.FullName + false))
-										Current.Dispatcher.Invoke(() => Vm.FileModels.Add(new FileModel(fileInfo.Name, folderName, false)));
+										Current.Dispatcher.Invoke(() => Vm.FileViewModels.Add(new FileViewModel(fileInfo.FullName, false)));
 								foreach (var directoryInfo in new DirectoryInfo(folderName).GetDirectories())
 									RecursiveReadFiles(directoryInfo.FullName);
 							}
-							if (FileModel.ValidPath(dialog.FileNames.First()))
+							if (FileViewModel.ValidPath(dialog.FileNames.First()))
 								foreach (var directoryName in dialog.FileNames)
 									RecursiveReadFiles(directoryName);
 							break;
@@ -108,7 +107,7 @@ namespace TagsTree.Services
 			Vm.Importing = false;
 		}
 
-		public static void DeleteBClick(object? parameter) => Vm.FileModels.Clear();
+		public static void DeleteBClick(object? parameter) => Vm.FileViewModels.Clear();
 		public static async void SaveBClick(object? parameter)
 		{
 			var border = new Border { Background = new SolidColorBrush(Color.FromArgb(0x55, 0x88, 0x88, 0x88)) };
@@ -125,13 +124,13 @@ namespace TagsTree.Services
 				foreach (var fileModel in App.IdFile.Values)
 					dictionary[fileModel.UniqueName] = true;
 				_ = Current.Dispatcher.Invoke(() => progressBar.Value = 2);
-				var unit = 97.0 / Vm.FileModels.Count;
-				foreach (var fileModel in Vm.FileModels)
+				var unit = 97.0 / Vm.FileViewModels.Count;
+				foreach (var fileModel in Vm.FileViewModels)
 				{
 					if (!dictionary.ContainsKey(fileModel.UniqueName))
 					{
-						App.Relations.NewRow(fileModel);
-						App.IdFile[fileModel.Id] = fileModel;
+						App.Relations.NewRow(fileModel.NewFileModel());
+						App.IdFile[fileModel.Id] = fileModel.NewFileModel();
 					}
 					else duplicated++;
 					_ = Current.Dispatcher.Invoke(() => progressBar.Value += unit);
@@ -140,8 +139,8 @@ namespace TagsTree.Services
 			App.SaveFiles();
 			App.SaveRelations();
 			progressBar.Value = 100;
-			var former = Vm.FileModels.Count;
-			Vm.FileModels.Clear();
+			var former = Vm.FileViewModels.Count;
+			Vm.FileViewModels.Clear();
 			((Grid)parameter!).Children.Remove(border);
 			App.MessageBoxX.Information($"共导入 {former} 个文件，其中成功导入 {former - duplicated} 个，有 {duplicated} 个因重复未导入");
 		}
