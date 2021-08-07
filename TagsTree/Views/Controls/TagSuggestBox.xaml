@@ -1,0 +1,28 @@
+﻿<UserControl
+    x:Class="TagsTree.Views.Controls.TagSuggestBox"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:TagsTree.ViewModels.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:TagsTree.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:viewModels="clr-namespace:TagsTree.ViewModels"
+    xmlns:views="clr-namespace:TagsTree.Views"
+    mc:Ignorable="d">
+    <ui:AutoSuggestBox
+        x:Name="AutoSuggestBox"
+        PlaceholderText="输入标签以搜索相应文件（标签间以空格隔开，不输入显示全部文件）"
+        QueryIcon="Find"
+        Text="{Binding Search, Mode=TwoWay}"
+        UpdateTextOnSelect="False">
+        <ui:AutoSuggestBox.DataContext>
+            <controls:TagSuggestBoxViewModel />
+        </ui:AutoSuggestBox.DataContext>
+        <ui:AutoSuggestBox.ItemTemplate>
+            <DataTemplate>
+                <TextBlock d:DataContext="{d:DesignInstance viewModels:FileViewModel}" Text="{Binding FullName, Mode=OneTime}" />
+            </DataTemplate>
+        </ui:AutoSuggestBox.ItemTemplate>
+    </ui:AutoSuggestBox>
+</UserControl>

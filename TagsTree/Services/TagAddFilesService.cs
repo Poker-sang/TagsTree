@@ -7,8 +7,11 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Xml;
+using TagsTree.Delegates;
+using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
 using TagsTree.Views;
+using TagsTree.Views.Controls;
 
 namespace TagsTree.Services
 {
@@ -30,38 +33,13 @@ namespace TagsTree.Services
 			Vm.SelectedTag = App.TvSelectedItemChanged((XmlElement?)e.NewValue) ?? Vm.SelectedTag;
 			Vm.CanConfirm = true;
 		}
-		public static void SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs e)
-		{
-			var index = sender.Text.LastIndexOf(' ') + 1;
-			if (index == 0)
-				sender.Text = e.SelectedItem.ToString();
-			else sender.Text = sender.Text[..index] + e.SelectedItem;
-		}
-		public static void TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
-		{
-			Vm.Search = Regex.Replace(Vm.Search, $@"[{App.FileX.GetInvalidPathChars}]+", "");
-			Vm.Search = Regex.Replace(Vm.Search, @"  +", " ").TrimStart();
-			sender.ItemsSource = App.TagSuggest(sender.Text);
-			var textBox = (TextBox)typeof(AutoSuggestBox).GetField("m_textBox", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(sender)!;
-			textBox.SelectionStart = textBox.Text.Length;
-		}
-		public static void QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e)
-		{
-			Vm.FileViewModels.Clear();
-			var tags = sender.Text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-			var validTags = new Dictionary<string, bool>();
-			foreach (var tag in tags)
-				if (!validTags.ContainsKey(tag))
-					validTags[tag] = true;
-			foreach (var fileModel in App.Relations.GetFileModels(validTags.Keys.ToList()))
-				Vm.FileViewModels.Add(new FileViewModel(fileModel));
-		}
+		public static void ResultChanged(TagSuggestBox sender, ResultChangedEventArgs e) => ((TagAddFilesViewModel)Win.DataContext).FileViewModels = e.NewResult.ToObservableCollection();
+		
+	#endregion
 
-		#endregion
+	#region 命令
 
-		#region 命令
-
-		private static bool _mode;
+	private static bool _mode;
 		public static void ConfirmBClick(object? parameter)
 		{
 			if (!_mode)
@@ -87,5 +65,6 @@ namespace TagsTree.Services
 		public static void Selected(object fileViewModel) => ((FileViewModel)fileViewModel).Selected = !((FileViewModel)fileViewModel).Selected;
 
 		#endregion
+
 	}
 }

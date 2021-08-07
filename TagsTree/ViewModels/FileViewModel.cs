@@ -1,6 +1,5 @@
 ﻿using JetBrains.Annotations;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using TagsTree.Models;
 
@@ -16,7 +15,7 @@ namespace TagsTree.ViewModels
 		public FileViewModel(string fullName, bool isFolder) : base(fullName, isFolder) { }
 
 		public FileModel GetFileModel => App.IdFile[Id];
-		public FileModel NewFileModel() => new(FullName, IsFolder);
+		public FileModel NewFileModel() => new(this);
 
 		public new void Reload(string fullName)
 		{

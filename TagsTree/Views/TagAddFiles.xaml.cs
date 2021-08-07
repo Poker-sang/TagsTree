@@ -23,9 +23,7 @@ namespace TagsTree.Views
 			_ = Tags.SetBinding(ItemsControl.ItemsSourceProperty, new Binding(".") { Mode = BindingMode.TwoWay, Source = ((Vm)DataContext).Xdp });
 
 			Tags.SelectedItemChanged += Vm.TvSelectItemChanged;
-			TbInput.SuggestionChosen += Vm.SuggestionChosen;
-			TbInput.TextChanged += Vm.TextChanged;
-			TbInput.QuerySubmitted += Vm.QuerySubmitted;
+			TbInput.ResultChanged += Vm.ResultChanged;
 
 			DgResult.RowStyle = new Style(typeof(DataGridRow), (Style)Application.Current.Resources["DefaultDataGridRowStyle"]);
 			DgResult.RowStyle.Setters.Add(new EventSetter(MouseLeftButtonDownEvent, new MouseButtonEventHandler((_, _) => Vm.Selected(DgResult.CurrentItem))));

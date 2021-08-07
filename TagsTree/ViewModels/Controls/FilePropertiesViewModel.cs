@@ -4,9 +4,9 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows.Media;
 using TagsTree.Commands;
-using TagsTree.Services;
+using TagsTree.Services.Controls;
 
-namespace TagsTree.ViewModels
+namespace TagsTree.ViewModels.Controls
 {
 	public class FilePropertiesViewModel : INotifyPropertyChanged
 	{
@@ -16,9 +16,9 @@ namespace TagsTree.ViewModels
 
 		public void Load(FileViewModel file)
 		{
-			FileViewModel = new FileViewModel(file);
+			FileViewModel = file;
 			Exists = File.Exists(file.FullName);
-			if(Exists)
+			if (Exists)
 				Icon = App.CIconOfPath.IconOfPathLarge(file.FullName, true, true);
 			OnPropertyChanged(nameof(FileViewModel));
 			OnPropertyChanged(nameof(Icon));

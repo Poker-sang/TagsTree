@@ -1,10 +1,12 @@
 ﻿using System.IO;
+using TagsTree.Delegates;
 using TagsTree.ViewModels;
 using TagsTree.Views;
+using TagsTree.Views.Controls;
 using static TagsTree.Properties.Settings;
-using Vm = TagsTree.ViewModels.FilePropertiesViewModel;
+using Vm = TagsTree.ViewModels.Controls.FilePropertiesViewModel;
 
-namespace TagsTree.Services
+namespace TagsTree.Services.Controls
 {
 	public static class FilePropertiesService
 	{
@@ -14,8 +16,8 @@ namespace TagsTree.Services
 
 		#region 命令
 
-		public static void OpenBClick(object? parameter) => App.FileX.Open(((Vm)parameter!).FileViewModel.FullName);
-		public static void OpenExplorerBClick(object? parameter) => App.FileX.Open(((Vm)parameter!).FileViewModel.Path);
+		public static void OpenBClick(object? parameter) => ((Vm)parameter!).FileViewModel.FullName.Open();
+		public static void OpenExplorerBClick(object? parameter) => ((Vm)parameter!).FileViewModel.Path.Open();
 		public static void EditTagsBClick(object? parameter)
 		{
 
@@ -85,14 +87,11 @@ namespace TagsTree.Services
 
 		#region 操作
 
-		private static void Remove(FileViewModel fileModel)
+		private static void Remove(FileViewModel fileViewModel)
 		{
 			ContentDialog.Hide();
-			if (!App.IdFile.Contains(fileModel.GetFileModel)) return;
-			_ = App.IdFile.Remove(fileModel.GetFileModel);
-			App.Relations.Rows.Remove(App.Relations.RowAt(fileModel.GetFileModel));
-			App.Relations.RefreshRowsDict();
-			App.SaveFiles();
+			if (!App.TryRemoveFileModel(fileViewModel)) return;
+			ContentDialog.OnFileRemoved(new FileRemovedEventArgs(fileViewModel));
 		}
 
 		#endregion

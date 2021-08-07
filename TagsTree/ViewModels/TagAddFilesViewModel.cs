@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Data;
 using TagsTree.Commands;
+using TagsTree.Delegates;
 using TagsTree.Services;
 
 namespace TagsTree.ViewModels
@@ -29,15 +30,11 @@ namespace TagsTree.ViewModels
 		public static Action<object> Selected => TagAddFilesService.Selected;
 		public RelayCommand ConfirmBClick { get; }
 		private bool _canConfirm;
-		public static TypedEventHandler<AutoSuggestBox, AutoSuggestBoxSuggestionChosenEventArgs> SuggestionChosen => TagAddFilesService.SuggestionChosen;
-		public static TypedEventHandler<AutoSuggestBox, AutoSuggestBoxTextChangedEventArgs> TextChanged => TagAddFilesService.TextChanged;
-		public static TypedEventHandler<AutoSuggestBox, AutoSuggestBoxQuerySubmittedEventArgs> QuerySubmitted => TagAddFilesService.QuerySubmitted;
+		public static ResultChangedEventHandler ResultChanged => TagAddFilesService.ResultChanged;
 
 		private string _selectedTag = "";
-		private string _search = "";
-		public ObservableCollection<FileViewModel> FileViewModels { get; } = new();
 		public XmlDataProvider Xdp { get; }
-
+		private ObservableCollection<FileViewModel> _fileViewModels;
 
 		public bool CanConfirm
 		{
@@ -59,15 +56,16 @@ namespace TagsTree.ViewModels
 				OnPropertyChanged(nameof(SelectedTag));
 			}
 		}
-		public string Search
+		public ObservableCollection<FileViewModel> FileViewModels
 		{
-			get => _search;
+			get => _fileViewModels;
 			set
 			{
-				if (Equals(_search, value)) return;
-				_search = value;
-				OnPropertyChanged(nameof(Search));
+				if (Equals(_fileViewModels, value)) return;
+				_fileViewModels = value;
+				OnPropertyChanged(nameof(FileViewModels));
 			}
 		}
+		public void CollectionChanged() => OnPropertyChanged(nameof(FileViewModels));
 	}
 }
