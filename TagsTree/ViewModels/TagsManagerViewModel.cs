@@ -43,16 +43,12 @@ namespace TagsTree.ViewModels
 
 		public XmlDataProvider Xdp { get; }
 
-		public static RoutedEventHandler PathComplement => TagsManagerService.PathComplement;
 		public static RoutedPropertyChangedEventHandler<object> TvSelectItemChanged => TagsManagerService.TvSelectItemChanged;
 		public static Action<XmlElement, XmlElement?> MoveTag => TagsManagerService.MoveTag;
-		public static TypedEventHandler<AutoSuggestBox, AutoSuggestBoxSuggestionChosenEventArgs> SuggestionChosen => TagsManagerService.SuggestionChosen;
 		public static TypedEventHandler<AutoSuggestBox, AutoSuggestBoxTextChangedEventArgs> NameChanged => TagsManagerService.NameChanged;
-		public static TypedEventHandler<AutoSuggestBox, AutoSuggestBoxTextChangedEventArgs> PathChanged => TagsManagerService.PathChanged;
 		public static CancelEventHandler Closing => TagsManagerService.Closing;
 
 		private string _name = "";
-		private string _path = "";
 		private bool _changed;
 		private XmlElement? _clipBoard;
 
@@ -65,16 +61,6 @@ namespace TagsTree.ViewModels
 				if (Equals(value, _name)) return;
 				_name = value;
 				OnPropertyChanged(nameof(Name));
-			}
-		}
-		public string Path
-		{
-			get => _path;
-			set
-			{
-				if (Equals(value, _path)) return;
-				_path = value;
-				OnPropertyChanged(nameof(Path));
 			}
 		}
 		public bool Changed

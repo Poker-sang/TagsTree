@@ -2,6 +2,7 @@
     x:Class="TagsTree.Views.TagsManager"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:TagsTree.Views.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:TagsTree"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -86,10 +87,10 @@
                 <ui:AppBarButton Icon="Help">
                     <ui:AppBarButton.ToolTip>
                         <TextBlock>
-                            新建：输入「标签名称」，该标签就会作为新标签加在「配置路径」目录下&quot;<LineBreak />
-                            移动：输入「标签名称」，该标签和其目录下的所有标签都会移动到「配置路径」目录下&quot;<LineBreak />
-                            重命名：输入「配置路径」，该标签名将会改成「标签名称」<LineBreak />
-                            删除：输入「配置路径」，该标签和其目录下的所有标签都会被删除</TextBlock>
+                            新建：输入「标签名称」，该标签就会作为新标签加在「标签路径」目录下&quot;<LineBreak />
+                            移动：输入「标签名称」，该标签和其目录下的所有标签都会移动到「标签路径」目录下&quot;<LineBreak />
+                            重命名：输入「标签路径」，该标签名将会改成「标签名称」<LineBreak />
+                            删除：输入「标签路径」，该标签和其目录下的所有标签都会被删除</TextBlock>
                     </ui:AppBarButton.ToolTip>
                 </ui:AppBarButton>
                 <ui:AppBarButton
@@ -97,7 +98,6 @@
                     Icon="Save"
                     Label="保存" />
             </ui:CommandBar>
-
             <ui:AutoSuggestBox
                 x:Name="TbName"
                 VerticalAlignment="Center"
@@ -105,19 +105,10 @@
                 PlaceholderText="标签名称（不包含\/:*?&quot;&lt;&gt;|,和空白字符且不为空）"
                 Text="{Binding Name, Mode=TwoWay}" />
         </DockPanel>
-        <ui:AutoSuggestBox
+        <controls:TagCompleteBox
             x:Name="TbPath"
             VerticalAlignment="Center"
-            DockPanel.Dock="Top"
-            PlaceholderText="配置路径（不包含/:*?&quot;&lt;&gt;|,和空白字符且不为空）"
-            Text="{Binding Path, Mode=TwoWay}"
-            UpdateTextOnSelect="False">
-            <ui:AutoSuggestBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock d:DataContext="{d:DesignInstance viewModels:FileViewModel}" Text="{Binding FullName, Mode=OneTime}" />
-                </DataTemplate>
-            </ui:AutoSuggestBox.ItemTemplate>
-        </ui:AutoSuggestBox>
+            DockPanel.Dock="Top" />
         <TreeView
             x:Name="TvTags"
             MinHeight="400"

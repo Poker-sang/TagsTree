@@ -11,8 +11,15 @@ namespace TagsTree.ViewModels
 		[NotifyPropertyChangedInvocator]
 		private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-		public FileViewModel(FileModel fileModel) : base(fileModel) { }
-		public FileViewModel(string fullName, bool isFolder) : base(fullName, isFolder) { }
+		public FileViewModel(FileModel fileModel) : base(fileModel) => _virtualTags = Tags;
+
+		public FileViewModel(FileModel fileModel, string tag) : base(fileModel)
+		{
+			_selected = App.Relations[GetFileModel, tag];
+			_virtualTags = Tags;
+		}
+
+		public FileViewModel(string fullName, bool isFolder) : base(fullName, isFolder) => _virtualTags = Tags;
 
 		public FileModel GetFileModel => App.IdFile[Id];
 		public FileModel NewFileModel() => new(this);
@@ -29,8 +36,10 @@ namespace TagsTree.ViewModels
 		}
 
 		public new static bool ValidPath(string path) => FileModel.ValidPath(path);
-
+		
 		private bool _selected;
+		private string _virtualTags;
+
 		public bool Selected
 		{
 			get => _selected;
@@ -39,6 +48,16 @@ namespace TagsTree.ViewModels
 				if (Equals(_selected, value)) return;
 				_selected = value;
 				OnPropertyChanged(nameof(Selected));
+			}
+		}
+		public string VirtualTags
+		{
+			get => _virtualTags;
+			set
+			{
+				if (Equals(_virtualTags, value)) return;
+				_virtualTags = value;
+				OnPropertyChanged(nameof(VirtualTags));
 			}
 		}
 	}

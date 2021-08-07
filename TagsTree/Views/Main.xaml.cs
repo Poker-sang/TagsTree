@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Animation;
-using TagsTree.Delegates;
 using TagsTree.Views.Controls;
 using Vm = TagsTree.ViewModels.MainViewModel;
 
@@ -31,7 +30,7 @@ namespace TagsTree.Views
 			FileProperties.FileRemoved += Vm.FileRemoved;
 		}
 
-
+		private bool _isSearched;
 		private async void Search()
 		{
 			if (_isSearched) return;
@@ -58,11 +57,9 @@ namespace TagsTree.Views
 			DgResult.IsHitTestVisible = true;
 		}
 
-		private bool _isSearched;
-
 		private void ChangeConfig_Click(object sender, RoutedEventArgs e) => _ = new NewConfig(this).ShowDialog();
 		private void TagsManager_Click(object sender, RoutedEventArgs e) => _ = new TagsManager(this).ShowDialog();
 		private void FileAdder_OnClick(object sender, RoutedEventArgs e) => _ = new FileImporter(this).ShowDialog();
-		private void TagAddFiles_OnClick(object sender, RoutedEventArgs e) => _ = new TagAddFiles(this).ShowDialog();
+		private void TagEditFiles_OnClick(object sender, RoutedEventArgs e) => _ = new TagEditFiles(this).ShowDialog();
 	}
 }

@@ -7,15 +7,15 @@ using TagsTree.Services.Controls;
 
 namespace TagsTree.ViewModels.Controls
 {
-	public class TagSuggestBoxViewModel : INotifyPropertyChanged
+	public class TagSearchBoxViewModel : INotifyPropertyChanged
 	{
 		public event PropertyChangedEventHandler? PropertyChanged;
 		[NotifyPropertyChangedInvocator]
 		private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-		public static TypedEventHandler<AutoSuggestBox, AutoSuggestBoxSuggestionChosenEventArgs> SuggestionChosen => TagSuggestBoxService.SuggestionChosen;
-		public static TypedEventHandler<AutoSuggestBox, AutoSuggestBoxTextChangedEventArgs> TextChanged => TagSuggestBoxService.TextChanged;
-		public static TypedEventHandler<AutoSuggestBox, AutoSuggestBoxQuerySubmittedEventArgs> QuerySubmitted => TagSuggestBoxService.QuerySubmitted;
+		public static TypedEventHandler<AutoSuggestBox, AutoSuggestBoxSuggestionChosenEventArgs> SuggestionChosen => TagSearchBoxService.SuggestionChosen;
+		public static TypedEventHandler<AutoSuggestBox, AutoSuggestBoxTextChangedEventArgs> TextChanged => TagSearchBoxService.TextChanged;
+		public static TypedEventHandler<AutoSuggestBox, AutoSuggestBoxQuerySubmittedEventArgs> QuerySubmitted => TagSearchBoxService.QuerySubmitted;
 
 		private string _search = "";
 		public string Search

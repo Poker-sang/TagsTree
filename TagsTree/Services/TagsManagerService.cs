@@ -22,7 +22,6 @@ namespace TagsTree.Services
 
 		#region 事件处理
 
-		public static void PathComplement(object sender, RoutedEventArgs e) => Vm.Path = App.TagPathComplete(Vm.Path)?.FullName ?? Vm.Path;
 		public static void NameChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
 		{
 			Vm.Name = Regex.Replace(Vm.Name, $@"[{App.FileX.GetInvalidNameChars}]+", "");
@@ -30,15 +29,7 @@ namespace TagsTree.Services
 			textBox.SelectionStart = textBox.Text.Length;
 		}
 
-		public static void PathChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
-		{
-			Vm.Path = Regex.Replace(Vm.Path, $@"[{App.FileX.GetInvalidPathChars}]+", "");
-			sender.ItemsSource = App.TagSuggest(sender.Text);
-			var textBox = (TextBox)typeof(AutoSuggestBox).GetField("m_textBox", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(sender)!;
-			textBox.SelectionStart = textBox.Text.Length;
-		}
-		public static void SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs e) => sender.Text = e.SelectedItem.ToString();
-		public static void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => Vm.Path = App.TvSelectedItemChanged((XmlElement?)e.NewValue) ?? Vm.Path;
+		public static void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => Win.TbPath.AutoSuggestBox.Text = App.TvSelectedItemChanged((XmlElement?)e.NewValue) ?? Win.TbPath.AutoSuggestBox.Text;
 		private static XmlElement TvItemGetHeader(object? sender) => (XmlElement)((TreeViewItem)sender!).Header;
 		public static void Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
@@ -56,35 +47,43 @@ namespace TagsTree.Services
 
 		public static void NewBClick(object? parameter)
 		{
+			if (App.IsTagNotExists(Win.TbPath.AutoSuggestBox.Text))
+				return;
 			if (!NewTagCheck(Vm.Name)) return;
-			NewTag(Vm.Name, App.GetXmlElement(Vm.Path)!);
+			NewTag(Vm.Name, App.GetXmlElement(Win.TbPath.AutoSuggestBox.Text)!);
 			Vm.Name = "";
 		}
 		public static void MoveBClick(object? parameter)
 		{
+			if (App.IsTagNotExists(Win.TbPath.AutoSuggestBox.Text))
+				return;
 			var element = App.GetXmlElement(Vm.Name);
 			if (element is not null)
 			{
-				MoveTag(element, App.GetXmlElement(Vm.Path)!);
+				MoveTag(element, App.GetXmlElement(Win.TbPath.AutoSuggestBox.Text)!);
 				Vm.Name = "";
 			}
 			else App.MessageBoxX.Error("标签名称不存在！请填写正确的单个标签或完整的路径！");
 		}
 		public static void RenameBClick(object? parameter)
 		{
+			if (App.IsTagNotExists(Win.TbPath.AutoSuggestBox.Text))
+				return;
 			if (!NewTagCheck(Vm.Name)) return;
-			RenameTag(Vm.Name, App.GetXmlElement(Vm.Path)!);
+			RenameTag(Vm.Name, App.GetXmlElement(Win.TbPath.AutoSuggestBox.Text)!);
 			Vm.Name = "";
-			Vm.Path = "";
+			Win.TbPath.AutoSuggestBox.Text = "";
 		}
 		public static void DeleteBClick(object? parameter)
 		{
-			if (Vm.Path == string.Empty)
+			if (App.IsTagNotExists(Win.TbPath.AutoSuggestBox.Text))
+				return;
+			if (Win.TbPath.AutoSuggestBox.Text == string.Empty)
 			{
 				App.MessageBoxX.Error("未输入希望删除的标签");
 				return;
 			}
-			DeleteTag(App.GetXmlElement(Vm.Path)!);
+			DeleteTag(App.GetXmlElement(Win.TbPath.AutoSuggestBox.Text)!);
 			Vm.Name = "";
 		}
 		public static void SaveBClick(object? parameter)
@@ -157,7 +156,7 @@ namespace TagsTree.Services
 			App.Relations.RenameColumn(path.GetAttribute("Name"), name);
 			TagsChanged();
 			Vm.Name = "";
-			Vm.Path = "";
+			Win.TbPath.AutoSuggestBox.Text = "";
 		}
 		private static void DeleteTag(XmlElement path)
 		{
