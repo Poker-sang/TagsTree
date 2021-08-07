@@ -6,6 +6,7 @@ using System.Windows;
 using System.Xml;
 using System.Xml.Linq;
 using TagsTree.Models;
+using TagsTree.ViewModels;
 using static TagsTree.Properties.Settings;
 
 namespace TagsTree
@@ -68,6 +69,18 @@ namespace TagsTree
 		/// 所有关系
 		/// </summary>
 		public static RelationsDataTable Relations;
+
+		public static bool TryRemoveFileModel(FileViewModel fileViewModel)
+		{
+			var fileModel = fileViewModel.GetFileModel;
+			if (!IdFile.Contains(fileModel)) return false;
+			_ = IdFile.Remove(fileModel);
+			Relations.Rows.Remove(Relations.RowAt(fileModel));
+			Relations.RefreshRowsDict();
+			SaveFiles();
+			SaveRelations();
+			return true;
+		}
 
 		///  <summary>
 		///  重新加载新的配置文件

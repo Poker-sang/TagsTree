@@ -1,13 +1,13 @@
 ﻿using JetBrains.Annotations;
-using ModernWpf;
-using ModernWpf.Controls;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using TagsTree.Commands;
+using TagsTree.Delegates;
 using TagsTree.Services;
+using TagsTree.Views.Controls;
 
 
 namespace TagsTree.ViewModels
@@ -26,22 +26,20 @@ namespace TagsTree.ViewModels
 		public static Func<bool> CheckConfig => MainService.CheckConfig;
 		public static MouseButtonEventHandler MainMouseLeftButtonDown => MainService.MainMouseLeftButtonDown;
 		public static MouseButtonEventHandler DgItemMouseDoubleClick => MainService.DgItemMouseDoubleClick;
-		public static TypedEventHandler<AutoSuggestBox, AutoSuggestBoxSuggestionChosenEventArgs> SuggestionChosen => MainService.SuggestionChosen;
-		public static TypedEventHandler<AutoSuggestBox, AutoSuggestBoxTextChangedEventArgs> TextChanged => MainService.TextChanged;
-		public static TypedEventHandler<AutoSuggestBox, AutoSuggestBoxQuerySubmittedEventArgs> QuerySubmitted => MainService.QuerySubmitted;
+		public static ResultChangedEventHandler ResultChanged => MainService.ResultChanged;
+		public static FileRemovedEventHandler FileRemoved => MainService.FileRemoved;
 
-		public ObservableCollection<FileViewModel> FileModels { get; } = new();
-		private string _search = "";
-
-		public string Search
+		private ObservableCollection<FileViewModel> _fileViewModels;
+		public ObservableCollection<FileViewModel> FileViewModels
 		{
-			get => _search;
+			get => _fileViewModels;
 			set
 			{
-				if (Equals(_search, value)) return;
-				_search = value;
-				OnPropertyChanged(nameof(Search));
+				if (Equals(_fileViewModels, value)) return;
+				_fileViewModels = value;
+				OnPropertyChanged(nameof(FileViewModels));
 			}
 		}
+		public void CollectionChanged() => OnPropertyChanged(nameof(FileViewModels));
 	}
 }

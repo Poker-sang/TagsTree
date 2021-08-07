@@ -1,7 +1,8 @@
 ﻿namespace TagsTree.Commands
 {
-	class OldRoutedCommands
-	{/*
+	/*
+	public class OldRoutedCommands
+	{
 		public static RoutedCommand NewCommand { get; } = new();
 		public static RoutedCommand NewXCommand { get; } = new();
 		public static RoutedCommand CutCommand { get; } = new();
@@ -65,6 +66,6 @@
 		private void Delete_Execute(object sender, ExecutedRoutedEventArgs e) => Service.DeleteTag(TagsTreeStatic.TvItemGetHeader(e.Parameter));
 
 		#endregion
-		*/
 	}
+	*/
 }

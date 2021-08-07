@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
+using TagsTree.ViewModels;
 using static TagsTree.Properties.Settings;
 
 namespace TagsTree.Models
@@ -15,6 +16,21 @@ namespace TagsTree.Models
 		public string Path { get; private set; }
 		public bool IsFolder { get; }
 
+		protected FileModel(FileModel fileModel)
+		{
+			IsFolder = fileModel.IsFolder;
+			Name = fileModel.Name;
+			Path = fileModel.Path;
+			Id = fileModel.Id;
+		}
+		protected FileModel(string fullName, bool isFolder)
+		{
+			Id = Num;
+			Num++;
+			IsFolder = isFolder;
+			Name = fullName[(fullName.LastIndexOf('\\') + 1)..];
+			Path = fullName[..fullName.LastIndexOf('\\')];
+		}
 		[JsonConstructor]
 		public FileModel(int id, string name, string path, bool isFolder)
 		{
@@ -23,20 +39,12 @@ namespace TagsTree.Models
 			Path = path;
 			IsFolder = isFolder;
 		}
-		public FileModel(string fullName, bool isFolder)
+		public FileModel(FileViewModel fileViewModel)
 		{
-			Id = Num;
-			Num++;
-			IsFolder = isFolder;
-			Name = fullName[(fullName.LastIndexOf('\\') + 1)..];
-			Path = fullName[..fullName.LastIndexOf('\\')];
-		}
-		protected FileModel(FileModel fileModel)
-		{
-			IsFolder = fileModel.IsFolder;
-			Name = fileModel.Name;
-			Path = fileModel.Path;
-			Id = fileModel.Id;
+			Id = fileViewModel.Id;
+			Name = fileViewModel.Name;
+			Path = fileViewModel.Path;
+			IsFolder = fileViewModel.IsFolder;
 		}
 		public void Reload(string fullName)
 		{

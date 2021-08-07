@@ -1,14 +1,13 @@
 ﻿using ModernWpf.Controls;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
+using TagsTree.Delegates;
+using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
+using TagsTree.ViewModels.Controls;
 using TagsTree.Views;
+using TagsTree.Views.Controls;
 using static TagsTree.Properties.Settings;
 
 namespace TagsTree.Services
@@ -40,53 +39,26 @@ namespace TagsTree.Services
 
 		public static void DgItemMouseDoubleClick(object sender, MouseButtonEventArgs e) => PropertiesCmClick(sender);
 
-		public static void SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs e)
-		{
-			var index = sender.Text.LastIndexOf(' ') + 1;
-			if (index == 0)
-				sender.Text = e.SelectedItem.ToString();
-			else sender.Text = sender.Text[..index] + e.SelectedItem;
-		}
+		public static void ResultChanged(TagSuggestBox sender, ResultChangedEventArgs e) => ((MainViewModel)Win.DataContext).FileViewModels = e.NewResult.ToObservableCollection();
 
-		public static void TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
+		public static void FileRemoved(FileProperties sender, FileRemovedEventArgs e)
 		{
-			Vm.Search = Regex.Replace(Vm.Search, $@"[{App.FileX.GetInvalidPathChars}]+", "");
-			Vm.Search = Regex.Replace(Vm.Search, @"  +", " ").TrimStart();
-			sender.ItemsSource = App.TagSuggest(sender.Text);
-			var textBox = (TextBox)typeof(AutoSuggestBox).GetField("m_textBox", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(sender)!;
-			textBox.SelectionStart = textBox.Text.Length;
-		}
-		public static void QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e)
-		{
-			Vm.FileModels.Clear();
-			var tags = sender.Text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-			var validTags = new Dictionary<string, bool>();
-			foreach (var tag in tags)
-				if (!validTags.ContainsKey(tag))
-					validTags[tag] = true;
-			foreach (var fileModel in App.Relations.GetFileModels(validTags.Keys.ToList()))
-				Vm.FileModels.Add(new FileViewModel(fileModel));
+			_ = Vm.FileViewModels.Remove(e.RemovedItem);
+			Vm.CollectionChanged();
 		}
 
 		#endregion
 
 		#region 命令
 
-		public static void OpenCmClick(object? parameter) => App.FileX.Open(((FileViewModel)((DataGridRow)parameter!).DataContext).FullName);
-		public static void OpenExplorerCmClick(object? parameter) => App.FileX.Open(((FileViewModel)((DataGridRow)parameter!).DataContext).Path);
+		public static void OpenCmClick(object? parameter) => ((FileViewModel)((DataGridRow)parameter!).DataContext).FullName.Open();
+		public static void OpenExplorerCmClick(object? parameter) => ((FileViewModel)((DataGridRow)parameter!).DataContext).Path.Open();
 		public static void RemoveCmClick(object? parameter)
 		{
 			if (!App.MessageBoxX.Warning("是否从软件移除该文件？")) return;
-			var value = (FileViewModel)((DataGridRow)parameter!).DataContext;
-			if (App.IdFile.Contains(value))
-			{
-				_ = App.IdFile.Remove(value);
-				App.Relations.Rows.Remove(App.Relations.RowAt(value));
-				App.Relations.RefreshRowsDict();
-				App.SaveFiles();
-			}
-
-			_ = Vm.FileModels.Remove((FileViewModel)((DataGridRow)parameter).DataContext);
+			if (!App.TryRemoveFileModel((FileViewModel)((DataGridRow)parameter!).DataContext)) return;
+			_ = Vm.FileViewModels.Remove((FileViewModel)((DataGridRow)parameter).DataContext);
+			Vm.CollectionChanged();
 		}
 		public static async void PropertiesCmClick(object? parameter)
 		{
