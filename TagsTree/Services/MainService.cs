@@ -39,7 +39,7 @@ namespace TagsTree.Services
 
 		public static void DgItemMouseDoubleClick(object sender, MouseButtonEventArgs e) => PropertiesCmClick(sender);
 
-		public static void ResultChanged(TagSuggestBox sender, ResultChangedEventArgs e) => ((MainViewModel)Win.DataContext).FileViewModels = e.NewResult.ToObservableCollection();
+		public static void ResultChanged(TagSearchBox sender, ResultChangedEventArgs e) => ((MainViewModel)Win.DataContext).FileViewModels = e.NewResult.ToObservableCollection();
 
 		public static void FileRemoved(FileProperties sender, FileRemovedEventArgs e)
 		{

@@ -2,15 +2,12 @@
     x:Class="TagsTree.Views.Main"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:TagsTree.Views.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:TagsTree"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:models="clr-namespace:TagsTree.Models"
-    xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:ui="http://schemas.modernwpf.com/2019"
     xmlns:viewModels="clr-namespace:TagsTree.ViewModels"
-    xmlns:views="clr-namespace:TagsTree.Views"
-    xmlns:controls="clr-namespace:TagsTree.Views.Controls"
     x:Name="MainWindow"
     Title="TagsTree"
     Width="1280"
@@ -83,7 +80,7 @@
                             <ui:FontIcon Glyph="&#xEC50;" />
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Click="TagAddFiles_OnClick" Header="为标签添加文件">
+                    <MenuItem Click="TagEditFiles_OnClick" Header="为标签添加文件">
                         <MenuItem.Icon>
                             <ui:FontIcon Glyph="&#xECC8;" />
                         </MenuItem.Icon>
@@ -109,7 +106,7 @@
             Grid.Row="0"
             Grid.RowSpan="2"
             Grid.Column="1">
-            <controls:TagSuggestBox
+            <controls:TagSearchBox
                 x:Name="TbInput"
                 Margin="0,300,0,0"
                 HorizontalAlignment="Stretch"

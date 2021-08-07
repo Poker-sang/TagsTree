@@ -12,14 +12,14 @@ using TagsTree.Views.Controls;
 
 namespace TagsTree.Services.Controls
 {
-	public static class TagSuggestBoxService
+	public static class TagSearchBoxService
 	{
-		private static TagSuggestBoxViewModel Vm;
-		private static TagSuggestBox TagSuggestBox;
-		public static void Load(TagSuggestBox tagSuggestBox)
+		private static TagSearchBoxViewModel Vm;
+		private static TagSearchBox TagSearchBox;
+		public static void Load(TagSearchBox tagSuggestBox)
 		{
-			Vm = (TagSuggestBoxViewModel)tagSuggestBox.AutoSuggestBox.DataContext;
-			TagSuggestBox = tagSuggestBox;
+			Vm = (TagSearchBoxViewModel)tagSuggestBox.AutoSuggestBox.DataContext;
+			TagSearchBox = tagSuggestBox;
 		}
 		public static void SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs e)
 		{
@@ -32,7 +32,7 @@ namespace TagsTree.Services.Controls
 		{
 			Vm.Search = Regex.Replace(Vm.Search, $@"[{App.FileX.GetInvalidPathChars}]+", "");
 			Vm.Search = Regex.Replace(Vm.Search, @"  +", " ").TrimStart();
-			sender.ItemsSource = App.TagSuggest(sender.Text);
+			sender.ItemsSource = App.TagSuggest(sender.Text, ' ');
 			var textBox = (TextBox)typeof(AutoSuggestBox).GetField("m_textBox", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(sender)!;
 			textBox.SelectionStart = textBox.Text.Length;
 		}
@@ -43,7 +43,7 @@ namespace TagsTree.Services.Controls
 			foreach (var tag in tags)
 				if (!validTags.ContainsKey(tag))
 					validTags[tag] = true;
-			TagSuggestBox.OnResultChanged(new ResultChangedEventArgs(App.Relations.GetFileModels(validTags.Keys.ToList()).Select(fileModel => new FileViewModel(fileModel))));
+			TagSearchBox.OnResultChanged(new ResultChangedEventArgs(App.Relations.GetFileModels(validTags.Keys.ToList()).Select(fileModel => new FileViewModel(fileModel))));
 		}
 	}
 }

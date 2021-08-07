@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using System.IO;
 using TagsTree.Delegates;
 using TagsTree.ViewModels;
 using TagsTree.Views;
@@ -18,10 +19,7 @@ namespace TagsTree.Services.Controls
 
 		public static void OpenBClick(object? parameter) => ((Vm)parameter!).FileViewModel.FullName.Open();
 		public static void OpenExplorerBClick(object? parameter) => ((Vm)parameter!).FileViewModel.Path.Open();
-		public static void EditTagsBClick(object? parameter)
-		{
-
-		}
+		public static void EditTagsBClick(object? parameter) => new FileEditTags(MainService.Win, ((Vm)parameter).FileViewModel).ShowDialog();
 		public static void RemoveBClick(object? parameter)
 		{
 			if (!App.MessageBoxX.Warning("是否从软件移除该文件？")) return;
@@ -48,25 +46,26 @@ namespace TagsTree.Services.Controls
 		}
 		public static void MoveBClick(object? parameter)
 		{
-			var dialog = new InputName(MainService.Win, @"不能包含\/:*?""<>|和除空格外的空白字符（只需填写「文件路径」后的路径）", App.FileX.GetInvalidPathChars);
-			if (dialog.ShowDialog() == false) return;
-			var newFullPath = Default.LibraryPath + @"\" + dialog.Message;
-			if (((Vm)parameter!).FileViewModel.Path == newFullPath)
+			var dialog = new CommonOpenFileDialog
+			{
+				Multiselect = false,
+				EnsurePathExists = true,
+				IsFolderPicker = true,
+				InitialDirectory = Default.LibraryPath,
+				Title = "选择你要将文件移动到的位置"
+			};
+			if (dialog.ShowDialog(MainService.Win) != CommonFileDialogResult.Ok) return; //仅用于主窗口所以直接调用MainService
+			if (((Vm)parameter!).FileViewModel.Path == dialog.FileName)
 			{
 				App.MessageBoxX.Error("新目录与原目录一致！");
 				return;
 			}
-			if (newFullPath.Contains(((Vm)parameter).FileViewModel.Path))
+			if (dialog.FileName.Contains(((Vm)parameter).FileViewModel.Path))
 			{
 				App.MessageBoxX.Error("不能将其移动到原目录下！");
 				return;
 			}
-			if (!Directory.Exists(newFullPath))
-			{
-				App.MessageBoxX.Error("新目录不存在！");
-				return;
-			}
-			var newFullName = newFullPath + @"\" + ((Vm)parameter).FileViewModel.Name;
+			var newFullName = dialog.FileName + @"\" + ((Vm)parameter).FileViewModel.Name;
 			if (((Vm)parameter).FileViewModel.IsFolder ? Directory.Exists(newFullName) : File.Exists(newFullName))
 			{
 				App.MessageBoxX.Error("新文件名与文件夹中其他文件同名！");

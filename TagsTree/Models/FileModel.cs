@@ -70,17 +70,18 @@ namespace TagsTree.Models
 			}
 		}
 		[JsonIgnore]
-		public string AllTags
+		public string PathTags //如果设置没有启用则返回空串
 		{
 			get
 			{
 				var tags = "";
 				if (Default.PathTags)
 					tags = PartialPath[4..].Split('\\', StringSplitOptions.RemoveEmptyEntries).Aggregate(tags, (current, tag) => current + " " + tag);
-				tags += App.Relations.GetTags(this).Aggregate("", (current, tag) => current + " " + tag);
 				return tags is "" ? "" : tags[1..];
 			}
 		}
+		[JsonIgnore]
+		public string AllTags => Tags + PathTags is "" ? "" : " " + PathTags;
 	}
 }
 

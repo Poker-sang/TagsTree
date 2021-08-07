@@ -11,8 +11,8 @@ namespace TagsTree.Views.Controls
 	{
 		public FileProperties()
 		{
-			FilePropertiesService.Load(this);
 			InitializeComponent();
+			FilePropertiesService.Load(this);
 		}
 
 		public event FileRemovedEventHandler FileRemoved;

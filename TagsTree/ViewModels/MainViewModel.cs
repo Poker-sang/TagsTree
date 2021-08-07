@@ -7,7 +7,6 @@ using System.Windows.Input;
 using TagsTree.Commands;
 using TagsTree.Delegates;
 using TagsTree.Services;
-using TagsTree.Views.Controls;
 
 
 namespace TagsTree.ViewModels

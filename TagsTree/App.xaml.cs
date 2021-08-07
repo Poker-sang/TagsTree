@@ -201,8 +201,17 @@ namespace TagsTree
 			var temp = name.Split('\\', StringSplitOptions.RemoveEmptyEntries);
 			if (temp.Length == 0)
 				return null;
-			name = temp.Last();
-			return Tags.ContainsKey(name) ? Tags[name] : null;
+			return Tags.ContainsKey(temp.Last()) ? Tags[temp.Last()] : null;
+		}
+
+		/// <summary>
+		/// 是否不存在该标签
+		/// </summary>
+		public static bool IsTagNotExists(string tag)
+		{
+			if (TagPathComplete(tag) is not null) return false;
+			MessageBoxX.Error("「标签路径」不存在！");
+			return true;
 		}
 
 		/// <summary>
@@ -223,10 +232,11 @@ namespace TagsTree
 		/// 输入标签时的建议列表
 		/// </summary>
 		/// <param name="name">目前输入的最后一个标签</param>
+		/// <param name="separator">标签间分隔符</param>
 		/// <returns>建议列表</returns>
-		public static IEnumerable<TagModel> TagSuggest(string name)
+		public static IEnumerable<TagModel> TagSuggest(string name, char separator)
 		{
-			var tempName = name.Split('\\', StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
+			var tempName = name.Split(separator, StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
 			if (tempName is "" or null)
 				yield break;
 			foreach (var tag in Tags.Values.Where(tag => tag.Name.Contains(tempName)))

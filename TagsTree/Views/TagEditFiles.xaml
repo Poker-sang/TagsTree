@@ -1,22 +1,21 @@
 ﻿<Window
-    x:Class="TagsTree.Views.TagAddFiles"
+    x:Class="TagsTree.Views.TagEditFiles"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:TagsTree.Views.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:models="clr-namespace:TagsTree.Models"
     xmlns:ui="http://schemas.modernwpf.com/2019"
     xmlns:viewModels="clr-namespace:TagsTree.ViewModels"
-    Title="为标签添加文件"
+    Title="编辑标签的文件"
     Width="800"
     Height="600"
     ui:WindowHelper.UseModernWindowStyle="True"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
     <Window.DataContext>
-        <viewModels:TagAddFilesViewModel />
+        <viewModels:TagEditFilesViewModel />
     </Window.DataContext>
     <StackPanel x:Name="StackPanel" Orientation="Vertical">
         <DockPanel>
@@ -26,10 +25,7 @@
                 Content="确定"
                 DockPanel.Dock="Right" />
             <Separator Width="5" DockPanel.Dock="Right" />
-            <ui:AutoSuggestBox
-                IsEnabled="False"
-                PlaceholderText="选择标签"
-                Text="{Binding SelectedTag, Mode=OneWay}" />
+            <controls:TagCompleteBox x:Name="TbPath" />
         </DockPanel>
         <TreeView x:Name="Tags" VerticalAlignment="Stretch">
             <TreeView.ItemTemplate>
@@ -38,7 +34,7 @@
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
-        <controls:TagSuggestBox
+        <controls:TagSearchBox
             x:Name="TbInput"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Top"
@@ -53,7 +49,7 @@
             CanUserReorderColumns="False"
             CanUserResizeRows="False"
             IsHitTestVisible="False"
-            ItemsSource="{Binding FileViewModels, Mode=OneTime}"
+            ItemsSource="{Binding FileViewModels, Mode=OneWay}"
             Opacity="0"
             SelectionMode="Single">
             <DataGrid.Columns>

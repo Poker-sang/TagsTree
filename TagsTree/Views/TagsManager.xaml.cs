@@ -20,10 +20,7 @@ namespace TagsTree.Views
 			_ = TvTags.SetBinding(ItemsControl.ItemsSourceProperty, new Binding(".") { Mode = BindingMode.TwoWay, Source = ((Vm)DataContext).Xdp });
 
 			_moveTag = Vm.MoveTag;
-			TbPath.LostFocus += Vm.PathComplement;
-			TbPath.SuggestionChosen += Vm.SuggestionChosen;
 			TbName.TextChanged += Vm.NameChanged;
-			TbPath.TextChanged += Vm.PathChanged;
 			TvTags.SelectedItemChanged += Vm.TvSelectItemChanged;
 			Closing += Vm.Closing;
 		}

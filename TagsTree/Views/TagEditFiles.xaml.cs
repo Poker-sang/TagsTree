@@ -5,29 +5,26 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
-using Vm = TagsTree.ViewModels.TagAddFilesViewModel;
+using Vm = TagsTree.ViewModels.TagEditFilesViewModel;
 
 namespace TagsTree.Views
 {
 	/// <summary>
-	/// TagAddFiles.xaml 的交互逻辑
+	/// TagEditFiles.xaml 的交互逻辑
 	/// </summary>
-	public partial class TagAddFiles : Window
+	public partial class TagEditFiles : Window
 	{
-		public TagAddFiles(Window owner)
+		public TagEditFiles(Window owner)
 		{
 			Owner = owner;
 			InitializeComponent();
-			Services.TagAddFilesService.Load(this);
+			Services.TagEditFilesService.Load(this);
 			MouseLeftButtonDown += (_, _) => DragMove();
 			_ = Tags.SetBinding(ItemsControl.ItemsSourceProperty, new Binding(".") { Mode = BindingMode.TwoWay, Source = ((Vm)DataContext).Xdp });
 
 			Tags.SelectedItemChanged += Vm.TvSelectItemChanged;
 			TbInput.ResultChanged += Vm.ResultChanged;
-
-			DgResult.RowStyle = new Style(typeof(DataGridRow), (Style)Application.Current.Resources["DefaultDataGridRowStyle"]);
-			DgResult.RowStyle.Setters.Add(new EventSetter(MouseLeftButtonDownEvent, new MouseButtonEventHandler((_, _) => Vm.Selected(DgResult.CurrentItem))));
-			DgResult.SelectionChanged += (_, _) => Vm.Selected(DgResult.CurrentItem);
+			DgResult.SelectionChanged += Vm.Selected;
 		}
 
 
