@@ -30,7 +30,7 @@ namespace TagsTree.Services
 			textBox.SelectionStart = textBox.Text.Length;
 		}
 
-		public static void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => Win.TbPath.AutoSuggestBox.Text = App.TvSelectedItemChanged((XmlElement?)e.NewValue) ?? Win.TbPath.AutoSuggestBox.Text;
+		public static void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => Win.TbPath.AutoSuggestBox.Text = App.TagMethods.TvSelectedItemChanged((XmlElement?)e.NewValue) ?? Win.TbPath.AutoSuggestBox.Text;
 		private static XmlElement TvItemGetHeader(object? sender) => (XmlElement)((TreeViewItem)sender!).Header;
 		public static void Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
@@ -178,7 +178,7 @@ namespace TagsTree.Services
 		private static void TagsChanged()
 		{
 			Vm.Changed = true;
-			App.RecursiveLoadTags();
+			App.TagMethods.RecursiveLoadTags();
 		}
 
 		private static bool NewTagCheck(string name)

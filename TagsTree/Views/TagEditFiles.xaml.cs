@@ -36,7 +36,7 @@ namespace TagsTree.Views
 				Duration = TimeSpan.FromMilliseconds(500)
 			});
 			await Task.Delay(500);
-			StackPanel.Children.Remove(Tags);
+			DockPanel.Children.Remove(Tags);
 			BConfirm.Content = "保存";
 			TbInput.BeginAnimation(OpacityProperty, new DoubleAnimation
 			{

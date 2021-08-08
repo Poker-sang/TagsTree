@@ -25,8 +25,8 @@ namespace TagsTree.Views
 
 			MouseLeftButtonDown += Vm.MainMouseLeftButtonDown;
 			((Style)Resources["DgRowStyle"]).Setters.Add(new EventSetter(MouseDoubleClickEvent, Vm.DgItemMouseDoubleClick));
-			TbInput.BeforeQuerySubmitted = (_, _) => Search();
-			TbInput.ResultChanged += Vm.ResultChanged;
+			TbSearch.BeforeQuerySubmitted = (_, _) => Search();
+			TbSearch.ResultChanged += Vm.ResultChanged;
 			FileProperties.FileRemoved += Vm.FileRemoved;
 		}
 
@@ -41,7 +41,7 @@ namespace TagsTree.Views
 				To = new Thickness(0, -350, 0, 0),
 				Duration = TimeSpan.FromMilliseconds(1000)
 			});
-			TbInput.BeginAnimation(MarginProperty, new ThicknessAnimation
+			TbSearch.BeginAnimation(MarginProperty, new ThicknessAnimation
 			{
 				From = new Thickness(0, 300, 0, 0),
 				To = new Thickness(0, 80, 0, 0),
@@ -57,9 +57,13 @@ namespace TagsTree.Views
 			DgResult.IsHitTestVisible = true;
 		}
 
-		private void ChangeConfig_Click(object sender, RoutedEventArgs e) => _ = new NewConfig(this).ShowDialog();
 		private void TagsManager_Click(object sender, RoutedEventArgs e) => _ = new TagsManager(this).ShowDialog();
 		private void FileAdder_OnClick(object sender, RoutedEventArgs e) => _ = new FileImporter(this).ShowDialog();
 		private void TagEditFiles_OnClick(object sender, RoutedEventArgs e) => _ = new TagEditFiles(this).ShowDialog();
+		private void ChangeConfig_Click(object sender, RoutedEventArgs e)
+		{
+			if (!App.MessageBoxX.Warning("更改设置后需要重启软件，请确保已保存"))	return;
+			if (new NewConfig(this).ShowDialog() == true) Close();
+		}
 	}
 }

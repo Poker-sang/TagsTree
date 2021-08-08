@@ -26,7 +26,7 @@ namespace TagsTree.Services
 
 		#region 事件处理
 
-		public static void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => Win.TbPath.AutoSuggestBox.Text = App.TvSelectedItemChanged((XmlElement?)e.NewValue) ?? Win.TbPath.AutoSuggestBox.Text;
+		public static void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => Win.TbPath.AutoSuggestBox.Text = App.TagMethods.TvSelectedItemChanged((XmlElement?)e.NewValue) ?? Win.TbPath.AutoSuggestBox.Text;
 
 		public static void ResultChanged(TagSearchBox sender, ResultChangedEventArgs e) => ((TagEditFilesViewModel)Win.DataContext).FileViewModels = e.NewResult.ToObservableCollection();
 
@@ -35,7 +35,7 @@ namespace TagsTree.Services
 			if ((FileViewModel)((DataGrid)sender).SelectedItem is null) return;
 			((FileViewModel)((DataGrid)sender).SelectedItem).Selected = ((FileViewModel)((DataGrid)sender).SelectedItem).Selected switch
 			{
-				true => null,
+				true => false,
 				false => true,
 				null => false
 			};
@@ -52,7 +52,7 @@ namespace TagsTree.Services
 		{
 			if (!_mode)
 			{
-				if (Win.TbPath.AutoSuggestBox.Text.GetTagModel() is not { } pathTagModel)
+				if (Win.TbPath.AutoSuggestBox.Text.GetTagModel() is not { } pathTagModel || pathTagModel.XmlElement != App.XdpRoot)
 				{
 					App.MessageBoxX.Error("「标签路径」不存在！");
 					return;

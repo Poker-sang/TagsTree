@@ -47,34 +47,34 @@ namespace TagsTree.Services
 				await Task.Run(() =>
 				{
 					var dictionary = new Dictionary<string, bool>();
-					foreach (var fileModel in Vm.FileViewModels)
-						dictionary[fileModel.UniqueName] = true;
+					foreach (var fileViewModelModel in Vm.FileViewModels)
+						dictionary[fileViewModelModel.UniqueName] = true;
 					switch ((string)parameter!)
 					{
 						case "Select_Files":
 							if (FileViewModel.ValidPath(dialog.FileNames.First()[..dialog.FileNames.First().LastIndexOf('\\')]))
 								foreach (var fileName in dialog.FileNames)
-									if (!dictionary.ContainsKey(fileName))
+									if (!dictionary.ContainsKey(false + fileName))
 										Current.Dispatcher.Invoke(() => Vm.FileViewModels.Add(new FileViewModel(fileName, false)));
 							break;
 						case "Select_Folders":
 							if (FileViewModel.ValidPath(dialog.FileNames.First()[..dialog.FileNames.First().LastIndexOf('\\')]))
 								foreach (var directoryName in dialog.FileNames)
-									if (!dictionary.ContainsKey(directoryName))
+									if (!dictionary.ContainsKey(true + directoryName))
 										Current.Dispatcher.Invoke(() => Vm.FileViewModels.Add(new FileViewModel(directoryName, true)));
 							break;
 						case "Path_Files":
 							if (FileViewModel.ValidPath(dialog.FileNames.First()))
 								foreach (var directoryName in dialog.FileNames)
 									foreach (var fileInfo in new DirectoryInfo(directoryName).GetFiles())
-										if (!dictionary.ContainsKey(fileInfo.FullName + false))
+										if (!dictionary.ContainsKey(false + fileInfo.FullName ))
 											Current.Dispatcher.Invoke(() => Vm.FileViewModels.Add(new FileViewModel(fileInfo.FullName, false)));
 							break;
 						case "Path_Folders":
 							if (FileViewModel.ValidPath(dialog.FileNames.First()))
 								foreach (var directoryName in dialog.FileNames)
 									foreach (var directoryInfo in new DirectoryInfo(directoryName).GetDirectories())
-										if (!dictionary.ContainsKey(directoryInfo.FullName + true))
+										if (!dictionary.ContainsKey(true + directoryInfo.FullName))
 											Current.Dispatcher.Invoke(() => Vm.FileViewModels.Add(new FileViewModel(directoryInfo.FullName, true)));
 							break;
 						case "Path_Both":
@@ -82,10 +82,10 @@ namespace TagsTree.Services
 								foreach (var directoryName in dialog.FileNames)
 								{
 									foreach (var fileInfo in new DirectoryInfo(directoryName).GetFiles())
-										if (!dictionary.ContainsKey(fileInfo.FullName + false))
+										if (!dictionary.ContainsKey(false + fileInfo.FullName))
 											Current.Dispatcher.Invoke(() => Vm.FileViewModels.Add(new FileViewModel(fileInfo.FullName, false)));
 									foreach (var directoryInfo in new DirectoryInfo(directoryName).GetDirectories())
-										if (!dictionary.ContainsKey(directoryInfo.FullName + true))
+										if (!dictionary.ContainsKey(true + directoryInfo.FullName))
 											Current.Dispatcher.Invoke(() => Vm.FileViewModels.Add(new FileViewModel(directoryInfo.FullName, true)));
 								}
 							break;
@@ -93,7 +93,7 @@ namespace TagsTree.Services
 							void RecursiveReadFiles(string folderName)
 							{
 								foreach (var fileInfo in new DirectoryInfo(folderName).GetFiles())
-									if (!dictionary!.ContainsKey(fileInfo.FullName + false))
+									if (!dictionary!.ContainsKey(false + fileInfo.FullName))
 										Current.Dispatcher.Invoke(() => Vm.FileViewModels.Add(new FileViewModel(fileInfo.FullName, false)));
 								foreach (var directoryInfo in new DirectoryInfo(folderName).GetDirectories())
 									RecursiveReadFiles(directoryInfo.FullName);

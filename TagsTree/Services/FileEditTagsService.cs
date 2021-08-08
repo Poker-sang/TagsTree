@@ -1,8 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
 using System.Xml;
-using TagsTree.Models;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
 using TagsTree.Views;
@@ -20,7 +18,7 @@ namespace TagsTree.Services
 			Vm = (FileEditTagsViewModel)window.DataContext;
 		}
 
-		public static void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => Win.TbPath.AutoSuggestBox.Text = App.TvSelectedItemChanged((XmlElement?)e.NewValue) ?? Win.TbPath.AutoSuggestBox.Text;
+		public static void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => Win.TbPath.AutoSuggestBox.Text = App.TagMethods.TvSelectedItemChanged((XmlElement?)e.NewValue) ?? Win.TbPath.AutoSuggestBox.Text;
 
 		public static void AddBClick(object? parameter)
 		{
@@ -71,15 +69,5 @@ namespace TagsTree.Services
 			App.MessageBoxX.Information("已保存更改");
 			Vm.CanSave = false;
 		}
-
-		#region 操作
-
-		public static void RemoveTag(TagModel tag)
-		{
-			Vm.FileViewModel.VirtualTags = $" {Vm.FileViewModel.VirtualTags} ".Replace($" {tag.Name} ", " ").Trim();
-
-		}
-
-		#endregion
 	}
 }

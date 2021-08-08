@@ -33,7 +33,7 @@ namespace TagsTree.Services.Controls
 		{
 			Vm.Search = Regex.Replace(Vm.Search, $@"[{App.FileX.GetInvalidPathChars}]+", "");
 			Vm.Search = Regex.Replace(Vm.Search, @"  +", " ").TrimStart();
-			sender.ItemsSource = App.TagSuggest(sender.Text, ' ');
+			sender.ItemsSource = App.TagMethods.TagSuggest(sender.Text, ' ');
 			var textBox = (TextBox)typeof(AutoSuggestBox).GetField("m_textBox", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(sender)!;
 			textBox.SelectionStart = textBox.Text.Length;
 		}

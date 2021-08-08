@@ -6,6 +6,7 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>false</UseWindowsForms>
     <Nullable>enable</Nullable>
+    <Authors>Poker</Authors>
   </PropertyGroup>
 
   <ItemGroup>

@@ -54,7 +54,7 @@ namespace TagsTree.Models
 			Path = info.FullName[..^(info.Name.Length + 1)];
 		}
 
-		protected static bool ValidPath(string path) => path.Contains(Default.LibraryPath) && path.Split('\\', StringSplitOptions.RemoveEmptyEntries).Length > Default.LibraryPath.Split('\\', StringSplitOptions.RemoveEmptyEntries).Length;
+		protected static bool ValidPath(string path) => path.Contains(Default.LibraryPath);
 
 		public bool? HasTag(TagModel tag) //null表示拥有标签的上级标签存在本标签
 		{

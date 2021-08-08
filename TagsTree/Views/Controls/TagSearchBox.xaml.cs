@@ -1,4 +1,5 @@
-﻿using ModernWpf;
+﻿using System.Windows;
+using ModernWpf;
 using ModernWpf.Controls;
 using System.Windows.Controls;
 using TagsTree.Delegates;
@@ -33,6 +34,7 @@ namespace TagsTree.Views.Controls
 		}
 
 		public event ResultChangedEventHandler ResultChanged;
+
 		public void OnResultChanged(ResultChangedEventArgs e) => ResultChanged.Invoke(this, e);
 	}
 }

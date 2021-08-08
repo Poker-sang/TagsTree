@@ -17,8 +17,8 @@
     <Window.DataContext>
         <viewModels:TagEditFilesViewModel />
     </Window.DataContext>
-    <StackPanel x:Name="StackPanel" Orientation="Vertical">
-        <DockPanel>
+    <DockPanel x:Name="DockPanel">
+        <DockPanel DockPanel.Dock="Top">
             <Button
                 x:Name="BConfirm"
                 Command="{Binding ConfirmBClick}"
@@ -27,7 +27,10 @@
             <Separator Width="5" DockPanel.Dock="Right" />
             <controls:TagCompleteBox x:Name="TbPath" />
         </DockPanel>
-        <TreeView x:Name="Tags" VerticalAlignment="Stretch">
+        <TreeView
+            x:Name="Tags"
+            VerticalAlignment="Stretch"
+            DockPanel.Dock="Top">
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding XPath=Tag}">
                     <TextBlock Text="{Binding XPath=@name}" />
@@ -38,11 +41,11 @@
             x:Name="TbInput"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Top"
+            DockPanel.Dock="Top"
             IsHitTestVisible="False"
             Opacity="0" />
         <DataGrid
             x:Name="DgResult"
-            VerticalAlignment="Stretch"
             AutoGenerateColumns="False"
             CanUserAddRows="False"
             CanUserDeleteRows="False"
@@ -91,5 +94,5 @@
                     IsReadOnly="True" />
             </DataGrid.Columns>
         </DataGrid>
-    </StackPanel>
+    </DockPanel>
 </Window>
