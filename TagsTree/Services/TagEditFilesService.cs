@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Xml;
 using TagsTree.Delegates;
+using TagsTree.Models;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
 using TagsTree.Views;
@@ -34,7 +35,12 @@ namespace TagsTree.Services
 		public static void Selected(object sender, SelectionChangedEventArgs e)
 		{
 			if((FileViewModel)((DataGrid)sender).SelectedItem is null) return;
-			((FileViewModel)((DataGrid)sender).SelectedItem).Selected = !((FileViewModel)((DataGrid)sender).SelectedItem).Selected;
+			((FileViewModel)((DataGrid)sender).SelectedItem).Selected = ((FileViewModel)((DataGrid)sender).SelectedItem).Selected switch
+			{
+				true => null,
+				false => true,
+				null => false
+			};
 			((DataGrid)sender).SelectedIndex = -1;
 		}
 
@@ -48,16 +54,53 @@ namespace TagsTree.Services
 		{
 			if (!_mode)
 			{
-				if (App.IsTagNotExists(Win.TbPath.AutoSuggestBox.Text))
+				if (Win.TbPath.AutoSuggestBox.Text.GetTagModel() is not { } pathTagModel)
+				{
+					App.MessageBoxX.Error("「标签路径」不存在！");
 					return;
+				}
 				Win.BConfirmClick();
-				Vm.FileViewModels = App.Relations.GetFileModels(new List<string>()).Select(fileModel => new FileViewModel(fileModel, Win.TbPath.AutoSuggestBox.Text)).ToObservableCollection();
+				Vm.FileViewModels = App.Relations.GetFileModels(new List<TagModel>()).Select(fileModel => new FileViewModel(fileModel, pathTagModel)).ToObservableCollection();
+				Win.TbPath.IsEnabled = false;
 				_mode = true;
 			}
 			else
 			{
+				if (Win.TbPath.AutoSuggestBox.Text.GetTagModel() is not { } pathTagModel)
+				{
+					App.MessageBoxX.Error("「标签路径」不存在！"); //理论上不会到达此代码
+					return;
+				}
 				foreach (var fileViewModel in Vm.FileViewModels) 
-					App.Relations[fileViewModel, Win.TbPath.AutoSuggestBox.Text.Split('\\', StringSplitOptions.RemoveEmptyEntries).Last()] = fileViewModel.Selected;
+					switch (fileViewModel.Selected)
+					{
+						case true:
+						case null:
+							switch (fileViewModel.HasTag(pathTagModel))
+							{
+								case true: //如果原本是true或null，则不改变
+								case null: break;
+								case false: //如果原本是false，则加上本标签
+									App.Relations[fileViewModel, pathTagModel.Name] = true;
+									fileViewModel.TagsUpdated();
+									break;
+							}
+							break;
+						case false:
+							switch (fileViewModel.HasTag(pathTagModel))
+							{
+								case true:  //如果原本是true，则删除本标签
+									App.Relations[fileViewModel, pathTagModel.Name] = false;
+									fileViewModel.TagsUpdated();
+									break;
+								case null: //如果原本是null，则删除fileViewModel拥有的相应子标签
+									App.Relations[fileViewModel, fileViewModel.GetRelativeTag(pathTagModel)!.Name] = false;
+									fileViewModel.TagsUpdated();
+									break;
+								case false: break;//如果原本是false，则不改变
+							}
+							break;
+					}
 				App.SaveRelations();
 				App.MessageBoxX.Information("已保存更改");
 			}

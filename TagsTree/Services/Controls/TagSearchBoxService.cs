@@ -6,6 +6,8 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Controls;
 using TagsTree.Delegates;
+using TagsTree.Models;
+using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
 using TagsTree.ViewModels.Controls;
 using TagsTree.Views.Controls;
@@ -38,8 +40,8 @@ namespace TagsTree.Services.Controls
 		}
 		public static void QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e)
 		{
-			var tags = sender.Text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-			var validTags = new Dictionary<string, bool>();
+			var tags = sender.Text.GetTagModels();
+			var validTags = new Dictionary<TagModel, bool>();
 			foreach (var tag in tags)
 				if (!validTags.ContainsKey(tag))
 					validTags[tag] = true;

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
+using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
 using static TagsTree.Properties.Settings;
 
@@ -53,8 +54,18 @@ namespace TagsTree.Models
 			Path = info.FullName[..^(info.Name.Length + 1)];
 		}
 
-		public static bool ValidPath(string path) => path.Contains(Default.LibraryPath) &&
-			path.Split('\\', StringSplitOptions.RemoveEmptyEntries).Length > Default.LibraryPath.Split('\\', StringSplitOptions.RemoveEmptyEntries).Length;
+		protected static bool ValidPath(string path) => path.Contains(Default.LibraryPath) && path.Split('\\', StringSplitOptions.RemoveEmptyEntries).Length > Default.LibraryPath.Split('\\', StringSplitOptions.RemoveEmptyEntries).Length;
+
+		public bool? HasTag(TagModel tag) //null表示拥有标签的上级标签存在本标签
+		{
+			foreach (var tagPossessed in Tags.GetTagModels())
+				if (tag == tagPossessed)
+					return true;
+				else if (tag.HasChildTag(tagPossessed))
+					return null;
+			return false;
+		}
+		public TagModel? GetRelativeTag(TagModel parentTag) => Tags.GetTagModels().FirstOrDefault(parentTag.HasChildTag);
 
 		[JsonIgnore] public string Extension => IsFolder ? "文件夹" : Name.Split('.', StringSplitOptions.RemoveEmptyEntries).Last().ToUpper();
 		[JsonIgnore] public string PartialPath => "..." + Path[Default.LibraryPath.Length..]; //Path必然包含文件路径
@@ -70,7 +81,7 @@ namespace TagsTree.Models
 			}
 		}
 		[JsonIgnore]
-		public string PathTags //如果设置没有启用则返回空串
+		public string PathTags //如果设置没有启用PathTags则返回空串
 		{
 			get
 			{

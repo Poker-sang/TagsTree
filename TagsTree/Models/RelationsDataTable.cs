@@ -23,7 +23,7 @@ namespace TagsTree.Models
 				if ((bool)_rowsDict[file.Id][Columns[i]])
 					yield return Columns[i].ColumnName;
 		}
-		public IEnumerable<FileModel> GetFileModels(List<string> tags)
+		public IEnumerable<FileModel> GetFileModels(List<TagModel> tags)
 		{
 			if (tags.Count == 0)
 				return App.IdFile.Values.ToList();
@@ -31,14 +31,14 @@ namespace TagsTree.Models
 			_ = enumerator.MoveNext();
 			return GetFileModels(enumerator).Select(row => App.IdFile[(int)row[0]]).ToList();
 		}
-		private List<DataRow> GetFileModels(IEnumerator<string> tags)
+		private List<DataRow> GetFileModels(IEnumerator<TagModel> tags)
 		{
 			var tag = tags.Current;
 			var lastRange = tags.MoveNext() ? GetFileModels(tags) : _rowsDict.Values.ToList();
-			if (App.Tags.ContainsKey(tag))
+			if (App.Tags.ContainsKey(tag.Name))
 			{
-				var dataRows = lastRange.Where(row => (bool)row[tag]).ToList();
-				dataRows.AddRange(App.Tags.Values.Where(childTag => App.Tags[tag].HasChildTag(childTag))
+				var dataRows = lastRange.Where(row => (bool)row[tag.Name]).ToList();
+				dataRows.AddRange(App.Tags.Values.Where(childTag => App.Tags[tag.Name].HasChildTag(childTag))
 					.SelectMany(_ => lastRange, (childTag, row) => new { childTag, row })
 					.Where(t => (bool)t.row[t.childTag.Name])
 					.Select(t => t.row));
@@ -48,7 +48,7 @@ namespace TagsTree.Models
 			{
 				return lastRange
 					.SelectMany(dataRow => App.IdFile[(int)dataRow[0]].PartialPath[4..].Split('\\', StringSplitOptions.RemoveEmptyEntries), (dataRow, pathTag) => new { dataRow, pathTag })
-					.Where(t => t.pathTag == tag)
+					.Where(t => t.pathTag == tag.Name)
 					.Select(t => t.dataRow).ToList();
 			}
 			return new List<DataRow>();

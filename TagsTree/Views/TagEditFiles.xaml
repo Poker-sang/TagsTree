@@ -58,7 +58,8 @@
                     Binding="{Binding Selected, Mode=TwoWay}"
                     CanUserResize="False"
                     CanUserSort="False"
-                    IsReadOnly="True">
+                    IsReadOnly="True"
+                    IsThreeState="True">
                     <DataGridCheckBoxColumn.Header>
                         <ui:FontIcon Glyph="&#xE9D5;" />
                     </DataGridCheckBoxColumn.Header>

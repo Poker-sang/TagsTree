@@ -6,6 +6,7 @@ using System.Windows;
 using System.Xml;
 using System.Xml.Linq;
 using TagsTree.Models;
+using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
 using static TagsTree.Properties.Settings;
 
@@ -90,7 +91,7 @@ namespace TagsTree
 		{
 			if (!Directory.Exists(Default.ConfigPath))
 			{
-				if (MessageBoxX.Warning($"路径{Default.ConfigPath}不存在", "修改设置", "关闭软件"))
+				if (MessageBoxX.Warning($"路径「{Default.ConfigPath}」不存在", "修改设置", "关闭软件"))
 				{
 					Default.IsSet = false;
 					return false;
@@ -132,13 +133,13 @@ namespace TagsTree
 
 			if (Tags.Count != Relations.Columns.Count - 1) //第一列是文件Id 
 			{
-				if (MessageBoxX.Warning($"路径{Default.ConfigPath}下，TagsTree.xml和Relations.xml存储的标签数不同", "删除标签与文件的配置文件", "直接关闭软件"))
+				if (MessageBoxX.Warning($"路径「{Default.ConfigPath}」下，TagsTree.xml和Relations.xml存储的标签数不同", "删除标签与文件的配置文件", "直接关闭软件"))
 					return DeleteAll();
 				return null;
 			}
 			if (IdFile.Count != Relations.Rows.Count)
 			{
-				if (MessageBoxX.Warning($"路径{Default.ConfigPath}下，Files.json和Relations.xml存储的文件数不同", "删除标签与文件的配置文件", "直接关闭软件"))
+				if (MessageBoxX.Warning($"「路径{Default.ConfigPath}」下，Files.json和Relations.xml存储的文件数不同", "删除标签与文件的配置文件", "直接关闭软件"))
 					return DeleteAll();
 				return null;
 			}
@@ -189,43 +190,6 @@ namespace TagsTree
 						Tags[name] = new TagModel(name, path, element);
 						RecursiveLoadTags((path is "" ? "" : path + '\\') + name, element);
 					}
-		}
-
-		/// <summary>
-		/// 补全标签的路径（为空则不补）
-		/// </summary>
-		/// <param name="name">需要找的单个标签</param>
-		/// <returns>找到的标签，若返回null即没找到路径</returns>
-		public static TagModel? TagPathComplete(string name)
-		{
-			var temp = name.Split('\\', StringSplitOptions.RemoveEmptyEntries);
-			if (temp.Length == 0)
-				return null;
-			return Tags.ContainsKey(temp.Last()) ? Tags[temp.Last()] : null;
-		}
-
-		/// <summary>
-		/// 是否不存在该标签
-		/// </summary>
-		public static bool IsTagNotExists(string tag)
-		{
-			if (TagPathComplete(tag) is not null) return false;
-			MessageBoxX.Error("「标签路径」不存在！");
-			return true;
-		}
-
-		/// <summary>
-		/// 递归用路径查找标签所在元素
-		/// </summary>
-		/// <param name="path">需要查找的元素所在路径</param>
-		/// <returns>标签所在元素</returns>
-		public static XmlElement? GetXmlElement(string path)
-		{
-			var temp = path.Split('\\', StringSplitOptions.RemoveEmptyEntries);
-			if (temp.Length == 0)
-				return XdpRoot;
-			path = temp.Last();
-			return Tags.ContainsKey(path) ? Tags[path].XmlElement : null;
 		}
 
 		/// <summary>

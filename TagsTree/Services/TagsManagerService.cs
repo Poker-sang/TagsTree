@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Xml;
+using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
 using TagsTree.Views;
 
@@ -47,43 +48,55 @@ namespace TagsTree.Services
 
 		public static void NewBClick(object? parameter)
 		{
-			if (App.IsTagNotExists(Win.TbPath.AutoSuggestBox.Text))
+			if (Win.TbPath.AutoSuggestBox.Text.GetTagModel() is not { } pathTagModel)
+			{
+				App.MessageBoxX.Error("「标签路径」不存在！");
 				return;
+			}
 			if (!NewTagCheck(Vm.Name)) return;
-			NewTag(Vm.Name, App.GetXmlElement(Win.TbPath.AutoSuggestBox.Text)!);
+			NewTag(Vm.Name, pathTagModel.XmlElement);
 			Vm.Name = "";
 		}
 		public static void MoveBClick(object? parameter)
 		{
-			if (App.IsTagNotExists(Win.TbPath.AutoSuggestBox.Text))
-				return;
-			var element = App.GetXmlElement(Vm.Name);
-			if (element is not null)
+			if (Win.TbPath.AutoSuggestBox.Text.GetTagModel() is not { } pathTagModel)
 			{
-				MoveTag(element, App.GetXmlElement(Win.TbPath.AutoSuggestBox.Text)!);
-				Vm.Name = "";
+				App.MessageBoxX.Error("「标签路径」不存在！");
+				return;
 			}
-			else App.MessageBoxX.Error("标签名称不存在！请填写正确的单个标签或完整的路径！");
+			if (Vm.Name.GetTagModel() is not { } nameTagModel)
+			{
+				App.MessageBoxX.Error("「标签名称」不存在！");
+				return;
+			}
+			MoveTag(nameTagModel.XmlElement, pathTagModel.XmlElement);
+			Vm.Name = "";
 		}
 		public static void RenameBClick(object? parameter)
 		{
-			if (App.IsTagNotExists(Win.TbPath.AutoSuggestBox.Text))
+			if (Win.TbPath.AutoSuggestBox.Text.GetTagModel() is not { } pathTagModel)
+			{
+				App.MessageBoxX.Error("「标签路径」不存在！");
 				return;
+			}
 			if (!NewTagCheck(Vm.Name)) return;
-			RenameTag(Vm.Name, App.GetXmlElement(Win.TbPath.AutoSuggestBox.Text)!);
+			RenameTag(Vm.Name, pathTagModel.XmlElement);
 			Vm.Name = "";
 			Win.TbPath.AutoSuggestBox.Text = "";
 		}
 		public static void DeleteBClick(object? parameter)
 		{
-			if (App.IsTagNotExists(Win.TbPath.AutoSuggestBox.Text))
-				return;
 			if (Win.TbPath.AutoSuggestBox.Text == string.Empty)
 			{
 				App.MessageBoxX.Error("未输入希望删除的标签");
 				return;
 			}
-			DeleteTag(App.GetXmlElement(Win.TbPath.AutoSuggestBox.Text)!);
+			if (Win.TbPath.AutoSuggestBox.Text.GetTagModel() is not { } pathTagModel)
+			{
+				App.MessageBoxX.Error("「标签路径」不存在！");
+				return;
+			}
+			DeleteTag(pathTagModel.XmlElement);
 			Vm.Name = "";
 		}
 		public static void SaveBClick(object? parameter)
@@ -95,13 +108,13 @@ namespace TagsTree.Services
 
 		public static void NewCmClick(object? parameter)
 		{
-			var dialog = new InputName(Win, @"不能包含\/:*?""<>|和除空格外的空白字符", App.FileX.GetInvalidNameChars);
+			var dialog = new InputName(Win, App.FileX.InvalidMode.Name);
 			if (dialog.ShowDialog() != false && NewTagCheck(dialog.Message))
-				NewTag(dialog.Message, TvItemGetHeader(parameter)!);
+				NewTag(dialog.Message, TvItemGetHeader(parameter));
 		}
 		public static void NewXCmClick(object? parameter)
 		{
-			var dialog = new InputName(Win, @"不能包含\/:*?""<>|和除空格外的空白字符", App.FileX.GetInvalidNameChars);
+			var dialog = new InputName(Win, App.FileX.InvalidMode.Name);
 			if (dialog.ShowDialog() != false && NewTagCheck(dialog.Message))
 				NewTag(dialog.Message, App.XdpRoot!);
 		}
@@ -118,7 +131,7 @@ namespace TagsTree.Services
 		}
 		public static void RenameCmClick(object? parameter)
 		{
-			var dialog = new InputName(Win, @"不能包含\/:*?""<>|和空白字符", App.FileX.GetInvalidNameChars);
+			var dialog = new InputName(Win, App.FileX.InvalidMode.Name);
 			if (dialog.ShowDialog() != false && NewTagCheck(dialog.Message))
 				RenameTag(dialog.Message, TvItemGetHeader(parameter)!);
 		}
@@ -155,21 +168,19 @@ namespace TagsTree.Services
 			path.SetAttribute("name", name);
 			App.Relations.RenameColumn(path.GetAttribute("Name"), name);
 			TagsChanged();
-			Vm.Name = "";
-			Win.TbPath.AutoSuggestBox.Text = "";
 		}
 		private static void DeleteTag(XmlElement path)
 		{
 			_ = path.ParentNode!.RemoveChild(path);
 			App.Relations.DeleteColumn(path.GetAttribute("Name"));
 			TagsChanged();
-			Vm.Name = "";
 		}
 		private static void TagsChanged()
 		{
 			Vm.Changed = true;
 			App.RecursiveLoadTags();
 		}
+
 		private static bool NewTagCheck(string name)
 		{
 			if (name == string.Empty)
@@ -177,7 +188,7 @@ namespace TagsTree.Services
 				App.MessageBoxX.Error("标签名称不能为空！");
 				return false;
 			}
-			if (App.TagPathComplete(name) is not null)
+			if (name.GetTagModel() is not null)
 			{
 				App.MessageBoxX.Error("与现有标签重名！");
 				return false;

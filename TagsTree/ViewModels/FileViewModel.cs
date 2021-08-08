@@ -1,7 +1,9 @@
 ﻿using JetBrains.Annotations;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using TagsTree.Models;
+using TagsTree.Services.ExtensionMethods;
 
 namespace TagsTree.ViewModels
 {
@@ -13,9 +15,9 @@ namespace TagsTree.ViewModels
 
 		public FileViewModel(FileModel fileModel) : base(fileModel) => _virtualTags = Tags;
 
-		public FileViewModel(FileModel fileModel, string tag) : base(fileModel)
+		public FileViewModel(FileModel fileModel, TagModel tag) : base(fileModel)
 		{
-			_selected = App.Relations[GetFileModel, tag];
+			_selected = HasTag(tag);
 			_virtualTags = Tags;
 		}
 
@@ -36,11 +38,17 @@ namespace TagsTree.ViewModels
 		}
 
 		public new static bool ValidPath(string path) => FileModel.ValidPath(path);
-		
-		private bool _selected;
+		public TagModel? GetRelativeVirtualTag(TagModel parentTag) => VirtualTags.GetTagModels().FirstOrDefault(parentTag.HasChildTag);
+		public void TagsUpdated()
+		{
+			OnPropertyChanged(nameof(Tags));
+			OnPropertyChanged(nameof(VirtualTags));
+		}
+
+		private bool? _selected;
 		private string _virtualTags;
 
-		public bool Selected
+		public bool? Selected
 		{
 			get => _selected;
 			set

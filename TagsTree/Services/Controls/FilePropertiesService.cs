@@ -27,7 +27,7 @@ namespace TagsTree.Services.Controls
 		}
 		public static void RenameBClick(object? parameter)
 		{
-			var dialog = new InputName(MainService.Win, @"不能包含\/:*?""<>|和除空格外的空白字符", App.FileX.GetInvalidNameChars, ((Vm)parameter!).FileViewModel.Name);
+			var dialog = new InputName(MainService.Win, App.FileX.InvalidMode.Name, ((Vm)parameter!).FileViewModel.Name);
 			if (dialog.ShowDialog() == false) return;
 			if (((Vm)parameter).FileViewModel.Name == dialog.Message)
 			{

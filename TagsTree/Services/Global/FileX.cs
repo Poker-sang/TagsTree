@@ -8,6 +8,11 @@ namespace TagsTree
 		{
 			public static string GetInvalidNameChars => new string(Path.GetInvalidPathChars()) + @"/:*?""<>|";
 			public static string GetInvalidPathChars => new string(Path.GetInvalidPathChars()) + @"\/:*?""<>|";
+			public enum InvalidMode
+			{
+				Name = 0,
+				Path = 1
+			}
 		}
 	}
 }

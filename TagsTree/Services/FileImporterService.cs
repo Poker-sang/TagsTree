@@ -142,7 +142,7 @@ namespace TagsTree.Services
 			var former = Vm.FileViewModels.Count;
 			Vm.FileViewModels.Clear();
 			((Grid)parameter!).Children.Remove(border);
-			App.MessageBoxX.Information($"共导入 {former} 个文件，其中成功导入 {former - duplicated} 个，有 {duplicated} 个因重复未导入");
+			App.MessageBoxX.Information($"共导入「{former}」个文件，其中成功导入「{former - duplicated}」个，有「{duplicated}」个因重复未导入");
 		}
 	}
 }
