@@ -17,6 +17,6 @@ namespace TagsTree.Models
 		public string FullName => (Path is "" ? "" : Path + '\\') + Name;
 		public override string ToString() => Name;
 
-		public bool HasChildTag(TagModel child) => child.Path.Contains(FullName);
+		public bool HasChildTag(TagModel child) => $"\\{child.Path}\\".Contains($"\\{Name}\\"); //不包含自己
 	}
 }

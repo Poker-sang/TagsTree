@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Input;
 using System.Windows.Media.Animation;
 using Vm = TagsTree.ViewModels.TagEditFilesViewModel;
 
@@ -37,7 +36,7 @@ namespace TagsTree.Views
 				Duration = TimeSpan.FromMilliseconds(500)
 			});
 			await Task.Delay(500);
-			StackPanel.Children.Remove(Tags);
+			DockPanel.Children.Remove(Tags);
 			BConfirm.Content = "保存";
 			TbInput.BeginAnimation(OpacityProperty, new DoubleAnimation
 			{

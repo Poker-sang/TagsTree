@@ -37,7 +37,7 @@ namespace TagsTree.Views
 
 		private void BConfirm_Click(object sender, RoutedEventArgs e)
 		{
-			var legalPath = new Regex($@"^[a-zA-Z]:\\[^{App.FileX.GetInvalidPathChars}]+$");
+			var legalPath = new Regex($@"^[a-zA-Z]:\\[^{App.FileX.GetInvalidPathChars}]*$");
 			if (!legalPath.IsMatch(TbConfigPath.Text) || !legalPath.IsMatch(TbLibraryPath.Text))
 				App.MessageBoxX.Error("路径错误！请填写正确完整的文件夹路径！");
 			else

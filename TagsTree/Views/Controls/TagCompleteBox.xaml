@@ -10,15 +10,15 @@
     xmlns:viewModelControls="clr-namespace:TagsTree.ViewModels.Controls"
     mc:Ignorable="d">
     <ui:AutoSuggestBox
-        x:Name="AutoSuggestBox"
         VerticalAlignment="Center"
+        DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:TagCompleteBox, AncestorLevel=1}}"
         DockPanel.Dock="Top"
+        LostFocus="PathComplement"
         PlaceholderText="标签路径（不包含/:*?&quot;&lt;&gt;|,和空白字符且不为空）"
+        SuggestionChosen="SuggestionChosen"
         Text="{Binding Path, Mode=TwoWay}"
+        TextChanged="PathChanged"
         UpdateTextOnSelect="False">
-        <ui:AutoSuggestBox.DataContext>
-            <viewModelControls:TagCompleteBoxViewModel />
-        </ui:AutoSuggestBox.DataContext>
         <ui:AutoSuggestBox.ItemTemplate>
             <DataTemplate>
                 <TextBlock d:DataContext="{d:DesignInstance models:TagModel}" Text="{Binding FullName, Mode=OneTime}" />

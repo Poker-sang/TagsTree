@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 using System.Windows;
 
 namespace TagsTree.Views
@@ -8,26 +9,33 @@ namespace TagsTree.Views
 	/// </summary>
 	public partial class InputName : Window
 	{
-		public InputName(Window owner, string hintMessage, string invalidRegex, string text = "")
+		public InputName(Window owner, App.FileX.InvalidMode mode, string text = "")
 		{
 			Owner = owner;
-			_invalidRegex = invalidRegex;
-			_hintMessage = hintMessage is "" ? invalidRegex : hintMessage;
 			InitializeComponent();
-			AsBox.PlaceholderText = _hintMessage;
-			if (text is "") return;
+			switch (mode)
+			{
+				case App.FileX.InvalidMode.Name:
+					AsBox.PlaceholderText = @"不能包含\/:*?""<>|和除空格外的空白字符";
+					_invalidRegex = App.FileX.GetInvalidNameChars;
+					break;
+				case App.FileX.InvalidMode.Path:
+					AsBox.PlaceholderText = @"不能包含/:*?""<>|和除空格外的空白字符";
+					_invalidRegex = App.FileX.GetInvalidPathChars;
+					break;
+				default: throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
+			}
 			AsBox.Text = text;
 		}
 
 		public string Message = "";
 		private readonly string _invalidRegex;
-		private readonly string _hintMessage;
 
 		private void BConfirm_OnClick(object sender, RoutedEventArgs e)
 		{
 			if (!new Regex($@"^[^{_invalidRegex}]+$").IsMatch(AsBox.Text))
 			{
-				App.MessageBoxX.Error(_hintMessage);
+				App.MessageBoxX.Error(AsBox.PlaceholderText);
 				return;
 			}
 			Message = AsBox.Text;
