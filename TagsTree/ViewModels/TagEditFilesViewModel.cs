@@ -1,5 +1,4 @@
 ﻿using JetBrains.Annotations;
-using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -30,9 +29,9 @@ namespace TagsTree.ViewModels
 
 		public RelayCommand ConfirmBClick { get; } = new(_ => true, TagEditFilesService.ConfirmBClick);
 		public XmlDataProvider Xdp { get; }
-		
+
 		private ObservableCollection<FileViewModel> _fileViewModels;
-		
+
 		public ObservableCollection<FileViewModel> FileViewModels
 		{
 			get => _fileViewModels;

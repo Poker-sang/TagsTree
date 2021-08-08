@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data;
 using System.Linq;
 using System.Windows;
 using System.Xml;
@@ -79,7 +78,7 @@ namespace TagsTree.Services
 		{
 			Vm.FileViewModel.VirtualTags = $" {Vm.FileViewModel.VirtualTags} ".Replace($" {tag.Name} ", " ").Trim();
 
-		}	
+		}
 
 		#endregion
 	}

@@ -1,6 +1,4 @@
-﻿using ModernWpf.Controls;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -34,7 +32,7 @@ namespace TagsTree.Services
 
 		public static void Selected(object sender, SelectionChangedEventArgs e)
 		{
-			if((FileViewModel)((DataGrid)sender).SelectedItem is null) return;
+			if ((FileViewModel)((DataGrid)sender).SelectedItem is null) return;
 			((FileViewModel)((DataGrid)sender).SelectedItem).Selected = ((FileViewModel)((DataGrid)sender).SelectedItem).Selected switch
 			{
 				true => null,
@@ -71,7 +69,7 @@ namespace TagsTree.Services
 					App.MessageBoxX.Error("「标签路径」不存在！"); //理论上不会到达此代码
 					return;
 				}
-				foreach (var fileViewModel in Vm.FileViewModels) 
+				foreach (var fileViewModel in Vm.FileViewModels)
 					switch (fileViewModel.Selected)
 					{
 						case true:

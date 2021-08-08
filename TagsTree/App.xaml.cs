@@ -6,7 +6,6 @@ using System.Windows;
 using System.Xml;
 using System.Xml.Linq;
 using TagsTree.Models;
-using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
 using static TagsTree.Properties.Settings;
 
