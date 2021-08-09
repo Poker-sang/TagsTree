@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using ModernWpf;
+using ModernWpf.Controls;
 using TagsTree.Commands;
 using TagsTree.Delegates;
 using TagsTree.Services;
@@ -27,18 +29,25 @@ namespace TagsTree.ViewModels
 		public static MouseButtonEventHandler DgItemMouseDoubleClick => MainService.DgItemMouseDoubleClick;
 		public static ResultChangedEventHandler ResultChanged => MainService.ResultChanged;
 		public static FileRemovedEventHandler FileRemoved => MainService.FileRemoved;
+		public static TypedEventHandler<AutoSuggestBox, AutoSuggestBoxTextChangedEventArgs> TextChanged => MainService.TextChanged;
+		public static TypedEventHandler<AutoSuggestBox, AutoSuggestBoxQuerySubmittedEventArgs> QuerySubmitted => MainService.QuerySubmitted;
 
-		private ObservableCollection<FileViewModel> _fileViewModels;
-		public ObservableCollection<FileViewModel> FileViewModels
+
+		public ObservableCollection<FileViewModel> FileViewModels { get; set; }
+
+		private ObservableCollection<FileViewModel> _resultCallBack;
+		public ObservableCollection<FileViewModel> ResultCallBack
 		{
-			get => _fileViewModels;
+			get => _resultCallBack;
 			set
 			{
-				if (Equals(_fileViewModels, value)) return;
-				_fileViewModels = value;
+				if (Equals(_resultCallBack, value)) return; 
+				_resultCallBack = value;
+				FileViewModels = value;
 				OnPropertyChanged(nameof(FileViewModels));
 			}
 		}
+
 		public void CollectionChanged() => OnPropertyChanged(nameof(FileViewModels));
 	}
 }

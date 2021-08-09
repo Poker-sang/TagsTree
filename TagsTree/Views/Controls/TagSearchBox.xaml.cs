@@ -1,12 +1,10 @@
 ﻿using ModernWpf;
 using ModernWpf.Controls;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Controls;
 using TagsTree.Delegates;
-using TagsTree.Models;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
 
@@ -44,6 +42,11 @@ namespace TagsTree.Views.Controls
 		}
 		private void TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
 		{
+			if (sender.Text is "")
+			{
+				ResultChanged.Invoke(this, new ResultChangedEventArgs(App.IdFile.Values.Select(fileModel => new FileViewModel(fileModel))));
+				return;
+			}
 			sender.Text = Regex.Replace(sender.Text, $@"[{App.FileX.GetInvalidPathChars}]+", "");
 			sender.Text = Regex.Replace(sender.Text, @"  +", " ").TrimStart();
 			sender.ItemsSource = App.TagMethods.TagSuggest(sender.Text, ' ');

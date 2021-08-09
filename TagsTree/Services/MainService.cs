@@ -1,8 +1,13 @@
-﻿using ModernWpf.Controls;
+﻿using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using ModernWpf.Controls;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
 using TagsTree.Delegates;
+using TagsTree.Models;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
 using TagsTree.ViewModels.Controls;
@@ -39,11 +44,22 @@ namespace TagsTree.Services
 
 		public static void DgItemMouseDoubleClick(object sender, MouseButtonEventArgs e) => PropertiesCmClick(sender);
 
-		public static void ResultChanged(TagSearchBox sender, ResultChangedEventArgs e) => ((MainViewModel)Win.DataContext).FileViewModels = e.NewResult.ToObservableCollection();
+		public static void ResultChanged(TagSearchBox sender, ResultChangedEventArgs e) => Vm.ResultCallBack = e.NewResult.ToObservableCollection();
 
 		public static void FileRemoved(FileProperties sender, FileRemovedEventArgs e)
 		{
 			_ = Vm.FileViewModels.Remove(e.RemovedItem);
+			Vm.CollectionChanged();
+		}
+		public static void TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
+		{
+			sender.Text = Regex.Replace(sender.Text, $@"[{App.FileX.GetInvalidNameChars} ]+", "");
+			var textBox = (TextBox)typeof(AutoSuggestBox).GetField("m_textBox", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(sender)!;
+			textBox.SelectionStart = textBox.Text.Length;
+		}
+		public static void QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e)
+		{
+			Vm.FileViewModels = sender.Text is "" ? Vm.ResultCallBack : RelationsDataTable.FuzzySearchName(sender.Text, Vm.ResultCallBack);
 			Vm.CollectionChanged();
 		}
 

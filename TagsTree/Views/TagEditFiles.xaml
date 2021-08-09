@@ -54,7 +54,8 @@
             IsHitTestVisible="False"
             ItemsSource="{Binding FileViewModels, Mode=OneWay}"
             Opacity="0"
-            SelectionMode="Single">
+            SelectionMode="Single"
+            SelectionUnit="FullRow">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn
                     Width="45"

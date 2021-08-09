@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using TagsTree.Models;
-using static TagsTree.Properties.Settings;
 
 namespace TagsTree.Services.ExtensionMethods
 {

@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Xml;
 using TagsTree.Delegates;
-using TagsTree.Models;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
 using TagsTree.Views;
@@ -58,9 +56,14 @@ namespace TagsTree.Services
 		{
 			if (!_mode)
 			{
-				if (Win.TbPath.Path.GetTagModel() is not { } pathTagModel || pathTagModel.XmlElement == App.XdpRoot)
+				if (Win.TbPath.Path.GetTagModel() is not { } pathTagModel)
 				{
 					App.MessageBoxX.Error("「标签路径」不存在！");
+					return;
+				}
+				if (pathTagModel.XmlElement == App.XdpRoot)
+				{
+					App.MessageBoxX.Error("「标签路径」不能为空！");
 					return;
 				}
 				Win.BConfirmClick();
