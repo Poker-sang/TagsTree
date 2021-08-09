@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TagsTree.Models;
+using static TagsTree.Properties.Settings;
 
 namespace TagsTree.Services.ExtensionMethods
 {
@@ -23,6 +24,14 @@ namespace TagsTree.Services.ExtensionMethods
 		{
 			var temp = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 			return temp.Where(tag => App.Tags.ContainsKey(tag)).Select(tag => App.Tags[tag]);
+		}
+		public static IEnumerable<PathTagModel> GetTagsFiles(this string name)
+		{
+			var temp = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+			foreach (string tag in temp)
+				if (App.Tags.ContainsKey(tag))
+					yield return App.Tags[tag];
+				else yield return new PathTagModel(tag);
 		}
 	}
 }
