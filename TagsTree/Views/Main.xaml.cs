@@ -28,6 +28,8 @@ namespace TagsTree.Views
 			TbSearch.BeforeQuerySubmitted = (_, _) => Search();
 			TbSearch.ResultChanged += Vm.ResultChanged;
 			FileProperties.FileRemoved += Vm.FileRemoved;
+			TbFuzzySearch.TextChanged += Vm.TextChanged;
+			TbFuzzySearch.QuerySubmitted += Vm.QuerySubmitted;
 		}
 
 		private bool _isSearched;
@@ -44,16 +46,23 @@ namespace TagsTree.Views
 			TbSearch.BeginAnimation(MarginProperty, new ThicknessAnimation
 			{
 				From = new Thickness(0, 300, 0, 0),
-				To = new Thickness(0, 80, 0, 0),
+				To = new Thickness(0, 50, 0, 0),
 				Duration = TimeSpan.FromMilliseconds(1000)
 			});
 			await Task.Delay(1000);
-			DgResult.BeginAnimation(OpacityProperty, new DoubleAnimation
+			TbFuzzySearch.BeginAnimation(OpacityProperty, new DoubleAnimation
 			{
 				From = 0,
 				To = 1,
 				Duration = TimeSpan.FromMilliseconds(1000)
 			});
+			DgResult.BeginAnimation(OpacityProperty, new DoubleAnimation
+			{
+				From = 0,
+				To = 1,
+				Duration = TimeSpan.FromMilliseconds(1000)
+			}); 
+			TbFuzzySearch.IsHitTestVisible = true;
 			DgResult.IsHitTestVisible = true;
 		}
 

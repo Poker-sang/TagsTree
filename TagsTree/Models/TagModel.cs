@@ -7,7 +7,7 @@ namespace TagsTree.Models
 		public string Name { get; }
 		public PathTagModel(string name) => Name = name;
 	}
-	public class TagModel: PathTagModel
+	public class TagModel : PathTagModel
 	{
 		public string Path { get; }
 		public XmlElement XmlElement { get; }

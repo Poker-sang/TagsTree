@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using TagsTree.ViewModels;
 using static TagsTree.Properties.Settings;
 
 namespace TagsTree.Models
@@ -17,11 +20,52 @@ namespace TagsTree.Models
 		}
 		public DataRow RowAt(FileModel rowKey) => _rowsDict[rowKey.Id];
 
+
 		public IEnumerable<string> GetTags(FileModel file)
 		{
 			for (var i = 1; i < Columns.Count; i++)
 				if ((bool)_rowsDict[file.Id][Columns[i]])
 					yield return Columns[i].ColumnName;
+		}
+		private struct Part
+		{
+			public int Num;
+			public readonly FileViewModel File;
+
+			public Part(int num, FileViewModel file)
+			{
+				Num = num;
+				File = file;
+			}
+		}
+
+		public static ObservableCollection<FileViewModel> FuzzySearchName(string name, IEnumerable<FileViewModel> range)
+		{
+			var precise = new List<FileViewModel>();
+			var fuzzy = new List<FileViewModel>();
+			var part = new List<Part>();
+			var fuzzyRegex = new Regex(Regex.Replace(name, "(.)", ".+$1", RegexOptions.IgnoreCase));
+			var partRegex = new Regex($"[{name}]", RegexOptions.IgnoreCase);
+			foreach (var fileViewModel in range)
+			{
+				if(fileViewModel.Name.Contains(name,StringComparison.OrdinalIgnoreCase))
+					precise.Add(fileViewModel);
+				else if (fuzzyRegex.IsMatch(fileViewModel.Name)) 
+					fuzzy.Add(fileViewModel);
+				else
+				{
+					var matches = partRegex.Matches(fileViewModel.Name);
+					if (matches.Count != 0)
+						part.Add(new Part(matches.Count, fileViewModel));
+				}
+			}
+			precise.AddRange(fuzzy);
+			part.Sort((x, y) => x.Num.CompareTo(y.Num));
+			precise.AddRange(part.Select(item => item.File));
+			var temp = new ObservableCollection<FileViewModel>();
+			foreach (var fileModel in precise)
+				temp.Add(fileModel);
+			return temp;
 		}
 		public IEnumerable<FileModel> GetFileModels(List<PathTagModel>? tags = null)
 		{
