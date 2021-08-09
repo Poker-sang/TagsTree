@@ -2,14 +2,17 @@
 
 namespace TagsTree.Models
 {
-	public class TagModel
+	public class PathTagModel
 	{
 		public string Name { get; }
+		public PathTagModel(string name) => Name = name;
+	}
+	public class TagModel: PathTagModel
+	{
 		public string Path { get; }
 		public XmlElement XmlElement { get; }
-		public TagModel(string name, string path, XmlElement xmlElement)
+		public TagModel(string name, string path, XmlElement xmlElement) : base(name)
 		{
-			Name = name;
 			Path = path;
 			XmlElement = xmlElement;
 		}

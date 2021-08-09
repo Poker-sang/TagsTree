@@ -23,15 +23,18 @@ namespace TagsTree.Models
 				if ((bool)_rowsDict[file.Id][Columns[i]])
 					yield return Columns[i].ColumnName;
 		}
-		public IEnumerable<FileModel> GetFileModels(List<TagModel> tags)
+		public IEnumerable<FileModel> GetFileModels(List<PathTagModel>? tags = null)
 		{
-			if (tags.Count == 0)
+			if (tags is null || tags.Count == 0)
 				return App.IdFile.Values.ToList();
+			var validTags = new Dictionary<PathTagModel, bool>();
+			foreach (var tag in tags.Where(tag => !validTags.ContainsKey(tag)))
+				validTags[tag] = true;
 			var enumerator = tags.GetEnumerator();
 			_ = enumerator.MoveNext();
 			return GetFileModels(enumerator).Select(row => App.IdFile[(int)row[0]]).ToList();
 		}
-		private List<DataRow> GetFileModels(IEnumerator<TagModel> tags)
+		private List<DataRow> GetFileModels(IEnumerator<PathTagModel> tags)
 		{
 			var tag = tags.Current;
 			var lastRange = tags.MoveNext() ? GetFileModels(tags) : _rowsDict.Values.ToList();
@@ -44,7 +47,7 @@ namespace TagsTree.Models
 					.Select(t => t.row));
 				return dataRows;
 			}
-			if (Default.PathTags)
+			if (Default.PathTags) //唯一需要判断是否能使用路径作为标签的地方
 			{
 				return lastRange
 					.SelectMany(dataRow => App.IdFile[(int)dataRow[0]].PartialPath[4..].Split('\\', StringSplitOptions.RemoveEmptyEntries), (dataRow, pathTag) => new { dataRow, pathTag })

@@ -44,20 +44,12 @@ namespace TagsTree.Views.Controls
 		}
 		private void TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
 		{
-			AutoSuggestBox.Text = Regex.Replace(AutoSuggestBox.Text, $@"[{App.FileX.GetInvalidPathChars}]+", "");
-			AutoSuggestBox.Text = Regex.Replace(AutoSuggestBox.Text, @"  +", " ").TrimStart();
+			sender.Text = Regex.Replace(sender.Text, $@"[{App.FileX.GetInvalidPathChars}]+", "");
+			sender.Text = Regex.Replace(sender.Text, @"  +", " ").TrimStart();
 			sender.ItemsSource = App.TagMethods.TagSuggest(sender.Text, ' ');
 			var textBox = (TextBox)typeof(AutoSuggestBox).GetField("m_textBox", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(sender)!;
 			textBox.SelectionStart = textBox.Text.Length;
 		}
-		private void QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e)
-		{
-			var tags = sender.Text.GetTagModels();
-			var validTags = new Dictionary<TagModel, bool>();
-			foreach (var tag in tags)
-				if (!validTags.ContainsKey(tag))
-					validTags[tag] = true;
-			ResultChanged.Invoke(this, new ResultChangedEventArgs(App.Relations.GetFileModels(validTags.Keys.ToList()).Select(fileModel => new FileViewModel(fileModel))));
-		}
+		private void QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e) => ResultChanged.Invoke(this, new ResultChangedEventArgs(App.Relations.GetFileModels(sender.Text.GetTagsFiles().ToList()).Select(fileModel => new FileViewModel(fileModel))));
 	}
 }

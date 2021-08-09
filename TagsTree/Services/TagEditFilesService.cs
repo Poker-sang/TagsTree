@@ -64,7 +64,7 @@ namespace TagsTree.Services
 					return;
 				}
 				Win.BConfirmClick();
-				Vm.FileViewModels = App.Relations.GetFileModels(new List<TagModel>()).Select(fileModel => new FileViewModel(fileModel, pathTagModel)).ToObservableCollection();
+				Vm.FileViewModels = App.Relations.GetFileModels().Select(fileModel => new FileViewModel(fileModel, pathTagModel)).ToObservableCollection();
 				Win.TbPath.IsEnabled = false;
 				_mode = true;
 			}
