@@ -3,7 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:TagsTree.Views"
+    xmlns:local="clr-namespace:TagsTree.Views.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.modernwpf.com/2019"
     xmlns:viewModelControls="clr-namespace:TagsTree.ViewModels.Controls"
@@ -11,13 +11,14 @@
     mc:Ignorable="d">
     <ui:AutoSuggestBox
         x:Name="AutoSuggestBox"
+        x:FieldModifier="private"
+        DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:TagSearchBox, AncestorLevel=1}}"
         PlaceholderText="标签路径（不包含/:*?&quot;&lt;&gt;|,和空白字符且不为空）"
         QueryIcon="Find"
-        Text="{Binding Search, Mode=TwoWay}"
+        QuerySubmitted="QuerySubmitted"
+        SuggestionChosen="SuggestionChosen"
+        TextChanged="TextChanged"
         UpdateTextOnSelect="False">
-        <ui:AutoSuggestBox.DataContext>
-            <viewModelControls:TagSearchBoxViewModel />
-        </ui:AutoSuggestBox.DataContext>
         <ui:AutoSuggestBox.ItemTemplate>
             <DataTemplate>
                 <TextBlock d:DataContext="{d:DesignInstance viewModels:FileViewModel}" Text="{Binding FullName, Mode=OneTime}" />

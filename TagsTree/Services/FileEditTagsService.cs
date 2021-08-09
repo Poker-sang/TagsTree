@@ -18,11 +18,11 @@ namespace TagsTree.Services
 			Vm = (FileEditTagsViewModel)window.DataContext;
 		}
 
-		public static void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => Win.TbPath.AutoSuggestBox.Text = App.TagMethods.TvSelectedItemChanged((XmlElement?)e.NewValue) ?? Win.TbPath.AutoSuggestBox.Text;
+		public static void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => Win.TbPath.Path = App.TagMethods.TvSelectedItemChanged((XmlElement?)e.NewValue) ?? Win.TbPath.Path;
 
 		public static void AddBClick(object? parameter)
 		{
-			if (Win.TbPath.AutoSuggestBox.Text.GetTagModel() is not { } pathTagModel)
+			if (Win.TbPath.Path.GetTagModel() is not { } pathTagModel)
 			{
 				App.MessageBoxX.Error("「标签路径」不存在！");
 				return;
@@ -49,7 +49,7 @@ namespace TagsTree.Services
 		}
 		public static void DeleteBClick(object? parameter)
 		{
-			if (Win.TbPath.AutoSuggestBox.Text.GetTagModel() is not { } pathTagModel)
+			if (Win.TbPath.Path.GetTagModel() is not { } pathTagModel)
 			{
 				App.MessageBoxX.Error("「标签路径」不存在！");
 				return;

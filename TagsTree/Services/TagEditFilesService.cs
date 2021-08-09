@@ -26,9 +26,15 @@ namespace TagsTree.Services
 
 		#region 事件处理
 
-		public static void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => Win.TbPath.AutoSuggestBox.Text = App.TagMethods.TvSelectedItemChanged((XmlElement?)e.NewValue) ?? Win.TbPath.AutoSuggestBox.Text;
+		public static void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => Win.TbPath.Path = App.TagMethods.TvSelectedItemChanged((XmlElement?)e.NewValue) ?? Win.TbPath.Path;
 
-		public static void ResultChanged(TagSearchBox sender, ResultChangedEventArgs e) => ((TagEditFilesViewModel)Win.DataContext).FileViewModels = e.NewResult.ToObservableCollection();
+		public static void ResultChanged(TagSearchBox sender, ResultChangedEventArgs e)
+		{
+			var temp = e.NewResult.ToObservableCollection();
+			foreach (var fileViewModel in temp)
+				fileViewModel.Selected = fileViewModel.HasTag(Win.TbPath.Path.GetTagModel()!);
+			((TagEditFilesViewModel)Win.DataContext).FileViewModels = temp;
+		}
 
 		public static void Selected(object sender, SelectionChangedEventArgs e)
 		{
@@ -52,7 +58,7 @@ namespace TagsTree.Services
 		{
 			if (!_mode)
 			{
-				if (Win.TbPath.AutoSuggestBox.Text.GetTagModel() is not { } pathTagModel || pathTagModel.XmlElement != App.XdpRoot)
+				if (Win.TbPath.Path.GetTagModel() is not { } pathTagModel || pathTagModel.XmlElement == App.XdpRoot)
 				{
 					App.MessageBoxX.Error("「标签路径」不存在！");
 					return;
@@ -64,7 +70,7 @@ namespace TagsTree.Services
 			}
 			else
 			{
-				if (Win.TbPath.AutoSuggestBox.Text.GetTagModel() is not { } pathTagModel)
+				if (Win.TbPath.Path.GetTagModel() is not { } pathTagModel)
 				{
 					App.MessageBoxX.Error("「标签路径」不存在！"); //理论上不会到达此代码
 					return;

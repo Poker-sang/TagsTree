@@ -30,7 +30,7 @@ namespace TagsTree.Services
 			textBox.SelectionStart = textBox.Text.Length;
 		}
 
-		public static void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => Win.TbPath.AutoSuggestBox.Text = App.TagMethods.TvSelectedItemChanged((XmlElement?)e.NewValue) ?? Win.TbPath.AutoSuggestBox.Text;
+		public static void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => Win.TbPath.Path = App.TagMethods.TvSelectedItemChanged((XmlElement?)e.NewValue) ?? Win.TbPath.Path;
 		private static XmlElement TvItemGetHeader(object? sender) => (XmlElement)((TreeViewItem)sender!).Header;
 		public static void Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
@@ -48,7 +48,7 @@ namespace TagsTree.Services
 
 		public static void NewBClick(object? parameter)
 		{
-			if (Win.TbPath.AutoSuggestBox.Text.GetTagModel() is not { } pathTagModel)
+			if (Win.TbPath.Path.GetTagModel() is not { } pathTagModel)
 			{
 				App.MessageBoxX.Error("「标签路径」不存在！");
 				return;
@@ -59,7 +59,7 @@ namespace TagsTree.Services
 		}
 		public static void MoveBClick(object? parameter)
 		{
-			if (Win.TbPath.AutoSuggestBox.Text.GetTagModel() is not { } pathTagModel)
+			if (Win.TbPath.Path.GetTagModel() is not { } pathTagModel)
 			{
 				App.MessageBoxX.Error("「标签路径」不存在！");
 				return;
@@ -74,7 +74,7 @@ namespace TagsTree.Services
 		}
 		public static void RenameBClick(object? parameter)
 		{
-			if (Win.TbPath.AutoSuggestBox.Text.GetTagModel() is not { } pathTagModel)
+			if (Win.TbPath.Path.GetTagModel() is not { } pathTagModel)
 			{
 				App.MessageBoxX.Error("「标签路径」不存在！");
 				return;
@@ -82,16 +82,16 @@ namespace TagsTree.Services
 			if (!NewTagCheck(Vm.Name)) return;
 			RenameTag(Vm.Name, pathTagModel.XmlElement);
 			Vm.Name = "";
-			Win.TbPath.AutoSuggestBox.Text = "";
+			Win.TbPath.Path = "";
 		}
 		public static void DeleteBClick(object? parameter)
 		{
-			if (Win.TbPath.AutoSuggestBox.Text == string.Empty)
+			if (Win.TbPath.Path == string.Empty)
 			{
 				App.MessageBoxX.Error("未输入希望删除的标签");
 				return;
 			}
-			if (Win.TbPath.AutoSuggestBox.Text.GetTagModel() is not { } pathTagModel)
+			if (Win.TbPath.Path.GetTagModel() is not { } pathTagModel)
 			{
 				App.MessageBoxX.Error("「标签路径」不存在！");
 				return;

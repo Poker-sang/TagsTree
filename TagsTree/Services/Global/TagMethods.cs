@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using TagsTree.Models;
 
@@ -15,7 +13,7 @@ namespace TagsTree
 			/// <summary>
 			/// TreeView控件选择的元素改变时，显示所选项目Xml元素的路径<br/>
 			/// 用法：<code>private void treeView_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs&lt;object&gt; e)<br/>
-			/// => textBox.Text = App.TvSelectedItemChanged(treeView) ?? textBox.Text;</code>
+			/// => textBox.Path = App.TvSelectedItemChanged(treeView) ?? textBox.Path;</code>
 			/// </summary>
 			/// <param name="selectedItem">TreeView控件的SelectedItem</param>
 			/// <returns>string类型，显示所选Xml元素的路径，为null则是没有选择项目</returns>

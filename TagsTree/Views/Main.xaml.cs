@@ -62,7 +62,7 @@ namespace TagsTree.Views
 		private void TagEditFiles_OnClick(object sender, RoutedEventArgs e) => _ = new TagEditFiles(this).ShowDialog();
 		private void ChangeConfig_Click(object sender, RoutedEventArgs e)
 		{
-			if (!App.MessageBoxX.Warning("更改设置后需要重启软件，请确保已保存"))	return;
+			if (!App.MessageBoxX.Warning("更改设置后需要重启软件，请确保已保存")) return;
 			if (new NewConfig(this).ShowDialog() == true) Close();
 		}
 	}

@@ -67,7 +67,7 @@ namespace TagsTree.Services
 							if (FileViewModel.ValidPath(dialog.FileNames.First()))
 								foreach (var directoryName in dialog.FileNames)
 									foreach (var fileInfo in new DirectoryInfo(directoryName).GetFiles())
-										if (!dictionary.ContainsKey(false + fileInfo.FullName ))
+										if (!dictionary.ContainsKey(false + fileInfo.FullName))
 											Current.Dispatcher.Invoke(() => Vm.FileViewModels.Add(new FileViewModel(fileInfo.FullName, false)));
 							break;
 						case "Path_Folders":
