@@ -13,7 +13,7 @@
         x:Name="AutoSuggestBox"
         x:FieldModifier="private"
         DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:TagSearchBox, AncestorLevel=1}}"
-        PlaceholderText="标签路径（不包含/:*?&quot;&lt;&gt;|,和空白字符，留空显示全部）"
+        PlaceholderText="标签（空格隔开标签，不包含/:*?&quot;&lt;&gt;|,和空白字符，留空显示全部）"
         QueryIcon="Find"
         QuerySubmitted="QuerySubmitted"
         SuggestionChosen="SuggestionChosen"

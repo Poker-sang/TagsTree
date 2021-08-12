@@ -1,11 +1,11 @@
 ﻿using JetBrains.Annotations;
+using ModernWpf;
+using ModernWpf.Controls;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using ModernWpf;
-using ModernWpf.Controls;
 using TagsTree.Commands;
 using TagsTree.Delegates;
 using TagsTree.Services;
@@ -41,7 +41,7 @@ namespace TagsTree.ViewModels
 			get => _resultCallBack;
 			set
 			{
-				if (Equals(_resultCallBack, value)) return; 
+				if (Equals(_resultCallBack, value)) return;
 				_resultCallBack = value;
 				FileViewModels = value;
 				OnPropertyChanged(nameof(FileViewModels));

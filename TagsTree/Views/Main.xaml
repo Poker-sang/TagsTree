@@ -139,16 +139,19 @@
             SelectionMode="Single"
             SelectionUnit="CellOrRowHeader">
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn
-                    Width="45"
-                    Binding="{Binding IsFolder, Mode=OneTime}"
-                    CanUserResize="False"
-                    CanUserSort="False"
-                    IsReadOnly="True">
-                    <DataGridCheckBoxColumn.Header>
+                <DataGridTemplateColumn Width="45">
+                    <DataGridTemplateColumn.Header>
                         <ui:FontIcon Glyph="&#xF12B;" />
-                    </DataGridCheckBoxColumn.Header>
-                </DataGridCheckBoxColumn>
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image
+                                Width="32"
+                                Height="32"
+                                Source="{Binding Icon, Mode=OneTime}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn
                     Width="2*"
                     Binding="{Binding Name, Mode=OneWay}"

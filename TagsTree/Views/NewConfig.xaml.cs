@@ -1,4 +1,6 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using ModernWpf;
+using ModernWpf.Controls;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -16,9 +18,6 @@ namespace TagsTree.Views
 			Owner = owner;
 			InitializeComponent();
 			MouseLeftButtonDown += (_, _) => DragMove();
-			TbConfigPath.Text = Default.ConfigPath;
-			TbLibraryPath.Text = Default.LibraryPath;
-			CbRootFoldersExist.IsChecked = Default.PathTags;
 		}
 
 		private void BConfigPath_Click(object sender, RoutedEventArgs e)
@@ -35,6 +34,8 @@ namespace TagsTree.Views
 				TbLibraryPath.Text = dialog.FileName;
 		}
 
+		private void TgTheme_OnToggled(object sender, RoutedEventArgs e) => ThemeManager.Current.ApplicationTheme = ((ToggleSwitch)sender).IsOn ? ApplicationTheme.Dark : ApplicationTheme.Light;
+
 		private void BConfirm_Click(object sender, RoutedEventArgs e)
 		{
 			var legalPath = new Regex($@"^[a-zA-Z]:\\[^{App.FileX.GetInvalidPathChars}]*$");
@@ -42,8 +43,6 @@ namespace TagsTree.Views
 				App.MessageBoxX.Error("路径错误！请填写正确完整的文件夹路径！");
 			else
 			{
-				if (new DirectoryInfo(TbConfigPath.Text).GetFiles().Length != 0)
-					App.MessageBoxX.Information("请保证存放配置文件的文件夹里没有重要的文件，防止受到损坏");
 				if (Owner is not null && Default.ConfigPath != TbConfigPath.Text)
 					switch (App.MessageBoxX.Question("是否将原位置配置文件移动到新位置"))
 					{
@@ -53,14 +52,17 @@ namespace TagsTree.Views
 							break;
 						case null: return;
 					}
+
 				Default.ConfigPath = TbConfigPath.Text;
 				Default.LibraryPath = TbLibraryPath.Text;
 				Default.PathTags = CbRootFoldersExist.IsChecked!.Value;
+				Default.Theme = TgTheme.IsOn;
 				Default.IsSet = true;
 				Default.Save();
 				DialogResult = true;
 				Close();
 			}
 		}
+
 	}
 }

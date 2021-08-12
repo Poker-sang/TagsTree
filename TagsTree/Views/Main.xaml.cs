@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media.Animation;
-using TagsTree.Views.Controls;
+using System.Windows.Threading;
 using Vm = TagsTree.ViewModels.MainViewModel;
 
 namespace TagsTree.Views
@@ -30,6 +31,7 @@ namespace TagsTree.Views
 			FileProperties.FileRemoved += Vm.FileRemoved;
 			TbFuzzySearch.TextChanged += Vm.TextChanged;
 			TbFuzzySearch.QuerySubmitted += Vm.QuerySubmitted;
+			_ = Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)(() => Keyboard.Focus(TbSearch)));
 		}
 
 		private bool _isSearched;
@@ -61,7 +63,7 @@ namespace TagsTree.Views
 				From = 0,
 				To = 1,
 				Duration = TimeSpan.FromMilliseconds(1000)
-			}); 
+			});
 			TbFuzzySearch.IsHitTestVisible = true;
 			DgResult.IsHitTestVisible = true;
 		}
