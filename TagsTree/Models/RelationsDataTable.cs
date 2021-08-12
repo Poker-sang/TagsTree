@@ -48,9 +48,9 @@ namespace TagsTree.Models
 			var partRegex = new Regex($"[{name}]", RegexOptions.IgnoreCase);
 			foreach (var fileViewModel in range)
 			{
-				if(fileViewModel.Name.Contains(name,StringComparison.OrdinalIgnoreCase))
+				if (fileViewModel.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
 					precise.Add(fileViewModel);
-				else if (fuzzyRegex.IsMatch(fileViewModel.Name)) 
+				else if (fuzzyRegex.IsMatch(fileViewModel.Name))
 					fuzzy.Add(fileViewModel);
 				else
 				{

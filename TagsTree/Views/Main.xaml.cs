@@ -61,7 +61,7 @@ namespace TagsTree.Views
 				From = 0,
 				To = 1,
 				Duration = TimeSpan.FromMilliseconds(1000)
-			}); 
+			});
 			TbFuzzySearch.IsHitTestVisible = true;
 			DgResult.IsHitTestVisible = true;
 		}

@@ -1,8 +1,7 @@
-﻿using System.Collections.ObjectModel;
-using System.Linq;
+﻿using ModernWpf;
+using ModernWpf.Controls;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using ModernWpf.Controls;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -90,6 +89,7 @@ namespace TagsTree.Services
 
 		public static bool CheckConfig()
 		{
+			ThemeManager.Current.ApplicationTheme = Default.Theme ? ApplicationTheme.Dark : ApplicationTheme.Light;
 			while (true)
 			{
 				if (Default.IsSet) //如果之前有储存过用户配置，则判断是否符合

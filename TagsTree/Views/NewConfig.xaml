@@ -8,15 +8,15 @@
     xmlns:properties="clr-namespace:TagsTree.Properties"
     xmlns:ui="http://schemas.modernwpf.com/2019"
     Title="设置"
-    Width="400"
-    Height="300"
-    MinWidth="400"
-    MinHeight="300"
+    Width="600"
+    Height="450"
     ui:WindowHelper.UseModernWindowStyle="True"
+    ResizeMode="NoResize"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
     <Grid Margin="40,30,40,30">
         <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
@@ -31,15 +31,17 @@
             Grid.Row="0"
             Grid.Column="0"
             VerticalAlignment="Center"
-            PlaceholderText="「配置路径」（存放配置文件的文件夹）"
-            Text="{Binding Path=ConfigPath, Source={x:Static properties:Settings.Default}}" />
+            Header="配置路径"
+            PlaceholderText="存放配置文件的文件夹（最好是空文件夹）"
+            Text="{Binding Path=ConfigPath, Mode=OneTime, Source={x:Static properties:Settings.Default}}" />
         <ui:AutoSuggestBox
             x:Name="TbLibraryPath"
             Grid.Row="1"
             Grid.Column="0"
             VerticalAlignment="Center"
-            PlaceholderText="「文件路径」（被归类文件的根目录文件夹）"
-            Text="{Binding Path=LibraryPath, Source={x:Static properties:Settings.Default}}" />
+            Header="文件路径"
+            PlaceholderText="被归类文件的根目录文件夹"
+            Text="{Binding Path=LibraryPath, Mode=OneTime, Source={x:Static properties:Settings.Default}}" />
         <Button
             Grid.Row="0"
             Grid.Column="1"
@@ -64,9 +66,18 @@
             Grid.Column="0"
             VerticalAlignment="Center"
             Content="将所在路径文件夹名作为标签使用"
-            IsChecked="{Binding Path=PathTags, Source={x:Static properties:Settings.Default}}" />
+            IsChecked="{Binding Path=PathTags, Mode=OneTime, Source={x:Static properties:Settings.Default}}" />
+        <ui:ToggleSwitch
+            x:Name="TgTheme"
+            Grid.Row="3"
+            Grid.Column="0"
+            Header="主题色"
+            IsOn="{Binding Path=Theme, Mode=OneTime, Source={x:Static properties:Settings.Default}}"
+            OffContent="浅色"
+            OnContent="暗色"
+            Toggled="TgTheme_OnToggled" />
         <Button
-            Grid.Row="2"
+            Grid.Row="3"
             Grid.Column="1"
             HorizontalAlignment="Center"
             Click="BConfirm_Click"
