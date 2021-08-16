@@ -17,19 +17,19 @@ namespace TagsTree.ViewModels.Controls
 		public void Load(FileViewModel file)
 		{
 			FileViewModel = file;
-			Exists = File.Exists(file.FullName);
-			if (Exists)
-				Icon = App.CIconOfPath.IconOfPathLarge(file.FullName, true, true);
 			OnPropertyChanged(nameof(FileViewModel));
-			OnPropertyChanged(nameof(Icon));
+			OpenExplorerBClick.OnCanExecuteChanged();
+			RenameBClick.OnCanExecuteChanged();
+			MoveBClick.OnCanExecuteChanged();
+			DeleteBClick.OnCanExecuteChanged();
 		}
 
 		public FilePropertiesViewModel()
 		{
-			OpenBClick = new RelayCommand(_ => _exists, FilePropertiesService.OpenBClick);
-			RenameBClick = new RelayCommand(_ => _exists, FilePropertiesService.RenameBClick);
-			MoveBClick = new RelayCommand(_ => _exists, FilePropertiesService.MoveBClick);
-			DeleteBClick = new RelayCommand(_ => _exists, FilePropertiesService.DeleteBClick);
+			OpenBClick = new RelayCommand(_ => FileViewModel.Exists, FilePropertiesService.OpenBClick);
+			RenameBClick = new RelayCommand(_ => FileViewModel.Exists, FilePropertiesService.RenameBClick);
+			MoveBClick = new RelayCommand(_ => FileViewModel.Exists, FilePropertiesService.MoveBClick);
+			DeleteBClick = new RelayCommand(_ => FileViewModel.Exists, FilePropertiesService.DeleteBClick);
 		}
 
 		public RelayCommand OpenBClick { get; }
@@ -41,24 +41,5 @@ namespace TagsTree.ViewModels.Controls
 		public RelayCommand DeleteBClick { get; }
 
 		public FileViewModel FileViewModel { get; private set; }
-
-		private bool _exists;
-
-		public ImageSource? Icon { get; private set; }
-
-		public bool Exists
-		{
-			get => _exists;
-			set
-			{
-				if (Equals(_exists, value)) return;
-				_exists = value;
-				OnPropertyChanged(nameof(Exists));
-				OpenExplorerBClick.OnCanExecuteChanged();
-				RenameBClick.OnCanExecuteChanged();
-				MoveBClick.OnCanExecuteChanged();
-				DeleteBClick.OnCanExecuteChanged();
-			}
-		}
 	}
 }

@@ -19,18 +19,19 @@
         </Grid.DataContext>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="9*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" />
-            <RowDefinition Height="2*" />
+            <RowDefinition Height="7*" />
         </Grid.RowDefinitions>
         <Image
             Grid.Row="0"
             Grid.Column="0"
-            Source="{Binding Icon, Mode=OneWay}" />
+            Source="{Binding FileViewModel.Icon, Mode=OneWay}" />
         <StackPanel
             Grid.Row="0"
+            Grid.RowSpan="2"
             Grid.Column="1"
             DataContext="{Binding FileViewModel, Mode=OneWay}"
             Orientation="Vertical">
@@ -52,6 +53,16 @@
             <StackPanel Orientation="Horizontal">
                 <TextBlock FontSize="20" Text="标签：" />
                 <TextBlock FontSize="20" Text="{Binding Tags, Mode=OneWay}" />
+            </StackPanel>
+            <Separator />
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontSize="20" Text="修改日期：" />
+                <TextBlock FontSize="20" Text="{Binding DateOfModification, Mode=OneWay}" />
+            </StackPanel>
+            <Separator />
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontSize="20" Text="大小：" />
+                <TextBlock FontSize="20" Text="{Binding Size, Mode=OneWay}" />
             </StackPanel>
         </StackPanel>
         <ui:CommandBar
