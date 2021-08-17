@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-using System.Windows.Media;
 using TagsTree.ViewModels;
 using TagsTree.Views;
 using static System.Windows.Application;
@@ -110,21 +109,15 @@ namespace TagsTree.Services
 		public static void DeleteBClick(object? parameter) => Vm.FileViewModels.Clear();
 		public static async void SaveBClick(object? parameter)
 		{
-			var border = new Border { Background = new SolidColorBrush(Color.FromArgb(0x55, 0x88, 0x88, 0x88)) };
-			var progressBar = new ModernWpf.Controls.ProgressBar { Width = 300, Height = 20 };
-			progressBar.ValueChanged += (_, _) => border.Child.UpdateLayout();
-			border.Child = progressBar;
-			_ = ((Grid)parameter!).Children.Add(border);
-			progressBar.Value = 1;
-
+			var progressBar = new App.ProcessBarHelper((Grid)parameter!);
 			var duplicated = 0;
 			await Task.Run(() =>
 			{
 				var dictionary = new Dictionary<string, bool>();
 				foreach (var fileModel in App.IdFile.Values)
 					dictionary[fileModel.UniqueName] = true;
-				_ = Current.Dispatcher.Invoke(() => progressBar.Value = 2);
-				var unit = 97.0 / Vm.FileViewModels.Count;
+				progressBar.ProcessValue = 1;
+				var unit = 98.0 / Vm.FileViewModels.Count;
 				foreach (var fileModel in Vm.FileViewModels)
 				{
 					if (!dictionary.ContainsKey(fileModel.UniqueName))
@@ -133,15 +126,15 @@ namespace TagsTree.Services
 						App.IdFile[fileModel.Id] = fileModel.NewFileModel();
 					}
 					else duplicated++;
-					_ = Current.Dispatcher.Invoke(() => progressBar.Value += unit);
+					progressBar.ProcessValue += unit;
 				}
 			});
 			App.SaveFiles();
 			App.SaveRelations();
-			progressBar.Value = 100;
+			progressBar.ProcessValue = 100;
 			var former = Vm.FileViewModels.Count;
 			Vm.FileViewModels.Clear();
-			((Grid)parameter!).Children.Remove(border);
+			progressBar.Dispose();
 			App.MessageBoxX.Information($"共导入「{former}」个文件，其中成功导入「{former - duplicated}」个，有「{duplicated}」个因重复未导入");
 		}
 	}

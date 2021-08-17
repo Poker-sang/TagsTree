@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace TagsTree.Views
 {
@@ -26,6 +28,7 @@ namespace TagsTree.Views
 				default: throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
 			}
 			AsBox.Text = text;
+			_ = Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)(() => Keyboard.Focus(AsBox)));
 		}
 
 		public string Message = "";

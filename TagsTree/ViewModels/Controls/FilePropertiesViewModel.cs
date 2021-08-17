@@ -1,8 +1,6 @@
 ﻿using JetBrains.Annotations;
 using System.ComponentModel;
-using System.IO;
 using System.Runtime.CompilerServices;
-using System.Windows.Media;
 using TagsTree.Commands;
 using TagsTree.Services.Controls;
 

@@ -1,13 +1,10 @@
 ﻿using JetBrains.Annotations;
 using System.ComponentModel;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Windows;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using TagsTree.Models;
 using TagsTree.Services.ExtensionMethods;
 
@@ -55,6 +52,7 @@ namespace TagsTree.ViewModels
 
 		private readonly FileSystemInfo _fileSystemInfo;
 		public ImageSource Icon => App.SystemIcon.GetIcon(IsFolder, FullName);
+		//public ImageSource Icon => App.SystemIcon.ChangeIconToImageSource(System.Drawing.Icon.ExtractAssociatedIcon(FullName)); //文件夹图标无法获取
 		public string DateOfModification => _fileSystemInfo.LastWriteTime.ToString(CultureInfo.CurrentCulture);
 		public string Size => IsFolder ? "" : App.FileX.CountSize((FileInfo)_fileSystemInfo);
 		public bool Exists => _fileSystemInfo.Exists;
@@ -69,7 +67,7 @@ namespace TagsTree.ViewModels
 
 		private bool? _selected;
 		private string _virtualTags = "";
-		
+
 		public bool? Selected
 		{
 			get => _selected;
