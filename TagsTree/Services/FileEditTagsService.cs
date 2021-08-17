@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Xml;
 using TagsTree.Services.ExtensionMethods;
@@ -62,7 +63,7 @@ namespace TagsTree.Services
 			for (var index = 1; index < App.Relations.Columns.Count; index++)
 			{
 				var column = App.Relations.Columns[index];
-				App.Relations.RowAt(Vm.FileViewModel.GetFileModel)[column] = $" {Vm.FileViewModel.VirtualTags} ".Contains($" {column.ColumnName} ");
+				App.Relations.RowAt(Vm.FileViewModel.GetFileModel)[column] = $" {Vm.FileViewModel.VirtualTags} ".Contains($" {App.Tags[Convert.ToInt32(column.ColumnName)].Name} ");
 			}
 			Vm.FileViewModel.TagsUpdated();
 			App.SaveRelations();

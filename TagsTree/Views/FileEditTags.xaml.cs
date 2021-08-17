@@ -15,6 +15,7 @@ namespace TagsTree.Views
 			Owner = owner;
 			InitializeComponent();
 			((FileEditTagsViewModel)DataContext).FileViewModel = fileViewModel;
+			fileViewModel.VirtualTagsInitialize();
 			Services.FileEditTagsService.Load(this);
 			MouseLeftButtonDown += (_, _) => DragMove();
 			_ = Tags.SetBinding(ItemsControl.ItemsSourceProperty, new Binding(".") { Mode = BindingMode.TwoWay, Source = ((FileEditTagsViewModel)DataContext).Xdp });

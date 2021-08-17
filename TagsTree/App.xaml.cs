@@ -32,7 +32,6 @@ namespace TagsTree
 		{
 			XdTags.Load(TagsPath);
 			TagMethods.RecursiveLoadTags();
-			Relations = RelationsDataTable.Load()!;
 		}
 
 		/// <summary>
@@ -58,7 +57,7 @@ namespace TagsTree
 		/// <summary>
 		/// 所有标签
 		/// </summary>
-		public static readonly Dictionary<string, TagModel> Tags = new();
+		public static readonly DoubleKeysDictionary<int, string, TagModel> Tags = new();
 
 		/// <summary>
 		/// 所有标签
@@ -68,7 +67,7 @@ namespace TagsTree
 		/// <summary>
 		/// 所有关系
 		/// </summary>
-		public static RelationsDataTable Relations;
+		public static readonly RelationsDataTable Relations = new();
 
 		public static bool TryRemoveFileModel(FileViewModel fileViewModel)
 		{
@@ -88,6 +87,7 @@ namespace TagsTree
 		///  <returns>true：已填写正确地址，进入软件；false：打开设置页面；null：关闭软件</returns>
 		public static bool? LoadConfig()
 		{
+			//总体设置
 			if (!Directory.Exists(Default.ConfigPath))
 			{
 				if (MessageBoxX.Warning($"路径「{Default.ConfigPath}」不存在", "修改设置", "关闭软件"))
@@ -101,7 +101,7 @@ namespace TagsTree
 					return null;
 				}
 			}
-
+			//标签
 			if (!File.Exists(TagsPath))
 				new XDocument(new XElement("TagsTree", new XAttribute("name", ""))).Save(TagsPath);
 			try
@@ -115,14 +115,16 @@ namespace TagsTree
 			}
 
 			TagMethods.RecursiveLoadTags();
-
+			TagModel.Num = Tags.Count is 0 ? 0 : Tags.Values.Last().Id + 1;
+			//文件
+			IdFile.Deserialize(FilesPath);
+			FileModel.Num = IdFile.Count is 0 ? 0 : IdFile.Keys.Last() + 1; //或 IdFile.Values.Last().Id + 1
+			
+			//关系
 			if (!File.Exists(RelationsPath))
 				_ = File.Create(RelationsPath);
-			Relations = RelationsDataTable.Load()!; //异常在内部处理
-
-			IdFile.Deserialize(FilesPath);
-			FileModel.Num = IdFile.Count is 0 ? 0 : IdFile.Keys.Last() + 1;
-
+			Relations.Load(); //异常在内部处理
+			//检查
 			static bool DeleteAll()
 			{
 				File.Delete(TagsPath);
@@ -130,7 +132,6 @@ namespace TagsTree
 				File.Delete(RelationsPath);
 				return false;
 			}
-
 			if (Tags.Count != Relations.Columns.Count - 1) //第一列是文件Id 
 			{
 				if (MessageBoxX.Warning($"路径「{Default.ConfigPath}」下，TagsTree.xml和Relations.xml存储的标签数不同", "删除标签与文件的配置文件", "直接关闭软件"))
