@@ -12,9 +12,9 @@ namespace TagsTree.ViewModels.Controls
 		[NotifyPropertyChangedInvocator]
 		private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-		public void Load(FileViewModel file)
+		public void Load(FileViewModel fileViewModel)
 		{
-			FileViewModel = file;
+			FileViewModel = fileViewModel;
 			OnPropertyChanged(nameof(FileViewModel));
 			OpenExplorerBClick.OnCanExecuteChanged();
 			RenameBClick.OnCanExecuteChanged();

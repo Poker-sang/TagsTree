@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Xml;
+using TagsTree.Models;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
 using TagsTree.Views;
@@ -145,9 +146,11 @@ namespace TagsTree.Services
 		{
 			var element = Vm.Xdp.Document.CreateElement("Tag");
 			element.SetAttribute("name", name);
-			App.Relations.NewColumn(name);
+			element.SetAttribute("id", TagModel.Num.ToString());
+			TagModel.Num++;
 			_ = path.AppendChild(element);
 			TagsChanged();
+			App.Relations.NewColumn(App.Tags[name].Id);
 		}
 		public static void MoveTag(XmlElement name, XmlElement? path)
 		{
@@ -164,16 +167,15 @@ namespace TagsTree.Services
 		}
 		private static void RenameTag(string name, XmlElement path)
 		{
-			path.RemoveAllAttributes();
 			path.SetAttribute("name", name);
-			App.Relations.RenameColumn(path.GetAttribute("Name"), name);
 			TagsChanged();
+			App.Relations.RenameColumn(path.GetAttribute("id"), App.Tags[name].Id);
 		}
 		private static void DeleteTag(XmlElement path)
 		{
 			_ = path.ParentNode!.RemoveChild(path);
-			App.Relations.DeleteColumn(path.GetAttribute("Name"));
 			TagsChanged();
+			App.Relations.DeleteColumn(path.GetAttribute("id"));
 		}
 		private static void TagsChanged()
 		{

@@ -88,7 +88,7 @@ namespace TagsTree.Services
 								case true: //如果原本是true或null，则不改变
 								case null: break;
 								case false: //如果原本是false，则加上本标签
-									App.Relations[fileViewModel, pathTagModel.Name] = true;
+									App.Relations[fileViewModel, pathTagModel] = true;
 									fileViewModel.TagsUpdated();
 									break;
 							}
@@ -97,11 +97,11 @@ namespace TagsTree.Services
 							switch (fileViewModel.HasTag(pathTagModel))
 							{
 								case true:  //如果原本是true，则删除本标签
-									App.Relations[fileViewModel, pathTagModel.Name] = false;
+									App.Relations[fileViewModel, pathTagModel] = false;
 									fileViewModel.TagsUpdated();
 									break;
 								case null: //如果原本是null，则删除fileViewModel拥有的相应子标签
-									App.Relations[fileViewModel, fileViewModel.GetRelativeTag(pathTagModel)!.Name] = false;
+									App.Relations[fileViewModel, fileViewModel.GetRelativeTag(pathTagModel)!] = false;
 									fileViewModel.TagsUpdated();
 									break;
 								case false: break;//如果原本是false，则不改变

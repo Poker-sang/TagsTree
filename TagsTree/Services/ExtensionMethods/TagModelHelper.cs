@@ -16,7 +16,7 @@ namespace TagsTree.Services.ExtensionMethods
 		{
 			var temp = name.Split('\\', StringSplitOptions.RemoveEmptyEntries);
 			if (temp.Length == 0)
-				return new TagModel("", "", App.XdpRoot!);
+				return new TagModel(0, "", "", App.XdpRoot!);
 			return App.Tags.ContainsKey(temp.Last()) ? App.Tags[temp.Last()] : null;
 		}
 		public static IEnumerable<TagModel> GetTagModels(this string name)

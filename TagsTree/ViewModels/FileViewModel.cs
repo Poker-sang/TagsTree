@@ -24,7 +24,6 @@ namespace TagsTree.ViewModels
 		public FileViewModel(FileModel fileModel, TagModel tag) : base(fileModel)
 		{
 			_selected = HasTag(tag);
-			_virtualTags = Tags;
 			_fileSystemInfo = IsFolder ? new DirectoryInfo(FullName) : new FileInfo(FullName);
 		}
 
@@ -64,6 +63,7 @@ namespace TagsTree.ViewModels
 			OnPropertyChanged(nameof(Tags));
 			OnPropertyChanged(nameof(VirtualTags));
 		}
+		public void VirtualTagsInitialize() => VirtualTags = Tags;
 
 		private bool? _selected;
 		private string _virtualTags = "";

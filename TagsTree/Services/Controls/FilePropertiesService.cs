@@ -19,7 +19,7 @@ namespace TagsTree.Services.Controls
 
 		public static void OpenBClick(object? parameter) => ((Vm)parameter!).FileViewModel.FullName.Open();
 		public static void OpenExplorerBClick(object? parameter) => ((Vm)parameter!).FileViewModel.Path.Open();
-		public static void EditTagsBClick(object? parameter) => new FileEditTags(MainService.Win, ((Vm)parameter).FileViewModel).ShowDialog();
+		public static void EditTagsBClick(object? parameter) => new FileEditTags(MainService.Win, ((Vm)parameter!).FileViewModel).ShowDialog();
 		public static void RemoveBClick(object? parameter)
 		{
 			if (!App.MessageBoxX.Warning("是否从软件移除该文件？")) return;

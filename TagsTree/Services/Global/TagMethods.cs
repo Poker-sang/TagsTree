@@ -49,9 +49,9 @@ namespace TagsTree
 			{
 				if (xmlElement is { HasChildNodes: true })
 					foreach (XmlElement? element in xmlElement.ChildNodes)
-						if (element!.GetAttribute("name") is { } name)
+						if (element!.GetAttribute("name") is { } name && Convert.ToInt32(element.GetAttribute("id")) is { } id)
 						{
-							Tags[name] = new TagModel(name, path, element);
+							Tags[id, name] = new TagModel(id, name, path, element);
 							RecursiveLoadTags((path is "" ? "" : path + '\\') + name, element);
 						}
 			}

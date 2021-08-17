@@ -13,10 +13,10 @@ namespace TagsTree.Models
 	public class RelationsDataTable : DataTable
 	{
 		private readonly Dictionary<int, DataRow> _rowsDict = new();
-		public bool this[FileModel fileModel, string tag]
+		public bool this[FileModel fileModel, TagModel tag]
 		{
-			get => (bool)_rowsDict[fileModel.Id][tag];
-			set => _rowsDict[fileModel.Id][tag] = value;
+			get => (bool)_rowsDict[fileModel.Id][tag.Id];
+			set => _rowsDict[fileModel.Id][tag.Id.ToString()] = value;
 		}
 		public DataRow RowAt(FileModel rowKey) => _rowsDict[rowKey.Id];
 
@@ -25,11 +25,11 @@ namespace TagsTree.Models
 		{
 			for (var i = 1; i < Columns.Count; i++)
 				if ((bool)_rowsDict[file.Id][Columns[i]])
-					yield return Columns[i].ColumnName;
+					yield return App.Tags[Convert.ToInt32(Columns[i].ColumnName)].Name;
 		}
-		private struct Part
+		private readonly struct Part
 		{
-			public int Num;
+			public readonly int Num;
 			public readonly FileViewModel File;
 
 			public Part(int num, FileViewModel file)
@@ -107,14 +107,14 @@ namespace TagsTree.Models
 			_rowsDict[(int)newRow[0]] = newRow;
 			Rows.Add(newRow);
 		}
-		public void NewColumn(string name)
+		public void NewColumn(int id)
 		{
 			var column = new DataColumn //不拎出来会因为"False"无法转化为bool类型而抛异常
 			{
 				AllowDBNull = false,
 				AutoIncrement = false,
-				ColumnName = name,
-				Caption = name,
+				ColumnName = id.ToString(),
+				Caption = id.ToString(),
 				DataType = typeof(bool),
 				ReadOnly = false,
 				Unique = false,
@@ -122,29 +122,28 @@ namespace TagsTree.Models
 			};
 			Columns.Add(column);
 		}
-		public void RenameColumn(string originalName, string newName)
+		public void RenameColumn(string originalId, int newId)
 		{
 			foreach (DataColumn column in Columns)
-				if (column.ColumnName == originalName)
+				if (column.ColumnName == originalId)
 				{
-					column.ColumnName = newName;
-					column.Caption = newName;
+					column.ColumnName = newId.ToString();
+					column.Caption = newId.ToString();
 					return;
 				}
 		}
-		public void DeleteColumn(string name)
+		public void DeleteColumn(string id)
 		{
 			foreach (DataColumn column in Columns)
-				if (column.ColumnName == name)
+				if (column.ColumnName == id)
 				{
 					Columns.Remove(column);
 					return;
 				}
 		}
 
-		private RelationsDataTable() { }
-
-		private RelationsDataTable(string name) => TableName = name;
+		public RelationsDataTable() => TableName = "Relations";
+		
 
 		public void RefreshRowsDict()
 		{
@@ -153,19 +152,17 @@ namespace TagsTree.Models
 				_rowsDict[(int)row[0]] = row; //row[0]即为row["FileId"]
 		}
 
-		public static RelationsDataTable Load()
+		public void Load()
 		{
 			try
 			{
-				var temp = new RelationsDataTable("Relations");
-				_ = temp.ReadXml(App.RelationsPath);
-				temp.RefreshRowsDict();
-				return temp;
+				ReadXml(App.RelationsPath);
+				RefreshRowsDict();
 			}
 			catch (Exception)
 			{
-				var temp = new RelationsDataTable("Relations");
-				temp.Columns.Add(new DataColumn
+				Clear();
+				Columns.Add(new DataColumn
 				{
 					AllowDBNull = false,
 					AutoIncrement = false,
@@ -175,7 +172,6 @@ namespace TagsTree.Models
 					ReadOnly = false,
 					Unique = true
 				});
-				return temp;
 			}
 		}
 

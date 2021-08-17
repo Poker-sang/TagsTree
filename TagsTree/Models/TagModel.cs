@@ -9,10 +9,21 @@ namespace TagsTree.Models
 	}
 	public class TagModel : PathTagModel
 	{
+		public static int Num { get; set; }
+
+		public int Id { get; }
 		public string Path { get; }
 		public XmlElement XmlElement { get; }
 		public TagModel(string name, string path, XmlElement xmlElement) : base(name)
 		{
+			Id = Num;
+			Num++;
+			Path = path;
+			XmlElement = xmlElement;
+		}	
+		public TagModel(int id, string name, string path, XmlElement xmlElement) : base(name)
+		{
+			Id = id;
 			Path = path;
 			XmlElement = xmlElement;
 		}
