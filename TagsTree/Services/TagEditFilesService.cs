@@ -26,23 +26,12 @@ namespace TagsTree.Services
 
 		public static void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => Win.TbPath.Path = App.TagMethods.TvSelectedItemChanged((XmlElement?)e.NewValue) ?? Win.TbPath.Path;
 
-		public static void ResultChanged(TagSearchBox sender, ResultChangedEventArgs e)
-		{
-			var temp = e.NewResult.ToObservableCollection();
-			foreach (var fileViewModel in temp)
-				fileViewModel.Selected = fileViewModel.HasTag(Win.TbPath.Path.GetTagModel()!);
-			((TagEditFilesViewModel)Win.DataContext).FileViewModels = temp;
-		}
+		public static void ResultChanged(TagSearchBox sender, ResultChangedEventArgs e) => Vm.FileViewModels = e.NewResult.Select(fileModel => new FileViewModel(fileModel, Win.TbPath.Path.GetTagModel()!)).ToObservableCollection();
 
 		public static void Selected(object sender, SelectionChangedEventArgs e)
 		{
 			if ((FileViewModel)((DataGrid)sender).SelectedItem is null) return;
-			((FileViewModel)((DataGrid)sender).SelectedItem).Selected = ((FileViewModel)((DataGrid)sender).SelectedItem).Selected switch
-			{
-				true => false,
-				false => true,
-				null => false
-			};
+			((FileViewModel)((DataGrid)sender).SelectedItem).SelectedFlip();
 			((DataGrid)sender).SelectedIndex = -1;
 		}
 
@@ -79,34 +68,18 @@ namespace TagsTree.Services
 					return;
 				}
 				foreach (var fileViewModel in Vm.FileViewModels)
-					switch (fileViewModel.Selected)
+					if (fileViewModel.Selected != fileViewModel.SelectedOriginal)
 					{
-						case true:
-						case null:
-							switch (fileViewModel.HasTag(pathTagModel))
-							{
-								case true: //如果原本是true或null，则不改变
-								case null: break;
-								case false: //如果原本是false，则加上本标签
-									App.Relations[fileViewModel, pathTagModel] = true;
-									fileViewModel.TagsUpdated();
-									break;
-							}
-							break;
-						case false:
-							switch (fileViewModel.HasTag(pathTagModel))
-							{
-								case true:  //如果原本是true，则删除本标签
-									App.Relations[fileViewModel, pathTagModel] = false;
-									fileViewModel.TagsUpdated();
-									break;
-								case null: //如果原本是null，则删除fileViewModel拥有的相应子标签
-									App.Relations[fileViewModel, fileViewModel.GetRelativeTag(pathTagModel)!] = false;
-									fileViewModel.TagsUpdated();
-									break;
-								case false: break;//如果原本是false，则不改变
-							}
-							break;
+						switch (fileViewModel.SelectedOriginal)
+						{
+							case true: App.Relations[fileViewModel, pathTagModel] = false; break;
+							case false: App.Relations[fileViewModel, pathTagModel] = true; break;
+							case null: //如果原本是null，则删除fileViewModel拥有的相应子标签
+								foreach (var tag in fileViewModel.GetRelativeTags(pathTagModel))
+									App.Relations[fileViewModel, tag] = false;
+								break;
+						}
+						fileViewModel.TagsUpdated();
 					}
 				App.SaveRelations();
 				App.MessageBoxX.Information("已保存更改");

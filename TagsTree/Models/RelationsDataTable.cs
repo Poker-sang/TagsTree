@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
 using static TagsTree.Properties.Settings;
 
@@ -84,10 +85,10 @@ namespace TagsTree.Models
 			var lastRange = tags.MoveNext() ? GetFileModels(tags) : _rowsDict.Values.ToList();
 			if (App.Tags.ContainsKey(tag.Name))
 			{
-				var dataRows = lastRange.Where(row => (bool)row[tag.Name]).ToList();
+				var dataRows = lastRange.Where(row => (bool)row[tag.Name.GetTagModel()!.Id.ToString()]).ToList();
 				dataRows.AddRange(App.Tags.Values.Where(childTag => App.Tags[tag.Name].HasChildTag(childTag))
 					.SelectMany(_ => lastRange, (childTag, row) => new { childTag, row })
-					.Where(t => (bool)t.row[t.childTag.Name])
+					.Where(t => (bool)t.row[t.childTag.Id.ToString()])
 					.Select(t => t.row));
 				return dataRows;
 			}
@@ -122,20 +123,10 @@ namespace TagsTree.Models
 			};
 			Columns.Add(column);
 		}
-		public void RenameColumn(string originalId, int newId)
+		public void DeleteColumn(int id)
 		{
 			foreach (DataColumn column in Columns)
-				if (column.ColumnName == originalId)
-				{
-					column.ColumnName = newId.ToString();
-					column.Caption = newId.ToString();
-					return;
-				}
-		}
-		public void DeleteColumn(string id)
-		{
-			foreach (DataColumn column in Columns)
-				if (column.ColumnName == id)
+				if (column.ColumnName == id.ToString())
 				{
 					Columns.Remove(column);
 					return;
@@ -172,6 +163,10 @@ namespace TagsTree.Models
 					ReadOnly = false,
 					Unique = true
 				});
+				foreach (var tag in App.Tags.Values) 
+					NewColumn(tag.Id);
+				foreach (var fileModel in App.IdFile.Values) 
+					NewRow(fileModel);
 			}
 		}
 

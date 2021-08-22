@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using TagsTree.Models;
+using TagsTree.Services.ExtensionMethods;
 
 namespace TagsTree
 {
@@ -17,19 +18,7 @@ namespace TagsTree
 			/// </summary>
 			/// <param name="selectedItem">TreeView控件的SelectedItem</param>
 			/// <returns>string类型，显示所选Xml元素的路径，为null则是没有选择项目</returns>
-			public static string? TvSelectedItemChanged(XmlElement? selectedItem)
-			{
-				if (selectedItem is null)
-					return null;
-				var text = selectedItem.GetAttribute("name");
-				var currentElement = (XmlElement?)selectedItem.ParentNode;
-				while (currentElement!.Name == "Tag")
-				{
-					text = currentElement.GetAttribute("name") + @"\" + text;
-					currentElement = (XmlElement?)currentElement.ParentNode;
-				}
-				return text;
-			}
+			public static string? TvSelectedItemChanged(XmlElement? selectedItem) => selectedItem?.GetAttribute("name").GetTagModel()?.FullName;
 
 			/// <summary>
 			/// 清空并重新读取标签

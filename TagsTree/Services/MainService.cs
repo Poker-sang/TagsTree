@@ -1,4 +1,5 @@
-﻿using ModernWpf;
+﻿using System.Linq;
+using ModernWpf;
 using ModernWpf.Controls;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -43,7 +44,7 @@ namespace TagsTree.Services
 
 		public static void DgItemMouseDoubleClick(object sender, MouseButtonEventArgs e) => PropertiesCmClick(sender);
 
-		public static void ResultChanged(TagSearchBox sender, ResultChangedEventArgs e) => Vm.ResultCallBack = e.NewResult.ToObservableCollection();
+		public static void ResultChanged(TagSearchBox sender, ResultChangedEventArgs e) => Vm.ResultCallBack = e.NewResult.Select(fileModel => new FileViewModel(fileModel)).ToObservableCollection();
 
 		public static void FileRemoved(FileProperties sender, FileRemovedEventArgs e)
 		{
