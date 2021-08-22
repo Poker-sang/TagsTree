@@ -123,20 +123,10 @@ namespace TagsTree.Models
 			};
 			Columns.Add(column);
 		}
-		public void RenameColumn(string originalId, int newId)
+		public void DeleteColumn(int id)
 		{
 			foreach (DataColumn column in Columns)
-				if (column.ColumnName == originalId)
-				{
-					column.ColumnName = newId.ToString();
-					column.Caption = newId.ToString();
-					return;
-				}
-		}
-		public void DeleteColumn(string id)
-		{
-			foreach (DataColumn column in Columns)
-				if (column.ColumnName == id)
+				if (column.ColumnName == id.ToString())
 				{
 					Columns.Remove(column);
 					return;
@@ -173,6 +163,10 @@ namespace TagsTree.Models
 					ReadOnly = false,
 					Unique = true
 				});
+				foreach (var tag in App.Tags.Values) 
+					NewColumn(tag.Id);
+				foreach (var fileModel in App.IdFile.Values) 
+					NewRow(fileModel);
 			}
 		}
 

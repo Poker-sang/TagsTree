@@ -115,7 +115,6 @@ namespace TagsTree
 			}
 
 			TagMethods.RecursiveLoadTags();
-			TagModel.Num = Tags.Count is 0 ? 0 : Tags.Values.Last().Id + 1;
 			//文件
 			IdFile.Deserialize(FilesPath);
 			FileModel.Num = IdFile.Count is 0 ? 0 : IdFile.Keys.Last() + 1; //或 IdFile.Values.Last().Id + 1
@@ -125,23 +124,16 @@ namespace TagsTree
 				_ = File.Create(RelationsPath);
 			Relations.Load(); //异常在内部处理
 			//检查
-			static bool DeleteAll()
-			{
-				File.Delete(TagsPath);
-				File.Delete(FilesPath);
-				File.Delete(RelationsPath);
-				return false;
-			}
 			if (Tags.Count != Relations.Columns.Count - 1) //第一列是文件Id 
 			{
-				if (MessageBoxX.Warning($"路径「{Default.ConfigPath}」下，TagsTree.xml和Relations.xml存储的标签数不同", "删除标签与文件的配置文件", "直接关闭软件"))
-					return DeleteAll();
+				if (MessageBoxX.Warning($"路径「{Default.ConfigPath}」下，TagsTree.xml和Relations.xml存储的标签数不同", "删除关系文件Relations.xml并关闭软件", "直接关闭软件"))
+					File.Delete(RelationsPath);
 				return null;
 			}
 			if (IdFile.Count != Relations.Rows.Count)
 			{
-				if (MessageBoxX.Warning($"「路径{Default.ConfigPath}」下，Files.json和Relations.xml存储的文件数不同", "删除标签与文件的配置文件", "直接关闭软件"))
-					return DeleteAll();
+				if (MessageBoxX.Warning($"「路径{Default.ConfigPath}」下，Files.json和Relations.xml存储的文件数不同", "删除关系文件Relations.xml并关闭软件", "直接关闭软件"))
+					File.Delete(RelationsPath);
 				return null;
 			}
 			return true;

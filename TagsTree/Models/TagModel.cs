@@ -4,7 +4,7 @@ namespace TagsTree.Models
 {
 	public class PathTagModel
 	{
-		public string Name { get; }
+		public string Name { get; set; }
 		public PathTagModel(string name) => Name = name;
 	}
 	public class TagModel : PathTagModel
@@ -12,7 +12,7 @@ namespace TagsTree.Models
 		public static int Num { get; set; }
 
 		public int Id { get; }
-		public string Path { get; }
+		public string Path { get; set; }
 		public XmlElement XmlElement { get; }
 		public TagModel(string name, string path, XmlElement xmlElement) : base(name)
 		{
@@ -23,6 +23,7 @@ namespace TagsTree.Models
 		}	
 		public TagModel(int id, string name, string path, XmlElement xmlElement) : base(name)
 		{
+			Num = Num - 1 >= id ? Num : id + 1;
 			Id = id;
 			Path = path;
 			XmlElement = xmlElement;

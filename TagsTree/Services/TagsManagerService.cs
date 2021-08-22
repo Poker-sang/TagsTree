@@ -32,6 +32,7 @@ namespace TagsTree.Services
 		}
 
 		public static void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => Win.TbPath.Path = App.TagMethods.TvSelectedItemChanged((XmlElement?)e.NewValue) ?? Win.TbPath.Path;
+
 		private static XmlElement TvItemGetHeader(object? sender) => (XmlElement)((TreeViewItem)sender!).Header;
 		public static void Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
@@ -75,6 +76,11 @@ namespace TagsTree.Services
 		}
 		public static void RenameBClick(object? parameter)
 		{
+			if (Win.TbPath.Path is "")
+			{
+				App.MessageBoxX.Error("未输入希望重命名的标签");
+				return;
+			}
 			if (Win.TbPath.Path.GetTagModel() is not { } pathTagModel)
 			{
 				App.MessageBoxX.Error("「标签路径」不存在！");
@@ -87,7 +93,7 @@ namespace TagsTree.Services
 		}
 		public static void DeleteBClick(object? parameter)
 		{
-			if (Win.TbPath.Path == string.Empty)
+			if (Win.TbPath.Path is "")
 			{
 				App.MessageBoxX.Error("未输入希望删除的标签");
 				return;
@@ -145,12 +151,13 @@ namespace TagsTree.Services
 		private static void NewTag(string name, XmlElement path)
 		{
 			var element = Vm.Xdp.Document.CreateElement("Tag");
+			var temp = new TagModel(name, path.GetAttribute("name"), element);
 			element.SetAttribute("name", name);
-			element.SetAttribute("id", TagModel.Num.ToString());
-			TagModel.Num++;
+			element.SetAttribute("id", temp.Id.ToString());
 			_ = path.AppendChild(element);
-			TagsChanged();
-			App.Relations.NewColumn(App.Tags[name].Id);
+			App.Tags[temp.Id, name] = temp;
+			App.Relations.NewColumn(temp.Id);
+			Vm.Changed = true;
 		}
 		public static void MoveTag(XmlElement name, XmlElement? path)
 		{
@@ -158,7 +165,8 @@ namespace TagsTree.Services
 			{
 				path ??= (XmlElement?)Vm.Xdp.Document.LastChild;
 				_ = path!.AppendChild(name); //原位置自动被删除
-				TagsChanged();
+				App.Tags[name.GetAttribute("name")].Path = path.GetAttribute("name").GetTagModel()!.FullName;
+				Vm.Changed = true;
 			}
 			catch (ArgumentException)
 			{
@@ -167,25 +175,24 @@ namespace TagsTree.Services
 		}
 		private static void RenameTag(string name, XmlElement path)
 		{
+			var temp = App.Tags[path.GetAttribute("name")];
 			path.SetAttribute("name", name);
-			TagsChanged();
-			App.Relations.RenameColumn(path.GetAttribute("id"), App.Tags[name].Id);
+			App.Tags.ChangeKey2(temp.Name, name);
+			temp.Name = name;
+			Vm.Changed = true;
 		}
 		private static void DeleteTag(XmlElement path)
 		{
 			_ = path.ParentNode!.RemoveChild(path);
-			TagsChanged();
-			App.Relations.DeleteColumn(path.GetAttribute("id"));
-		}
-		private static void TagsChanged()
-		{
+			var temp = Convert.ToInt32(path.GetAttribute("id"));
+			App.Relations.DeleteColumn(temp);
+			App.Tags.Remove(temp);
 			Vm.Changed = true;
-			App.TagMethods.RecursiveLoadTags();
 		}
-
+		
 		private static bool NewTagCheck(string name)
 		{
-			if (name == string.Empty)
+			if (name is "")
 			{
 				App.MessageBoxX.Error("标签名称不能为空！");
 				return false;
