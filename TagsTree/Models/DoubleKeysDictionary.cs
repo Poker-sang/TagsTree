@@ -37,8 +37,8 @@ namespace TagsTree.Models
 		public bool Remove(TKey1 key1)
 		{
 			if (!_dict1.ContainsKey(key1)) return false;
-			_ = _dict1.Remove(key1);
 			_ = _dict2.Remove(_dict1[key1]);
+			_ = _dict1.Remove(key1);
 			return true;
 		}
 		public void Clear()
