@@ -23,7 +23,8 @@ namespace TagsTree.ViewModels
 
 		public FileViewModel(FileModel fileModel, TagModel tag) : base(fileModel)
 		{
-			_selected = HasTag(tag);
+			Selected = HasTag(tag);
+			SelectedOriginal = HasTag(tag);
 			_fileSystemInfo = IsFolder ? new DirectoryInfo(FullName) : new FileInfo(FullName);
 		}
 
@@ -65,18 +66,22 @@ namespace TagsTree.ViewModels
 		}
 		public void VirtualTagsInitialize() => VirtualTags = Tags;
 
-		private bool? _selected;
+		public bool? SelectedOriginal { get; }
 		private string _virtualTags = "";
 
-		public bool? Selected
+		public bool? Selected { get; private set; }
+
+		public void SelectedFlip()
 		{
-			get => _selected;
-			set
-			{
-				if (Equals(_selected, value)) return;
-				_selected = value;
-				OnPropertyChanged(nameof(Selected));
-			}
+			Selected = Selected == SelectedOriginal ?
+				Selected switch
+				{
+					true => false,
+					false => true,
+					null => false
+				}
+				: SelectedOriginal;
+			OnPropertyChanged(nameof(Selected));
 		}
 		public string VirtualTags
 		{

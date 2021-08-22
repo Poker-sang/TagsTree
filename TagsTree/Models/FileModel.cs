@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
@@ -65,7 +67,7 @@ namespace TagsTree.Models
 					return null;
 			return false;
 		}
-		public TagModel? GetRelativeTag(TagModel parentTag) => Tags.GetTagModels().FirstOrDefault(parentTag.HasChildTag);
+		public IEnumerable<TagModel> GetRelativeTags(TagModel parentTag) => Tags.GetTagModels().Where(parentTag.HasChildTag);
 
 		[JsonIgnore] public string Extension => IsFolder ? "文件夹" : Name.Split('.', StringSplitOptions.RemoveEmptyEntries).Last().ToUpper();
 		[JsonIgnore] public string PartialPath => "..." + Path[Default.LibraryPath.Length..]; //Path必然包含文件路径

@@ -59,7 +59,7 @@
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn
                     Width="45"
-                    Binding="{Binding Selected, Mode=TwoWay}"
+                    Binding="{Binding Selected, Mode=OneWay}"
                     CanUserResize="False"
                     CanUserSort="False"
                     IsReadOnly="True"
