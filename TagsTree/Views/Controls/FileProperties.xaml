@@ -6,17 +6,15 @@
     xmlns:local="clr-namespace:TagsTree"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.modernwpf.com/2019"
-    xmlns:viewModelControls="clr-namespace:TagsTree.ViewModels.Controls"
+    x:Name="CdFileProperties"
     Title="属性"
     mc:Ignorable="d">
 
     <Grid
-        x:Name="Grid"
         Width="800"
-        Height="600">
-        <Grid.DataContext>
-            <viewModelControls:FilePropertiesViewModel />
-        </Grid.DataContext>
+        Height="600"
+        DataContext="{Binding ElementName=CdFileProperties}">
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
             <ColumnDefinition Width="9*" />
@@ -71,42 +69,37 @@
             Grid.ColumnSpan="2"
             VerticalAlignment="Bottom">
             <ui:AppBarButton
-                Command="{Binding OpenBClick}"
-                CommandParameter="{Binding}"
+                x:Name="BOpen"
+                Click="OpenBClick"
                 Icon="OpenFile"
                 Label="打开" />
             <ui:AppBarButton
-                Command="{Binding OpenExplorerBClick}"
-                CommandParameter="{Binding}"
+                Click="OpenExplorerBClick"
                 Icon="OpenLocal"
                 Label="打开文件夹" />
             <ui:AppBarButton
-                Command="{Binding EditTagsBClick}"
-                CommandParameter="{Binding}"
+                Click="EditTagsBClick"
                 Icon="Tag"
                 Label="编辑标签" />
-            <ui:AppBarButton
-                Command="{Binding RemoveBClick}"
-                CommandParameter="{Binding}"
-                Label="移除">
+            <ui:AppBarButton Click="RemoveBClick" Label="移除">
                 <ui:AppBarButton.Icon>
                     <ui:FontIcon Glyph="&#xEDE1;" />
                 </ui:AppBarButton.Icon>
             </ui:AppBarButton>
             <ui:AppBarSeparator />
             <ui:AppBarButton
-                Command="{Binding RenameBClick}"
-                CommandParameter="{Binding}"
+                x:Name="BRename"
+                Click="RenameBClick"
                 Icon="Rename"
                 Label="重命名" />
             <ui:AppBarButton
-                Command="{Binding MoveBClick}"
-                CommandParameter="{Binding}"
+                x:Name="BMove"
+                Click="MoveBClick"
                 Icon="MoveToFolder"
                 Label="移动" />
             <ui:AppBarButton
-                Command="{Binding DeleteBClick}"
-                CommandParameter="{Binding}"
+                x:Name="BDelete"
+                Click="DeleteBClick"
                 Icon="Delete"
                 Label="删除" />
         </ui:CommandBar>

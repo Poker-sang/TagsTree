@@ -30,7 +30,7 @@ namespace TagsTree.Models
 		}
 		public TValue this[TKey1 key1] => _dict2[_dict1[key1]];
 		public TValue this[TKey2 key2] => _dict2[key2];
-		
+
 		public bool ContainsKey(TKey1 key) => _dict1.ContainsKey(key);
 		public bool ContainsKey(TKey2 key) => _dict2.ContainsKey(key);
 		public bool ContainsValue(TValue value) => _dict2.ContainsValue(value);

@@ -4,7 +4,10 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows;
+using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using TagsTree.Models;
 using TagsTree.Services.ExtensionMethods;
 
@@ -23,8 +26,7 @@ namespace TagsTree.ViewModels
 
 		public FileViewModel(FileModel fileModel, TagModel tag) : base(fileModel)
 		{
-			Selected = HasTag(tag);
-			SelectedOriginal = HasTag(tag);
+			Selected = SelectedOriginal = HasTag(tag);
 			_fileSystemInfo = IsFolder ? new DirectoryInfo(FullName) : new FileInfo(FullName);
 		}
 
@@ -51,10 +53,22 @@ namespace TagsTree.ViewModels
 		}
 
 		private readonly FileSystemInfo _fileSystemInfo;
-		public ImageSource Icon => App.SystemIcon.GetIcon(IsFolder, FullName);
-		//public ImageSource Icon => App.SystemIcon.ChangeIconToImageSource(System.Drawing.Icon.ExtractAssociatedIcon(FullName)); //文件夹图标无法获取
-		public string DateOfModification => _fileSystemInfo.LastWriteTime.ToString(CultureInfo.CurrentCulture);
-		public string Size => IsFolder ? "" : App.FileX.CountSize((FileInfo)_fileSystemInfo);
+		public ImageSource Icon
+		{
+			get
+			{
+				if (Exists)
+				{
+					if (IsFolder)
+						return App.BitmapX.FolderIcon;
+					if (System.Drawing.Icon.ExtractAssociatedIcon(FullName) is { } icon)
+						return Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+				}
+				return App.BitmapX.NotFoundIcon;
+			}
+		}
+		public string DateOfModification => Exists ? _fileSystemInfo.LastWriteTime.ToString(CultureInfo.CurrentCulture) : "";
+		public string Size => Exists && !IsFolder ? App.FileX.CountSize((FileInfo)_fileSystemInfo) : "";
 		public bool Exists => _fileSystemInfo.Exists;
 
 		public new static bool ValidPath(string path) => FileModel.ValidPath(path);
@@ -66,10 +80,9 @@ namespace TagsTree.ViewModels
 		}
 		public void VirtualTagsInitialize() => VirtualTags = Tags;
 
+		public bool? Selected { get; private set; }
 		public bool? SelectedOriginal { get; }
 		private string _virtualTags = "";
-
-		public bool? Selected { get; private set; }
 
 		public void SelectedFlip()
 		{

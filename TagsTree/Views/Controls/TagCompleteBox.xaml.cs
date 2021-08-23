@@ -15,10 +15,7 @@ namespace TagsTree.Views.Controls
 	/// </summary>
 	public partial class TagCompleteBox : UserControl, INotifyPropertyChanged
 	{
-		public TagCompleteBox()
-		{
-			InitializeComponent();
-		}
+		public TagCompleteBox() => InitializeComponent();
 		private void PathComplement(object sender, RoutedEventArgs e) => Path = Path.GetTagModel()?.FullName ?? Path;
 		private void PathChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
 		{

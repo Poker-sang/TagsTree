@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -118,12 +117,12 @@ namespace TagsTree
 			//文件
 			IdFile.Deserialize(FilesPath);
 			FileModel.Num = IdFile.Count is 0 ? 0 : IdFile.Keys.Last() + 1; //或 IdFile.Values.Last().Id + 1
-			
+
 			//关系
 			if (!File.Exists(RelationsPath))
 				_ = File.Create(RelationsPath);
 			Relations.Load(); //异常在内部处理
-			//检查
+							  //检查
 			if (Tags.Count != Relations.Columns.Count - 1) //第一列是文件Id 
 			{
 				if (MessageBoxX.Warning($"路径「{Default.ConfigPath}」下，TagsTree.xml和Relations.xml存储的标签数不同", "删除关系文件Relations.xml并关闭软件", "直接关闭软件"))

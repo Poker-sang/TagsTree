@@ -89,16 +89,6 @@
                     </ui:AppBarButton.Icon>
                 </ui:AppBarButton>
                 <ui:AppBarSeparator />
-                <ui:AppBarButton Icon="Help">
-                    <ui:AppBarButton.ToolTip>
-                        <TextBlock>
-                            选择引入：引入文件或文件夹<LineBreak />
-                            目录引入：引入目录下一级所有文件或文件夹或全部<LineBreak />
-                            全部引入：引入目录下所有深度所有文件<LineBreak />
-                            可以按Del删除选定行<LineBreak />
-                            只允许导入「文件路径」下的文件或文件夹，不符合和重复的将被剔除</TextBlock>
-                    </ui:AppBarButton.ToolTip>
-                </ui:AppBarButton>
                 <ui:AppBarButton
                     Command="{Binding DeleteBClick}"
                     Icon="Delete"

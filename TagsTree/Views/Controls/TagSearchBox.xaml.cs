@@ -16,10 +16,7 @@ namespace TagsTree.Views.Controls
 	public partial class TagSearchBox : UserControl
 	{
 
-		public TagSearchBox()
-		{
-			InitializeComponent();
-		}
+		public TagSearchBox() => InitializeComponent();
 
 		public TypedEventHandler<AutoSuggestBox, AutoSuggestBoxQuerySubmittedEventArgs> BeforeQuerySubmitted
 		{

@@ -134,7 +134,7 @@ namespace TagsTree.Models
 		}
 
 		public RelationsDataTable() => TableName = "Relations";
-		
+
 
 		public void RefreshRowsDict()
 		{
@@ -163,9 +163,9 @@ namespace TagsTree.Models
 					ReadOnly = false,
 					Unique = true
 				});
-				foreach (var tag in App.Tags.Values) 
+				foreach (var tag in App.Tags.Values)
 					NewColumn(tag.Id);
-				foreach (var fileModel in App.IdFile.Values) 
+				foreach (var fileModel in App.IdFile.Values)
 					NewRow(fileModel);
 			}
 		}

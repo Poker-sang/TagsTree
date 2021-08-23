@@ -7,7 +7,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="clr-namespace:TagsTree.Models"
     xmlns:ui="http://schemas.modernwpf.com/2019"
-    xmlns:viewModelControls="clr-namespace:TagsTree.ViewModels.Controls"
     mc:Ignorable="d">
     <ui:AutoSuggestBox
         VerticalAlignment="Center"

@@ -189,7 +189,7 @@ namespace TagsTree.Services
 			App.Tags.Remove(temp);
 			Vm.Changed = true;
 		}
-		
+
 		private static bool NewTagCheck(string name)
 		{
 			if (name is "")

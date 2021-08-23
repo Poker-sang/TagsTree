@@ -20,7 +20,7 @@ namespace TagsTree.Models
 			Num++;
 			Path = path;
 			XmlElement = xmlElement;
-		}	
+		}
 		public TagModel(int id, string name, string path, XmlElement xmlElement) : base(name)
 		{
 			Num = Num - 1 >= id ? Num : id + 1;

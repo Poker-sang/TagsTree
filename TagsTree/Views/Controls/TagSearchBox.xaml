@@ -6,7 +6,6 @@
     xmlns:local="clr-namespace:TagsTree.Views.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.modernwpf.com/2019"
-    xmlns:viewModelControls="clr-namespace:TagsTree.ViewModels.Controls"
     xmlns:viewModels="clr-namespace:TagsTree.ViewModels"
     mc:Ignorable="d">
     <ui:AutoSuggestBox

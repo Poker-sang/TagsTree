@@ -1,6 +1,6 @@
-﻿using System.Linq;
-using ModernWpf;
+﻿using ModernWpf;
 using ModernWpf.Controls;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -10,7 +10,6 @@ using TagsTree.Delegates;
 using TagsTree.Models;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
-using TagsTree.ViewModels.Controls;
 using TagsTree.Views;
 using TagsTree.Views.Controls;
 using static TagsTree.Properties.Settings;
@@ -78,7 +77,7 @@ namespace TagsTree.Services
 		}
 		public static async void PropertiesCmClick(object? parameter)
 		{
-			((FilePropertiesViewModel)Win.FileProperties.Grid.DataContext).Load((FileViewModel)((DataGridRow)parameter!).DataContext);
+			Win.FileProperties.Load((FileViewModel)((DataGridRow)parameter!).DataContext);
 			_ = _fileProperties.ShowAsync(ContentDialogPlacement.Popup);
 			await Task.Delay(100);
 			_isShowed = true;
