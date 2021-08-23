@@ -1,32 +1,43 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.31410.357
+VisualStudioVersion = 16.0.31613.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TagsTree", "TagsTree\TagsTree.csproj", "{3D415314-6BA6-4C3B-9A7E-82DF61FCA512}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9C17363A-5479-4E92-831C-1A467B928957}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-		README.md = README.md
-		TagsTree 使用说明.md = TagsTree 使用说明.md
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TagsTreeWpf", "TagsTreeWpf\TagsTreeWpf.csproj", "{4FCED905-0A28-414C-976E-2101A62DBE30}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|arm64 = Debug|arm64
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|arm64 = Release|arm64
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3D415314-6BA6-4C3B-9A7E-82DF61FCA512}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3D415314-6BA6-4C3B-9A7E-82DF61FCA512}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3D415314-6BA6-4C3B-9A7E-82DF61FCA512}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3D415314-6BA6-4C3B-9A7E-82DF61FCA512}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FCED905-0A28-414C-976E-2101A62DBE30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FCED905-0A28-414C-976E-2101A62DBE30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FCED905-0A28-414C-976E-2101A62DBE30}.Debug|arm64.ActiveCfg = Debug|Any CPU
+		{4FCED905-0A28-414C-976E-2101A62DBE30}.Debug|arm64.Build.0 = Debug|Any CPU
+		{4FCED905-0A28-414C-976E-2101A62DBE30}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4FCED905-0A28-414C-976E-2101A62DBE30}.Debug|x64.Build.0 = Debug|Any CPU
+		{4FCED905-0A28-414C-976E-2101A62DBE30}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4FCED905-0A28-414C-976E-2101A62DBE30}.Debug|x86.Build.0 = Debug|Any CPU
+		{4FCED905-0A28-414C-976E-2101A62DBE30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FCED905-0A28-414C-976E-2101A62DBE30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FCED905-0A28-414C-976E-2101A62DBE30}.Release|arm64.ActiveCfg = Release|Any CPU
+		{4FCED905-0A28-414C-976E-2101A62DBE30}.Release|arm64.Build.0 = Release|Any CPU
+		{4FCED905-0A28-414C-976E-2101A62DBE30}.Release|x64.ActiveCfg = Release|Any CPU
+		{4FCED905-0A28-414C-976E-2101A62DBE30}.Release|x64.Build.0 = Release|Any CPU
+		{4FCED905-0A28-414C-976E-2101A62DBE30}.Release|x86.ActiveCfg = Release|Any CPU
+		{4FCED905-0A28-414C-976E-2101A62DBE30}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {BA99AB44-A41D-41B9-9187-6FF34A348D70}
+		SolutionGuid = {1E1C6E87-1901-4AD6-A21D-1ECC0A2D55E0}
 	EndGlobalSection
 EndGlobal
