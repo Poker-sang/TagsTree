@@ -1,0 +1,54 @@
+﻿<Window
+    x:Class="TagsTreeWpf.Views.FileEditTags"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:TagsTreeWpf.Views.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:TagsTreeWpf.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:viewModels="clr-namespace:TagsTreeWpf.ViewModels"
+    Title="编辑文件的标签"
+    Width="800"
+    Height="600"
+    d:DataContext="{d:DesignInstance viewModels:FileEditTagsViewModel}"
+    ui:WindowHelper.UseModernWindowStyle="True"
+    WindowStartupLocation="CenterOwner"
+    mc:Ignorable="d">
+    <DockPanel>
+        <ui:AutoSuggestBox
+            DockPanel.Dock="Top"
+            IsEnabled="False"
+            Text="{Binding FileViewModel.VirtualTags, Mode=OneWay}" />
+        <DockPanel DockPanel.Dock="Top">
+            <ui:CommandBar DockPanel.Dock="Right">
+                <ui:AppBarButton
+                    Click="AddBClick"
+                    Icon="Import"
+                    Label="添加" />
+                <ui:AppBarButton
+                    Click="DeleteBClick"
+                    Icon="Delete"
+                    Label="删除" />
+                <ui:AppBarSeparator />
+                <ui:AppBarButton
+                    x:Name="BSave"
+                    Click="SaveBClick"
+                    Icon="Save"
+                    IsEnabled="False"
+                    Label="保存" />
+            </ui:CommandBar>
+            <controls:TagCompleteBox x:Name="TbPath" />
+        </DockPanel>
+        <TreeView
+            x:Name="Tags"
+            VerticalAlignment="Stretch"
+            SelectedItemChanged="TvSelectItemChanged">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding XPath=Tag}">
+                    <TextBlock Text="{Binding XPath=@name}" />
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+    </DockPanel>
+</Window>
