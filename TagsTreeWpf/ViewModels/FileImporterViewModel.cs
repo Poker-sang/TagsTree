@@ -14,11 +14,11 @@ namespace TagsTreeWpf.ViewModels
 		[NotifyPropertyChangedInvocator]
 		private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-		public FileImporterViewModel(FileImporter win)
+		public FileImporterViewModel(FileImporterPage page)
 		{
-			Import = new RelayCommand(_ => !Importing, win.Import);
-			DeleteBClick = new RelayCommand(_ => !Importing && FileViewModels.Count != 0, win.DeleteBClick);
-			SaveBClick = new RelayCommand(_ => !Importing && FileViewModels.Count != 0, win.SaveBClick);
+			Import = new RelayCommand(_ => !Importing, page.Import);
+			DeleteBClick = new RelayCommand(_ => !Importing && FileViewModels.Count != 0, page.DeleteBClick);
+			SaveBClick = new RelayCommand(_ => !Importing && FileViewModels.Count != 0, page.SaveBClick);
 
 			FileViewModels.CollectionChanged += (_, _) =>
 			{

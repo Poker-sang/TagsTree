@@ -4,24 +4,22 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using TagsTreeWpf.Services;
 using TagsTreeWpf.ViewModels;
-using static System.Windows.Application;
 using static TagsTreeWpf.Properties.Settings;
 
 namespace TagsTreeWpf.Views
 {
 	/// <summary>
-	/// FileImporter.xaml 的交互逻辑
+	/// FileImporterPage.xaml 的交互逻辑
 	/// </summary>
-	public partial class FileImporter : Window
+	public partial class FileImporterPage : Page
 	{
-		public FileImporter(Window owner)
+		public FileImporterPage()
 		{
-			Owner = owner;
 			DataContext = _vm = new FileImporterViewModel(this);
 			InitializeComponent();
-			MouseLeftButtonDown += (_, _) => DragMove();
 		}
 
 		private readonly FileImporterViewModel _vm;
@@ -38,7 +36,10 @@ namespace TagsTreeWpf.Views
 			};
 			switch ((string)parameter!)
 			{
-				case "Select_Files": dialog.Title = "选择你需要引入的文件"; dialog.IsFolderPicker = false; break;
+				case "Select_Files":
+					dialog.Title = "选择你需要引入的文件";
+					dialog.IsFolderPicker = false;
+					break;
 				case "Select_Folders": dialog.Title = "选择你需要引入的文件夹"; break;
 				case "Path_Files": dialog.Title = "选择你需要引入的文件所在的文件夹"; break;
 				case "Path_Folders": dialog.Title = "选择你需要引入的文件夹所在的文件夹"; break;
@@ -46,7 +47,7 @@ namespace TagsTreeWpf.Views
 				case "All": dialog.Title = "选择你需要引入的文件所在的根文件夹"; break;
 			}
 
-			if (dialog.ShowDialog(this) == CommonFileDialogResult.Ok)
+			if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
 				await Task.Run(() =>
 				{
 					var dictionary = new Dictionary<string, bool>();
@@ -55,30 +56,36 @@ namespace TagsTreeWpf.Views
 					switch ((string)parameter!)
 					{
 						case "Select_Files":
-							if (FileViewModel.ValidPath(dialog.FileNames.First()[..dialog.FileNames.First().LastIndexOf('\\')]))
+							if (FileViewModel.ValidPath(
+								dialog.FileNames.First()[..dialog.FileNames.First().LastIndexOf('\\')]))
 								foreach (var fileName in dialog.FileNames)
 									if (!dictionary.ContainsKey(false + fileName))
-										Current.Dispatcher.Invoke(() => _vm.FileViewModels.Add(new FileViewModel(fileName, false)));
+										Application.Current.Dispatcher.Invoke(() =>
+											_vm.FileViewModels.Add(new FileViewModel(fileName, false)));
 							break;
 						case "Select_Folders":
-							if (FileViewModel.ValidPath(dialog.FileNames.First()[..dialog.FileNames.First().LastIndexOf('\\')]))
+							if (FileViewModel.ValidPath(
+								dialog.FileNames.First()[..dialog.FileNames.First().LastIndexOf('\\')]))
 								foreach (var directoryName in dialog.FileNames)
 									if (!dictionary.ContainsKey(true + directoryName))
-										Current.Dispatcher.Invoke(() => _vm.FileViewModels.Add(new FileViewModel(directoryName, true)));
+										Application.Current.Dispatcher.Invoke(() =>
+											_vm.FileViewModels.Add(new FileViewModel(directoryName, true)));
 							break;
 						case "Path_Files":
 							if (FileViewModel.ValidPath(dialog.FileNames.First()))
 								foreach (var directoryName in dialog.FileNames)
 									foreach (var fileInfo in new DirectoryInfo(directoryName).GetFiles())
 										if (!dictionary.ContainsKey(false + fileInfo.FullName))
-											Current.Dispatcher.Invoke(() => _vm.FileViewModels.Add(new FileViewModel(fileInfo.FullName, false)));
+											Application.Current.Dispatcher.Invoke(() =>
+												_vm.FileViewModels.Add(new FileViewModel(fileInfo.FullName, false)));
 							break;
 						case "Path_Folders":
 							if (FileViewModel.ValidPath(dialog.FileNames.First()))
 								foreach (var directoryName in dialog.FileNames)
 									foreach (var directoryInfo in new DirectoryInfo(directoryName).GetDirectories())
 										if (!dictionary.ContainsKey(true + directoryInfo.FullName))
-											Current.Dispatcher.Invoke(() => _vm.FileViewModels.Add(new FileViewModel(directoryInfo.FullName, true)));
+											Application.Current.Dispatcher.Invoke(() =>
+												_vm.FileViewModels.Add(new FileViewModel(directoryInfo.FullName, true)));
 							break;
 						case "Path_Both":
 							if (FileViewModel.ValidPath(dialog.FileNames.First()))
@@ -86,21 +93,28 @@ namespace TagsTreeWpf.Views
 								{
 									foreach (var fileInfo in new DirectoryInfo(directoryName).GetFiles())
 										if (!dictionary.ContainsKey(false + fileInfo.FullName))
-											Current.Dispatcher.Invoke(() => _vm.FileViewModels.Add(new FileViewModel(fileInfo.FullName, false)));
+											Application.Current.Dispatcher.Invoke(() =>
+												_vm.FileViewModels.Add(new FileViewModel(fileInfo.FullName, false)));
 									foreach (var directoryInfo in new DirectoryInfo(directoryName).GetDirectories())
 										if (!dictionary.ContainsKey(true + directoryInfo.FullName))
-											Current.Dispatcher.Invoke(() => _vm.FileViewModels.Add(new FileViewModel(directoryInfo.FullName, true)));
+											Application.Current.Dispatcher.Invoke(() =>
+												_vm.FileViewModels.Add(new FileViewModel(directoryInfo.FullName,
+													true)));
 								}
+
 							break;
 						case "All":
+
 							void RecursiveReadFiles(string folderName)
 							{
 								foreach (var fileInfo in new DirectoryInfo(folderName).GetFiles())
 									if (!dictionary!.ContainsKey(false + fileInfo.FullName))
-										Current.Dispatcher.Invoke(() => _vm.FileViewModels.Add(new FileViewModel(fileInfo.FullName, false)));
+										Application.Current.Dispatcher.Invoke(() =>
+											_vm.FileViewModels.Add(new FileViewModel(fileInfo.FullName, false)));
 								foreach (var directoryInfo in new DirectoryInfo(folderName).GetDirectories())
 									RecursiveReadFiles(directoryInfo.FullName);
 							}
+
 							if (FileViewModel.ValidPath(dialog.FileNames.First()))
 								foreach (var directoryName in dialog.FileNames)
 									RecursiveReadFiles(directoryName);
@@ -111,6 +125,7 @@ namespace TagsTreeWpf.Views
 		}
 
 		public void DeleteBClick(object? parameter) => _vm.FileViewModels.Clear();
+
 		public async void SaveBClick(object? parameter)
 		{
 			var progressBar = new ProcessBarHelper(FileImporterGrid);
@@ -130,6 +145,7 @@ namespace TagsTreeWpf.Views
 						App.IdFile[fileModel.Id] = fileModel.NewFileModel();
 					}
 					else duplicated++;
+
 					progressBar.ProcessValue += unit;
 				}
 			});
@@ -143,3 +159,4 @@ namespace TagsTreeWpf.Views
 		}
 	}
 }
+

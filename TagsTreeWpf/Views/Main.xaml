@@ -14,180 +14,66 @@
     Height="720"
     d:DataContext="{d:DesignInstance viewModels:MainViewModel}"
     ui:WindowHelper.UseModernWindowStyle="True"
-    MouseLeftButtonDown="MainMouseLeftButtonDown"
     ResizeMode="CanMinimize"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
-    <Window.Resources>
-        <Style
-            x:Key="DgRowStyle"
-            BasedOn="{StaticResource DefaultDataGridRowStyle}"
-            TargetType="DataGridRow">
-            <EventSetter Event="MouseDoubleClick" Handler="PropertiesCmDoubleClick" />
-            <Setter Property="ContextMenu">
-                <Setter.Value>
-                    <ContextMenu DataContext="{Binding PlacementTarget, RelativeSource={RelativeSource Mode=Self}}">
-                        <MenuItem Header="打开" Tag="{Binding}">
-                            <MenuItem.Style>
-                                <Style TargetType="MenuItem">
-                                    <EventSetter Event="Click" Handler="OpenCmClick" />
-                                </Style>
-                            </MenuItem.Style>
-                        </MenuItem>
-                        <MenuItem Header="打开文件夹" Tag="{Binding}">
-                            <MenuItem.Style>
-                                <Style TargetType="MenuItem">
-                                    <EventSetter Event="Click" Handler="OpenExplorerCmClick" />
-                                </Style>
-                            </MenuItem.Style>
-                        </MenuItem>
-                        <MenuItem Header="移除" Tag="{Binding}">
-                            <MenuItem.Style>
-                                <Style TargetType="MenuItem">
-                                    <EventSetter Event="Click" Handler="RemoveCmClick" />
-                                </Style>
-                            </MenuItem.Style>
-                        </MenuItem>
-                        <MenuItem Header="属性" Tag="{Binding}">
-                            <MenuItem.Style>
-                                <Style TargetType="MenuItem">
-                                    <EventSetter Event="Click" Handler="PropertiesCmClick" />
-                                </Style>
-                            </MenuItem.Style>
-                        </MenuItem>
-                    </ContextMenu>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Window.Resources>
 
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.191*" />
-            <ColumnDefinition Width="0.618*" />
-            <ColumnDefinition Width="0.191*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="1*" />
-            <RowDefinition Height="3*" />
-        </Grid.RowDefinitions>
-        <Button
-            Grid.Row="0"
-            Grid.Column="2"
-            Width="40"
-            Height="40"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Top">
-            <ui:FontIcon Glyph="&#xE712;" />
-            <ui:FlyoutService.Flyout>
-                <ui:MenuFlyout Placement="BottomEdgeAlignedRight">
-                    <MenuItem Click="TagsManager_Click" Header="标签管理">
-                        <MenuItem.Icon>
-                            <ui:FontIcon Glyph="&#xE8EC;" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem Click="FileAdder_OnClick" Header="文件引入">
-                        <MenuItem.Icon>
-                            <ui:FontIcon Glyph="&#xEC50;" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem Click="TagEditFiles_OnClick" Header="为标签添加文件">
-                        <MenuItem.Icon>
-                            <ui:FontIcon Glyph="&#xECC8;" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem Click="ChangeConfig_Click" Header="更改配置文件">
-                        <MenuItem.Icon>
-                            <ui:FontIcon Glyph="&#xE713;" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                </ui:MenuFlyout>
-            </ui:FlyoutService.Flyout>
-        </Button>
-        <TextBlock
-            x:Name="TbBanner"
-            Grid.Row="1"
-            Grid.Column="1"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Top"
-            FontSize="80"
-            Text="TagsTree" />
 
-        <Grid
-            Grid.Row="0"
-            Grid.RowSpan="2"
-            Grid.Column="1">
-            <controls:TagSearchBox
-                x:Name="TbSearch"
-                Margin="0,300,0,0"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Top"
-                ResultChanged="ResultChanged" />
-        </Grid>
-        <ui:AutoSuggestBox
-            x:Name="TbFuzzySearch"
-            Grid.Row="0"
-            Grid.Column="1"
-            Margin="0,100,0,0"
-            IsHitTestVisible="False"
-            Opacity="0"
-            PlaceholderText="文件名（模糊搜索，不包含\/:*?&quot;&lt;&gt;|,和空白字符，留空显示全部）"
-            QueryIcon="Find"
-            QuerySubmitted="QuerySubmitted"
-            TextChanged="TextChanged" />
-        <DataGrid
-            x:Name="DgResult"
-            Grid.Row="1"
-            Grid.Column="0"
-            Grid.ColumnSpan="3"
-            VerticalAlignment="Stretch"
-            AutoGenerateColumns="False"
-            CanUserAddRows="False"
-            CanUserDeleteRows="False"
-            CanUserReorderColumns="False"
-            CanUserResizeRows="False"
-            IsHitTestVisible="False"
-            ItemsSource="{Binding FileViewModels, Mode=OneWay}"
-            Opacity="0"
-            RowStyle="{StaticResource DgRowStyle}"
-            SelectionMode="Single"
-            SelectionUnit="CellOrRowHeader">
-            <DataGrid.Columns>
-                <DataGridTemplateColumn Width="45" d:DataContext="{d:DesignInstance viewModels:FileViewModel}">
-                    <DataGridTemplateColumn.Header>
-                        <ui:FontIcon Glyph="&#xF12B;" />
-                    </DataGridTemplateColumn.Header>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Image
-                                Width="32"
-                                Height="32"
-                                Source="{Binding Icon, Mode=OneTime}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTextColumn
-                    Width="2*"
-                    Binding="{Binding Name, Mode=OneWay}"
-                    Header="名称"
-                    IsReadOnly="True" />
-                <DataGridTextColumn
-                    Width="*"
-                    Binding="{Binding Tags, Mode=OneWay}"
-                    Header="标签"
-                    IsReadOnly="True" />
-                <DataGridTextColumn
-                    Width="*"
-                    Binding="{Binding PartialPath, Mode=OneWay}"
-                    Header="路径"
-                    IsReadOnly="True" />
-            </DataGrid.Columns>
-        </DataGrid>
-        <controls:FileProperties
-            x:Name="FileProperties"
-            Grid.Row="0"
-            Grid.RowSpan="2"
-            Grid.Column="1"
-            FileRemoved="FileRemoved" />
-    </Grid>
+    <DockPanel>
+        <ListView
+            x:Name="ListView"
+            DockPanel.Dock="Top"
+            SelectionChanged="Selector_OnSelectionChanged"
+            SelectionMode="Single">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListViewItem>
+                <ListViewItem.Content>
+                    <TextBlock FontSize="20">
+                        <ui:FontIcon Glyph="&#xe80f;" />
+                        主页
+                    </TextBlock>
+                </ListViewItem.Content>
+            </ListViewItem>
+            <ListViewItem>
+                <ListViewItem.Content>
+                    <TextBlock FontSize="20">
+                        <ui:FontIcon Glyph="&#xE8EC;" />
+                        标签管理
+                    </TextBlock>
+                </ListViewItem.Content>
+            </ListViewItem>
+            <ListViewItem>
+                <ListViewItem.Content>
+                    <TextBlock FontSize="20">
+                        <ui:FontIcon Glyph="&#xEC50;" />
+                        文件引入
+                    </TextBlock>
+                </ListViewItem.Content>
+            </ListViewItem>
+            <ListViewItem>
+                <ListViewItem.Content>
+                    <TextBlock FontSize="20">
+                        <ui:FontIcon Glyph="&#xECC8;" />
+                        为标签添加文件
+                    </TextBlock>
+                </ListViewItem.Content>
+            </ListViewItem>
+            <ListViewItem>
+                <ListViewItem.Content>
+                    <TextBlock FontSize="20">
+                        <ui:FontIcon Glyph="&#xE713;" />
+                        更改配置文件
+                    </TextBlock>
+                </ListViewItem.Content>
+            </ListViewItem>
+        </ListView>
+        <Frame
+            x:Name="Frame"
+            Navigated="Frame_OnNavigated"
+            NavigationUIVisibility="Hidden" />
+    </DockPanel>
 </Window>

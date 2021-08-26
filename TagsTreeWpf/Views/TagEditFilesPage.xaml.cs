@@ -15,16 +15,14 @@ using TagsTreeWpf.Views.Controls;
 namespace TagsTreeWpf.Views
 {
 	/// <summary>
-	/// TagEditFiles.xaml 的交互逻辑
+	/// TagEditFilesPage.xaml 的交互逻辑
 	/// </summary>
-	public partial class TagEditFiles : Window
+	public partial class TagEditFilesPage : Page
 	{
-		public TagEditFiles(Window owner)
+		public TagEditFilesPage()
 		{
-			Owner = owner;
 			DataContext = _vm = new TagEditFilesViewModel();
 			InitializeComponent();
-			MouseLeftButtonDown += (_, _) => DragMove();
 			_ = Tags.SetBinding(ItemsControl.ItemsSourceProperty, new Binding(".") { Mode = BindingMode.TwoWay, Source = _vm.Xdp });
 		}
 
