@@ -12,9 +12,9 @@ namespace TagsTreeWpf.Views
 	/// </summary>
 	public partial class InputName : Window
 	{
-		public InputName(Window owner, FileX.InvalidMode mode, string text = "")
+		public InputName(FileX.InvalidMode mode, string text = "")
 		{
-			Owner = owner;
+			Owner = App.Win;
 			InitializeComponent();
 			switch (mode)
 			{

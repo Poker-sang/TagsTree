@@ -16,16 +16,14 @@ using TagsTreeWpf.ViewModels;
 
 namespace TagsTreeWpf.Views
 {
-	public partial class TagsManager : Window
+	public partial class TagsManagerPage : System.Windows.Controls.Page
 	{
-		public TagsManager(Window owner)
+		public TagsManagerPage()
 		{
-			Owner = owner;
 			DataContext = _vm = new TagsManagerViewModel();
 			PPasteCmClick = new RelayCommand(_ => _clipBoard is not null, PasteCmClick);
 			PPasteXCmClick = new RelayCommand(_ => _clipBoard is not null, PasteXCmClick);
 			InitializeComponent();
-			MouseLeftButtonDown += (_, _) => DragMove();
 			_ = TvTags.SetBinding(ItemsControl.ItemsSourceProperty, new Binding(".") { Mode = BindingMode.TwoWay, Source = _vm.Xdp });
 
 			TbName.TextChanged += NameChanged;
@@ -33,9 +31,10 @@ namespace TagsTreeWpf.Views
 		}
 
 		private readonly TagsManagerViewModel _vm;
-		public RelayCommand PPasteCmClick { get; }
+		public RelayCommand PPasteCmClick { get; } //public才能被BindingProxy找到
 		public RelayCommand PPasteXCmClick { get; }
-		private static XmlElement TvItemGetHeader(object? sender) => (XmlElement)((TreeViewItem)((MenuItem)sender!).Tag!).Header;
+		private static XmlElement TvItemGetHeader(object? sender) => (XmlElement)((TreeViewItem)sender!).Header;
+		private static XmlElement MItemGetHeader(object? sender) => TvItemGetHeader(((MenuItem)sender!).Tag!);
 
 		private XmlElement? _clipBoard;
 		private XmlElement? ClipBoard
@@ -100,17 +99,7 @@ namespace TagsTreeWpf.Views
 		}
 
 		private void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => TbPath.Path = TagMethods.TvSelectedItemChanged((XmlElement?)e.NewValue) ?? TbPath.Path;
-
-		private void TmClosing(object sender, System.ComponentModel.CancelEventArgs e)
-		{
-			if (!BSave.IsEnabled) return;
-			switch (MessageBoxX.Question("是否保存更改？"))
-			{
-				case true: SaveBClick(sender, (RoutedEventArgs)EventArgs.Empty); break;
-				case null: e.Cancel = true; break;
-			}
-		}
-
+		
 		#endregion
 
 		#region 命令
@@ -182,17 +171,17 @@ namespace TagsTreeWpf.Views
 
 		private void NewCmClick(object sender, RoutedEventArgs e)
 		{
-			var dialog = new InputName(this, FileX.InvalidMode.Name);
+			var dialog = new InputName(FileX.InvalidMode.Name);
 			if (dialog.ShowDialog() != false && NewTagCheck(dialog.Message))
-				NewTag(dialog.Message, TvItemGetHeader(sender));
+				NewTag(dialog.Message, MItemGetHeader(sender));
 		}
 		private void NewXCmClick(object sender, RoutedEventArgs e)
 		{
-			var dialog = new InputName(this, FileX.InvalidMode.Name);
+			var dialog = new InputName(FileX.InvalidMode.Name);
 			if (dialog.ShowDialog() != false && NewTagCheck(dialog.Message))
 				NewTag(dialog.Message, App.XdpRoot!);
 		}
-		private void CutCmClick(object sender, RoutedEventArgs e) => ClipBoard = TvItemGetHeader(sender);
+		private void CutCmClick(object sender, RoutedEventArgs e) => ClipBoard = MItemGetHeader(sender);
 		private void PasteCmClick(object? parameter)
 		{
 			MoveTag(ClipBoard!, (XmlElement)((TreeViewItem)parameter!).Header);
@@ -205,11 +194,11 @@ namespace TagsTreeWpf.Views
 		}
 		private void RenameCmClick(object sender, RoutedEventArgs e)
 		{
-			var dialog = new InputName(this, FileX.InvalidMode.Name);
+			var dialog = new InputName(FileX.InvalidMode.Name);
 			if (dialog.ShowDialog() != false && NewTagCheck(dialog.Message))
-				RenameTag(dialog.Message, TvItemGetHeader(sender)!);
+				RenameTag(dialog.Message, MItemGetHeader(sender));
 		}
-		private void DeleteCmClick(object sender, RoutedEventArgs e) => DeleteTag(TvItemGetHeader(sender));
+		private void DeleteCmClick(object sender, RoutedEventArgs e) => DeleteTag(MItemGetHeader(sender));
 
 		#endregion
 

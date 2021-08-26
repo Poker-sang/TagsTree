@@ -7,6 +7,7 @@ using System.Xml.Linq;
 using TagsTreeWpf.Models;
 using TagsTreeWpf.Services;
 using TagsTreeWpf.ViewModels;
+using TagsTreeWpf.Views;
 using static TagsTreeWpf.Properties.Settings;
 
 namespace TagsTreeWpf
@@ -33,6 +34,11 @@ namespace TagsTreeWpf
 			XdTags.Load(TagsPath);
 			TagMethods.RecursiveLoadTags();
 		}
+
+		/// <summary>
+		/// 主窗口
+		/// </summary>
+		public static Main Win;
 
 		/// <summary>
 		/// XmlDataProvider根元素

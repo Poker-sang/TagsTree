@@ -15,9 +15,9 @@ namespace TagsTreeWpf.Views
 	/// </summary>
 	public partial class FileEditTags : Window
 	{
-		public FileEditTags(Window owner, FileViewModel fileViewModel)
+		public FileEditTags(FileViewModel fileViewModel)
 		{
-			Owner = owner;
+			Owner = App.Win;
 			fileViewModel.VirtualTagsInitialize();
 			DataContext = _vm = new FileEditTagsViewModel(fileViewModel);
 			InitializeComponent();
