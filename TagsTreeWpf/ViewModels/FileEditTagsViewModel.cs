@@ -1,7 +1,9 @@
 ﻿using JetBrains.Annotations;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Windows.Data;
+using TagsTreeWpf.Models;
 
 namespace TagsTreeWpf.ViewModels
 {
@@ -15,11 +17,9 @@ namespace TagsTreeWpf.ViewModels
 		public FileEditTagsViewModel(FileViewModel fileViewModel)
 		{
 			_fileViewModel = fileViewModel;
-			App.XdTagsReload();
-			Xdp = new XmlDataProvider { Document = App.XdTags, XPath = @"TagsTree/Tag" };
 		}
 
-		public XmlDataProvider Xdp { get; }
+		public ObservableCollection<TagModel> TagsSource { get; set; } = App.Tags.TagsTree.SubTags;
 
 		private FileViewModel _fileViewModel;
 

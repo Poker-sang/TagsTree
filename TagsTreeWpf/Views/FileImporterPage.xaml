@@ -89,7 +89,7 @@
                     Label="清空" />
                 <ui:AppBarButton
                     Command="{Binding SaveBClick}"
-                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Grid, AncestorLevel=4}}"
+                    CommandParameter="{Binding ElementName=FileImporterGrid}"
                     Icon="Save"
                     Label="保存" />
             </ui:CommandBar>

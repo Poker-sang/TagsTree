@@ -8,7 +8,7 @@ namespace TagsTreeWpf.Services.ExtensionMethods
 	public static class TagModelHelper
 	{
 		/// <summary>
-		/// 补全标签的路径（为空则不补）
+		/// 补全标签的路径（为空则为根标签）
 		/// </summary>
 		/// <param name="name">需要找的单个标签</param>
 		/// <returns>找到的标签，若返回null即没找到路径</returns>
@@ -16,20 +16,22 @@ namespace TagsTreeWpf.Services.ExtensionMethods
 		{
 			var temp = name.Split('\\', StringSplitOptions.RemoveEmptyEntries);
 			if (temp.Length == 0)
-				return new TagModel(0, "", "", App.XdpRoot!);
-			return App.Tags.ContainsKey(temp.Last()) ? App.Tags[temp.Last()] : null;
+				return App.Tags.TagsDictionaryRoot;
+			return App.Tags.TagsDictionary.ContainsKey(temp.Last()) ? App.Tags.TagsDictionary[temp.Last()] : null;
 		}
+		public static TagModel? GetTagModel(this int id) => App.Tags.TagsDictionary.ContainsKey(id) ? App.Tags.TagsDictionary[id] : null;
+
 		public static IEnumerable<TagModel> GetTagModels(this string name)
 		{
 			var temp = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-			return temp.Where(tag => App.Tags.ContainsKey(tag)).Select(tag => App.Tags[tag]);
+			return temp.Where(tag => App.Tags.TagsDictionary.ContainsKey(tag)).Select(tag => App.Tags.TagsDictionary[tag]);
 		}
 		public static IEnumerable<PathTagModel> GetTagsFiles(this string name)
 		{
 			var temp = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 			foreach (string tag in temp)
-				if (App.Tags.ContainsKey(tag))
-					yield return App.Tags[tag];
+				if (App.Tags.TagsDictionary.ContainsKey(tag))
+					yield return App.Tags.TagsDictionary[tag];
 				else yield return new PathTagModel(tag);
 		}
 	}

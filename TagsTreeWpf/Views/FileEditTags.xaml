@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:TagsTreeWpf.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:TagsTreeWpf.Models"
     xmlns:ui="http://schemas.modernwpf.com/2019"
     xmlns:viewModels="clr-namespace:TagsTreeWpf.ViewModels"
     Title="编辑文件的标签"
@@ -43,10 +44,11 @@
         <TreeView
             x:Name="Tags"
             VerticalAlignment="Stretch"
+            ItemsSource="{Binding TagsSource, Mode=TwoWay}"
             SelectedItemChanged="TvSelectItemChanged">
             <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate ItemsSource="{Binding XPath=Tag}">
-                    <TextBlock Text="{Binding XPath=@name}" />
+                <HierarchicalDataTemplate ItemsSource="{Binding SubTags}">
+                    <TextBlock Text="{Binding Name}" />
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>

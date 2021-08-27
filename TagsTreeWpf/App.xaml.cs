@@ -1,9 +1,7 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Windows;
-using System.Xml;
-using System.Xml.Linq;
 using TagsTreeWpf.Models;
 using TagsTreeWpf.Services;
 using TagsTreeWpf.ViewModels;
@@ -17,38 +15,22 @@ namespace TagsTreeWpf
 	/// </summary>
 	public partial class App : Application
 	{
-		public static string TagsPath => Default.ConfigPath + @"\TagsTree.xml";
+		public static string TagsPath => Default.ConfigPath + @"\TagsTree.json";
 		public static string FilesPath => Default.ConfigPath + @"\Files.json";
 		public static string RelationsPath => Default.ConfigPath + @"\Relations.xml";
 
-		/// <summary>
-		/// 存储标签结构的Xml文档
-		/// </summary>
-		public static XmlDocument XdTags { get; } = new();
 
-		/// <summary>
-		/// 重新加载标签
-		/// </summary>
-		public static void XdTagsReload()
-		{
-			XdTags.Load(TagsPath);
-			TagMethods.RecursiveLoadTags();
-		}
 
 		/// <summary>
 		/// 主窗口
 		/// </summary>
 		public static Main Win;
 
-		/// <summary>
-		/// XmlDataProvider根元素
-		/// </summary>
-		public static XmlElement? XdpRoot => (XmlElement?)XdTags.LastChild;
 
 		/// <summary>
 		/// 保存标签
 		/// </summary>
-		public static void SaveXdTags() => XdTags.Save(TagsPath);
+		public static void SaveTags(ObservableCollection<TagModel> tags) => Serialization.Serialize(TagsPath, tags);
 
 		/// <summary>
 		/// 保存文件
@@ -60,10 +42,11 @@ namespace TagsTreeWpf
 		/// </summary>
 		public static void SaveRelations() => Relations.Save(RelationsPath);
 
+
 		/// <summary>
 		/// 所有标签
 		/// </summary>
-		public static readonly DoubleKeysDictionary<int, string, TagModel> Tags = new();
+		public static readonly TreeDictionary Tags = new();
 
 		/// <summary>
 		/// 所有标签
@@ -102,22 +85,11 @@ namespace TagsTreeWpf
 				return null;
 			}
 			//标签
-			if (!File.Exists(TagsPath))
-				new XDocument(new XElement("TagsTree", new XAttribute("name", ""))).Save(TagsPath);
-			try
-			{
-				XdTags.Load(TagsPath);
-			}
-			catch (Exception)
-			{
-				File.Delete(TagsPath);
-				new XDocument(new XElement("TagsTree", new XAttribute("name", ""))).Save(TagsPath);
-			}
-			TagMethods.RecursiveLoadTags();
+			Tags.LoadTree(TagsPath);
+			Tags.LoadDictionary();
 
 			//文件
 			IdFile.Deserialize(FilesPath);
-			FileModel.Num = IdFile.Count is 0 ? 0 : IdFile.Keys.Last() + 1; //或 IdFile.Values.Last().Id + 1
 
 			//关系
 			if (!File.Exists(RelationsPath))
@@ -125,7 +97,7 @@ namespace TagsTreeWpf
 			Relations.Load(); //异常在内部处理
 
 			//检查
-			if (Tags.Count != Relations.Columns.Count - 1) //第一列是文件Id 
+			if (Tags.TagsDictionary.Count != Relations.Columns.Count) //TagsDictionary第一个是总根标签，Relations第一列是文件Id 
 			{
 				if (MessageBoxX.Warning($"路径「{Default.ConfigPath}」下，TagsTree.xml和Relations.xml存储的标签数不同", "删除关系文件Relations.xml并关闭软件", "直接关闭软件"))
 					File.Delete(RelationsPath);

@@ -21,7 +21,7 @@ namespace TagsTreeWpf.Views.Controls
 		private void PathChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
 		{
 			Path = Regex.Replace(Path, $@"[{FileX.GetInvalidPathChars}]+", "");
-			sender.ItemsSource = TagMethods.TagSuggest(sender.Text, '\\');
+			sender.ItemsSource = sender.Text.TagSuggest('\\');
 			var textBox = (TextBox)typeof(AutoSuggestBox).GetField("m_textBox", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(sender)!;
 			textBox.SelectionStart = textBox.Text.Length;
 		}

@@ -1,9 +1,10 @@
 ﻿using JetBrains.Annotations;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Windows.Data;
+using TagsTreeWpf.Models;
 using TagsTreeWpf.Services.ExtensionMethods;
 
 namespace TagsTreeWpf.ViewModels
@@ -14,13 +15,7 @@ namespace TagsTreeWpf.ViewModels
 		[NotifyPropertyChangedInvocator]
 		private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-		public TagEditFilesViewModel()
-		{
-			App.XdTagsReload();
-			Xdp = new XmlDataProvider { Document = App.XdTags, XPath = @"TagsTree/Tag" };
-		}
-
-		public XmlDataProvider Xdp { get; }
+		public ObservableCollection<TagModel> TagsSource { get; set; } = App.Tags.TagsTree.SubTags;
 
 		private ObservableCollection<FileViewModel> _fileViewModels = Enumerable.Empty<FileViewModel>().ToObservableCollection();
 

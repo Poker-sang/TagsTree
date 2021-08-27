@@ -21,12 +21,11 @@ namespace TagsTreeWpf.Models
 		}
 		public DataRow RowAt(FileModel rowKey) => _rowsDict[rowKey.Id];
 
-
 		public IEnumerable<string> GetTags(FileModel file)
 		{
 			for (var i = 1; i < Columns.Count; i++)
 				if ((bool)_rowsDict[file.Id][Columns[i]])
-					yield return App.Tags[Convert.ToInt32(Columns[i].ColumnName)].Name;
+					yield return App.Tags.TagsDictionary[Convert.ToInt32(Columns[i].ColumnName)].Name;
 		}
 		private readonly struct Part
 		{
@@ -40,16 +39,16 @@ namespace TagsTreeWpf.Models
 			}
 		}
 
-		public static ObservableCollection<FileViewModel> FuzzySearchName(string name, IEnumerable<FileViewModel> range)
-		{
-			var precise = new List<FileViewModel>();
-			var fuzzy = new List<FileViewModel>();
-			var part = new List<Part>();
-			var fuzzyRegex = new Regex(Regex.Replace(name, "(.)", ".+$1", RegexOptions.IgnoreCase));
-			var partRegex = new Regex($"[{name}]", RegexOptions.IgnoreCase);
+		public static ObservableCollection<FileViewModel> FuzzySearchName(string input, IEnumerable<FileViewModel> range)
+		{   //大小写不敏感
+			var precise = new List<FileViewModel>(); //完整包含搜索内容
+			var fuzzy = new List<FileViewModel>(); //有序并全部包含所有字符
+			var part = new List<Part>(); //包含任意一个字符
+			var fuzzyRegex = new Regex(Regex.Replace(input, "(.)", ".+$1", RegexOptions.IgnoreCase));
+			var partRegex = new Regex($"[{input}]", RegexOptions.IgnoreCase);
 			foreach (var fileViewModel in range)
 			{
-				if (fileViewModel.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
+				if (fileViewModel.Name.Contains(input, StringComparison.OrdinalIgnoreCase))
 					precise.Add(fileViewModel);
 				else if (fuzzyRegex.IsMatch(fileViewModel.Name))
 					fuzzy.Add(fileViewModel);
@@ -83,10 +82,10 @@ namespace TagsTreeWpf.Models
 		{
 			var tag = tags.Current;
 			var lastRange = tags.MoveNext() ? GetFileModels(tags) : _rowsDict.Values.ToList();
-			if (App.Tags.ContainsKey(tag.Name))
+			if (App.Tags.TagsDictionary.ContainsKey(tag.Name))
 			{
 				var dataRows = lastRange.Where(row => (bool)row[tag.Name.GetTagModel()!.Id.ToString()]).ToList();
-				dataRows.AddRange(App.Tags.Values.Where(childTag => App.Tags[tag.Name].HasChildTag(childTag))
+				dataRows.AddRange(App.Tags.TagsDictionaryValues.Where(childTag => App.Tags.TagsDictionary[tag.Name].HasChildTag(childTag))
 					.SelectMany(_ => lastRange, (childTag, row) => new { childTag, row })
 					.Where(t => (bool)t.row[t.childTag.Id.ToString()])
 					.Select(t => t.row));
@@ -163,7 +162,7 @@ namespace TagsTreeWpf.Models
 					ReadOnly = false,
 					Unique = true
 				});
-				foreach (var tag in App.Tags.Values)
+				foreach (var tag in App.Tags.TagsDictionaryValues)
 					NewColumn(tag.Id);
 				foreach (var fileModel in App.IdFile.Values)
 					NewRow(fileModel);

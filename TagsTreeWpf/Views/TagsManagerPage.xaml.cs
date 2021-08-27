@@ -1,13 +1,12 @@
 ﻿using ModernWpf.Controls;
-using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Xml;
 using TagsTreeWpf.Commands;
 using TagsTreeWpf.Models;
 using TagsTreeWpf.Services;
@@ -24,7 +23,6 @@ namespace TagsTreeWpf.Views
 			PPasteCmClick = new RelayCommand(_ => _clipBoard is not null, PasteCmClick);
 			PPasteXCmClick = new RelayCommand(_ => _clipBoard is not null, PasteXCmClick);
 			InitializeComponent();
-			_ = TvTags.SetBinding(ItemsControl.ItemsSourceProperty, new Binding(".") { Mode = BindingMode.TwoWay, Source = _vm.Xdp });
 
 			TbName.TextChanged += NameChanged;
 			TvTags.SelectedItemChanged += TvSelectItemChanged;
@@ -33,11 +31,11 @@ namespace TagsTreeWpf.Views
 		private readonly TagsManagerViewModel _vm;
 		public RelayCommand PPasteCmClick { get; } //public才能被BindingProxy找到
 		public RelayCommand PPasteXCmClick { get; }
-		private static XmlElement TvItemGetHeader(object? sender) => (XmlElement)((TreeViewItem)sender!).Header;
-		private static XmlElement MItemGetHeader(object? sender) => TvItemGetHeader(((MenuItem)sender!).Tag!);
+		private static TagModel TvItemGetHeader(object? sender) => (TagModel)((TreeViewItem)sender!).Header;
+		private static TagModel MItemGetHeader(object? sender) => TvItemGetHeader(((MenuItem)sender!).Tag!);
 
-		private XmlElement? _clipBoard;
-		private XmlElement? ClipBoard
+		private TagModel? _clipBoard;
+		private TagModel? ClipBoard
 		{
 			get => _clipBoard;
 			set
@@ -48,6 +46,7 @@ namespace TagsTreeWpf.Views
 				PPasteXCmClick.OnCanExecuteChanged();
 			}
 		}
+
 		#region 拖拽
 
 		private void TbTag_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e) => MouseX.LastMousePos = e.GetPosition(TvTags);
@@ -58,7 +57,7 @@ namespace TagsTreeWpf.Views
 		}
 		private void TbTag_DragEnter(object sender, DragEventArgs e)
 		{
-			if (e.Data.GetData(typeof(XmlElement)) is XmlElement origin)
+			if (e.Data.GetData(typeof(TagModel)) is TagModel origin)
 				if (origin != TvItemGetHeader(sender))
 					((TreeViewItem)sender).Foreground = new SolidColorBrush(Colors.LightGray);
 			e.Handled = true;
@@ -70,7 +69,7 @@ namespace TagsTreeWpf.Views
 		private void TbTag_Drop(object sender, DragEventArgs e)
 		{
 			((TreeViewItem)sender).Foreground = new SolidColorBrush(Colors.Black);
-			if (e.Data.GetData(typeof(XmlElement)) is not XmlElement origin)
+			if (e.Data.GetData(typeof(TagModel)) is not TagModel origin)
 				return;
 			e.Effects = DragDropEffects.None;
 			e.Handled = true;
@@ -79,15 +78,14 @@ namespace TagsTreeWpf.Views
 		}
 		private void TvTags_Drop(object sender, DragEventArgs e)
 		{
-			if (e.Data.GetData(typeof(XmlElement)) is not XmlElement origin)
+			if (e.Data.GetData(typeof(TagModel)) is not TagModel origin)
 				return;
 			e.Effects = DragDropEffects.None;
 			e.Handled = true;
-			MoveTag(origin, null);
+			MoveTag(origin, App.Tags.TagsTree);
 		}
 
 		#endregion
-
 
 		#region 事件处理
 
@@ -98,8 +96,8 @@ namespace TagsTreeWpf.Views
 			textBox.SelectionStart = textBox.Text.Length;
 		}
 
-		private void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => TbPath.Path = TagMethods.TvSelectedItemChanged((XmlElement?)e.NewValue) ?? TbPath.Path;
-		
+		private void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => TbPath.Path = TbPath.Path.TvSelectedItemChanged((TagModel?)e.NewValue);
+
 		#endregion
 
 		#region 命令
@@ -112,7 +110,7 @@ namespace TagsTreeWpf.Views
 				return;
 			}
 			if (!NewTagCheck(_vm.Name)) return;
-			NewTag(_vm.Name, pathTagModel.XmlElement);
+			NewTag(_vm.Name, pathTagModel);
 			_vm.Name = "";
 		}
 		private void MoveBClick(object parameter, RoutedEventArgs e)
@@ -127,7 +125,7 @@ namespace TagsTreeWpf.Views
 				MessageBoxX.Error("「标签名称」不存在！");
 				return;
 			}
-			MoveTag(nameTagModel.XmlElement, pathTagModel.XmlElement);
+			MoveTag(nameTagModel, pathTagModel);
 			_vm.Name = "";
 		}
 		private void RenameBClick(object parameter, RoutedEventArgs e)
@@ -143,7 +141,7 @@ namespace TagsTreeWpf.Views
 				return;
 			}
 			if (!NewTagCheck(_vm.Name)) return;
-			RenameTag(_vm.Name, pathTagModel.XmlElement);
+			RenameTag(_vm.Name, pathTagModel);
 			_vm.Name = "";
 			TbPath.Path = "";
 		}
@@ -159,12 +157,12 @@ namespace TagsTreeWpf.Views
 				MessageBoxX.Error("「标签路径」不存在！");
 				return;
 			}
-			DeleteTag(pathTagModel.XmlElement);
+			DeleteTag(pathTagModel);
 			_vm.Name = "";
 		}
 		private void SaveBClick(object parameter, RoutedEventArgs e)
 		{
-			App.SaveXdTags();
+			App.SaveTags(_vm.TagsSource);
 			App.SaveRelations();
 			BSave.IsEnabled = false;
 		}
@@ -179,17 +177,17 @@ namespace TagsTreeWpf.Views
 		{
 			var dialog = new InputName(FileX.InvalidMode.Name);
 			if (dialog.ShowDialog() != false && NewTagCheck(dialog.Message))
-				NewTag(dialog.Message, App.XdpRoot!);
+				NewTag(dialog.Message, App.Tags.TagsTree);
 		}
 		private void CutCmClick(object sender, RoutedEventArgs e) => ClipBoard = MItemGetHeader(sender);
 		private void PasteCmClick(object? parameter)
 		{
-			MoveTag(ClipBoard!, (XmlElement)((TreeViewItem)parameter!).Header);
+			MoveTag(ClipBoard!, TvItemGetHeader(parameter));
 			ClipBoard = null;
 		}
 		private void PasteXCmClick(object? parameter)
 		{
-			MoveTag(ClipBoard!, App.XdpRoot!);
+			MoveTag(ClipBoard!, App.Tags.TagsTree);
 			ClipBoard = null;
 		}
 		private void RenameCmClick(object sender, RoutedEventArgs e)
@@ -204,45 +202,33 @@ namespace TagsTreeWpf.Views
 
 		#region 操作
 
-		private void NewTag(string name, XmlElement path)
+		private void NewTag(string name, TagModel path)
 		{
-			var element = _vm.Xdp.Document.CreateElement("Tag");
-			var temp = new TagModel(name, path.GetAttribute("name"), element);
-			element.SetAttribute("name", name);
-			element.SetAttribute("id", temp.Id.ToString());
-			_ = path.AppendChild(element);
-			App.Tags[temp.Id, name] = temp;
-			App.Relations.NewColumn(temp.Id);
+			var tempId = App.Tags.AddTag(path,name);
+			App.Relations.NewColumn(tempId);
 			BSave.IsEnabled = true;
 		}
-		private void MoveTag(XmlElement name, XmlElement? path)
+
+		private void MoveTag(TagModel name, TagModel path)
 		{
-			try
-			{
-				path ??= (XmlElement?)_vm.Xdp.Document.LastChild;
-				_ = path!.AppendChild(name); //原位置自动被删除
-				App.Tags[name.GetAttribute("name")].Path = path.GetAttribute("name").GetTagModel()!.FullName;
-				BSave.IsEnabled = true;
-			}
-			catch (ArgumentException)
+			if (name == path || name.Id.GetTagModel()!.HasChildTag(path.Id.GetTagModel()!))
 			{
 				MessageBoxX.Error("禁止将标签移动到自己目录下");
+				return;
 			}
-		}
-		private void RenameTag(string name, XmlElement path)
-		{
-			var temp = App.Tags[path.GetAttribute("name")];
-			path.SetAttribute("name", name);
-			App.Tags.ChangeKey2(temp.Name, name);
-			temp.Name = name;
+			App.Tags.MoveTag(name, path);
 			BSave.IsEnabled = true;
 		}
-		private void DeleteTag(XmlElement path)
+
+		private void RenameTag(string name, TagModel path)
 		{
-			_ = path.ParentNode!.RemoveChild(path);
-			var temp = Convert.ToInt32(path.GetAttribute("id"));
-			App.Relations.DeleteColumn(temp);
-			App.Tags.Remove(temp);
+			App.Tags.RenameTag(path, name);
+			BSave.IsEnabled = true;
+		}
+		private void DeleteTag(TagModel path)
+		{
+			App.Tags.DeleteTag(path);
+			App.Relations.DeleteColumn(path.Id);
 			BSave.IsEnabled = true;
 		}
 
