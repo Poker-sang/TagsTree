@@ -95,6 +95,7 @@
                     x:Name="BSave"
                     Click="SaveBClick"
                     Icon="Save"
+                    IsEnabled="False"
                     Label="保存" />
             </ui:CommandBar>
             <ui:AutoSuggestBox
@@ -114,10 +115,11 @@
             MinHeight="400"
             AllowDrop="True"
             Drop="TvTags_Drop"
-            ItemContainerStyle="{StaticResource TvItemStyle}">
+            ItemContainerStyle="{StaticResource TvItemStyle}"
+            ItemsSource="{Binding TagsSource, Mode=TwoWay}">
             <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate ItemsSource="{Binding XPath=Tag}">
-                    <TextBlock Text="{Binding XPath=@name}" />
+                <HierarchicalDataTemplate ItemsSource="{Binding SubTags, Mode=TwoWay}">
+                    <TextBlock Text="{Binding Name, Mode=TwoWay}" />
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
             <TreeView.ContextMenu>

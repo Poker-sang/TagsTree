@@ -27,10 +27,11 @@
             x:Name="Tags"
             VerticalAlignment="Stretch"
             DockPanel.Dock="Top"
+            ItemsSource="{Binding TagsSource, Mode=TwoWay}"
             SelectedItemChanged="TvSelectItemChanged">
             <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate ItemsSource="{Binding XPath=Tag}">
-                    <TextBlock Text="{Binding XPath=@name}" />
+                <HierarchicalDataTemplate ItemsSource="{Binding SubTags}">
+                    <TextBlock Text="{Binding Name}" />
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>

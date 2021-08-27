@@ -11,7 +11,7 @@ namespace TagsTreeWpf.Models
 {
 	public class FileModel
 	{
-		public static int Num { get; set; }
+		private static int Num { get; set; }
 
 		public int Id { get; }
 		public string Name { get; private set; }
@@ -33,9 +33,13 @@ namespace TagsTreeWpf.Models
 			Name = fullName[(fullName.LastIndexOf('\\') + 1)..];
 			Path = fullName[..fullName.LastIndexOf('\\')];
 		}
+		/// <summary>
+		/// 反序列化专用，不要调用该构造器
+		/// </summary>
 		[JsonConstructor]
 		public FileModel(int id, string name, string path, bool isFolder)
 		{
+			Num = Math.Max(Num, id + 1);
 			Id = id;
 			Name = name;
 			Path = path;
@@ -43,6 +47,7 @@ namespace TagsTreeWpf.Models
 		}
 		public FileModel(FileViewModel fileViewModel)
 		{
+			Num = Math.Max(Num, fileViewModel.Id + 1);
 			Id = fileViewModel.Id;
 			Name = fileViewModel.Name;
 			Path = fileViewModel.Path;

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Xml;
+using TagsTreeWpf.Models;
 using TagsTreeWpf.Services;
 using TagsTreeWpf.Services.ExtensionMethods;
 using TagsTreeWpf.ViewModels;
@@ -22,11 +20,10 @@ namespace TagsTreeWpf.Views
 			DataContext = _vm = new FileEditTagsViewModel(fileViewModel);
 			InitializeComponent();
 			MouseLeftButtonDown += (_, _) => DragMove();
-			_ = Tags.SetBinding(ItemsControl.ItemsSourceProperty, new Binding(".") { Mode = BindingMode.TwoWay, Source = ((FileEditTagsViewModel)DataContext).Xdp });
 		}
 
 		private readonly FileEditTagsViewModel _vm;
-		private void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => TbPath.Path = TagMethods.TvSelectedItemChanged((XmlElement?)e.NewValue) ?? TbPath.Path;
+		private void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => TbPath.Path = TbPath.Path.TvSelectedItemChanged((TagModel?)e.NewValue);
 
 		private void AddBClick(object parameter, RoutedEventArgs e)
 		{
@@ -72,7 +69,7 @@ namespace TagsTreeWpf.Views
 			for (var index = 1; index < App.Relations.Columns.Count; index++)
 			{
 				var column = App.Relations.Columns[index];
-				App.Relations.RowAt(_vm.FileViewModel.GetFileModel)[column] = $" {_vm.FileViewModel.VirtualTags} ".Contains($" {App.Tags[Convert.ToInt32(column.ColumnName)].Name} ");
+				App.Relations.RowAt(_vm.FileViewModel.GetFileModel)[column] = $" {_vm.FileViewModel.VirtualTags} ".Contains($" {App.Tags.TagsDictionary[Convert.ToInt32(column.ColumnName)].Name} ");
 			}
 			_vm.FileViewModel.TagsUpdated();
 			App.SaveRelations();

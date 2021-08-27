@@ -3,10 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Media.Animation;
-using System.Xml;
 using TagsTreeWpf.Delegates;
+using TagsTreeWpf.Models;
 using TagsTreeWpf.Services;
 using TagsTreeWpf.Services.ExtensionMethods;
 using TagsTreeWpf.ViewModels;
@@ -23,7 +22,6 @@ namespace TagsTreeWpf.Views
 		{
 			DataContext = _vm = new TagEditFilesViewModel();
 			InitializeComponent();
-			_ = Tags.SetBinding(ItemsControl.ItemsSourceProperty, new Binding(".") { Mode = BindingMode.TwoWay, Source = _vm.Xdp });
 		}
 
 		private readonly TagEditFilesViewModel _vm;
@@ -57,7 +55,7 @@ namespace TagsTreeWpf.Views
 
 		#region 事件处理
 
-		private void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => TbPath.Path = TagMethods.TvSelectedItemChanged((XmlElement?)e.NewValue) ?? TbPath.Path;
+		private void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => TbPath.Path = TbPath.Path.TvSelectedItemChanged((TagModel?)e.NewValue);
 
 		private void ResultChanged(TagSearchBox sender, ResultChangedEventArgs e) => _vm.FileViewModels = e.NewResult.Select(fileModel => new FileViewModel(fileModel, TbPath.Path.GetTagModel()!)).ToObservableCollection();
 
@@ -83,7 +81,7 @@ namespace TagsTreeWpf.Views
 					MessageBoxX.Error("「标签路径」不存在！");
 					return;
 				}
-				if (pathTagModel.XmlElement == App.XdpRoot)
+				if (pathTagModel == App.Tags.TagsDictionaryRoot)
 				{
 					MessageBoxX.Error("「标签路径」不能为空！");
 					return;

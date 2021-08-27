@@ -1,5 +1,4 @@
 ﻿using ModernWpf;
-using ModernWpf.Controls;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -67,7 +66,7 @@ namespace TagsTreeWpf.Views
 				ListView.SelectedIndex = 0;
 			else if (((Frame)sender).Content.GetType() == typeof(TagsManagerPage))
 				ListView.SelectedIndex = 1;
-			else if (((Frame)sender).Content.GetType() ==  typeof(FileImporterPage))
+			else if (((Frame)sender).Content.GetType() == typeof(FileImporterPage))
 				ListView.SelectedIndex = 2;
 			else if (((Frame)sender).Content.GetType() == typeof(TagEditFilesPage))
 				ListView.SelectedIndex = 3;

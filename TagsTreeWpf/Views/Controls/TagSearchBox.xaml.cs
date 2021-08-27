@@ -47,7 +47,7 @@ namespace TagsTreeWpf.Views.Controls
 			}
 			sender.Text = Regex.Replace(sender.Text, $@"[{FileX.GetInvalidPathChars}]+", "");
 			sender.Text = Regex.Replace(sender.Text, @"  +", " ").TrimStart();
-			sender.ItemsSource = TagMethods.TagSuggest(sender.Text, ' ');
+			sender.ItemsSource = sender.Text.TagSuggest(' ');
 			var textBox = (TextBox)typeof(AutoSuggestBox).GetField("m_textBox", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(sender)!;
 			textBox.SelectionStart = textBox.Text.Length;
 		}
