@@ -1,0 +1,51 @@
+﻿<Window
+    x:Class="TagsTreeWinUI3.Views.FileEditTags"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:TagsTreeWinUI3.Views.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:TagsTreeWinUI3.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:TagsTreeWinUI3.Models"
+    xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
+    mc:Ignorable="d">
+    <uiControls:DockPanel>
+        <AutoSuggestBox
+            uiControls:DockPanel.Dock="Top"
+            IsEnabled="False"
+            Text="{x:Bind _vm.FileViewModel.VirtualTags, Mode=OneWay}" />
+        <uiControls:DockPanel uiControls:DockPanel.Dock="Top">
+            <CommandBar uiControls:DockPanel.Dock="Right">
+                <AppBarButton
+                    Click="AddBClick"
+                    Icon="Import"
+                    Label="添加" />
+                <AppBarButton
+                    Click="DeleteBClick"
+                    Icon="Delete"
+                    Label="删除" />
+                <AppBarSeparator />
+                <AppBarButton
+                    x:Name="BSave"
+                    Click="SaveBClick"
+                    Icon="Save"
+                    IsEnabled="False"
+                    Label="保存" />
+            </CommandBar>
+            <controls:TagCompleteBox x:Name="TbPath" />
+        </uiControls:DockPanel>
+        <TreeView
+            x:Name="Tags"
+            VerticalAlignment="Stretch"
+            ItemsSource="{x:Bind _vm.TagsSource, Mode=TwoWay}">
+            <!--  SelectedItemChanged="TvSelectItemChanged"  -->
+            <TreeView.ItemTemplate>
+                <DataTemplate x:DataType="models:TagModel">
+                    <TreeViewItem ItemsSource="{x:Bind SubTags}">
+                        <TextBlock Text="{x:Bind Name}" />
+                    </TreeViewItem>
+                </DataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+    </uiControls:DockPanel>
+</Window>
