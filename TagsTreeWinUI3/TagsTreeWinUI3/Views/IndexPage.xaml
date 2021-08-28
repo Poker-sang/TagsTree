@@ -1,0 +1,163 @@
+﻿<Page
+    x:Class="TagsTreeWinUI3.Views.IndexPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:TagsTreeWinUI3.Views.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:TagsTreeWinUI3.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:viewModels="using:TagsTreeWinUI3.ViewModels"
+    d:DesignHeight="1280"
+    d:DesignWidth="720"
+    mc:Ignorable="d">
+
+    <Grid PointerPressed="GridMouseLeftButtonDown">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.191*" />
+            <ColumnDefinition Width="0.618*" />
+            <ColumnDefinition Width="0.191*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="3*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            x:Name="TbBanner"
+            Grid.Row="1"
+            Grid.Column="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            FontSize="80"
+            Text="TagsTree" />
+
+        <Grid
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="1">
+            <controls:TagSearchBox
+                x:Name="TbSearch"
+                Margin="0,300,0,0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Top"
+                ResultChanged="ResultChanged" />
+        </Grid>
+        <AutoSuggestBox
+            x:Name="TbFuzzySearch"
+            Grid.Row="0"
+            Grid.Column="1"
+            Margin="0,100,0,0"
+            IsHitTestVisible="False"
+            Opacity="0"
+            PlaceholderText="文件名（模糊搜索，不包含\/:*?&quot;&lt;&gt;|,和空白字符，留空显示全部）"
+            QueryIcon="Find"
+            QuerySubmitted="QuerySubmitted"
+            TextChanged="TextChanged" />
+        <uiControls:DataGrid
+            x:Name="DgResult"
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="3"
+            VerticalAlignment="Stretch"
+            AutoGenerateColumns="False"
+            CanUserReorderColumns="False"
+            IsHitTestVisible="False"
+            ItemsSource="{x:Bind _vm.FileViewModels, Mode=OneWay}"
+            Opacity="0"
+            SelectionMode="Single">
+            <uiControls:DataGrid.RowStyle>
+                <Style TargetType="uiControls:DataGridRow">
+                    <Setter Property="ContextFlyout">
+                        <Setter.Value>
+                            <MenuFlyout>
+                                <MenuFlyoutItem
+                                    Click="OpenCmClick"
+                                    Tag="{Binding}"
+                                    Text="打开" />
+                                <MenuFlyoutItem
+                                    Click="OpenExplorerCmClick"
+                                    Tag="{Binding}"
+                                    Text="打开文件夹" />
+                                <MenuFlyoutItem
+                                    Click="RemoveCmClick"
+                                    Tag="{Binding}"
+                                    Text="移除" />
+                                <MenuFlyoutItem
+                                    Click="PropertiesCmClick"
+                                    Tag="{Binding}"
+                                    Text="属性" />
+                            </MenuFlyout>
+                        </Setter.Value>
+                    </Setter>
+
+                </Style>
+            </uiControls:DataGrid.RowStyle>
+            <uiControls:DataGrid.Columns>
+                <uiControls:DataGridTemplateColumn Width="45" IsReadOnly="True">
+                    <uiControls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="viewModels:FileViewModel">
+                            <Image
+                                Width="32"
+                                Height="32"
+                                DoubleTapped="PropertiesCmDoubleClick"
+                                Source="{x:Bind Icon}"
+                                Tag="{x:Bind}" />
+                        </DataTemplate>
+                    </uiControls:DataGridTemplateColumn.CellTemplate>
+                </uiControls:DataGridTemplateColumn>
+                <uiControls:DataGridTemplateColumn
+                    Width="2*"
+                    Header="名称"
+                    IsReadOnly="True">
+                    <uiControls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="viewModels:FileViewModel">
+                            <TextBlock
+                                Margin="10,0"
+                                VerticalAlignment="Center"
+                                DoubleTapped="PropertiesCmDoubleClick"
+                                Tag="{x:Bind}"
+                                Text="{x:Bind Name}" />
+                        </DataTemplate>
+                    </uiControls:DataGridTemplateColumn.CellTemplate>
+                </uiControls:DataGridTemplateColumn>
+                <uiControls:DataGridTemplateColumn
+                    Width="*"
+                    Header="标签"
+                    IsReadOnly="True">
+                    <uiControls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="viewModels:FileViewModel">
+                            <TextBlock
+                                Margin="10,0"
+                                VerticalAlignment="Center"
+                                DoubleTapped="PropertiesCmDoubleClick"
+                                Tag="{x:Bind}"
+                                Text="{x:Bind Tags}" />
+                        </DataTemplate>
+                    </uiControls:DataGridTemplateColumn.CellTemplate>
+                </uiControls:DataGridTemplateColumn>
+                <uiControls:DataGridTemplateColumn
+                    Width="*"
+                    Header="路径"
+                    IsReadOnly="True">
+                    <uiControls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="viewModels:FileViewModel">
+                            <TextBlock
+                                Margin="10,0"
+                                VerticalAlignment="Center"
+                                DoubleTapped="PropertiesCmDoubleClick"
+                                Tag="{x:Bind}"
+                                Text="{x:Bind PartialPath}" />
+                        </DataTemplate>
+                    </uiControls:DataGridTemplateColumn.CellTemplate>
+                </uiControls:DataGridTemplateColumn>
+            </uiControls:DataGrid.Columns>
+        </uiControls:DataGrid>
+        <controls:FileProperties
+            x:Name="FileProperties"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="1"
+            FileRemoved="FileRemoved" />
+    </Grid>
+</Page>

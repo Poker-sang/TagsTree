@@ -1,0 +1,14 @@
+﻿<Application
+    x:Class="TagsTreeWinUI3.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TagsTreeWinUI3"
+    xmlns:ui="using:Microsoft.UI.Xaml.Controls">
+    <Application.Resources>
+        <ui:XamlControlsResources>
+            <ui:XamlControlsResources.MergedDictionaries>
+                <!--  Other app resources here  -->
+            </ui:XamlControlsResources.MergedDictionaries>
+        </ui:XamlControlsResources>
+    </Application.Resources>
+</Application>
