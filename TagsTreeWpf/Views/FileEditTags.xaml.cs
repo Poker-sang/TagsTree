@@ -23,7 +23,7 @@ namespace TagsTreeWpf.Views
 		}
 
 		private readonly FileEditTagsViewModel _vm;
-		private void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => TbPath.Path = TbPath.Path.TvSelectedItemChanged((TagModel?)e.NewValue);
+		private void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => TbPath.Path = ((TagModel?)e.NewValue)?.FullName ?? TbPath.Path;
 
 		private void AddBClick(object parameter, RoutedEventArgs e)
 		{

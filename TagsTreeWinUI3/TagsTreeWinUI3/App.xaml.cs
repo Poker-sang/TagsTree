@@ -3,8 +3,9 @@ using System.Collections.ObjectModel;
 using System.IO;
 using TagsTreeWinUI3.Models;
 using TagsTreeWinUI3.Services;
+using TagsTreeWinUI3.Services.ExtensionMethods;
 using TagsTreeWinUI3.ViewModels;
-using TagsTreeWinUI3.Views;
+using Windows.Storage;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -17,7 +18,8 @@ namespace TagsTreeWinUI3
 	public partial class App : Application
 	{
 		public static MainWindow Window = null!;
-		public static AppConfigurations? AppConfigurations { get; set; }
+		public static AppConfigurations AppConfigurations { get; set; } = null!;
+		public static bool ConfigSet { get; set; }
 
 		/// <summary>
 		/// Initializes the singleton application object.  This is the first line of authored code
@@ -26,7 +28,21 @@ namespace TagsTreeWinUI3
 		public App()
 		{
 			InitializeComponent();
-			AppConfigurations.Initialize();
+			AppConfigurations.Initialize(); 
+			if (AppConfigurations.LoadConfiguration() is { } appConfigurations)
+				if (!Directory.Exists(appConfigurations.ProxyPath))
+					MessageDialogX.Information(true, "配置路径不存在！");
+				else
+				{
+					AppConfigurations = appConfigurations;
+					ConfigSet = true;
+				}
+			else
+			{
+				AppConfigurations = AppConfigurations.GetDefault();
+				ConfigSet = false;
+			}
+			RequestedTheme = AppConfigurations.Theme ? ApplicationTheme.Dark : ApplicationTheme.Light;
 		}
 
 		/// <summary>
@@ -37,22 +53,16 @@ namespace TagsTreeWinUI3
 		protected override void OnLaunched(LaunchActivatedEventArgs args)
 		{
 			Window = new MainWindow { ExtendsContentIntoTitleBar = true };
+			WindowHelper.SetWindowSize(1280, 720);
 			Window.Activate();
-			AppConfigurations = AppConfigurations.LoadConfiguration();
+			
 			LoadConfig();
-			if (AppConfigurations is null) return;
-			RequestedTheme = AppConfigurations.Theme switch
-			{
-				"Dark" => ApplicationTheme.Dark,
-				"Light" => ApplicationTheme.Light,
-				_ => RequestedTheme
-			};
 			Window.ConfigModeUnlock();
 		}
 
-		public static string TagsPath => AppConfigurations!.ProxyPath + @"\TagsTree.json";
-		public static string FilesPath => AppConfigurations!.ProxyPath + @"\Files.json";
-		public static string RelationsPath => AppConfigurations!.ProxyPath + @"\Relations.xml";
+		public static string TagsPath => AppConfigurations.ProxyPath + @"\TagsTree.json";
+		public static string FilesPath => AppConfigurations.ProxyPath + @"\Files.json";
+		public static string RelationsPath => AppConfigurations.ProxyPath + @"\Relations.xml";
 
 		/// <summary>
 		/// 保存标签
@@ -101,14 +111,11 @@ namespace TagsTreeWinUI3
 		///  重新加载新的配置文件
 		///  </summary>
 		///  <returns>true：已填写正确地址，进入软件；false：打开设置页面；null：关闭软件</returns>
-		private static void LoadConfig()
+		private async void LoadConfig()
 		{
-			//总体设置
-			if (AppConfigurations is null || !Directory.Exists(AppConfigurations.ProxyPath))
-			{
-				AppConfigurations = null;
-				return;
-			}
+			//主题色
+			ApplicationData.Current.LocalSettings.Values["themeSetting"] = AppConfigurations.Theme ? 1 : 0;
+
 			//标签
 			Tags.LoadTree(TagsPath);
 			Tags.LoadDictionary();
@@ -122,19 +129,32 @@ namespace TagsTreeWinUI3
 			Relations.Load(); //异常在内部处理
 
 			//检查
-			//if (Tags.TagsDictionary.Count != Relations.Columns.Count) //TagsDictionary第一个是总根标签，Relations第一列是文件Id 
-			//{
-			//	if (await Window.MessageDialogX.Warning($"路径「{AppConfigurations.ProxyPath}」下，TagsTree.xml和Relations.xml存储的标签数不同", "删除关系文件Relations.xml并关闭软件", "直接关闭软件"))
-			//		File.Delete(RelationsPath);
-			//	return null;
-			//}
-			//if (IdFile.Count != Relations.Rows.Count)
-			//{
-			//	if (await Window.MessageDialogX.Warning($"「路径{AppConfigurations.ProxyPath}」下，Files.json和Relations.xml存储的文件数不同", "删除关系文件Relations.xml并关闭软件", "直接关闭软件"))
-			//		File.Delete(RelationsPath);
-			//	return null;
-			//}
-			//return true;
+			if (Tags.TagsDictionary.Count != Relations.Columns.Count) //TagsDictionary第一个是总根标签，Relations第一列是文件Id 
+			{
+				if (await MessageDialogX.Warning($"路径「{AppConfigurations.ProxyPath}」下，TagsTree.xml和Relations.xml存储的标签数不同", "删除关系文件Relations.xml并重新生成", "直接关闭软件"))
+				{
+					File.Delete(RelationsPath);
+					Relations.Load();
+				}
+				else
+				{
+					Window.Close();
+					return;
+				}
+			}
+			if (IdFile.Count != Relations.Rows.Count)
+			{
+				if (await MessageDialogX.Warning($"「路径{AppConfigurations.ProxyPath}」下，Files.json和Relations.xml存储的文件数不同", "删除关系文件Relations.xml并重新生成", "直接关闭软件"))
+				{
+					File.Delete(RelationsPath);
+					Relations.Load();
+				}
+				else
+				{
+					Window.Close();
+					return;
+				}
+			}
 		}
 
 	}

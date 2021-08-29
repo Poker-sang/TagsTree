@@ -40,7 +40,7 @@ namespace TagsTreeWpf.Services
 		{
 			{
 				var yes = yesHint is "" ? "" : $"\n按“是”{yesHint}";
-				var no = yesHint is "" ? "" : $"\n按“是”{noHint}";
+				var no = yesHint is "" ? "" : $"\n按“否”{noHint}";
 				var cancel = cancelHint is "" ? "" : $"\n按“取消”{cancelHint}";
 				return MessageBox.Show(message + yes + no + cancel, "提示", MessageBoxButton.YesNoCancel, MessageBoxImage.Question) switch
 				{

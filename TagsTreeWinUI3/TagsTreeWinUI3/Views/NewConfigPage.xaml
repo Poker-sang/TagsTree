@@ -20,7 +20,7 @@
         </Grid.ColumnDefinitions>
 
         <AutoSuggestBox
-            x:Name="TbConfigPath"
+            x:Name="TbProxyPath"
             Grid.Row="0"
             Grid.Column="0"
             VerticalAlignment="Center"
@@ -54,15 +54,15 @@
             Grid.Row="2"
             Grid.Column="0"
             VerticalAlignment="Center"
-            Content="将所在路径文件夹名作为标签使用" />
+            Content="将所在路径文件夹名作为标签使用"
+            IsThreeState="False" />
         <ToggleSwitch
-            x:Name="TgTheme"
+            x:Name="TsTheme"
             Grid.Row="3"
             Grid.Column="0"
-            Header="主题色"
+            Header="主题色（保存后重启生效）"
             OffContent="浅色"
-            OnContent="暗色"
-            Toggled="TgTheme_OnToggled" />
+            OnContent="深色" />
         <Button
             Grid.Row="3"
             Grid.Column="1"

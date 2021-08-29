@@ -52,12 +52,11 @@
             VerticalAlignment="Center"
             uiControls:DockPanel.Dock="Top" />
         <TreeView
-            x:Name="TvTags"
             MinHeight="400"
             AllowDrop="True"
             CanDragItems="True"
-             ItemInvoked="TvSelectItemChanged"
             DragItemsCompleted="TvTags_OnDragItemsCompleted"
+            ItemInvoked="Tags_OnItemInvoked"
             ItemsSource="{x:Bind _vm.TagsSource, Mode=TwoWay}">
             <TreeView.ItemTemplate>
                 <DataTemplate x:DataType="models:TagModel">

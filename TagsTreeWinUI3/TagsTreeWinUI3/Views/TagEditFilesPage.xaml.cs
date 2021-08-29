@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.Linq;
 using TagsTreeWinUI3.Delegates;
+using TagsTreeWinUI3.Models;
 using TagsTreeWinUI3.Services;
 using TagsTreeWinUI3.Services.ExtensionMethods;
 using TagsTreeWinUI3.ViewModels;
@@ -22,41 +23,27 @@ namespace TagsTreeWinUI3.Views
 		}
 
 		private readonly TagEditFilesViewModel _vm;
-
-		private void BConfirmClick()
+		
+		private void Storyboard1_OnCompleted(object? sender, object e)
 		{
-			//Tags.BeginAnimation(OpacityProperty, new DoubleAnimation
-			//{
-			//	From = 1,
-			//	To = 0,
-			//	Duration = TimeSpan.FromMilliseconds(500)
-			//});
-			//await Task.Delay(500);
-			//MessageDialogX.Children.Remove(Tags);
-			//BConfirm.Content = "保存";
-			//TbInput.BeginAnimation(OpacityProperty, new DoubleAnimation
-			//{
-			//	From = 0,
-			//	To = 1,
-			//	Duration = TimeSpan.FromMilliseconds(500)
-			//});
-			//DgResult.BeginAnimation(OpacityProperty, new DoubleAnimation
-			//{
-			//	From = 0,
-			//	To = 1,
-			//	Duration = TimeSpan.FromMilliseconds(500)
-			//});
-			//TbInput.IsHitTestVisible = true;
-			//DgResult.IsHitTestVisible = true;
+			Panel.Children.Remove(Tags);
+			BConfirm.Content = "保存";
+			Storyboard2.Begin();
+		}
+
+		private void Storyboard2_OnCompleted(object? sender, object e)
+		{
+			TbInput.IsHitTestVisible = true;
+			DgResult.IsHitTestVisible = true;
 		}
 
 		#region 事件处理
 
-		//private void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => TbPath.Path = TbPath.Path.TvSelectedItemChanged((TagModel?)e.NewValue);
+		private void Tags_OnItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs e) => TbPath.Path = ((TagModel?)e.InvokedItem)?.FullName ?? TbPath.Path;
 
 		private void ResultChanged(TagSearchBox sender, ResultChangedEventArgs e) => _vm.FileViewModels = e.NewResult.Select(fileModel => new FileViewModel(fileModel, TbPath.Path.GetTagModel()!)).ToObservableCollection();
 
-		private void Selected(object sender, SelectionChangedEventArgs selectionChangedEventArgs)
+		private void Selected(object sender, SelectionChangedEventArgs e)
 		{
 			if ((FileViewModel)((DataGrid)sender).SelectedItem is null) return;
 			((FileViewModel)((DataGrid)sender).SelectedItem).SelectedFlip();
@@ -69,7 +56,7 @@ namespace TagsTreeWinUI3.Views
 
 		private static bool _mode;
 
-		private void ConfirmBClick(object parameter, RoutedEventArgs routedEventArgs)
+		private void ConfirmBClick(object parameter, RoutedEventArgs e)
 		{
 			if (!_mode)
 			{
@@ -83,7 +70,7 @@ namespace TagsTreeWinUI3.Views
 					MessageDialogX.Information(true, "「标签路径」不能为空！");
 					return;
 				}
-				BConfirmClick();
+				Storyboard1.Begin();
 				_vm.FileViewModels = App.Relations.GetFileModels().Select(fileModel => new FileViewModel(fileModel, pathTagModel)).ToObservableCollection();
 				TbPath.IsEnabled = false;
 				_mode = true;
@@ -115,5 +102,6 @@ namespace TagsTreeWinUI3.Views
 		}
 
 		#endregion
+
 	}
 }

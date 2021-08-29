@@ -1,6 +1,4 @@
 ﻿using ModernWpf.Controls;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -96,7 +94,7 @@ namespace TagsTreeWpf.Views
 			textBox.SelectionStart = textBox.Text.Length;
 		}
 
-		private void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => TbPath.Path = TbPath.Path.TvSelectedItemChanged((TagModel?)e.NewValue);
+		private void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => TbPath.Path = ((TagModel?)e.NewValue)?.FullName ?? TbPath.Path;
 
 		#endregion
 
@@ -204,7 +202,7 @@ namespace TagsTreeWpf.Views
 
 		private void NewTag(string name, TagModel path)
 		{
-			var tempId = App.Tags.AddTag(path,name);
+			var tempId = App.Tags.AddTag(path, name);
 			App.Relations.NewColumn(tempId);
 			BSave.IsEnabled = true;
 		}

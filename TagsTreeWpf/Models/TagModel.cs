@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Text.Json.Serialization;
 using TagsTreeWpf.Services.ExtensionMethods;
 
@@ -16,7 +15,7 @@ namespace TagsTreeWpf.Models
 	{
 		[JsonIgnore]
 		private static int Num { get; set; } = 1;
-		
+
 		public int Id { get; }
 		public ObservableCollection<TagModel> SubTags { get; set; }
 		[JsonIgnore]

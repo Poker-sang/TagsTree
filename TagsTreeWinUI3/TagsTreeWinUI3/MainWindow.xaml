@@ -6,11 +6,13 @@
     xmlns:local="using:TagsTreeWinUI3"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI.UI"
+    xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
     mc:Ignorable="d">
     <NavigationView
         x:Name="NavigationView"
+        Loaded="NavigationView_OnLoaded"
+        PaneDisplayMode="Left"
         PaneTitle="TagsTree"
-        SelectedItem="{x:Bind NavigationView.SettingsItem}"
         SelectionChanged="Selector_OnSelectionChanged">
         <NavigationView.MenuItems>
             <NavigationViewItem
@@ -30,6 +32,15 @@
                 Icon="{ui:FontIcon Glyph=&#xECC8;}"
                 IsEnabled="False" />
         </NavigationView.MenuItems>
-        <Frame x:Name="NavigateFrame" />
+        <uiControls:DockPanel>
+            <Rectangle
+                x:Name="TitleBar"
+                Height="28"
+                VerticalAlignment="Top"
+                uiControls:DockPanel.Dock="Top"
+                Fill="{x:Bind SystemColor}"
+                IsHitTestVisible="False" />
+            <Frame x:Name="NavigateFrame" />
+        </uiControls:DockPanel>
     </NavigationView>
 </Window>

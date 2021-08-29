@@ -1,7 +1,5 @@
-﻿#nullable enable
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using TagsTreeWinUI3.Commands;
 using TagsTreeWinUI3.Models;
@@ -19,9 +17,6 @@ namespace TagsTreeWinUI3.Views
 			PPasteCmClick = new RelayCommand(_ => _clipBoard is not null, PasteCmClick);
 			PPasteXCmClick = new RelayCommand(_ => _clipBoard is not null, PasteXCmClick);
 			InitializeComponent();
-
-			TbName.TextChanged += NameChanged;
-			//TvTags.SelectedItemChanged += TvSelectItemChanged;
 		}
 
 		private readonly TagsManagerViewModel _vm;
@@ -89,14 +84,9 @@ namespace TagsTreeWinUI3.Views
 
 		#region 事件处理
 
-		private void NameChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
-		{
-			_vm.Name = Regex.Replace(_vm.Name, $@"[{FileX.GetInvalidNameChars}]+", "");
-			var textBox = (TextBox)typeof(AutoSuggestBox).GetField("m_textBox", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(sender)!;
-			textBox.SelectionStart = textBox.Text.Length;
-		}
+		private void NameChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e) => _vm.Name = Regex.Replace(_vm.Name, $@"[{FileX.GetInvalidNameChars}]+", "");
 
-		private void TvSelectItemChanged(TreeView treeView, TreeViewItemInvokedEventArgs e) => TbPath.Path = TbPath.Path.TvSelectedItemChanged((TagModel?)e.InvokedItem); 啥//注意这里到底是什么
+		private void Tags_OnItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs e) => TbPath.Path = ((TagModel?)e.InvokedItem)?.FullName ?? TbPath.Path;
 
 		#endregion
 

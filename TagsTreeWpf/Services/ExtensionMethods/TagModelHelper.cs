@@ -34,5 +34,22 @@ namespace TagsTreeWpf.Services.ExtensionMethods
 					yield return App.Tags.TagsDictionary[tag];
 				else yield return new PathTagModel(tag);
 		}
+
+		/// <summary>
+		/// 输入标签时的建议列表
+		/// </summary>
+		/// <param name="name">目前输入的最后一个标签</param>
+		/// <param name="separator">标签间分隔符</param>
+		/// <returns>建议列表</returns>
+		public static IEnumerable<TagModel> TagSuggest(this string name, char separator)
+		{
+			var tempName = name.Split(separator, StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
+			if (tempName is "" or null)
+				yield break;
+			foreach (var tag in App.Tags.TagsDictionaryValues.Where(tag => tag.Name.Contains(tempName)))
+				yield return tag;
+			foreach (var tag in App.Tags.TagsDictionaryValues.Where(tag => tag.Path.Contains(tempName) && !tag.Name.Contains(tempName)))
+				yield return tag;
+		}
 	}
 }

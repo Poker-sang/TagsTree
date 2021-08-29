@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Windows.UI.Popups;
 using TagsTreeWinUI3.Services.ExtensionMethods;
+using Windows.UI.Popups;
 
 namespace TagsTreeWinUI3.Services
 {
@@ -34,7 +34,7 @@ namespace TagsTreeWinUI3.Services
 		{
 			var ok = okHint is "" ? "" : $"\n按“确认”{okHint}";
 			var cancel = okHint is "" ? "" : $"\n按“取消”{cancelHint}";
-			var result = false; 
+			var result = false;
 			var messageDialog = new MessageDialog(message + ok + cancel, "警告")
 			{
 				DefaultCommandIndex = 0,

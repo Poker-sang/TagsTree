@@ -1,14 +1,10 @@
-﻿using System;
-using Microsoft.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.Storage.Pickers;
 using TagsTreeWinUI3.Services;
-using TagsTreeWinUI3.Services.ExtensionMethods;
 using TagsTreeWinUI3.ViewModels;
-using WinRT;
 
 namespace TagsTreeWinUI3.Views
 {
@@ -30,7 +26,7 @@ namespace TagsTreeWinUI3.Views
 			_vm.Importing = true;
 			if ((string)parameter! is "Select_Files")
 			{
-				if (await new FileOpenPicker().InitializeWithWindow().PickMultipleFilesAsync() is { } files)
+				if (await FileX.GetStorageFiles() is { } files)
 					await Task.Run(() =>
 					{
 						var dictionary = new Dictionary<string, bool>();
@@ -45,7 +41,7 @@ namespace TagsTreeWinUI3.Views
 				_vm.Importing = false;
 				return;
 			}
-			if (await new FolderPicker().PickSingleFolderAsync() is { } folder)
+			if (await FileX.GetStorageFolder() is { } folder)
 				await Task.Run(() =>
 				{
 					var dictionary = new Dictionary<string, bool>();

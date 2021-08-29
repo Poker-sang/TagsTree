@@ -1,11 +1,9 @@
-﻿using System;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.IO;
 using System.Text.RegularExpressions;
-using Windows.Storage.Pickers;
 using TagsTreeWinUI3.Services;
-using TagsTreeWinUI3.Services.ExtensionMethods;
+using Windows.Storage;
 
 namespace TagsTreeWinUI3.Views
 {
@@ -17,40 +15,48 @@ namespace TagsTreeWinUI3.Views
 		public NewConfigPage()
 		{
 			InitializeComponent();
+			if (!App.ConfigSet)
+			{
+				TbProxyPath.Text = TbLibraryPath.Text = "";
+				TsTheme.IsOn = false;
+				CbRootFoldersExist.IsChecked = true;
+			}
+			else
+			{
+				TbProxyPath.Text = App.AppConfigurations.ProxyPath;
+				TbLibraryPath.Text = App.AppConfigurations.LibraryPath;
+				TsTheme.IsOn = App.AppConfigurations.Theme;
+				CbRootFoldersExist.IsChecked = App.AppConfigurations.PathTags;
+			}
 		}
+		private async void BConfigPath_Click(object sender, RoutedEventArgs e) => TbProxyPath.Text = (await FileX.GetStorageFolder())?.Path ?? TbProxyPath.Text;
 
-
-		private async void BConfigPath_Click(object sender, RoutedEventArgs e) => TbConfigPath.Text = (await new FolderPicker().InitializeWithWindow().PickSingleFolderAsync())?.Path ?? TbConfigPath.Text;
-		private async void BLibraryPath_Click(object sender, RoutedEventArgs e) => TbLibraryPath.Text = (await new FolderPicker().InitializeWithWindow().PickSingleFolderAsync())?.Path ?? TbLibraryPath.Text;
-
-		private void TgTheme_OnToggled(object sender, RoutedEventArgs e)
-		{
-			;
-		}
+		private async void BLibraryPath_Click(object sender, RoutedEventArgs e) => TbLibraryPath.Text = (await FileX.GetStorageFolder())?.Path ?? TbLibraryPath.Text;
 
 		private async void BConfirm_Click(object sender, RoutedEventArgs e)
 		{
 			var legalPath = new Regex($@"^[a-zA-Z]:\\[^{FileX.GetInvalidPathChars}]*$");
-			if (!legalPath.IsMatch(TbConfigPath.Text) || !legalPath.IsMatch(TbLibraryPath.Text))
+			if (!legalPath.IsMatch(TbProxyPath.Text) || !legalPath.IsMatch(TbLibraryPath.Text))
 				MessageDialogX.Information(true, "路径错误！请填写正确完整的文件夹路径！");
 			else
 			{
-				if (App.AppConfigurations is not null && App.AppConfigurations.ProxyPath != TbConfigPath.Text)
+				if (App.AppConfigurations.ProxyPath != TbProxyPath.Text && App.AppConfigurations.ProxyPath is not "")
 					switch (await MessageDialogX.Question("是否将原位置配置文件移动到新位置"))
 					{
 						case true:
 							foreach (var file in new DirectoryInfo(App.AppConfigurations.ProxyPath).GetFiles())
-								file.MoveTo(Path.Combine(TbConfigPath.Text, file.Name));
+								file.MoveTo(Path.Combine(TbProxyPath.Text, file.Name));
 							break;
 						case null: return;
 					}
 
-				App.AppConfigurations.ProxyPath = TbConfigPath.Text;
+				App.AppConfigurations.ProxyPath = TbProxyPath.Text;
 				App.AppConfigurations.LibraryPath = TbLibraryPath.Text;
 				App.AppConfigurations.PathTags = CbRootFoldersExist.IsChecked!.Value;
-				//App.AppConfigurations.Theme = TgTheme.IsOn;
+				App.AppConfigurations.Theme = TsTheme.IsOn;
 				AppConfigurations.SaveConfiguration(App.AppConfigurations);
 				MessageDialogX.Information(false, "已保存");
+				App.Window.ConfigModeUnlock();
 			}
 		}
 
