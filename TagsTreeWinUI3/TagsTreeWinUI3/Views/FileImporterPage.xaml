@@ -20,12 +20,10 @@
                             <MenuFlyoutItem
                                 Command="{x:Bind _vm.Import}"
                                 CommandParameter="Select_Files"
-                                Icon="{ui:FontIcon Glyph=&#xE7C3;}"
                                 Text="文件" />
                             <MenuFlyoutItem
                                 Command="{x:Bind _vm.Import}"
                                 CommandParameter="Select_Folders"
-                                Icon="{ui:FontIcon Glyph=&#xF12B;}"
                                 Text="文件夹" />
                         </MenuFlyout>
                     </AppBarButton.Flyout>
@@ -36,17 +34,14 @@
                             <MenuFlyoutItem
                                 Command="{x:Bind _vm.Import}"
                                 CommandParameter="Path_Files"
-                                Icon="{ui:FontIcon Glyph=&#xE7C3;}"
                                 Text="文件" />
                             <MenuFlyoutItem
                                 Command="{x:Bind _vm.Import}"
                                 CommandParameter="Path_Folders"
-                                Icon="{ui:FontIcon Glyph=&#xF12B;}"
                                 Text="文件夹" />
                             <MenuFlyoutItem
                                 Command="{x:Bind _vm.Import}"
                                 CommandParameter="Path_Both"
-                                Icon="{ui:FontIcon Glyph=&#xE71D;}"
                                 Text="全部" />
                         </MenuFlyout>
                     </AppBarButton.Flyout>
@@ -54,11 +49,8 @@
                 <AppBarButton
                     Command="{x:Bind _vm.Import}"
                     CommandParameter="All"
-                    Label="全部">
-                    <AppBarButton.Icon>
-                        <FontIcon Glyph="&#xE82E;" />
-                    </AppBarButton.Icon>
-                </AppBarButton>
+                    Icon="{ui:FontIcon Glyph=&#xE82E;}"
+                    Label="全部" />
                 <AppBarSeparator />
                 <AppBarButton
                     Command="{x:Bind _vm.DeleteBClick}"
@@ -66,7 +58,7 @@
                     Label="清空" />
                 <AppBarButton
                     Command="{x:Bind _vm.SaveBClick}"
-                    CommandParameter="{Binding ElementName=FileImporterGrid}"
+                    CommandParameter="{x:Bind FileImporterGrid}"
                     Icon="Save"
                     Label="保存" />
             </CommandBar>
@@ -77,10 +69,7 @@
                 CanUserReorderColumns="False"
                 ItemsSource="{x:Bind _vm.FileViewModels}">
                 <uiControls:DataGrid.Columns>
-                    <uiControls:DataGridTemplateColumn
-                        Width="45"
-                        Header="{ui:FontIcon Glyph=&#xF12B;}"
-                        IsReadOnly="True">
+                    <uiControls:DataGridTemplateColumn Width="45" IsReadOnly="True">
                         <uiControls:DataGridTemplateColumn.CellTemplate>
                             <DataTemplate x:DataType="viewModels:FileViewModel">
                                 <Image
@@ -96,7 +85,11 @@
                         IsReadOnly="True">
                         <uiControls:DataGridTemplateColumn.CellTemplate>
                             <DataTemplate x:DataType="viewModels:FileViewModel">
-                                <TextBlock Text="{x:Bind Name}" />
+                                <TextBlock
+                                    Margin="10,0"
+                                    VerticalAlignment="Center"
+                                    Tag="{x:Bind}"
+                                    Text="{x:Bind Name}" />
                             </DataTemplate>
                         </uiControls:DataGridTemplateColumn.CellTemplate>
                     </uiControls:DataGridTemplateColumn>
@@ -106,7 +99,11 @@
                         IsReadOnly="True">
                         <uiControls:DataGridTemplateColumn.CellTemplate>
                             <DataTemplate x:DataType="viewModels:FileViewModel">
-                                <TextBlock Text="{x:Bind PartialPath}" />
+                                <TextBlock
+                                    Margin="10,0"
+                                    VerticalAlignment="Center"
+                                    Tag="{x:Bind}"
+                                    Text="{x:Bind PartialPath}" />
                             </DataTemplate>
                         </uiControls:DataGridTemplateColumn.CellTemplate>
                     </uiControls:DataGridTemplateColumn>

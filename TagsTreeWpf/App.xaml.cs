@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
 using TagsTreeWpf.Models;
@@ -24,7 +23,7 @@ namespace TagsTreeWpf
 		/// <summary>
 		/// 主窗口
 		/// </summary>
-		public static Main Win;
+		public static Main Win = null!;
 
 
 		/// <summary>

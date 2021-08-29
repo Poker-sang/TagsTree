@@ -1,6 +1,8 @@
 ﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Linq;
+using TagsTreeWinUI3.Models;
 using TagsTreeWinUI3.Services;
 using TagsTreeWinUI3.Services.ExtensionMethods;
 using TagsTreeWinUI3.ViewModels;
@@ -20,7 +22,8 @@ namespace TagsTreeWinUI3.Views
 		}
 
 		private readonly FileEditTagsViewModel _vm;
-		//private void TvSelectItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => TbPath.Path = TbPath.Path.TvSelectedItemChanged((TagModel?)e.NewValue);
+
+		private void Tags_OnItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs e) => TbPath.Path = ((TagModel?)e.InvokedItem)?.FullName ?? TbPath.Path;
 
 		private async void AddBClick(object parameter, RoutedEventArgs routedEventArgs)
 		{
@@ -73,5 +76,6 @@ namespace TagsTreeWinUI3.Views
 			MessageDialogX.Information(false, "已保存更改");
 			BSave.IsEnabled = false;
 		}
+
 	}
 }

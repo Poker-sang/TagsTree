@@ -37,8 +37,8 @@
         <TreeView
             x:Name="Tags"
             VerticalAlignment="Stretch"
+            ItemInvoked="Tags_OnItemInvoked"
             ItemsSource="{x:Bind _vm.TagsSource, Mode=TwoWay}">
-            <!--  SelectedItemChanged="TvSelectItemChanged"  -->
             <TreeView.ItemTemplate>
                 <DataTemplate x:DataType="models:TagModel">
                     <TreeViewItem ItemsSource="{x:Bind SubTags}">

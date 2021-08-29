@@ -6,7 +6,7 @@ namespace TagsTreeWinUI3
 	public class AppConfigurations
 	{
 
-		public string Theme { get; set; }
+		public bool Theme { get; set; }
 		public string LibraryPath { get; set; }
 		public string ProxyPath { get; set; }
 		public bool PathTags { get; set; }
@@ -16,7 +16,7 @@ namespace TagsTreeWinUI3
 		private const string ConfigurationContainerKey = "Config";
 		public static StorageFolder AppLocalFolder { get; set; } = null!;
 
-		public AppConfigurations(string theme, string libraryPath, string proxyPath, bool pathTags)
+		public AppConfigurations(bool theme, string libraryPath, string proxyPath, bool pathTags)
 		{
 			Theme = theme;
 			LibraryPath = libraryPath;
@@ -28,9 +28,7 @@ namespace TagsTreeWinUI3
 		{
 			AppLocalFolder = ApplicationData.Current.LocalFolder;
 			if (!ApplicationData.Current.RoamingSettings.Containers.ContainsKey(ConfigurationContainerKey))
-			{
 				ApplicationData.Current.RoamingSettings.CreateContainer(ConfigurationContainerKey, ApplicationDataCreateDisposition.Always);
-			}
 
 			_configurationContainer = ApplicationData.Current.RoamingSettings.Containers[ConfigurationContainerKey];
 		}
@@ -41,7 +39,7 @@ namespace TagsTreeWinUI3
 			try
 			{
 				return new AppConfigurations(
-					_configurationContainer.Values[nameof(Theme)].CastThrow<string>(),
+					_configurationContainer.Values[nameof(Theme)].CastThrow<bool>(),
 					_configurationContainer.Values[nameof(LibraryPath)].CastThrow<string>(),
 					_configurationContainer.Values[nameof(ProxyPath)].CastThrow<string>(),
 					_configurationContainer.Values[nameof(PathTags)].CastThrow<bool>()
@@ -52,6 +50,8 @@ namespace TagsTreeWinUI3
 				return null;
 			}
 		}
+
+		public static AppConfigurations GetDefault() => new(false, "", "", true);
 
 		public static void SaveConfiguration(AppConfigurations appConfigurations)
 		{

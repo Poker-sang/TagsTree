@@ -1,10 +1,12 @@
-﻿using Microsoft.UI.Xaml;
+﻿using System;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.UI.Xaml.Media.Animation;
 using TagsTreeWinUI3.Delegates;
 using TagsTreeWinUI3.Models;
 using TagsTreeWinUI3.Services;
@@ -21,58 +23,30 @@ namespace TagsTreeWinUI3.Views
 			_vm = new MainViewModel();
 			InitializeComponent();
 
-			TbSearch.BeforeQuerySubmitted = (_, _) => Search();
 			//_ = Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)(() => Keyboard.Focus(TbSearch)));
 		}
 
 		private readonly MainViewModel _vm;
 
 		private bool _isSearched;
-		private void Search()
+		private void Search(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e)
 		{
-			//if (_isSearched) return;
-			//_isSearched = true;
-			//TbBanner.BeginAnimation(MarginProperty, new ThicknessAnimation
-			//{
-			//	From = new Thickness(0, 0, 0, 0),
-			//	To = new Thickness(0, -350, 0, 0),
-			//	Duration = TimeSpan.FromMilliseconds(1000)
-			//});
-			//TbSearch.BeginAnimation(MarginProperty, new ThicknessAnimation
-			//{
-			//	From = new Thickness(0, 300, 0, 0),
-			//	To = new Thickness(0, 50, 0, 0),
-			//	Duration = TimeSpan.FromMilliseconds(1000)
-			//});
-			//await Task.Delay(1000);
-			//TbFuzzySearch.BeginAnimation(OpacityProperty, new DoubleAnimation
-			//{
-			//	From = 0,
-			//	To = 1,
-			//	Duration = TimeSpan.FromMilliseconds(1000)
-			//});
-			//DgResult.BeginAnimation(OpacityProperty, new DoubleAnimation
-			//{
-			//	From = 0,
-			//	To = 1,
-			//	Duration = TimeSpan.FromMilliseconds(1000)
-			//});
-			//TbFuzzySearch.IsHitTestVisible = true;
-			//DgResult.IsHitTestVisible = true;
+			if (_isSearched) return;
+			_isSearched = true;
+			Storyboard1.Begin();
+		}
+		private void Storyboard1_OnCompleted(object sender, object e) => Storyboard2.Begin();
+
+		private void Storyboard2_OnCompleted(object sender, object e)
+		{
+			TbFuzzySearch.IsHitTestVisible = true;
+			DgResult.IsHitTestVisible = true;
 		}
 
 		private bool _isShowed;
 
 		#region 事件处理
-
-		private void GridMouseLeftButtonDown(object sender, PointerRoutedEventArgs pointerRoutedEventArgs)
-		{
-			if (!_isShowed || pointerRoutedEventArgs.GetCurrentPoint((Grid)sender).Properties.IsLeftButtonPressed && pointerRoutedEventArgs.GetCurrentPoint((Grid)sender).Position.X is >= 215 and <= 1065) return;
-			FileProperties.Hide();
-			_isShowed = false;
-		}
-
-
+		
 		private void ResultChanged(TagSearchBox sender, ResultChangedEventArgs e) => _vm.ResultCallBack = e.NewResult.Select(fileModel => new FileViewModel(fileModel)).ToObservableCollection();
 
 		private void FileRemoved(FileProperties sender, FileRemovedEventArgs e)
@@ -80,12 +54,8 @@ namespace TagsTreeWinUI3.Views
 			_ = _vm.FileViewModels.Remove(e.RemovedItem);
 			_vm.CollectionChanged();
 		}
-		private void TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
-		{
-			sender.Text = Regex.Replace(sender.Text, $@"[{FileX.GetInvalidNameChars} ]+", "");
-			var textBox = (TextBox)typeof(AutoSuggestBox).GetField("m_textBox", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(sender)!;
-			textBox.SelectionStart = textBox.Text.Length;
-		}
+		private void TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e) => sender.Text = Regex.Replace(sender.Text, $@"[{FileX.GetInvalidNameChars} ]+", "");
+
 		private void QuerySubmitted(AutoSuggestBox autoSuggestBox, AutoSuggestBoxQuerySubmittedEventArgs e)
 		{
 			_vm.FileViewModels = autoSuggestBox.Text is "" ? _vm.ResultCallBack : RelationsDataTable.FuzzySearchName(autoSuggestBox.Text, _vm.ResultCallBack);

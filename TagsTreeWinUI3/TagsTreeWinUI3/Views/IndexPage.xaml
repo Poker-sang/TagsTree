@@ -8,11 +8,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:viewModels="using:TagsTreeWinUI3.ViewModels"
-    d:DesignHeight="1280"
-    d:DesignWidth="720"
     mc:Ignorable="d">
 
-    <Grid PointerPressed="GridMouseLeftButtonDown">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.191*" />
             <ColumnDefinition Width="0.618*" />
@@ -22,6 +20,36 @@
             <RowDefinition Height="1*" />
             <RowDefinition Height="3*" />
         </Grid.RowDefinitions>
+
+        <Grid.Resources>
+            <Storyboard x:Name="Storyboard1" Completed="Storyboard1_OnCompleted">
+                <DoubleAnimation
+                    Storyboard.TargetName="TsbTranslation"
+                    Storyboard.TargetProperty="Y"
+                    From="0"
+                    To="-250"
+                    Duration="0:0:1">
+                    <DoubleAnimation.EasingFunction>
+                        <ExponentialEase EasingMode="EaseOut" Exponent="4.5" />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <FadeOutThemeAnimation Storyboard.TargetName="TbBanner" Duration="0:0:1" />
+            </Storyboard>
+            <Storyboard x:Name="Storyboard2" Completed="Storyboard2_OnCompleted">
+                <DoubleAnimation
+                    Storyboard.TargetName="DgResult"
+                    Storyboard.TargetProperty="Opacity"
+                    From="0"
+                    To="1"
+                    Duration="0:0:1" />
+                <DoubleAnimation
+                    Storyboard.TargetName="TbFuzzySearch"
+                    Storyboard.TargetProperty="Opacity"
+                    From="0"
+                    To="1"
+                    Duration="0:0:1" />
+            </Storyboard>
+        </Grid.Resources>
 
         <TextBlock
             x:Name="TbBanner"
@@ -41,7 +69,12 @@
                 Margin="0,300,0,0"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Top"
-                ResultChanged="ResultChanged" />
+                BeforeQuerySubmitted="Search"
+                ResultChanged="ResultChanged">
+                <controls:TagSearchBox.RenderTransform>
+                    <TranslateTransform x:Name="TsbTranslation" />
+                </controls:TagSearchBox.RenderTransform>
+            </controls:TagSearchBox>
         </Grid>
         <AutoSuggestBox
             x:Name="TbFuzzySearch"

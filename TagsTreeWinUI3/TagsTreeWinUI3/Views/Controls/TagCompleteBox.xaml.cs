@@ -1,7 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.ComponentModel;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using TagsTreeWinUI3.Services;
@@ -20,8 +19,6 @@ namespace TagsTreeWinUI3.Views.Controls
 		{
 			Path = Regex.Replace(Path, $@"[{FileX.GetInvalidPathChars}]+", "");
 			sender.ItemsSource = sender.Text.TagSuggest('\\');
-			var textBox = (TextBox)typeof(AutoSuggestBox).GetField("m_textBox", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(sender)!;
-			textBox.SelectionStart = textBox.Text.Length;
 		}
 		private void SuggestionChosen(AutoSuggestBox autoSuggestBox, AutoSuggestBoxSuggestionChosenEventArgs e) => autoSuggestBox.Text = e.SelectedItem.ToString();
 

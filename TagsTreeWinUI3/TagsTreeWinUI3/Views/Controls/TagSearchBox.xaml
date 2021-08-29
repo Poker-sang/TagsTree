@@ -5,13 +5,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:TagsTreeWinUI3.Views.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
-    xmlns:viewModels="using:TagsTreeWinUI3.ViewModels"
+    xmlns:models="using:TagsTreeWinUI3.Models"
     x:Name="TagSearch"
     mc:Ignorable="d">
     <AutoSuggestBox
         x:Name="AutoSuggestBox"
-        DataContext="{Binding ElementName=TagSearch}"
         PlaceholderText="标签（空格隔开标签，不包含/:*?&quot;&lt;&gt;|,和空白字符，留空显示全部）"
         QueryIcon="Find"
         QuerySubmitted="QuerySubmitted"
@@ -19,8 +17,8 @@
         TextChanged="TextChanged"
         UpdateTextOnSelect="False">
         <AutoSuggestBox.ItemTemplate>
-            <DataTemplate x:DataType="viewModels:FileViewModel">
-                <TextBlock Text="{x:Bind FullName, Mode=OneTime}" />
+            <DataTemplate x:DataType="models:TagModel">
+                <TextBlock Text="{x:Bind FullName}" />
             </DataTemplate>
         </AutoSuggestBox.ItemTemplate>
     </AutoSuggestBox>

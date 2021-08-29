@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text.Json.Serialization;
 using TagsTreeWpf.Services;
-using TagsTreeWpf.Services.ExtensionMethods;
 
 namespace TagsTreeWpf.Models
 {
@@ -34,7 +32,7 @@ namespace TagsTreeWpf.Models
 		public void RenameTag(TagModel tag, string newName)
 		{
 			TagsDictionary.ChangeKey2(tag.Name, newName);
-			tag.Name = newName; 
+			tag.Name = newName;
 			//TODO TreeView不会更新名称
 		}
 		public void DeleteTag(TagModel tag)

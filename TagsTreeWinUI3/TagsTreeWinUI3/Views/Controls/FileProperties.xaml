@@ -9,13 +9,11 @@
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
     x:Name="CdFileProperties"
     Title="属性"
+    CloseButtonText="退出"
+    DefaultButton="Close"
     mc:Ignorable="d">
 
-    <Grid
-       
-        Width="800"
-        Height="600">
-
+    <Grid Width="800" Height="600">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
             <ColumnDefinition Width="9*" />

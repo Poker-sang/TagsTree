@@ -1,10 +1,8 @@
-﻿using System;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
-using Windows.Storage.Pickers;
 using TagsTreeWinUI3.Delegates;
 using TagsTreeWinUI3.Services;
 using TagsTreeWinUI3.Services.ExtensionMethods;
@@ -65,7 +63,7 @@ namespace TagsTreeWinUI3.Views.Controls
 		}
 		private async void MoveBClick(object sender, RoutedEventArgs e)
 		{
-			if (await new FolderPicker().InitializeWithWindow().PickSingleFolderAsync() is not { } folder) return;
+			if (await FileX.GetStorageFolder() is not { } folder) return;
 			if (FileViewModel.Path == folder.Path)
 			{
 				MessageDialogX.Information(true, "新目录与原目录一致！");

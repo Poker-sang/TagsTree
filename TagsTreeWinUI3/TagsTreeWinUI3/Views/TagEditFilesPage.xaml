@@ -13,7 +13,26 @@
     d:DesignHeight="600"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <uiControls:DockPanel>
+    <uiControls:DockPanel x:Name="Panel">
+        <uiControls:DockPanel.Resources>
+            <Storyboard x:Name="Storyboard1" Completed="Storyboard1_OnCompleted">
+                <FadeOutThemeAnimation Storyboard.TargetName="Tags" Duration="0:0:0.5" />
+            </Storyboard>
+            <Storyboard x:Name="Storyboard2" Completed="Storyboard2_OnCompleted">
+                <DoubleAnimation
+                    Storyboard.TargetName="TbInput"
+                    Storyboard.TargetProperty="Opacity"
+                    From="0"
+                    To="1"
+                    Duration="0:0:0.5" />
+                <DoubleAnimation
+                    Storyboard.TargetName="DgResult"
+                    Storyboard.TargetProperty="Opacity"
+                    From="0"
+                    To="1"
+                    Duration="0:0:0.5" />
+            </Storyboard>
+        </uiControls:DockPanel.Resources>
         <uiControls:DockPanel uiControls:DockPanel.Dock="Top">
             <Button
                 x:Name="BConfirm"
@@ -26,9 +45,10 @@
             x:Name="Tags"
             VerticalAlignment="Stretch"
             uiControls:DockPanel.Dock="Top"
-            ItemsSource="{x:Bind _vm.TagsSource, Mode=TwoWay}"
-            >
-            <!--SelectedItemChanged="TvSelectItemChanged"-->
+            AllowDrop="False"
+            CanDragItems="False"
+            ItemInvoked="Tags_OnItemInvoked"
+            ItemsSource="{x:Bind _vm.TagsSource, Mode=TwoWay}">
             <TreeView.ItemTemplate>
                 <DataTemplate x:DataType="models:TagModel">
                     <TreeViewItem ItemsSource="{x:Bind SubTags}">
@@ -47,6 +67,7 @@
             ResultChanged="ResultChanged" />
         <uiControls:DataGrid
             x:Name="DgResult"
+            AlternatingRowBackground="Gray"
             AutoGenerateColumns="False"
             CanUserReorderColumns="False"
             IsHitTestVisible="False"
@@ -64,18 +85,23 @@
                         <DataTemplate x:DataType="viewModels:FileViewModel">
                             <CheckBox
                                 Margin="10,0"
-                                IsChecked="{x:Bind Selected}"
+                                IsChecked="{x:Bind Selected, Mode=OneWay}"
+                                IsEnabled="False"
                                 IsThreeState="True" />
                         </DataTemplate>
                     </uiControls:DataGridTemplateColumn.CellTemplate>
                 </uiControls:DataGridTemplateColumn>
-                <uiControls:DataGridTemplateColumn Width="45" Header="{ui:FontIcon Glyph=&#xF12B;}">
+                <uiControls:DataGridTemplateColumn
+                    Width="45"
+                    CanUserResize="False"
+                    CanUserSort="False"
+                    IsReadOnly="True">
                     <uiControls:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="viewModels:FileViewModel">
                             <Image
                                 Width="32"
                                 Height="32"
-                                Source="{x:Bind Icon, Mode=OneTime}" />
+                                Source="{x:Bind Icon}" />
                         </DataTemplate>
                     </uiControls:DataGridTemplateColumn.CellTemplate>
                 </uiControls:DataGridTemplateColumn>

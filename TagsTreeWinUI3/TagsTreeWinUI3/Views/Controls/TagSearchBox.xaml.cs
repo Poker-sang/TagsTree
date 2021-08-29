@@ -1,6 +1,5 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using TagsTreeWinUI3.Delegates;
 using TagsTreeWinUI3.Services;
@@ -18,12 +17,18 @@ namespace TagsTreeWinUI3.Views.Controls
 
 		public TagSearchBox() => InitializeComponent();
 
-		public TypedEventHandler<AutoSuggestBox, AutoSuggestBoxQuerySubmittedEventArgs> BeforeQuerySubmitted
+		public event TypedEventHandler<AutoSuggestBox, AutoSuggestBoxQuerySubmittedEventArgs> BeforeQuerySubmitted
 		{
-			set
+			add
 			{
 				AutoSuggestBox.QuerySubmitted -= QuerySubmitted;
 				AutoSuggestBox.QuerySubmitted += value;
+				AutoSuggestBox.QuerySubmitted += QuerySubmitted;
+			}
+			remove
+			{
+				AutoSuggestBox.QuerySubmitted -= QuerySubmitted;
+				AutoSuggestBox.QuerySubmitted -= value;
 				AutoSuggestBox.QuerySubmitted += QuerySubmitted;
 			}
 		}
@@ -46,9 +51,7 @@ namespace TagsTreeWinUI3.Views.Controls
 			}
 			sender.Text = Regex.Replace(sender.Text, $@"[{FileX.GetInvalidPathChars}]+", "");
 			sender.Text = Regex.Replace(sender.Text, @"  +", " ").TrimStart();
-			sender.ItemsSource = sender.Text.TagSuggest(' ');
-			var textBox = (TextBox)typeof(AutoSuggestBox).GetField("m_textBox", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(sender)!;
-			textBox.SelectionStart = textBox.Text.Length;
+			sender.ItemsSource  = sender.Text.TagSuggest(' ');
 		}
 		private void QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e) => ResultChanged.Invoke(this, new ResultChangedEventArgs(App.Relations.GetFileModels(sender.Text.GetTagsFiles().ToList())));
 	}
