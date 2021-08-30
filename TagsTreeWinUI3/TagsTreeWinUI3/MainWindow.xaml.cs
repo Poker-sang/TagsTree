@@ -1,17 +1,10 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-using Windows.UI;
-using Windows.UI.ViewManagement;
-using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Shapes;
-using PInvoke;
-using TagsTreeWinUI3.Commands;
-using TagsTreeWinUI3.Services.ExtensionMethods;
+using System;
+using System.Threading.Tasks;
 using TagsTreeWinUI3.Views;
+using Windows.UI;
 
 namespace TagsTreeWinUI3
 {
@@ -36,7 +29,7 @@ namespace TagsTreeWinUI3
 			NavigationView.SelectedItem = NavigationView.MenuItems[0];
 		}
 		//不为static方便绑定
-		private Brush SystemColor => new SolidColorBrush(Application.Current.RequestedTheme is ApplicationTheme.Light ? Color.FromArgb(0x80, 0xFF, 0xFF, 0xFF):Color.FromArgb(0x65, 0x00, 0x00, 0x00));
+		private Brush SystemColor => new SolidColorBrush(Application.Current.RequestedTheme is ApplicationTheme.Light ? Color.FromArgb(0x80, 0xFF, 0xFF, 0xFF) : Color.FromArgb(0x65, 0x00, 0x00, 0x00));
 
 		private void Selector_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs e)
 		{

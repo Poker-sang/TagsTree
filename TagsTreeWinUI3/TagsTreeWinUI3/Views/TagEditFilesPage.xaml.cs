@@ -23,7 +23,7 @@ namespace TagsTreeWinUI3.Views
 		}
 
 		private readonly TagEditFilesViewModel _vm;
-		
+
 		private void Storyboard1_OnCompleted(object? sender, object e)
 		{
 			Panel.Children.Remove(Tags);

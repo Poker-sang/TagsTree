@@ -51,7 +51,7 @@ namespace TagsTreeWinUI3.Views.Controls
 			}
 			sender.Text = Regex.Replace(sender.Text, $@"[{FileX.GetInvalidPathChars}]+", "");
 			sender.Text = Regex.Replace(sender.Text, @"  +", " ").TrimStart();
-			sender.ItemsSource  = sender.Text.TagSuggest(' ');
+			sender.ItemsSource = sender.Text.TagSuggest(' ');
 		}
 		private void QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e) => ResultChanged.Invoke(this, new ResultChangedEventArgs(App.Relations.GetFileModels(sender.Text.GetTagsFiles().ToList())));
 	}

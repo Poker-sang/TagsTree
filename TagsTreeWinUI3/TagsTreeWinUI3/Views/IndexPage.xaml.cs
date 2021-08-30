@@ -1,12 +1,8 @@
-﻿using System;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.UI.Xaml.Media.Animation;
 using TagsTreeWinUI3.Delegates;
 using TagsTreeWinUI3.Models;
 using TagsTreeWinUI3.Services;
@@ -46,7 +42,7 @@ namespace TagsTreeWinUI3.Views
 		private bool _isShowed;
 
 		#region 事件处理
-		
+
 		private void ResultChanged(TagSearchBox sender, ResultChangedEventArgs e) => _vm.ResultCallBack = e.NewResult.Select(fileModel => new FileViewModel(fileModel)).ToObservableCollection();
 
 		private void FileRemoved(FileProperties sender, FileRemovedEventArgs e)

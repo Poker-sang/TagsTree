@@ -28,7 +28,7 @@ namespace TagsTreeWinUI3
 		public App()
 		{
 			InitializeComponent();
-			AppConfigurations.Initialize(); 
+			AppConfigurations.Initialize();
 			if (AppConfigurations.LoadConfiguration() is { } appConfigurations)
 				if (!Directory.Exists(appConfigurations.ProxyPath))
 					MessageDialogX.Information(true, "配置路径不存在！");
@@ -55,9 +55,6 @@ namespace TagsTreeWinUI3
 			Window = new MainWindow { ExtendsContentIntoTitleBar = true };
 			WindowHelper.SetWindowSize(1280, 720);
 			Window.Activate();
-			
-			LoadConfig();
-			Window.ConfigModeUnlock();
 		}
 
 		public static string TagsPath => AppConfigurations.ProxyPath + @"\TagsTree.json";
@@ -106,56 +103,5 @@ namespace TagsTreeWinUI3
 			SaveRelations();
 			return true;
 		}
-
-		///  <summary>
-		///  重新加载新的配置文件
-		///  </summary>
-		///  <returns>true：已填写正确地址，进入软件；false：打开设置页面；null：关闭软件</returns>
-		private async void LoadConfig()
-		{
-			//主题色
-			ApplicationData.Current.LocalSettings.Values["themeSetting"] = AppConfigurations.Theme ? 1 : 0;
-
-			//标签
-			Tags.LoadTree(TagsPath);
-			Tags.LoadDictionary();
-
-			//文件
-			IdFile.Deserialize(FilesPath);
-
-			//关系
-			if (!File.Exists(RelationsPath))
-				_ = File.Create(RelationsPath);
-			Relations.Load(); //异常在内部处理
-
-			//检查
-			if (Tags.TagsDictionary.Count != Relations.Columns.Count) //TagsDictionary第一个是总根标签，Relations第一列是文件Id 
-			{
-				if (await MessageDialogX.Warning($"路径「{AppConfigurations.ProxyPath}」下，TagsTree.xml和Relations.xml存储的标签数不同", "删除关系文件Relations.xml并重新生成", "直接关闭软件"))
-				{
-					File.Delete(RelationsPath);
-					Relations.Load();
-				}
-				else
-				{
-					Window.Close();
-					return;
-				}
-			}
-			if (IdFile.Count != Relations.Rows.Count)
-			{
-				if (await MessageDialogX.Warning($"「路径{AppConfigurations.ProxyPath}」下，Files.json和Relations.xml存储的文件数不同", "删除关系文件Relations.xml并重新生成", "直接关闭软件"))
-				{
-					File.Delete(RelationsPath);
-					Relations.Load();
-				}
-				else
-				{
-					Window.Close();
-					return;
-				}
-			}
-		}
-
 	}
 }
