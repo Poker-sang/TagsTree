@@ -10,15 +10,15 @@ using TagsTreeWinUI3.ViewModels;
 namespace TagsTreeWinUI3.Views
 {
 	/// <summary>
-	/// FileEditTags.xaml 的交互逻辑
+	/// FileEditTagsPage.xaml 的交互逻辑
 	/// </summary>
-	public partial class FileEditTags : Window
+	public partial class FileEditTagsPage : Page
 	{
-		public FileEditTags(FileViewModel fileViewModel)
+		public FileEditTagsPage(FileViewModel fileViewModel)
 		{
+			_vm = new FileEditTagsViewModel(fileViewModel);
 			InitializeComponent();
 			fileViewModel.VirtualTagsInitialize();
-			_vm = new FileEditTagsViewModel(fileViewModel);
 		}
 
 		private readonly FileEditTagsViewModel _vm;

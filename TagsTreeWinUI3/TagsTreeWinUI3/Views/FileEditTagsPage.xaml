@@ -1,5 +1,5 @@
-﻿<Window
-    x:Class="TagsTreeWinUI3.Views.FileEditTags"
+﻿<Page
+    x:Class="TagsTreeWinUI3.Views.FileEditTagsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:TagsTreeWinUI3.Views.Controls"
@@ -48,4 +48,4 @@
             </TreeView.ItemTemplate>
         </TreeView>
     </uiControls:DockPanel>
-</Window>
+</Page>

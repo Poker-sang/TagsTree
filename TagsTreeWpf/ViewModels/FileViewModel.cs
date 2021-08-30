@@ -61,11 +61,11 @@ namespace TagsTreeWpf.ViewModels
 				if (Exists)
 				{
 					if (IsFolder)
-						return Services.BitmapX.FolderIcon;
+						return BitmapX.FolderIcon;
 					if (System.Drawing.Icon.ExtractAssociatedIcon(FullName) is { } icon)
 						return Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
 				}
-				return Services.BitmapX.NotFoundIcon;
+				return BitmapX.NotFoundIcon;
 			}
 		}
 		public string DateOfModification => Exists ? _fileSystemInfo.LastWriteTime.ToString(CultureInfo.CurrentCulture) : "";

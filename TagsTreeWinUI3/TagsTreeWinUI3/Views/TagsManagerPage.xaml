@@ -4,14 +4,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:TagsTreeWinUI3.Views.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:TagsTreeWinUI3"
+    xmlns:local="using:TagsTreeWinUI3.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:TagsTreeWinUI3.Models"
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
-    d:DesignHeight="600"
-    d:DesignWidth="800"
     mc:Ignorable="d">
     <uiControls:DockPanel>
+        <local:InputName x:Name="InputName" />
         <uiControls:DockPanel uiControls:DockPanel.Dock="Top">
             <CommandBar uiControls:DockPanel.Dock="Right">
                 <AppBarButton
@@ -31,7 +30,6 @@
                     Icon="Delete"
                     Label="删除" />
                 <AppBarSeparator />
-
                 <AppBarButton
                     x:Name="BSave"
                     Click="SaveBClick"
@@ -66,24 +64,23 @@
                             <MenuFlyout>
                                 <MenuFlyoutItem
                                     Click="NewCmClick"
-                                    Tag="{Binding}"
+                                    Tag="{x:Bind}"
                                     Text="新建" />
                                 <MenuFlyoutItem
                                     Click="CutCmClick"
-                                    Tag="{Binding}"
+                                    Tag="{x:Bind}"
                                     Text="剪切" />
-                                <MenuFlyoutItem Text="粘贴" />
-                                <!--
-                                    Command="{x:Bind _vm.PPasteCmClick}"
-                                    CommandParameter="{Binding}"
-                                -->
+                                <MenuFlyoutItem
+                                    Command="{x:Bind local:TagsManagerPage.Current.PPasteCmClick}"
+                                    CommandParameter="{x:Bind}"
+                                    Text="粘贴" />
                                 <MenuFlyoutItem
                                     Click="RenameCmClick"
-                                    Tag="{Binding}"
+                                    Tag="{x:Bind}"
                                     Text="重命名" />
                                 <MenuFlyoutItem
                                     Click="DeleteCmClick"
-                                    Tag="{Binding}"
+                                    Tag="{x:Bind}"
                                     Text="删除" />
                             </MenuFlyout>
                         </TreeViewItem.ContextFlyout>

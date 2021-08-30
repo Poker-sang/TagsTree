@@ -1,6 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
 using System;
 using System.Text.RegularExpressions;
+using Microsoft.UI.Xaml.Controls;
 using TagsTreeWinUI3.Services;
 
 namespace TagsTreeWinUI3.Views
@@ -8,9 +9,11 @@ namespace TagsTreeWinUI3.Views
 	/// <summary>
 	/// InputName.xaml 的交互逻辑
 	/// </summary>
-	public partial class InputName : Window
+	public partial class InputName : ContentDialog
 	{
-		public InputName(FileX.InvalidMode mode, string text = "")
+		public InputName() => InitializeComponent();
+
+		public void Load(FileX.InvalidMode mode, string text = "")
 		{
 			InitializeComponent();
 			switch (mode)
@@ -26,22 +29,21 @@ namespace TagsTreeWinUI3.Views
 				default: throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
 			}
 			AsBox.Text = text;
-			//_ = Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)(() => Keyboard.Focus(AsBox)));
 		}
 
-		public string Message = "";
-		private readonly string _invalidRegex;
+		public bool Canceled = true;
+		private string _invalidRegex = "";
 
-		private void BConfirm_OnClick(object sender, RoutedEventArgs routedEventArgs)
+		private void InputName_OnPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs e)
 		{
 			if (!new Regex($@"^[^{_invalidRegex}]+$").IsMatch(AsBox.Text))
 			{
 				MessageDialogX.Information(true, AsBox.PlaceholderText);
-				return;
+				e.Cancel = true;
 			}
-			Message = AsBox.Text;
-			//DialogResult = true;
-			Close();
+			else Canceled = false;
 		}
+
+		private void InputName_OnCloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args) => Canceled = true;
 	}
 }

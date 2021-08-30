@@ -66,6 +66,7 @@
             <uiControls:DataGrid
                 x:Name="DataGrid"
                 AutoGenerateColumns="False"
+                AlternatingRowBackground="LightGray"
                 CanUserReorderColumns="False"
                 ItemsSource="{x:Bind _vm.FileViewModels}">
                 <uiControls:DataGrid.Columns>
@@ -75,7 +76,7 @@
                                 <Image
                                     Width="32"
                                     Height="32"
-                                    Source="{x:Bind Icon}" />
+                                    Source="{x:Bind Icon, Mode=OneWay}" />
                             </DataTemplate>
                         </uiControls:DataGridTemplateColumn.CellTemplate>
                     </uiControls:DataGridTemplateColumn>

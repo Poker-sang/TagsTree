@@ -5,7 +5,6 @@ using TagsTreeWinUI3.Models;
 using TagsTreeWinUI3.Services;
 using TagsTreeWinUI3.Services.ExtensionMethods;
 using TagsTreeWinUI3.ViewModels;
-using Windows.Storage;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -19,7 +18,17 @@ namespace TagsTreeWinUI3
 	{
 		public static MainWindow Window = null!;
 		public static AppConfigurations AppConfigurations { get; set; } = null!;
-		public static bool ConfigSet { get; set; }
+
+		public static bool ConfigSet
+		{
+			get => _configSet;
+			set
+			{
+				if (_configSet != value && value)
+					LoadConfig();
+				_configSet = value;
+			}
+		}
 
 		/// <summary>
 		/// Initializes the singleton application object.  This is the first line of authored code
@@ -28,6 +37,7 @@ namespace TagsTreeWinUI3
 		public App()
 		{
 			InitializeComponent();
+			IconX.Initialize();
 			AppConfigurations.Initialize();
 			if (AppConfigurations.LoadConfiguration() is { } appConfigurations)
 				if (!Directory.Exists(appConfigurations.ProxyPath))
@@ -54,6 +64,8 @@ namespace TagsTreeWinUI3
 		{
 			Window = new MainWindow { ExtendsContentIntoTitleBar = true };
 			WindowHelper.SetWindowSize(1280, 720);
+			if (ConfigSet)
+				Window.ConfigModeUnlock();
 			Window.Activate();
 		}
 
@@ -92,6 +104,8 @@ namespace TagsTreeWinUI3
 		/// </summary>
 		public static readonly RelationsDataTable Relations = new();
 
+		private static bool _configSet;
+
 		public static bool TryRemoveFileModel(FileViewModel fileViewModel)
 		{
 			var fileModel = fileViewModel.GetFileModel;
@@ -102,6 +116,53 @@ namespace TagsTreeWinUI3
 			SaveFiles();
 			SaveRelations();
 			return true;
+		}
+
+		///  <summary>
+		///  重新加载新的配置文件
+		///  </summary>
+		///  <returns>true：已填写正确地址，进入软件；false：打开设置页面；null：关闭软件</returns>
+		public static async void LoadConfig()
+		{
+			//标签
+			Tags.LoadTree(TagsPath);
+			Tags.LoadDictionary();
+
+			//文件
+			IdFile.Deserialize(FilesPath);
+
+			//关系
+			if (!File.Exists(RelationsPath))
+				_ = File.Create(RelationsPath);
+			Relations.Load(); //异常在内部处理
+
+			//检查
+			if (Tags.TagsDictionary.Count != Relations.Columns.Count) //TagsDictionary第一个是总根标签，Relations第一列是文件Id 
+			{
+				if (await MessageDialogX.Warning($"路径「{AppConfigurations.ProxyPath}」下，TagsTree.xml和Relations.xml存储的标签数不同", "删除关系文件Relations.xml并重新生成", "直接关闭软件"))
+				{
+					File.Delete(RelationsPath);
+					Relations.Load();
+				}
+				else
+				{
+					Window.Close();
+					return;
+				}
+			}
+			if (IdFile.Count != Relations.Rows.Count)
+			{
+				if (await MessageDialogX.Warning($"「路径{AppConfigurations.ProxyPath}」下，Files.json和Relations.xml存储的文件数不同", "删除关系文件Relations.xml并重新生成", "直接关闭软件"))
+				{
+					File.Delete(RelationsPath);
+					Relations.Load();
+				}
+				else
+				{
+					Window.Close();
+					return;
+				}
+			}
 		}
 	}
 }

@@ -28,21 +28,23 @@ namespace TagsTreeWinUI3
 			await Task.Delay(500);
 			NavigationView.SelectedItem = NavigationView.MenuItems[0];
 		}
-		//不为static方便绑定
+		/// <summary>
+		///不为static方便绑定
+		/// </summary>
 		private Brush SystemColor => new SolidColorBrush(Application.Current.RequestedTheme is ApplicationTheme.Light ? Color.FromArgb(0x80, 0xFF, 0xFF, 0xFF) : Color.FromArgb(0x65, 0x00, 0x00, 0x00));
 
 		private void Selector_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs e)
 		{
 			if (e.SelectedItem == sender.MenuItems[0])
-				NavigateFrame.Content = new IndexPage();
+				NavigateFrame.Navigate(typeof(IndexPage));
 			else if (e.SelectedItem == sender.MenuItems[1])
-				NavigateFrame.Content = new TagsManagerPage();
+				NavigateFrame.Navigate(typeof(TagsManagerPage));
 			else if (e.SelectedItem == sender.MenuItems[2])
-				NavigateFrame.Content = new FileImporterPage();
+				NavigateFrame.Navigate(typeof(FileImporterPage));
 			else if (e.SelectedItem == sender.MenuItems[3])
-				NavigateFrame.Content = new TagEditFilesPage();
+				NavigateFrame.Navigate(typeof(TagEditFilesPage));
 			else if (e.IsSettingsSelected)
-				NavigateFrame.Content = new NewConfigPage();
+				NavigateFrame.Navigate(typeof(NewConfigPage));
 			GC.Collect();
 		}
 	}

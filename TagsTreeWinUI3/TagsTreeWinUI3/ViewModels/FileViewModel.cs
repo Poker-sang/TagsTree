@@ -1,12 +1,15 @@
-﻿using Microsoft.UI.Xaml.Media;
+﻿using Microsoft.UI.Xaml.Media.Imaging;
+using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using TagsTreeWinUI3.Models;
 using TagsTreeWinUI3.Services;
 using TagsTreeWinUI3.Services.ExtensionMethods;
+using Windows.Storage;
 
 namespace TagsTreeWinUI3.ViewModels
 {
@@ -17,18 +20,28 @@ namespace TagsTreeWinUI3.ViewModels
 
 		public FileViewModel(FileModel fileModel) : base(fileModel)
 		{
-			_fileSystemInfo = fileModel.IsFolder ? new DirectoryInfo(FullName) : new FileInfo(FullName);
+			_fileSystemInfo = IsFolder ? new DirectoryInfo(FullName) : new FileInfo(FullName);
+			GetIcon();
 		}
 
 		public FileViewModel(FileModel fileModel, TagModel tag) : base(fileModel)
 		{
-			Selected = SelectedOriginal = HasTag(tag);
 			_fileSystemInfo = IsFolder ? new DirectoryInfo(FullName) : new FileInfo(FullName);
+			Selected = SelectedOriginal = HasTag(tag);
+			GetIcon();
 		}
 
 		public FileViewModel(string fullName, bool isFolder) : base(fullName, isFolder)
 		{
-			_fileSystemInfo = isFolder ? new DirectoryInfo(FullName) : new FileInfo(FullName);
+			_fileSystemInfo = IsFolder ? new DirectoryInfo(FullName) : new FileInfo(FullName);
+			GetIcon();
+		}
+
+		private async void GetIcon()
+		{
+			if (Exists)
+				Icon = IsFolder ? IconX.FolderIcon : IconX.NotFoundIcon; // await IconX.GetIcon(Extension);
+			else Icon = IconX.NotFoundIcon;
 		}
 
 		public FileModel GetFileModel => App.IdFile[Id];
@@ -43,27 +56,16 @@ namespace TagsTreeWinUI3.ViewModels
 			OnPropertyChanged(nameof(Extension));
 			OnPropertyChanged(nameof(Path));
 			OnPropertyChanged(nameof(PartialPath));
+			GetIcon();
 			OnPropertyChanged(nameof(Icon));
 			OnPropertyChanged(nameof(DateOfModification));
 			OnPropertyChanged(nameof(Size));
 		}
 
 		private readonly FileSystemInfo _fileSystemInfo;
-		public ImageSource Icon
-		{
-			get
-			{
-				//if (Exists)
-				//{
-				//	if (IsFolder)
-				//		return Services.BitmapX.FolderIcon;
-				//	if (System.Drawing.Icon.ExtractAssociatedIcon(FullName) is { } icon)
-				//		return Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-				//}
-				//return Services.BitmapX.NotFoundIcon;
-				return null!;
-			}
-		}
+
+		public BitmapImage Icon { get; private set; } = null!;
+
 		public string DateOfModification => Exists ? _fileSystemInfo.LastWriteTime.ToString(CultureInfo.CurrentCulture) : "";
 		public string Size => Exists && !IsFolder ? FileX.CountSize((FileInfo)_fileSystemInfo) : "";
 		public bool Exists => _fileSystemInfo.Exists;

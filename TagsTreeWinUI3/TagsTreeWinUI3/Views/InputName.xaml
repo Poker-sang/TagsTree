@@ -1,17 +1,15 @@
-﻿<Window
+﻿<ContentDialog
     x:Class="TagsTreeWinUI3.Views.InputName"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:TagsTreeWinUI3"
+    xmlns:local="using:TagsTreeWinUI3.Views.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
+    CloseButtonText="取消"
+    DefaultButton="Close"
+    CloseButtonClick="InputName_OnCloseButtonClick"
+    PrimaryButtonClick="InputName_OnPrimaryButtonClick"
+    PrimaryButtonText="确定"
     mc:Ignorable="d">
-    <uiControls:DockPanel Margin="5,0">
-        <Button
-            uiControls:DockPanel.Dock="Right"
-            Click="BConfirm_OnClick"
-            Content="确定" />
-        <AutoSuggestBox x:Name="AsBox" VerticalAlignment="Center" />
-    </uiControls:DockPanel>
-</Window>
+    <AutoSuggestBox x:Name="AsBox" x:FieldModifier="public" />
+</ContentDialog>

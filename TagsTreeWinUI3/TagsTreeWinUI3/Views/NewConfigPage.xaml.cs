@@ -55,55 +55,10 @@ namespace TagsTreeWinUI3.Views
 				App.AppConfigurations.Theme = TsTheme.IsOn;
 				AppConfigurations.SaveConfiguration(App.AppConfigurations);
 				MessageDialogX.Information(false, "已保存");
-				LoadConfig();
+				App.ConfigSet = true;
 				App.Window.ConfigModeUnlock();
 			}
 		}
-		///  <summary>
-		///  重新加载新的配置文件
-		///  </summary>
-		///  <returns>true：已填写正确地址，进入软件；false：打开设置页面；null：关闭软件</returns>
-		private async void LoadConfig()
-		{
-			//标签
-			App.Tags.LoadTree(App.TagsPath);
-			App.Tags.LoadDictionary();
 
-			//文件
-			App.IdFile.Deserialize(App.FilesPath);
-
-			//关系
-			if (!File.Exists(App.RelationsPath))
-				_ = File.Create(App.RelationsPath);
-			App.Relations.Load(); //异常在内部处理
-
-			//检查
-			if (App.Tags.TagsDictionary.Count != App.Relations.Columns.Count) //TagsDictionary第一个是总根标签，Relations第一列是文件Id 
-			{
-				if (await MessageDialogX.Warning($"路径「{App.AppConfigurations.ProxyPath}」下，TagsTree.xml和Relations.xml存储的标签数不同", "删除关系文件Relations.xml并重新生成", "直接关闭软件"))
-				{
-					File.Delete(App.RelationsPath);
-					App.Relations.Load();
-				}
-				else
-				{
-					App.Window.Close();
-					return;
-				}
-			}
-			if (App.IdFile.Count != App.Relations.Rows.Count)
-			{
-				if (await MessageDialogX.Warning($"「路径{App.AppConfigurations.ProxyPath}」下，Files.json和Relations.xml存储的文件数不同", "删除关系文件Relations.xml并重新生成", "直接关闭软件"))
-				{
-					File.Delete(App.RelationsPath);
-					App.Relations.Load();
-				}
-				else
-				{
-					App.Window.Close();
-					return;
-				}
-			}
-		}
 	}
 }

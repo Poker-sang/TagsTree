@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml;
+﻿using System;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.Text.RegularExpressions;
 using TagsTreeWinUI3.Commands;
@@ -13,17 +14,18 @@ namespace TagsTreeWinUI3.Views
 	{
 		public TagsManagerPage()
 		{
+			Current = this;
 			_vm = new TagsManagerViewModel();
 			PPasteCmClick = new RelayCommand(_ => _clipBoard is not null, PasteCmClick);
 			PPasteXCmClick = new RelayCommand(_ => _clipBoard is not null, PasteXCmClick);
 			InitializeComponent();
 		}
 
+		public static TagsManagerPage Current =null!;
+
 		private readonly TagsManagerViewModel _vm;
-		public RelayCommand PPasteCmClick { get; } //public才能被BindingProxy找到
+		public RelayCommand PPasteCmClick { get; }
 		public RelayCommand PPasteXCmClick { get; }
-		private static TagModel TvItemGetHeader(object? sender) => (TagModel)((TreeViewItem)sender!).Content;
-		private static TagModel MItemGetHeader(object? sender) => TvItemGetHeader(((MenuFlyoutItem)sender!).Tag!);
 
 		private TagModel? _clipBoard;
 		private TagModel? ClipBoard
@@ -38,61 +40,15 @@ namespace TagsTreeWinUI3.Views
 			}
 		}
 
-		#region 拖拽
-
-		private void TvTags_OnDragItemsCompleted(TreeView sender, TreeViewDragItemsCompletedEventArgs args)
-		{
-
-		}
-		//private void TbTag_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e) => MouseX.LastMousePos = e.GetPosition(TvTags);
-		//private void TbTag_MouseMove(object sender, MouseEventArgs e)
-		//{
-		//	if (e.LeftButton == MouseButtonState.Pressed && MouseX.MouseDisplace(4, e.GetPosition(TvTags)))
-		//		_ = DragDrop.DoDragDrop((TreeViewItem)sender, TvItemGetHeader(sender), DragDropEffects.Move);
-		//}
-		//private void TbTag_DragEnter(object sender, DragEventArgs e)
-		//{
-		//	if (e.Data.GetData(typeof(TagModel)) is TagModel origin)
-		//		if (origin != TvItemGetHeader(sender))
-		//			((TreeViewItem)sender).Foreground = new SolidColorBrush(Colors.LightGray);
-		//	e.Handled = true;
-		//}
-		//private void TbTag_DragLeave(object sender, DragEventArgs dragEventArgs)
-		//{
-		//	((TreeViewItem)sender).Foreground = new SolidColorBrush(Colors.Black);
-		//}
-		//private void TbTag_Drop(object sender, DragEventArgs e)
-		//{
-		//	((TreeViewItem)sender).Foreground = new SolidColorBrush(Colors.Black);
-		//	if (e.Data.GetData(typeof(TagModel)) is not TagModel origin)
-		//		return;
-		//	e.Effects = DragDropEffects.None;
-		//	e.Handled = true;
-		//	if (origin != TvItemGetHeader(sender))
-		//		MoveTag(origin, TvItemGetHeader(sender));
-		//}
-		//private void TvTags_Drop(object sender, DragEventArgs dragEventArgs)
-		//{
-		//	if (e.Data.GetData(typeof(TagModel)) is not TagModel origin)
-		//		return;
-		//	e.Effects = DragDropEffects.None;
-		//	e.Handled = true;
-		//	MoveTag(origin, App.Tags.TagsTree);
-		//}
-
-		#endregion
-
 		#region 事件处理
+
+		private void TvTags_OnDragItemsCompleted(TreeView sender, TreeViewDragItemsCompletedEventArgs e) => BSave.IsEnabled = true;
 
 		private void NameChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e) => _vm.Name = Regex.Replace(_vm.Name, $@"[{FileX.GetInvalidNameChars}]+", "");
 
 		private void Tags_OnItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs e) => TbPath.Path = ((TagModel?)e.InvokedItem)?.FullName ?? TbPath.Path;
 
-		#endregion
-
-		#region 命令
-
-		private void NewBClick(object parameter, RoutedEventArgs e)
+		private void NewBClick(object sender, RoutedEventArgs e)
 		{
 			if (TbPath.Path.GetTagModel() is not { } pathTagModel)
 			{
@@ -103,7 +59,7 @@ namespace TagsTreeWinUI3.Views
 			NewTag(_vm.Name, pathTagModel);
 			_vm.Name = "";
 		}
-		private void MoveBClick(object parameter, RoutedEventArgs e)
+		private void MoveBClick(object sender, RoutedEventArgs e)
 		{
 			if (TbPath.Path.GetTagModel() is not { } pathTagModel)
 			{
@@ -118,7 +74,7 @@ namespace TagsTreeWinUI3.Views
 			MoveTag(nameTagModel, pathTagModel);
 			_vm.Name = "";
 		}
-		private void RenameBClick(object parameter, RoutedEventArgs e)
+		private void RenameBClick(object sender, RoutedEventArgs e)
 		{
 			if (TbPath.Path is "")
 			{
@@ -135,7 +91,7 @@ namespace TagsTreeWinUI3.Views
 			_vm.Name = "";
 			TbPath.Path = "";
 		}
-		private void DeleteBClick(object parameter, RoutedEventArgs e)
+		private void DeleteBClick(object sender, RoutedEventArgs e)
 		{
 			if (TbPath.Path is "")
 			{
@@ -150,29 +106,44 @@ namespace TagsTreeWinUI3.Views
 			DeleteTag(pathTagModel);
 			_vm.Name = "";
 		}
-		private void SaveBClick(object parameter, RoutedEventArgs e)
+		private void SaveBClick(object sender, RoutedEventArgs e)
 		{
 			App.SaveTags(_vm.TagsSource);
 			App.SaveRelations();
 			BSave.IsEnabled = false;
 		}
 
-		private void NewCmClick(object sender, RoutedEventArgs e)
+		private async void NewCmClick(object sender, RoutedEventArgs e)
 		{
-			var dialog = new InputName(FileX.InvalidMode.Name);
-			//if (dialog.ShowDialog() != false && NewTagCheck(dialog.Message))
-			//	NewTag(dialog.Message, MItemGetHeader(sender));
+			InputName.Load(FileX.InvalidMode.Name);
+			await InputName.ShowAsync();
+			if (!InputName.Canceled && NewTagCheck(InputName.AsBox.Text))
+				NewTag(InputName.AsBox.Text, (TagModel)((MenuFlyoutItem)sender).Tag!);
 		}
-		private void NewXCmClick(object sender, RoutedEventArgs e)
+		private async void NewXCmClick(object sender, RoutedEventArgs e)
 		{
-			var dialog = new InputName(FileX.InvalidMode.Name);
-			//if (dialog.ShowDialog() != false && NewTagCheck(dialog.Message))
-			//	NewTag(dialog.Message, App.Tags.TagsTree);
+			InputName.Load(FileX.InvalidMode.Name);
+			await InputName.ShowAsync();
+			if (!InputName.Canceled && NewTagCheck(InputName.AsBox.Text))
+				NewTag(InputName.AsBox.Text, App.Tags.TagsTree);
 		}
-		private void CutCmClick(object sender, RoutedEventArgs e) => ClipBoard = MItemGetHeader(sender);
+		private void CutCmClick(object sender, RoutedEventArgs e) => ClipBoard = (TagModel)((MenuFlyoutItem)sender).Tag!;
+		private async void RenameCmClick(object sender, RoutedEventArgs e)
+		{
+			InputName.Load(FileX.InvalidMode.Name);
+			await InputName.ShowAsync();
+			if (!InputName.Canceled && NewTagCheck(InputName.AsBox.Text))
+				RenameTag(InputName.AsBox.Text, (TagModel)((MenuFlyoutItem)sender).Tag!);
+		}
+		private void DeleteCmClick(object sender, RoutedEventArgs e) => DeleteTag((TagModel)((MenuFlyoutItem)sender).Tag!);
+
+		#endregion
+
+		#region 命令
+		
 		private void PasteCmClick(object? parameter)
 		{
-			MoveTag(ClipBoard!, TvItemGetHeader(parameter));
+			MoveTag(ClipBoard!, (TagModel)parameter!);
 			ClipBoard = null;
 		}
 		private void PasteXCmClick(object? parameter)
@@ -180,14 +151,7 @@ namespace TagsTreeWinUI3.Views
 			MoveTag(ClipBoard!, App.Tags.TagsTree);
 			ClipBoard = null;
 		}
-		private void RenameCmClick(object sender, RoutedEventArgs e)
-		{
-			var dialog = new InputName(FileX.InvalidMode.Name);
-			//if (dialog.ShowDialog() != false && NewTagCheck(dialog.Message))
-			//	RenameTag(dialog.Message, MItemGetHeader(sender));
-		}
-		private void DeleteCmClick(object sender, RoutedEventArgs e) => DeleteTag(MItemGetHeader(sender));
-
+		
 		#endregion
 
 		#region 操作

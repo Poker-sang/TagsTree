@@ -46,7 +46,7 @@
     <Page Update="Views\Controls\TagSearchBox.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="Views\FileEditTags.xaml">
+    <Page Update="Views\FileEditTagsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\FileImporterPage.xaml">
