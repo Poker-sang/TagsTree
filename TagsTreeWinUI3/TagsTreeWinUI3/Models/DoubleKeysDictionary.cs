@@ -30,9 +30,11 @@ namespace TagsTreeWinUI3.Models
 		}
 		public TValue this[TKey1 key1] => _dict2[_dict1[key1]];
 		public TValue this[TKey2 key2] => _dict2[key2];
+		public TValue? GetValueOrDefault(TKey2 key2) => _dict2.ContainsKey(key2) ? _dict2[key2] : default;
+		public TValue? GetValueOrDefault(TKey1 key1) => _dict1.ContainsKey(key1) ? _dict2[_dict1[key1]] : default;
 
-		public bool ContainsKey(TKey1 key) => _dict1.ContainsKey(key);
-		public bool ContainsKey(TKey2 key) => _dict2.ContainsKey(key);
+		public bool ContainsKey(TKey1 key1) => _dict1.ContainsKey(key1);
+		public bool ContainsKey(TKey2 key2) => _dict2.ContainsKey(key2);
 		public bool ContainsValue(TValue value) => _dict2.ContainsValue(value);
 		public bool Remove(TKey1 key1)
 		{

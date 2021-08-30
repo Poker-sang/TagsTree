@@ -22,7 +22,5 @@ namespace TagsTreeWinUI3.ViewModels
 				OnPropertyChanged(nameof(FileViewModels));
 			}
 		}
-
-		public void CollectionChanged() => OnPropertyChanged(nameof(FileViewModels));
 	}
 }

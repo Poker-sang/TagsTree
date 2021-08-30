@@ -3,7 +3,6 @@ using Microsoft.UI.Xaml.Controls;
 using System.IO;
 using System.Text.RegularExpressions;
 using TagsTreeWinUI3.Services;
-using Windows.Storage;
 
 namespace TagsTreeWinUI3.Views
 {
@@ -56,6 +55,7 @@ namespace TagsTreeWinUI3.Views
 				App.AppConfigurations.Theme = TsTheme.IsOn;
 				AppConfigurations.SaveConfiguration(App.AppConfigurations);
 				MessageDialogX.Information(false, "已保存");
+				App.ConfigSet = true;
 				App.Window.ConfigModeUnlock();
 			}
 		}

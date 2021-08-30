@@ -1,13 +1,12 @@
 ﻿using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System.Collections.Generic;
 using System.Linq;
-using TagsTreeWinUI3.Delegates;
 using TagsTreeWinUI3.Models;
 using TagsTreeWinUI3.Services;
 using TagsTreeWinUI3.Services.ExtensionMethods;
 using TagsTreeWinUI3.ViewModels;
-using TagsTreeWinUI3.Views.Controls;
 
 namespace TagsTreeWinUI3.Views
 {
@@ -23,7 +22,7 @@ namespace TagsTreeWinUI3.Views
 		}
 
 		private readonly TagEditFilesViewModel _vm;
-		
+
 		private void Storyboard1_OnCompleted(object? sender, object e)
 		{
 			Panel.Children.Remove(Tags);
@@ -39,9 +38,9 @@ namespace TagsTreeWinUI3.Views
 
 		#region 事件处理
 
-		private void Tags_OnItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs e) => TbPath.Path = ((TagModel?)e.InvokedItem)?.FullName ?? TbPath.Path;
+		private void Tags_OnItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs e) => TbPath.Path = ((TagViewModel?)e.InvokedItem)?.FullName ?? TbPath.Path;
 
-		private void ResultChanged(TagSearchBox sender, ResultChangedEventArgs e) => _vm.FileViewModels = e.NewResult.Select(fileModel => new FileViewModel(fileModel, TbPath.Path.GetTagModel()!)).ToObservableCollection();
+		private void ResultChanged(IEnumerable<FileModel> newResult) => _vm.FileViewModels = newResult.Select(fileModel => new FileViewModel(fileModel, TbPath.Path.GetTagViewModel()!)).ToObservableCollection();
 
 		private void Selected(object sender, SelectionChangedEventArgs e)
 		{
@@ -50,17 +49,13 @@ namespace TagsTreeWinUI3.Views
 			((DataGrid)sender).SelectedIndex = -1;
 		}
 
-		#endregion
-
-		#region 命令
-
 		private static bool _mode;
 
-		private void ConfirmBClick(object parameter, RoutedEventArgs e)
+		private void ConfirmBClick(object sender, RoutedEventArgs e)
 		{
 			if (!_mode)
 			{
-				if (TbPath.Path.GetTagModel() is not { } pathTagModel)
+				if (TbPath.Path.GetTagViewModel() is not { } pathTagModel)
 				{
 					MessageDialogX.Information(true, "「标签路径」不存在！");
 					return;
@@ -77,7 +72,7 @@ namespace TagsTreeWinUI3.Views
 			}
 			else
 			{
-				if (TbPath.Path.GetTagModel() is not { } pathTagModel)
+				if (TbPath.Path.GetTagViewModel() is not { } pathTagModel)
 				{
 					MessageDialogX.Information(true, "「标签路径」不存在！"); //理论上不会到达此代码
 					return;

@@ -14,7 +14,7 @@ namespace TagsTreeWinUI3.Services.ExtensionMethods
 		{
 			// When running on win32, FileOpenPicker needs to know the top-level hWnd via IInitializeWithWindow::Initialize.
 			if (Window.Current is null)
-				obj.As<IInitializeWithWindow>()?.Initialize(HWnd);
+				obj.As<IInitializeWithWindow>()?.Initialize(HWnd); //HWnd 或者 User32.GetActiveWindow()
 			return obj;
 		}
 

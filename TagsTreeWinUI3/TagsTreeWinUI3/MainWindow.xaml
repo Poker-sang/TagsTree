@@ -10,6 +10,7 @@
     mc:Ignorable="d">
     <NavigationView
         x:Name="NavigationView"
+        IsBackButtonVisible="Collapsed"
         Loaded="NavigationView_OnLoaded"
         PaneDisplayMode="Left"
         PaneTitle="TagsTree"
@@ -40,7 +41,7 @@
                 uiControls:DockPanel.Dock="Top"
                 Fill="{x:Bind SystemColor}"
                 IsHitTestVisible="False" />
-            <Frame x:Name="NavigateFrame" />
+            <Frame x:Name="NavigateFrame" x:FieldModifier="public" />
         </uiControls:DockPanel>
     </NavigationView>
 </Window>

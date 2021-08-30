@@ -6,14 +6,14 @@
     xmlns:local="using:TagsTreeWinUI3"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI.UI"
-    xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
-    x:Name="CdFileProperties"
     Title="属性"
     CloseButtonText="退出"
     DefaultButton="Close"
+    PrimaryButtonClick="EditTagsBClick"
+    PrimaryButtonText="编辑标签"
     mc:Ignorable="d">
 
-    <Grid Width="800" Height="600">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
             <ColumnDefinition Width="9*" />
@@ -60,7 +60,7 @@
             Grid.Row="1"
             Grid.Column="0"
             Grid.ColumnSpan="2"
-            VerticalAlignment="Bottom">
+            VerticalAlignment="Top">
             <AppBarButton
                 x:Name="BOpen"
                 Click="OpenBClick"
@@ -70,10 +70,6 @@
                 Click="OpenExplorerBClick"
                 Icon="OpenLocal"
                 Label="打开文件夹" />
-            <AppBarButton
-                Click="EditTagsBClick"
-                Icon="Tag"
-                Label="编辑标签" />
             <AppBarButton
                 Click="RemoveBClick"
                 Icon="{ui:FontIcon Glyph=&#xEDE1;}"

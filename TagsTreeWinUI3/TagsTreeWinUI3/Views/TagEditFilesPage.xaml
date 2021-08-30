@@ -6,8 +6,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:TagsTreeWinUI3.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:models="using:TagsTreeWinUI3.Models"
-    xmlns:ui="using:CommunityToolkit.WinUI.UI"
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:viewModels="using:TagsTreeWinUI3.ViewModels"
     d:DesignHeight="600"
@@ -50,7 +48,7 @@
             ItemInvoked="Tags_OnItemInvoked"
             ItemsSource="{x:Bind _vm.TagsSource, Mode=TwoWay}">
             <TreeView.ItemTemplate>
-                <DataTemplate x:DataType="models:TagModel">
+                <DataTemplate x:DataType="viewModels:TagViewModel">
                     <TreeViewItem ItemsSource="{x:Bind SubTags}">
                         <TextBlock Text="{x:Bind Name}" />
                     </TreeViewItem>
@@ -67,7 +65,7 @@
             ResultChanged="ResultChanged" />
         <uiControls:DataGrid
             x:Name="DgResult"
-            AlternatingRowBackground="Gray"
+            AlternatingRowBackground="LightGray"
             AutoGenerateColumns="False"
             CanUserReorderColumns="False"
             IsHitTestVisible="False"

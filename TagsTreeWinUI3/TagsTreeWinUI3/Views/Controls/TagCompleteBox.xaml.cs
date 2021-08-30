@@ -14,7 +14,7 @@ namespace TagsTreeWinUI3.Views.Controls
 	public partial class TagCompleteBox : UserControl, INotifyPropertyChanged
 	{
 		public TagCompleteBox() => InitializeComponent();
-		private void PathComplement(object sender, RoutedEventArgs routedEventArgs) => Path = Path.GetTagModel()?.FullName ?? Path;
+		private void PathComplement(object sender, RoutedEventArgs routedEventArgs) => Path = Path.GetTagViewModel()?.FullName ?? Path;
 		private void PathChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
 		{
 			Path = Regex.Replace(Path, $@"[{FileX.GetInvalidPathChars}]+", "");

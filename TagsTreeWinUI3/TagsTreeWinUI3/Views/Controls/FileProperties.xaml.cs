@@ -16,10 +16,10 @@ namespace TagsTreeWinUI3.Views.Controls
 	public partial class FileProperties : ContentDialog, INotifyPropertyChanged
 	{
 		public event FileRemovedEventHandler FileRemoved = null!;
+		public event FileEditTagsRaisedEventHandler FileEditTagsRaised = null!;
 		public event PropertyChangedEventHandler? PropertyChanged;
 
 		private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
 
 		public FileProperties() => InitializeComponent();
 
@@ -30,36 +30,41 @@ namespace TagsTreeWinUI3.Views.Controls
 			BOpen.IsEnabled = BRename.IsEnabled = BMove.IsEnabled = BDelete.IsEnabled = FileViewModel.Exists;
 		}
 
-		public FileViewModel FileViewModel { get; private set; }
+		public FileViewModel FileViewModel { get; private set; } = null!;
 
 		#region 事件
 
 		private void OpenBClick(object sender, RoutedEventArgs e) => FileViewModel.FullName.Open();
 		private void OpenExplorerBClick(object sender, RoutedEventArgs e) => FileViewModel.Path.Open();
-		private void EditTagsBClick(object sender, RoutedEventArgs e) => new FileEditTags(FileViewModel).Activate();
+		private void EditTagsBClick(ContentDialog sender, ContentDialogButtonClickEventArgs e) => FileEditTagsRaised.Invoke(FileViewModel);
 		private async void RemoveBClick(object sender, RoutedEventArgs e)
 		{
 			if (await MessageDialogX.Warning("是否从软件移除该文件？")) return;
 			Remove(FileViewModel);
 		}
-		private void RenameBClick(object sender, RoutedEventArgs e)
+		private async void RenameBClick(object sender, RoutedEventArgs e)
 		{
-			var dialog = new InputName(FileX.InvalidMode.Name, FileViewModel.Name);
+			//FileProperties.
+			//InputName.Load(FileX.InvalidMode.Name);
+			//await InputName.ShowAsync();
+			//if (!InputName.Canceled && NewTagCheck(InputName.AsBox.Text))
+			//	NewTag(InputName.AsBox.Text, MItemGetHeader(sender));
+			//var dialog = new InputName(FileX.InvalidMode.Name, FileViewModel.Name);
 			//if (dialog.ShowDialog() == false) return;
-			if (FileViewModel.Name == dialog.Message)
-			{
-				MessageDialogX.Information(true, "新文件名与原文件名一致！");
-				return;
-			}
-			var newFullName = FileViewModel.Path + @"\" + dialog.Message;
-			if (FileViewModel.IsFolder ? Directory.Exists(newFullName) : File.Exists(newFullName))
-			{
-				MessageDialogX.Information(true, "新文件名与文件夹中其他文件同名！");
-				return;
-			}
-			new FileInfo(FileViewModel.FullName).MoveTo(newFullName);
-			FileViewModel.Reload(newFullName);
-			Load(FileViewModel);
+			//if (FileViewModel.Name == dialog.Message)
+			//{
+			//	MessageDialogX.Information(true, "新文件名与原文件名一致！");
+			//	return;
+			//}
+			//var newFullName = FileViewModel.Path + @"\" + dialog.Message;
+			//if (FileViewModel.IsFolder ? Directory.Exists(newFullName) : File.Exists(newFullName))
+			//{
+			//	MessageDialogX.Information(true, "新文件名与文件夹中其他文件同名！");
+			//	return;
+			//}
+			//new FileInfo(FileViewModel.FullName).MoveTo(newFullName);
+			//FileViewModel.Reload(newFullName);
+			//Load(FileViewModel);
 		}
 		private async void MoveBClick(object sender, RoutedEventArgs e)
 		{
@@ -99,7 +104,7 @@ namespace TagsTreeWinUI3.Views.Controls
 		{
 			Hide();
 			if (App.TryRemoveFileModel(fileViewModel))
-				FileRemoved.Invoke(this, new FileRemovedEventArgs(fileViewModel));
+				FileRemoved.Invoke(fileViewModel);
 		}
 
 		#endregion

@@ -20,7 +20,6 @@
             <RowDefinition Height="1*" />
             <RowDefinition Height="3*" />
         </Grid.RowDefinitions>
-
         <Grid.Resources>
             <Storyboard x:Name="Storyboard1" Completed="Storyboard1_OnCompleted">
                 <DoubleAnimation
@@ -50,7 +49,6 @@
                     Duration="0:0:1" />
             </Storyboard>
         </Grid.Resources>
-
         <TextBlock
             x:Name="TbBanner"
             Grid.Row="1"
@@ -59,7 +57,6 @@
             VerticalAlignment="Top"
             FontSize="80"
             Text="TagsTree" />
-
         <Grid
             Grid.Row="0"
             Grid.RowSpan="2"
@@ -93,6 +90,7 @@
             Grid.Column="0"
             Grid.ColumnSpan="3"
             VerticalAlignment="Stretch"
+            AlternatingRowBackground="LightGray"
             AutoGenerateColumns="False"
             CanUserReorderColumns="False"
             IsHitTestVisible="False"
@@ -123,7 +121,6 @@
                             </MenuFlyout>
                         </Setter.Value>
                     </Setter>
-
                 </Style>
             </uiControls:DataGrid.RowStyle>
             <uiControls:DataGrid.Columns>
@@ -134,7 +131,7 @@
                                 Width="32"
                                 Height="32"
                                 DoubleTapped="PropertiesCmDoubleClick"
-                                Source="{x:Bind Icon}"
+                                Source="{x:Bind Icon, Mode=OneWay}"
                                 Tag="{x:Bind}" />
                         </DataTemplate>
                     </uiControls:DataGridTemplateColumn.CellTemplate>
@@ -191,6 +188,7 @@
             Grid.Row="0"
             Grid.RowSpan="2"
             Grid.Column="1"
+            FileEditTagsRaised="FileEditTagsRaised"
             FileRemoved="FileRemoved" />
     </Grid>
 </Page>

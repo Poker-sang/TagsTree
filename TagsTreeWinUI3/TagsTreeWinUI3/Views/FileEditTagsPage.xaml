@@ -1,13 +1,13 @@
-﻿<Window
-    x:Class="TagsTreeWinUI3.Views.FileEditTags"
+﻿<Page
+    x:Class="TagsTreeWinUI3.Views.FileEditTagsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:TagsTreeWinUI3.Views.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:TagsTreeWinUI3.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:models="using:TagsTreeWinUI3.Models"
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:viewModels="using:TagsTreeWinUI3.ViewModels"
     mc:Ignorable="d">
     <uiControls:DockPanel>
         <AutoSuggestBox
@@ -40,7 +40,7 @@
             ItemInvoked="Tags_OnItemInvoked"
             ItemsSource="{x:Bind _vm.TagsSource, Mode=TwoWay}">
             <TreeView.ItemTemplate>
-                <DataTemplate x:DataType="models:TagModel">
+                <DataTemplate x:DataType="viewModels:TagViewModel">
                     <TreeViewItem ItemsSource="{x:Bind SubTags}">
                         <TextBlock Text="{x:Bind Name}" />
                     </TreeViewItem>
@@ -48,4 +48,4 @@
             </TreeView.ItemTemplate>
         </TreeView>
     </uiControls:DockPanel>
-</Window>
+</Page>
