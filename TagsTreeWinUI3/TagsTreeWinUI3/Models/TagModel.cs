@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
+using Windows.UI.Xaml.Interop;
 using TagsTreeWinUI3.Services.ExtensionMethods;
 
 namespace TagsTreeWinUI3.Models
 {
 	public class PathTagModel
 	{
-		public string Name { get; set; }
+		public string Name { get; protected set; }
 		public PathTagModel(string name) => Name = name;
 	}
 
-	public class TagModel : PathTagModel
+	public class TagModel : PathTagModel, INotifyPropertyChanged
 	{
 		[JsonIgnore]
 		private static int Num { get; set; } = 1;
@@ -46,5 +49,21 @@ namespace TagsTreeWinUI3.Models
 		public bool HasChildTag(TagModel child) => $"\\\\{child.Path}\\".Contains($"\\{Name}\\"); //不包含自己
 		[JsonIgnore]
 		public TagModel GetParentTag => Path.GetTagModel()!; //根节点不能用
+
+		public new string Name
+		{
+			get => base.Name;
+			set
+			{
+				if (base.Name == value) return;
+				base.Name = value;
+				OnPropertyChanged(Name);
+			}
+		}
+
+
+
+		public event PropertyChangedEventHandler? PropertyChanged;
+		private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 	}
 }

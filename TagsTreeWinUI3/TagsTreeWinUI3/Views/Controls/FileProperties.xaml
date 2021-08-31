@@ -13,7 +13,7 @@
     PrimaryButtonText="编辑标签"
     mc:Ignorable="d">
 
-    <Grid Width="800" Height="600">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
             <ColumnDefinition Width="9*" />

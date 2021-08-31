@@ -32,8 +32,8 @@ namespace TagsTreeWinUI3.Models
 		public void RenameTag(TagModel tag, string newName)
 		{
 			TagsDictionary.ChangeKey2(tag.Name, newName);
+
 			tag.Name = newName;
-			//TODO TreeView不会更新名称
 		}
 		public void DeleteTag(TagModel tag)
 		{

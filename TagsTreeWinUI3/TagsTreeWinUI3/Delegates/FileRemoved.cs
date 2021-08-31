@@ -1,6 +1,4 @@
-﻿using TagsTreeWinUI3.ViewModels;
-
-namespace TagsTreeWinUI3.Delegates
+﻿namespace TagsTreeWinUI3.Delegates
 {
-	public delegate void FileRemovedEventHandler(FileViewModel removedItem);
+	public delegate void FileRemovedEventHandler(ViewModels.FileViewModel removedItem);
 }

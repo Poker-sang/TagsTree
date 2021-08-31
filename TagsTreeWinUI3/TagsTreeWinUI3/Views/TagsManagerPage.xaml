@@ -58,8 +58,8 @@
             ItemsSource="{x:Bind _vm.TagsSource, Mode=TwoWay}">
             <TreeView.ItemTemplate>
                 <DataTemplate x:DataType="models:TagModel">
-                    <TreeViewItem ItemsSource="{x:Bind SubTags, Mode=TwoWay}">
-                        <TextBlock Text="{x:Bind Name, Mode=TwoWay}" />
+                    <TreeViewItem ItemsSource="{x:Bind SubTags, Mode=OneWay}">
+                        <TextBlock Text="{x:Bind Name, Mode=OneWay}" />
                         <TreeViewItem.ContextFlyout>
                             <MenuFlyout>
                                 <MenuFlyoutItem

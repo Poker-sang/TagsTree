@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using TagsTreeWinUI3.Models;
-
-namespace TagsTreeWinUI3.Delegates
+﻿namespace TagsTreeWinUI3.Delegates
 {
-	public delegate void ResultChangedEventHandler(IEnumerable<FileModel> newResult);
+	public delegate void ResultChangedEventHandler(System.Collections.Generic.IEnumerable<Models.FileModel> newResult);
 }
