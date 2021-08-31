@@ -1,15 +1,12 @@
 ﻿using Microsoft.UI.Xaml.Media.Imaging;
-using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using TagsTreeWinUI3.Models;
 using TagsTreeWinUI3.Services;
 using TagsTreeWinUI3.Services.ExtensionMethods;
-using Windows.Storage;
 
 namespace TagsTreeWinUI3.ViewModels
 {
@@ -24,7 +21,7 @@ namespace TagsTreeWinUI3.ViewModels
 			GetIcon();
 		}
 
-		public FileViewModel(FileModel fileModel, TagModel tag) : base(fileModel)
+		public FileViewModel(FileModel fileModel, TagViewModel tag) : base(fileModel)
 		{
 			_fileSystemInfo = IsFolder ? new DirectoryInfo(FullName) : new FileInfo(FullName);
 			Selected = SelectedOriginal = HasTag(tag);
@@ -44,13 +41,13 @@ namespace TagsTreeWinUI3.ViewModels
 			else Icon = IconX.NotFoundIcon;
 		}
 
-		public FileModel GetFileModel => App.IdFile[Id];
+		public FileModel GetFileModel() => App.IdFile[Id];
 		public FileModel NewFileModel() => new(this);
 
 		public new void Reload(string fullName)
 		{
 			base.Reload(fullName);
-			GetFileModel.Reload(fullName);
+			GetFileModel().Reload(fullName);
 			App.SaveFiles();
 			OnPropertyChanged(nameof(Name));
 			OnPropertyChanged(nameof(Extension));
@@ -71,7 +68,7 @@ namespace TagsTreeWinUI3.ViewModels
 		public bool Exists => _fileSystemInfo.Exists;
 
 		public new static bool ValidPath(string path) => FileModel.ValidPath(path);
-		public TagModel? GetRelativeVirtualTag(TagModel parentTag) => VirtualTags.GetTagModels().FirstOrDefault(parentTag.HasChildTag);
+		public TagViewModel? GetRelativeVirtualTag(TagViewModel parentTag) => VirtualTags.GetTagViewModels().FirstOrDefault(parentTag.HasChildTag);
 		public void TagsUpdated()
 		{
 			OnPropertyChanged(nameof(Tags));

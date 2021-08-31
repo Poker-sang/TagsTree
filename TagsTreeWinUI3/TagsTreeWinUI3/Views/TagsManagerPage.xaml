@@ -8,6 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:TagsTreeWinUI3.Models"
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:viewModels="using:TagsTreeWinUI3.ViewModels"
     mc:Ignorable="d">
     <uiControls:DockPanel>
         <local:InputName x:Name="InputName" />
@@ -57,7 +58,7 @@
             ItemInvoked="Tags_OnItemInvoked"
             ItemsSource="{x:Bind _vm.TagsSource, Mode=TwoWay}">
             <TreeView.ItemTemplate>
-                <DataTemplate x:DataType="models:TagModel">
+                <DataTemplate x:DataType="viewModels:TagViewModel">
                     <TreeViewItem ItemsSource="{x:Bind SubTags, Mode=OneWay}">
                         <TextBlock Text="{x:Bind Name, Mode=OneWay}" />
                         <TreeViewItem.ContextFlyout>
@@ -71,7 +72,7 @@
                                     Tag="{x:Bind}"
                                     Text="剪切" />
                                 <MenuFlyoutItem
-                                    Command="{x:Bind local:TagsManagerPage.Current.PPasteCmClick}"
+                                    Command="{x:Bind local:TagsManagerPage.Current.RPasteCmClick}"
                                     CommandParameter="{x:Bind}"
                                     Text="粘贴" />
                                 <MenuFlyoutItem
@@ -90,7 +91,10 @@
             <TreeView.ContextFlyout>
                 <MenuFlyout>
                     <MenuFlyoutItem Click="NewXCmClick" Text="新建" />
-                    <MenuFlyoutItem Command="{x:Bind PPasteXCmClick}" Text="粘贴" />
+                    <MenuFlyoutItem
+                        x:Name="CmPPasteX"
+                        Click="PasteXCmClick"
+                        Text="粘贴" />
                 </MenuFlyout>
             </TreeView.ContextFlyout>
         </TreeView>

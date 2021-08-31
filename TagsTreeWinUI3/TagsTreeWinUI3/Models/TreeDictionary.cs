@@ -2,42 +2,43 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using TagsTreeWinUI3.Services;
+using TagsTreeWinUI3.ViewModels;
 
 namespace TagsTreeWinUI3.Models
 {
 	public class TreeDictionary
 	{
-		public DoubleKeysDictionary<int, string, TagModel> TagsDictionary { get; } = new();
+		public DoubleKeysDictionary<int, string, TagViewModel> TagsDictionary { get; } = new();
 
-		public TagModel TagsTree { get; } = new(0, "", ""); //属于反序列化一部分
+		public TagViewModel TagsTree { get; } = new(0, ""); //属于反序列化一部分
 
-		public IEnumerable<TagModel> TagsDictionaryValues => TagsDictionary.Values.Where(value => value.Id != 0);
-		public TagModel TagsDictionaryRoot => TagsDictionary[0]; //或TagsDictionary[""]
+		public IEnumerable<TagViewModel> TagsDictionaryValues => TagsDictionary.Values.Where(value => value.Id != 0);
+		public TagViewModel TagsDictionaryRoot => TagsDictionary[0]; //或TagsDictionary[""]
 
-		public int AddTag(TagModel path, string name)
+		public int AddTag(TagViewModel path, string name)
 		{
-			var temp = new TagModel(name, path.FullName);
+			var temp = new TagViewModel(name, path.FullName);
 			path.SubTags.Add(temp);
 
 			TagsDictionary[temp.Id, name] = temp;
 			return temp.Id;
 		}
-		public void MoveTag(TagModel tag, TagModel newPath)
+		public void MoveTag(TagViewModel tag, TagViewModel newPath)
 		{
-			_ = TagsDictionary[tag.Id].GetParentTag.SubTags.Remove(tag);
+			_ = TagsDictionary[tag.Id].GetParentTag().SubTags.Remove(tag);
 			newPath.SubTags.Add(tag);
 
 			TagsDictionary[tag.Id].Path = TagsDictionary[newPath.Id].FullName;
 		}
-		public void RenameTag(TagModel tag, string newName)
+		public void RenameTag(TagViewModel tag, string newName)
 		{
 			TagsDictionary.ChangeKey2(tag.Name, newName);
 
 			tag.Name = newName;
 		}
-		public void DeleteTag(TagModel tag)
+		public void DeleteTag(TagViewModel tag)
 		{
-			TagsDictionary[tag.Id].GetParentTag.SubTags.Remove(tag);
+			TagsDictionary[tag.Id].GetParentTag().SubTags.Remove(tag);
 
 			TagsDictionary.Remove(tag.Id);
 		}
@@ -48,7 +49,7 @@ namespace TagsTreeWinUI3.Models
 		/// </summary>
 		/// <param name="path">标签所在路径</param>
 		/// <param name="tag">标签所在路径的标签</param>
-		private void RecursiveLoadTags(string path, TagModel tag)
+		private void RecursiveLoadTags(string path, TagViewModel tag)
 		{
 			tag.Path = path;
 			TagsDictionary[tag.Id, tag.Name] = tag;
@@ -56,7 +57,7 @@ namespace TagsTreeWinUI3.Models
 				RecursiveLoadTags((path is "" ? "" : path + '\\') + tag.Name, subTag);
 		}
 
-		public void LoadTree(string path) => TagsTree.SubTags = Serialization.Deserialize<ObservableCollection<TagModel>>(path);
+		public void LoadTree(string path) => TagsTree.SubTags = Serialization.Deserialize<ObservableCollection<TagViewModel>>(path);
 
 		public void LoadDictionary()
 		{

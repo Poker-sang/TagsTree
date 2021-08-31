@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using TagsTreeWinUI3.Delegates;
 using TagsTreeWinUI3.Models;
 using TagsTreeWinUI3.Services;
 using TagsTreeWinUI3.Services.ExtensionMethods;
@@ -39,7 +37,7 @@ namespace TagsTreeWinUI3.Views
 			TbFuzzySearch.IsHitTestVisible = true;
 			DgResult.IsHitTestVisible = true;
 		}
-		
+
 
 		#region 事件处理
 
@@ -51,7 +49,7 @@ namespace TagsTreeWinUI3.Views
 		private void QuerySubmitted(AutoSuggestBox autoSuggestBox, AutoSuggestBoxQuerySubmittedEventArgs e) => _vm.FileViewModels = autoSuggestBox.Text is "" ? _vm.ResultCallBack : RelationsDataTable.FuzzySearchName(autoSuggestBox.Text, _vm.ResultCallBack);
 
 		private void FileEditTagsRaised(FileViewModel fileViewModel) => App.Window.NavigateFrame.Content = new FileEditTagsPage(fileViewModel);
-		
+
 		private void OpenCmClick(object sender, RoutedEventArgs e) => ((FileViewModel)((MenuFlyoutItem)sender).Tag).FullName.Open();
 		private void OpenExplorerCmClick(object sender, RoutedEventArgs e) => ((FileViewModel)((MenuFlyoutItem)sender).Tag).Path.Open();
 		private async void RemoveCmClick(object sender, RoutedEventArgs e)

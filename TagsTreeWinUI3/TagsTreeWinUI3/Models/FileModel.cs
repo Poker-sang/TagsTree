@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
@@ -61,18 +62,18 @@ namespace TagsTreeWinUI3.Models
 
 		protected static bool ValidPath(string path) => path.Contains(App.AppConfigurations.LibraryPath);
 
-		public bool? HasTag(TagModel tag) //null表示拥有标签的上级标签存在本标签
+		protected bool? HasTag(TagViewModel tag) //null表示拥有标签的上级标签存在本标签
 		{
-			foreach (var tagPossessed in Tags.GetTagModels())
+			foreach (var tagPossessed in Tags.GetTagViewModels())
 				if (tag == tagPossessed)
 					return true;
 				else if (tag.HasChildTag(tagPossessed))
 					return null;
 			return false;
 		}
-		public IEnumerable<TagModel> GetRelativeTags(TagModel parentTag) => Tags.GetTagModels().Where(parentTag.HasChildTag);
+		public IEnumerable<TagViewModel> GetRelativeTags(TagViewModel parentTag) => Tags.GetTagViewModels().Where(parentTag.HasChildTag);
 
-		[JsonIgnore] public string Extension => IsFolder ? "文件夹" : Name.Split('.', StringSplitOptions.RemoveEmptyEntries).Last().ToUpper();
+		[JsonIgnore] public string Extension => IsFolder ? "文件夹" : Name.Split('.', StringSplitOptions.RemoveEmptyEntries).Last().ToUpper(CultureInfo.CurrentCulture);
 		[JsonIgnore] public string PartialPath => "..." + Path[App.AppConfigurations.LibraryPath.Length..]; //Path必然包含文件路径
 		[JsonIgnore] public string FullName => Path + '\\' + Name; //Path必然包含文件路径
 		[JsonIgnore] public string UniqueName => IsFolder + FullName;
@@ -85,19 +86,7 @@ namespace TagsTreeWinUI3.Models
 				return tags is "" ? "" : tags[1..];
 			}
 		}
-		[JsonIgnore]
-		public string PathTags //如果设置没有启用PathTags则返回空串
-		{
-			get
-			{
-				var tags = "";
-				if (App.AppConfigurations.PathTags)
-					tags = PartialPath[4..].Split('\\', StringSplitOptions.RemoveEmptyEntries).Aggregate(tags, (current, tag) => current + " " + tag);
-				return tags is "" ? "" : tags[1..];
-			}
-		}
-		[JsonIgnore]
-		public string AllTags => Tags + PathTags is "" ? "" : " " + PathTags;
+		[JsonIgnore] public string PathTags => PartialPath[4..].Replace('\\', ' '); //PartialPath不会是空串
 	}
 }
 

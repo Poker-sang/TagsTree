@@ -5,7 +5,6 @@ using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using TagsTreeWinUI3.Services.ExtensionMethods;
 using TagsTreeWinUI3.ViewModels;
 
 namespace TagsTreeWinUI3.Models
@@ -13,7 +12,7 @@ namespace TagsTreeWinUI3.Models
 	public class RelationsDataTable : DataTable
 	{
 		private readonly Dictionary<int, DataRow> _rowsDict = new();
-		public bool this[FileModel fileModel, TagModel tag]
+		public bool this[FileModel fileModel, TagViewModel tag]
 		{
 			get => (bool)_rowsDict[fileModel.Id][tag.Id];
 			set => _rowsDict[fileModel.Id][tag.Id.ToString()] = value;
@@ -81,10 +80,10 @@ namespace TagsTreeWinUI3.Models
 		{
 			var tag = tags.Current;
 			var lastRange = tags.MoveNext() ? GetFileModels(tags) : _rowsDict.Values.ToList();
-			if (App.Tags.TagsDictionary.ContainsKey(tag.Name))
+			if (App.Tags.TagsDictionary.GetValueOrDefault(tag.Name) is { } tagModel)
 			{
-				var dataRows = lastRange.Where(row => (bool)row[tag.Name.GetTagModel()!.Id.ToString()]).ToList();
-				dataRows.AddRange(App.Tags.TagsDictionaryValues.Where(childTag => App.Tags.TagsDictionary[tag.Name].HasChildTag(childTag))
+				var dataRows = lastRange.Where(row => (bool)row[tagModel.Id.ToString()]).ToList();
+				dataRows.AddRange(App.Tags.TagsDictionaryValues.Where(childTag => tagModel.HasChildTag(childTag))
 					.SelectMany(_ => lastRange, (childTag, row) => new { childTag, row })
 					.Where(t => (bool)t.row[t.childTag.Id.ToString()])
 					.Select(t => t.row));
@@ -141,16 +140,16 @@ namespace TagsTreeWinUI3.Models
 				_rowsDict[(int)row[0]] = row; //row[0]即为row["FileId"]
 		}
 
-		public void Load()
+		public void Load(string path)
 		{
 			try
 			{
-				ReadXml(App.RelationsPath);
-				RefreshRowsDict();
+				ReadXml(path);
 			}
 			catch (Exception)
 			{
 				Clear();
+				Columns.Clear();
 				Columns.Add(new DataColumn
 				{
 					AllowDBNull = false,
@@ -166,6 +165,8 @@ namespace TagsTreeWinUI3.Models
 				foreach (var fileModel in App.IdFile.Values)
 					NewRow(fileModel);
 			}
+			RefreshRowsDict();
+			Save(path);
 		}
 
 		public async void Save(string path) => await Task.Run(() => WriteXml(path, XmlWriteMode.WriteSchema));

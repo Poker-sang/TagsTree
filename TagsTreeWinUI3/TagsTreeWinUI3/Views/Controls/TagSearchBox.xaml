@@ -5,8 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:TagsTreeWinUI3.Views.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:models="using:TagsTreeWinUI3.Models"
-    x:Name="TagSearch"
+    xmlns:viewModels="using:TagsTreeWinUI3.ViewModels"
     mc:Ignorable="d">
     <AutoSuggestBox
         x:Name="AutoSuggestBox"
@@ -17,7 +16,7 @@
         TextChanged="TextChanged"
         UpdateTextOnSelect="False">
         <AutoSuggestBox.ItemTemplate>
-            <DataTemplate x:DataType="models:TagModel">
+            <DataTemplate x:DataType="viewModels:TagViewModel">
                 <TextBlock Text="{x:Bind FullName}" />
             </DataTemplate>
         </AutoSuggestBox.ItemTemplate>

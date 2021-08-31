@@ -2,15 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
-using PInvoke;
-using System.Drawing;
-using System.Windows;
-using Windows.Foundation;
 
 namespace TagsTreeWinUI3.Services
 {
@@ -38,11 +33,11 @@ namespace TagsTreeWinUI3.Services
 		public static async Task<BitmapImage> GetIcon(string extension)
 		{
 			if (IconList.ContainsKey(extension))
-				return IconList[extension]; 
+				return IconList[extension];
 			var tempFile = await ApplicationData.Current.LocalFolder.CreateFileAsync("Temp." + extension, CreationCollisionOption.ReplaceExisting);
 			using var storageItemThumbnail = await tempFile.GetThumbnailAsync(ThumbnailMode.SingleItem, Size);
 			await tempFile.DeleteAsync();
-			var task= GetBitmapImage(storageItemThumbnail);
+			var task = GetBitmapImage(storageItemThumbnail);
 			IconList[extension] = await task;
 			task.Wait();
 			return IconList[extension];
@@ -52,6 +47,6 @@ namespace TagsTreeWinUI3.Services
 		public static BitmapImage NotFoundIcon { get; private set; } = null!;
 
 		private static readonly Dictionary<string, BitmapImage> IconList = new();
-		
+
 	}
 }

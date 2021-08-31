@@ -1,7 +1,6 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Text.RegularExpressions;
-using Microsoft.UI.Xaml.Controls;
 using TagsTreeWinUI3.Services;
 
 namespace TagsTreeWinUI3.Views

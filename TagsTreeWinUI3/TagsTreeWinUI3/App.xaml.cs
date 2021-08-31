@@ -17,7 +17,7 @@ namespace TagsTreeWinUI3
 	public partial class App : Application
 	{
 		public static MainWindow Window = null!;
-		public static AppConfigurations AppConfigurations { get; set; } = null!;
+		public static AppConfigurations AppConfigurations { get; private set; } = null!;
 
 		public static bool ConfigSet
 		{
@@ -45,12 +45,12 @@ namespace TagsTreeWinUI3
 				else
 				{
 					AppConfigurations = appConfigurations;
-					ConfigSet = true;
+					_configSet = true;
 				}
 			else
 			{
 				AppConfigurations = AppConfigurations.GetDefault();
-				ConfigSet = false;
+				_configSet = false;
 			}
 			RequestedTheme = AppConfigurations.Theme ? ApplicationTheme.Dark : ApplicationTheme.Light;
 		}
@@ -65,7 +65,10 @@ namespace TagsTreeWinUI3
 			Window = new MainWindow { ExtendsContentIntoTitleBar = true };
 			WindowHelper.SetWindowSize(1280, 720);
 			if (ConfigSet)
+			{
+				LoadConfig();
 				Window.ConfigModeUnlock();
+			}
 			Window.Activate();
 		}
 
@@ -76,7 +79,7 @@ namespace TagsTreeWinUI3
 		/// <summary>
 		/// 保存标签
 		/// </summary>
-		public static void SaveTags(ObservableCollection<TagModel> tags) => Serialization.Serialize(TagsPath, tags);
+		public static void SaveTags(ObservableCollection<TagViewModel> tags) => Serialization.Serialize(TagsPath, tags);
 
 		/// <summary>
 		/// 保存文件
@@ -108,7 +111,7 @@ namespace TagsTreeWinUI3
 
 		public static bool TryRemoveFileModel(FileViewModel fileViewModel)
 		{
-			var fileModel = fileViewModel.GetFileModel;
+			var fileModel = fileViewModel.GetFileModel();
 			if (!IdFile.Contains(fileModel)) return false;
 			_ = IdFile.Remove(fileModel);
 			Relations.Rows.Remove(Relations.RowAt(fileModel));
@@ -134,7 +137,7 @@ namespace TagsTreeWinUI3
 			//关系
 			if (!File.Exists(RelationsPath))
 				_ = File.Create(RelationsPath);
-			Relations.Load(); //异常在内部处理
+			Relations.Load(RelationsPath); //异常在内部处理
 
 			//检查
 			if (Tags.TagsDictionary.Count != Relations.Columns.Count) //TagsDictionary第一个是总根标签，Relations第一列是文件Id 
@@ -142,7 +145,7 @@ namespace TagsTreeWinUI3
 				if (await MessageDialogX.Warning($"路径「{AppConfigurations.ProxyPath}」下，TagsTree.xml和Relations.xml存储的标签数不同", "删除关系文件Relations.xml并重新生成", "直接关闭软件"))
 				{
 					File.Delete(RelationsPath);
-					Relations.Load();
+					Relations.Load(RelationsPath);
 				}
 				else
 				{
@@ -155,7 +158,7 @@ namespace TagsTreeWinUI3
 				if (await MessageDialogX.Warning($"「路径{AppConfigurations.ProxyPath}」下，Files.json和Relations.xml存储的文件数不同", "删除关系文件Relations.xml并重新生成", "直接关闭软件"))
 				{
 					File.Delete(RelationsPath);
-					Relations.Load();
+					Relations.Load(RelationsPath);
 				}
 				else
 				{
