@@ -21,8 +21,8 @@ namespace TagsTreeWinUI3.ViewModels
 			{
 				if(e.Action is NotifyCollectionChangedAction.Remove)
 					FilesChanged.Num--;
-				FilesChanged.Serialize(App.FilesChangedPath, FilesChangedList);
-			}; //或App.FilesChangedList
+				FilesChanged.Serialize(App.FilesChangedPath, FilesChangedList); //或App.FilesChangedList
+			};
 		}
 	}
 }

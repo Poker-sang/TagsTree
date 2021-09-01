@@ -51,13 +51,12 @@
             HorizontalAlignment="Center"
             Click="BLibraryPath_Click"
             Content="{ui:FontIcon Glyph=&#xE8B7;}" />
-        <CheckBox
+        <ToggleSwitch
             x:Name="CbRootFoldersExist"
             Grid.Row="2"
             Grid.Column="0"
             VerticalAlignment="Center"
-            Content="将所在路径文件夹名作为标签使用"
-            IsThreeState="False" />
+            Header="将所在路径文件夹名作为标签使用" />
         <ToggleSwitch
             x:Name="TsTheme"
             Grid.Row="3"
@@ -69,9 +68,7 @@
             x:Name="TsFilesObserver"
             Grid.Row="4"
             Grid.Column="0"
-            Header="监控文件"
-            OffContent="关"
-            OnContent="开" />
+            Header="监控文件" />
         <Button
             Grid.Row="4"
             Grid.Column="1"

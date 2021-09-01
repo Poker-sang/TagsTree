@@ -52,7 +52,7 @@ namespace TagsTreeWinUI3
 			AppConfigurations.Initialize();
 			if (AppConfigurations.LoadConfiguration() is { } appConfigurations)
 				if (!Directory.Exists(appConfigurations.ProxyPath))
-					MessageDialogX.Information(true, "配置路径不存在！");
+					MessageDialogX.Information(true, "配置路径不存在！"); //TODO FixBug
 				else
 				{
 					AppConfigurations = appConfigurations;
