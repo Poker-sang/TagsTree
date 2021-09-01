@@ -1,16 +1,14 @@
 ﻿<UserControl
-    x:Class="TagsTreeWinUI3.Views.Controls.TagCompleteBox"
+    x:Class="TagsTreeWinUI3.Controls.TagCompleteBox"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:TagsTreeWinUI3.Views.Controls"
+    xmlns:local="using:TagsTreeWinUI3.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:viewModels="using:TagsTreeWinUI3.ViewModels"
     mc:Ignorable="d">
     <AutoSuggestBox
         VerticalAlignment="Center"
-        uiControls:DockPanel.Dock="Top"
         LostFocus="PathComplement"
         PlaceholderText="标签路径（不包含/:*?&quot;&lt;&gt;|,和空白字符且不为空）"
         SuggestionChosen="SuggestionChosen"

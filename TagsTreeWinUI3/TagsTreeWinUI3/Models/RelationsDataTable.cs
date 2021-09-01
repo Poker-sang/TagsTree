@@ -90,12 +90,10 @@ namespace TagsTreeWinUI3.Models
 				return dataRows;
 			}
 			if (App.AppConfigurations.PathTags) //唯一需要判断是否能使用路径作为标签的地方
-			{
 				return lastRange
 					.SelectMany(dataRow => App.IdFile[(int)dataRow[0]].PartialPath[4..].Split('\\', StringSplitOptions.RemoveEmptyEntries), (dataRow, pathTag) => new { dataRow, pathTag })
 					.Where(t => t.pathTag == tag.Name)
 					.Select(t => t.dataRow).ToList();
-			}
 			return new List<DataRow>();
 		}
 		public void NewRow(FileModel fileModel)

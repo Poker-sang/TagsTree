@@ -2,6 +2,7 @@
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Linq;
+using Microsoft.UI.Xaml.Navigation;
 using TagsTreeWinUI3.Services;
 using TagsTreeWinUI3.Services.ExtensionMethods;
 using TagsTreeWinUI3.ViewModels;
@@ -13,12 +14,13 @@ namespace TagsTreeWinUI3.Views
 	/// </summary>
 	public partial class FileEditTagsPage : Page
 	{
-		public FileEditTagsPage(FileViewModel fileViewModel)
+		public FileEditTagsPage()
 		{
-			_vm = new FileEditTagsViewModel(fileViewModel);
+			_vm = new FileEditTagsViewModel();
 			InitializeComponent();
-			fileViewModel.VirtualTagsInitialize();
 		}
+
+		protected override void OnNavigatedTo(NavigationEventArgs e) => _vm.Load((FileViewModel)e.Parameter);
 
 		private readonly FileEditTagsViewModel _vm;
 
@@ -75,6 +77,5 @@ namespace TagsTreeWinUI3.Views
 			MessageDialogX.Information(false, "已保存更改");
 			BSave.IsEnabled = false;
 		}
-
 	}
 }

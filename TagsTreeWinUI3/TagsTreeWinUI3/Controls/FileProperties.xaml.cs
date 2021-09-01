@@ -1,14 +1,14 @@
-﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using TagsTreeWinUI3.Delegates;
 using TagsTreeWinUI3.Services;
 using TagsTreeWinUI3.Services.ExtensionMethods;
 using TagsTreeWinUI3.ViewModels;
 
-namespace TagsTreeWinUI3.Views.Controls
+namespace TagsTreeWinUI3.Controls
 {
 	/// <summary>
 	/// FileProperties.xaml 的交互逻辑

@@ -1,10 +1,15 @@
-﻿using Microsoft.UI.Xaml;
+﻿using CommunityToolkit.WinUI;
+using Microsoft.UI.Xaml;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using TagsTreeWinUI3.Models;
 using TagsTreeWinUI3.Services;
 using TagsTreeWinUI3.Services.ExtensionMethods;
 using TagsTreeWinUI3.ViewModels;
+using AppDomain = System.AppDomain;
+using Exception = System.Exception;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -125,7 +130,7 @@ namespace TagsTreeWinUI3
 		///  重新加载新的配置文件
 		///  </summary>
 		///  <returns>true：已填写正确地址，进入软件；false：打开设置页面；null：关闭软件</returns>
-		public static async void LoadConfig()
+		private static async void LoadConfig()
 		{
 			//标签
 			Tags.LoadTree(TagsPath);
@@ -165,6 +170,40 @@ namespace TagsTreeWinUI3
 					Window.Close();
 					return;
 				}
+			}
+		}
+
+		private void RegisterUnhandledExceptionHandler()
+		{
+			UnhandledException += async (_, args) =>
+			{
+				args.Handled = true;
+				await Window.DispatcherQueue.EnqueueAsync(() => UncaughtExceptionHandler(args.Exception));
+			};
+
+			TaskScheduler.UnobservedTaskException += async (_, args) =>
+			{
+				args.SetObserved();
+				await Window.DispatcherQueue.EnqueueAsync(() => UncaughtExceptionHandler(args.Exception));
+			};
+
+			AppDomain.CurrentDomain.UnhandledException += async (_, args) =>
+			{
+				if (args.ExceptionObject is Exception e)
+				{
+					await Window.DispatcherQueue.EnqueueAsync(() => UncaughtExceptionHandler(e));
+				}
+				else
+				{
+				}
+			};
+
+			static void UncaughtExceptionHandler(Exception e)
+			{
+#if DEBUG
+				Debugger.Break();
+#endif
+				MessageDialogX.Information(true, e.ToString());
 			}
 		}
 	}

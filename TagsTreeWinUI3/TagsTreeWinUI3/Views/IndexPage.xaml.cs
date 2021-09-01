@@ -7,7 +7,6 @@ using TagsTreeWinUI3.Models;
 using TagsTreeWinUI3.Services;
 using TagsTreeWinUI3.Services.ExtensionMethods;
 using TagsTreeWinUI3.ViewModels;
-using TagsTreeWinUI3.Views.Controls;
 
 namespace TagsTreeWinUI3.Views
 {
@@ -17,7 +16,7 @@ namespace TagsTreeWinUI3.Views
 		{
 			_vm = new MainViewModel();
 			InitializeComponent();
-
+			Storyboard0.Begin();
 			//_ = Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)(() => Keyboard.Focus(TbSearch)));
 		}
 
@@ -30,7 +29,12 @@ namespace TagsTreeWinUI3.Views
 			_isSearched = true;
 			Storyboard1.Begin();
 		}
-		private void Storyboard1_OnCompleted(object sender, object e) => Storyboard2.Begin();
+		private void Storyboard1_OnCompleted(object sender, object e)
+		{
+			Grid.SetRow(TbSearch, 1);
+			TbSearch.VerticalAlignment = VerticalAlignment.Top;
+			Storyboard2.Begin();
+		}
 
 		private void Storyboard2_OnCompleted(object sender, object e)
 		{
@@ -48,7 +52,7 @@ namespace TagsTreeWinUI3.Views
 
 		private void QuerySubmitted(AutoSuggestBox autoSuggestBox, AutoSuggestBoxQuerySubmittedEventArgs e) => _vm.FileViewModels = autoSuggestBox.Text is "" ? _vm.ResultCallBack : RelationsDataTable.FuzzySearchName(autoSuggestBox.Text, _vm.ResultCallBack);
 
-		private void FileEditTagsRaised(FileViewModel fileViewModel) => App.Window.NavigateFrame.Content = new FileEditTagsPage(fileViewModel);
+		private void FileEditTagsRaised(FileViewModel fileViewModel) => App.Window.NavigateFrame.Navigate(typeof(FileEditTagsPage), fileViewModel);
 
 		private void OpenCmClick(object sender, RoutedEventArgs e) => ((FileViewModel)((MenuFlyoutItem)sender).Tag).FullName.Open();
 		private void OpenExplorerCmClick(object sender, RoutedEventArgs e) => ((FileViewModel)((MenuFlyoutItem)sender).Tag).Path.Open();
@@ -67,6 +71,5 @@ namespace TagsTreeWinUI3.Views
 		}
 
 		#endregion
-
 	}
 }
