@@ -6,7 +6,7 @@ using TagsTreeWinUI3.Services.ExtensionMethods;
 
 namespace TagsTreeWinUI3.ViewModels
 {
-	public class MainViewModel : ObservableObject
+	public class IndexViewModel : ObservableObject
 	{
 		private ObservableCollection<FileViewModel> _resultCallBack = Enumerable.Empty<FileViewModel>().ToObservableCollection();
 		private ObservableCollection<FileViewModel> _fileViewModels = Enumerable.Empty<FileViewModel>().ToObservableCollection();

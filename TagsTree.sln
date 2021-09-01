@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31613.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "TagsTreeWinUI3 (Package)", "TagsTreeWinUI3\TagsTreeWinUI3 (Package)\TagsTreeWinUI3 (Package).wapproj", "{5D900A56-9A37-468F-8B66-5D03C6FF1380}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TagsTreeWinUI3", "TagsTreeWinUI3\TagsTreeWinUI3\TagsTreeWinUI3.csproj", "{688CC4A8-B843-47A9-8E63-3A0EBC3BB0AA}"
 EndProject
 Global
@@ -19,31 +17,12 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5D900A56-9A37-468F-8B66-5D03C6FF1380}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{5D900A56-9A37-468F-8B66-5D03C6FF1380}.Debug|arm64.ActiveCfg = Debug|arm64
-		{5D900A56-9A37-468F-8B66-5D03C6FF1380}.Debug|arm64.Build.0 = Debug|arm64
-		{5D900A56-9A37-468F-8B66-5D03C6FF1380}.Debug|arm64.Deploy.0 = Debug|arm64
-		{5D900A56-9A37-468F-8B66-5D03C6FF1380}.Debug|x64.ActiveCfg = Debug|x64
-		{5D900A56-9A37-468F-8B66-5D03C6FF1380}.Debug|x64.Build.0 = Debug|x64
-		{5D900A56-9A37-468F-8B66-5D03C6FF1380}.Debug|x64.Deploy.0 = Debug|x64
-		{5D900A56-9A37-468F-8B66-5D03C6FF1380}.Debug|x86.ActiveCfg = Debug|x86
-		{5D900A56-9A37-468F-8B66-5D03C6FF1380}.Debug|x86.Build.0 = Debug|x86
-		{5D900A56-9A37-468F-8B66-5D03C6FF1380}.Debug|x86.Deploy.0 = Debug|x86
-		{5D900A56-9A37-468F-8B66-5D03C6FF1380}.Release|Any CPU.ActiveCfg = Release|x86
-		{5D900A56-9A37-468F-8B66-5D03C6FF1380}.Release|arm64.ActiveCfg = Release|arm64
-		{5D900A56-9A37-468F-8B66-5D03C6FF1380}.Release|arm64.Build.0 = Release|arm64
-		{5D900A56-9A37-468F-8B66-5D03C6FF1380}.Release|arm64.Deploy.0 = Release|arm64
-		{5D900A56-9A37-468F-8B66-5D03C6FF1380}.Release|x64.ActiveCfg = Release|x64
-		{5D900A56-9A37-468F-8B66-5D03C6FF1380}.Release|x64.Build.0 = Release|x64
-		{5D900A56-9A37-468F-8B66-5D03C6FF1380}.Release|x64.Deploy.0 = Release|x64
-		{5D900A56-9A37-468F-8B66-5D03C6FF1380}.Release|x86.ActiveCfg = Release|x86
-		{5D900A56-9A37-468F-8B66-5D03C6FF1380}.Release|x86.Build.0 = Release|x86
-		{5D900A56-9A37-468F-8B66-5D03C6FF1380}.Release|x86.Deploy.0 = Release|x86
 		{688CC4A8-B843-47A9-8E63-3A0EBC3BB0AA}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{688CC4A8-B843-47A9-8E63-3A0EBC3BB0AA}.Debug|arm64.ActiveCfg = Debug|arm64
 		{688CC4A8-B843-47A9-8E63-3A0EBC3BB0AA}.Debug|arm64.Build.0 = Debug|arm64
 		{688CC4A8-B843-47A9-8E63-3A0EBC3BB0AA}.Debug|x64.ActiveCfg = Debug|x64
 		{688CC4A8-B843-47A9-8E63-3A0EBC3BB0AA}.Debug|x64.Build.0 = Debug|x64
+		{688CC4A8-B843-47A9-8E63-3A0EBC3BB0AA}.Debug|x64.Deploy.0 = Debug|x64
 		{688CC4A8-B843-47A9-8E63-3A0EBC3BB0AA}.Debug|x86.ActiveCfg = Debug|x86
 		{688CC4A8-B843-47A9-8E63-3A0EBC3BB0AA}.Debug|x86.Build.0 = Debug|x86
 		{688CC4A8-B843-47A9-8E63-3A0EBC3BB0AA}.Release|Any CPU.ActiveCfg = Release|x86
