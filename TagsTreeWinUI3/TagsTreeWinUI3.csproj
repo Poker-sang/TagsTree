@@ -21,6 +21,7 @@
     <None Remove="Images\StoreLogo.png" />
     <None Remove="Images\Wide310x150Logo.scale-200.png" />
     <None Remove="Package.appxmanifest" />
+    <None Remove="Views\FilesObserverPage.xaml" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -60,6 +61,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\FilesObserverPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

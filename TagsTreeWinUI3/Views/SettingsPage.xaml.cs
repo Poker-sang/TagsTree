@@ -25,7 +25,7 @@ namespace TagsTreeWinUI3.Views
 				TbProxyPath.Text = App.AppConfigurations.ProxyPath;
 				TbLibraryPath.Text = App.AppConfigurations.LibraryPath;
 				TsTheme.IsOn = App.AppConfigurations.Theme;
-				CbRootFoldersExist.IsChecked = App.AppConfigurations.PathTags;
+				CbRootFoldersExist.IsChecked = App.AppConfigurations.PathTagsEnabled;
 			}
 		}
 		private async void BConfigPath_Click(object sender, RoutedEventArgs e) => TbProxyPath.Text = (await FileX.GetStorageFolder())?.Path ?? TbProxyPath.Text;
@@ -51,8 +51,9 @@ namespace TagsTreeWinUI3.Views
 
 				App.AppConfigurations.ProxyPath = TbProxyPath.Text;
 				App.AppConfigurations.LibraryPath = TbLibraryPath.Text;
-				App.AppConfigurations.PathTags = CbRootFoldersExist.IsChecked!.Value;
+				App.AppConfigurations.PathTagsEnabled = CbRootFoldersExist.IsChecked!.Value;
 				App.AppConfigurations.Theme = TsTheme.IsOn;
+				App.AppConfigurations.FilesObserverEnabled = TsFilesObserver.IsOn;
 				AppConfigurations.SaveConfiguration(App.AppConfigurations);
 				MessageDialogX.Information(false, "已保存");
 				App.ConfigSet = true;

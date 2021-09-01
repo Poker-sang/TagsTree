@@ -9,6 +9,7 @@ using TagsTreeWinUI3.Models;
 using TagsTreeWinUI3.Services;
 using TagsTreeWinUI3.Services.ExtensionMethods;
 using TagsTreeWinUI3.ViewModels;
+using TagsTreeWinUI3.Views;
 using AppDomain = System.AppDomain;
 using Exception = System.Exception;
 
@@ -22,9 +23,11 @@ namespace TagsTreeWinUI3
 	/// </summary>
 	public partial class App : Application
 	{
-		public static MainWindow Window = null!;
+		public static MainWindow Window { get; private set; } = null!;
 		public static Frame RootFrame => Window.NavigateFrame;
 		public static AppConfigurations AppConfigurations { get; private set; } = null!;
+		public static FilesObserver FilesObserver { get; private set; } = null!;
+		public static ObservableCollection<FilesChanged> FilesChangedList => FilesObserverPage.Vm.FilesChangedList;
 
 		public static bool ConfigSet
 		{
@@ -45,6 +48,7 @@ namespace TagsTreeWinUI3
 		{
 			InitializeComponent();
 			IconX.Initialize();
+			FilesObserver = new FilesObserver();
 			AppConfigurations.Initialize();
 			if (AppConfigurations.LoadConfiguration() is { } appConfigurations)
 				if (!Directory.Exists(appConfigurations.ProxyPath))
@@ -77,11 +81,13 @@ namespace TagsTreeWinUI3
 				Window.ConfigModeUnlock();
 			}
 			Window.Activate();
+			FilesObserver.Initialize(AppConfigurations.LibraryPath);
 		}
-
-		public static string TagsPath => AppConfigurations.ProxyPath + @"\TagsTree.json";
-		public static string FilesPath => AppConfigurations.ProxyPath + @"\Files.json";
-		public static string RelationsPath => AppConfigurations.ProxyPath + @"\Relations.xml";
+		
+		public static string FilesChangedPath => AppConfigurations.ProxyPath + @"\FilesChanged.json";
+		private static string TagsPath => AppConfigurations.ProxyPath + @"\TagsTree.json";
+		private static string FilesPath => AppConfigurations.ProxyPath + @"\Files.json";
+		private static string RelationsPath => AppConfigurations.ProxyPath + @"\Relations.xml";
 
 		/// <summary>
 		/// 保存标签
@@ -134,6 +140,9 @@ namespace TagsTreeWinUI3
 		///  <returns>true：已填写正确地址，进入软件；false：打开设置页面；null：关闭软件</returns>
 		private static async void LoadConfig()
 		{
+			//文件监视
+			FilesObserverPage.Vm = new FilesObserverViewModel(FilesChanged.Deserialize(FilesChangedPath));
+
 			//标签
 			Tags.LoadTree(TagsPath);
 			Tags.LoadDictionary();

@@ -32,6 +32,10 @@
                 Content="为标签添加文件"
                 Icon="{ui:FontIcon Glyph=&#xECC8;}"
                 IsEnabled="False" />
+            <NavigationViewItem
+                Content="监控文件"
+                Icon="{ui:FontIcon Glyph=&#xE7B3;}"
+                IsEnabled="False" />
         </NavigationView.MenuItems>
         <uiControls:DockPanel>
             <Rectangle

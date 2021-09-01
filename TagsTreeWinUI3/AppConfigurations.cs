@@ -1,4 +1,5 @@
-﻿using TagsTreeWinUI3.Services.ExtensionMethods;
+﻿using System.Linq;
+using TagsTreeWinUI3.Services.ExtensionMethods;
 using Windows.Storage;
 
 namespace TagsTreeWinUI3
@@ -9,19 +10,26 @@ namespace TagsTreeWinUI3
 		public bool Theme { get; set; }
 		public string LibraryPath { get; set; }
 		public string ProxyPath { get; set; }
-		public bool PathTags { get; set; }
+		public bool PathTagsEnabled { get; set; }
+		private bool _filesObserverEnabled;
+		public bool FilesObserverEnabled
+		{
+			get => _filesObserverEnabled;
+			set => _filesObserverEnabled = App.FilesObserver.EnableRaisingEvents = App.Window.SetFilesObserverEnable = value;
+		}
 
 		private static ApplicationDataContainer _configurationContainer = null!;
 
 		private const string ConfigurationContainerKey = "Config";
 		public static StorageFolder AppLocalFolder { get; set; } = null!;
 
-		public AppConfigurations(bool theme, string libraryPath, string proxyPath, bool pathTags)
+		private AppConfigurations(bool theme, string libraryPath, string proxyPath, bool pathTagsEnabled, bool filesObserverEnabled)
 		{
 			Theme = theme;
 			LibraryPath = libraryPath;
 			ProxyPath = proxyPath;
-			PathTags = pathTags;
+			PathTagsEnabled = pathTagsEnabled;
+			_filesObserverEnabled = filesObserverEnabled;
 		}
 
 		public static void Initialize()
@@ -42,7 +50,8 @@ namespace TagsTreeWinUI3
 					_configurationContainer.Values[nameof(Theme)].CastThrow<bool>(),
 					_configurationContainer.Values[nameof(LibraryPath)].CastThrow<string>(),
 					_configurationContainer.Values[nameof(ProxyPath)].CastThrow<string>(),
-					_configurationContainer.Values[nameof(PathTags)].CastThrow<bool>()
+					_configurationContainer.Values[nameof(PathTagsEnabled)].CastThrow<bool>(),
+					_configurationContainer.Values[nameof(FilesObserverEnabled)].CastThrow<bool>()
 					);
 			}
 			catch
@@ -51,14 +60,15 @@ namespace TagsTreeWinUI3
 			}
 		}
 
-		public static AppConfigurations GetDefault() => new(false, "", "", true);
+		public static AppConfigurations GetDefault() => new(false, "", "", true, false);
 
 		public static void SaveConfiguration(AppConfigurations appConfigurations)
 		{
 			_configurationContainer.Values[nameof(Theme)] = appConfigurations.Theme;
 			_configurationContainer.Values[nameof(LibraryPath)] = appConfigurations.LibraryPath;
 			_configurationContainer.Values[nameof(ProxyPath)] = appConfigurations.ProxyPath;
-			_configurationContainer.Values[nameof(PathTags)] = appConfigurations.PathTags;
+			_configurationContainer.Values[nameof(PathTagsEnabled)] = appConfigurations.PathTagsEnabled;
+			_configurationContainer.Values[nameof(FilesObserverEnabled)] = appConfigurations.FilesObserverEnabled;
 		}
 	}
 }

@@ -8,8 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:viewModels="using:TagsTreeWinUI3.ViewModels"
-    d:DesignHeight="600"
-    d:DesignWidth="800"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
     <uiControls:DockPanel x:Name="Panel">
         <uiControls:DockPanel.Resources>
