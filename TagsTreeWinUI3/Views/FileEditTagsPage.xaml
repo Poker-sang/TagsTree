@@ -5,7 +5,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:TagsTreeWinUI3.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="using:CommunityToolkit.WinUI.UI"
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:viewModels="using:TagsTreeWinUI3.ViewModels"
     mc:Ignorable="d">
@@ -35,6 +34,7 @@
 
             <TreeView
                 Grid.Column="0"
+                Margin="0,0,8,0"
                 CanDragItems="False"
                 CanReorderItems="False"
                 ItemsSource="{x:Bind viewModels:FileEditTagsViewModel.TagsSource}">
@@ -50,7 +50,10 @@
                     </DataTemplate>
                 </TreeView.ItemTemplate>
             </TreeView>
-            <ListView Grid.Column="1" ItemsSource="{x:Bind _vm.VirtualTags, Mode=TwoWay}">
+            <ListView
+                Grid.Column="1"
+                Margin="8,0,0,0"
+                ItemsSource="{x:Bind _vm.VirtualTags, Mode=TwoWay}">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="viewModels:TagViewModel">
                         <ListViewItem

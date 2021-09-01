@@ -37,7 +37,7 @@ namespace TagsTreeWinUI3.Views
 				}
 				else if (newTag.HasChildTag(tagExisted))
 				{
-					MessageDialogX.Information(true, $"已拥有下级标签「{tagExisted.Name}」");
+					MessageDialogX.Information(true, $"已拥有下级标签「{tagExisted.Name}」或更多");
 					return;
 				}
 				else if (tagExisted.HasChildTag(newTag))

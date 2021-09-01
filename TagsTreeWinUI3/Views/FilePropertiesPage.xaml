@@ -17,7 +17,7 @@
                     Click="BackBClick"
                     Icon="Back" />
             </CommandBar>
-            <CommandBar DefaultLabelPosition="Right" OverflowButtonVisibility="Collapsed">
+            <CommandBar DefaultLabelPosition="Right">
                 <AppBarButton
                     x:Name="BOpen"
                     Click="OpenBClick"

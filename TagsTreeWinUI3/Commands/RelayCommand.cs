@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Windows.Input;
 
 namespace TagsTreeWinUI3.Commands
 {
-	public class RelayCommand : ICommand
+	public class RelayCommand : System.Windows.Input.ICommand
 	{
 		public RelayCommand(Func<object?, bool> canExecute, Action<object?> execute)
 		{

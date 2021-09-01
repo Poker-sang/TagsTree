@@ -93,6 +93,7 @@
                     <MenuFlyoutItem
                         x:Name="CmPPasteX"
                         Click="PasteXCmClick"
+                        IsEnabled="False"
                         Text="粘贴" />
                 </MenuFlyout>
             </TreeView.ContextFlyout>
