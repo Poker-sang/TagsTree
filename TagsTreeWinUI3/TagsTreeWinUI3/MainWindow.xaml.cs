@@ -19,7 +19,7 @@ namespace TagsTreeWinUI3
 			SetTitleBar(TitleBar);
 		}
 
-		private void NavigationView_OnLoaded(object sender, RoutedEventArgs e) => NavigateFrame.Content = new NewConfigPage();
+		private void NavigationView_OnLoaded(object sender, RoutedEventArgs e) => NavigateFrame.Content = new SettingsPage();
 
 		public async void ConfigModeUnlock()
 		{
@@ -44,7 +44,7 @@ namespace TagsTreeWinUI3
 			else if (e.SelectedItem == sender.MenuItems[3])
 				NavigateFrame.Navigate(typeof(TagEditFilesPage));
 			else if (e.IsSettingsSelected)
-				NavigateFrame.Navigate(typeof(NewConfigPage));
+				NavigateFrame.Navigate(typeof(SettingsPage));
 			GC.Collect();
 		}
 	}

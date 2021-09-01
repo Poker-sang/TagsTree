@@ -14,9 +14,19 @@ namespace TagsTreeWpf.ViewModels
 		[NotifyPropertyChangedInvocator]
 		private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-		public ObservableCollection<FileViewModel> FileViewModels { get; set; } = Enumerable.Empty<FileViewModel>().ToObservableCollection();
 
 		private ObservableCollection<FileViewModel> _resultCallBack = Enumerable.Empty<FileViewModel>().ToObservableCollection();
+		private ObservableCollection<FileViewModel> _fileViewModels = Enumerable.Empty<FileViewModel>().ToObservableCollection();
+		public ObservableCollection<FileViewModel> FileViewModels
+		{
+			get => _fileViewModels;
+			set
+			{
+				if (Equals(_fileViewModels, value)) return;
+				_fileViewModels = value;
+				OnPropertyChanged(nameof(FileViewModels));
+			}
+		}
 		public ObservableCollection<FileViewModel> ResultCallBack
 		{
 			get => _resultCallBack;
@@ -25,10 +35,8 @@ namespace TagsTreeWpf.ViewModels
 				if (Equals(_resultCallBack, value)) return;
 				_resultCallBack = value;
 				FileViewModels = value;
-				OnPropertyChanged(nameof(FileViewModels));
 			}
 		}
-
 		public void CollectionChanged() => OnPropertyChanged(nameof(FileViewModels));
 	}
 }

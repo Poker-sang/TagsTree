@@ -7,11 +7,11 @@ using TagsTreeWinUI3.Services;
 namespace TagsTreeWinUI3.Views
 {
 	/// <summary>
-	/// NewConfigPage.xaml 的交互逻辑
+	/// SettingsPage.xaml 的交互逻辑
 	/// </summary>
-	public partial class NewConfigPage : Page
+	public partial class SettingsPage : Page
 	{
-		public NewConfigPage()
+		public SettingsPage()
 		{
 			InitializeComponent();
 			if (!App.ConfigSet)

@@ -5,14 +5,15 @@ namespace TagsTreeWinUI3.ViewModels
 {
 	public class FileEditTagsViewModel : ObservableObject
 	{
-		public FileEditTagsViewModel(FileViewModel fileViewModel)
+		public void Load(FileViewModel fileViewModel)
 		{
 			_fileViewModel = fileViewModel;
+			_fileViewModel.VirtualTagsInitialize();
 		}
 
 		public ObservableCollection<TagViewModel> TagsSource { get; set; } = App.Tags.TagsTree.SubTags;
 
-		private FileViewModel _fileViewModel;
+		private FileViewModel _fileViewModel = null!;
 
 		public FileViewModel FileViewModel
 		{

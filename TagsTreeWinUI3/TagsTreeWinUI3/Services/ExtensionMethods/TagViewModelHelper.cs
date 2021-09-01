@@ -24,14 +24,6 @@ namespace TagsTreeWinUI3.Services.ExtensionMethods
 				if (App.Tags.TagsDictionary.GetValueOrDefault(tagName) is { } tagModel)
 					yield return tagModel;
 		}
-		public static IEnumerable<PathTagModel> GetTagsFiles(this string name)
-		{
-			var temp = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-			foreach (string tagName in temp)
-				if (App.Tags.TagsDictionary.GetValueOrDefault(tagName) is { } tagModel)
-					yield return tagModel;
-				else yield return new PathTagModel(tagName);
-		}
 
 		/// <summary>
 		/// 输入标签时的建议列表

@@ -2,7 +2,7 @@
     x:Class="TagsTreeWinUI3.Views.TagEditFilesPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:TagsTreeWinUI3.Views.Controls"
+    xmlns:controls="using:TagsTreeWinUI3.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:TagsTreeWinUI3.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -13,22 +13,16 @@
     mc:Ignorable="d">
     <uiControls:DockPanel x:Name="Panel">
         <uiControls:DockPanel.Resources>
+            <Storyboard x:Name="Storyboard0" Completed="Storyboard2_OnCompleted">
+                <FadeOutThemeAnimation Storyboard.TargetName="TbInput" Duration="0:0:0.2" />
+                <FadeOutThemeAnimation Storyboard.TargetName="DgResult" Duration="0:0:0.2" />
+            </Storyboard>
             <Storyboard x:Name="Storyboard1" Completed="Storyboard1_OnCompleted">
                 <FadeOutThemeAnimation Storyboard.TargetName="Tags" Duration="0:0:0.5" />
             </Storyboard>
             <Storyboard x:Name="Storyboard2" Completed="Storyboard2_OnCompleted">
-                <DoubleAnimation
-                    Storyboard.TargetName="TbInput"
-                    Storyboard.TargetProperty="Opacity"
-                    From="0"
-                    To="1"
-                    Duration="0:0:0.5" />
-                <DoubleAnimation
-                    Storyboard.TargetName="DgResult"
-                    Storyboard.TargetProperty="Opacity"
-                    From="0"
-                    To="1"
-                    Duration="0:0:0.5" />
+                <FadeInThemeAnimation Storyboard.TargetName="TbInput" Duration="0:0:0.5" />
+                <FadeInThemeAnimation Storyboard.TargetName="DgResult" Duration="0:0:0.5" />
             </Storyboard>
         </uiControls:DockPanel.Resources>
         <uiControls:DockPanel uiControls:DockPanel.Dock="Top">
@@ -61,7 +55,6 @@
             VerticalAlignment="Top"
             uiControls:DockPanel.Dock="Top"
             IsHitTestVisible="False"
-            Opacity="0"
             ResultChanged="ResultChanged" />
         <uiControls:DataGrid
             x:Name="DgResult"
@@ -70,7 +63,6 @@
             CanUserReorderColumns="False"
             IsHitTestVisible="False"
             ItemsSource="{x:Bind _vm.FileViewModels, Mode=OneWay}"
-            Opacity="0"
             SelectionChanged="Selected"
             SelectionMode="Single">
             <uiControls:DataGrid.Columns>

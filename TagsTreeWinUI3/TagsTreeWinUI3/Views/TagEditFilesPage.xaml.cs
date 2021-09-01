@@ -19,6 +19,7 @@ namespace TagsTreeWinUI3.Views
 		{
 			_vm = new TagEditFilesViewModel();
 			InitializeComponent();
+			Storyboard0.Begin();
 		}
 
 		private readonly TagEditFilesViewModel _vm;

@@ -37,13 +37,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Views\Controls\FileProperties.xaml">
+    <Page Update="Controls\FileProperties.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="Views\Controls\TagCompleteBox.xaml">
+    <Page Update="Controls\TagCompleteBox.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="Views\Controls\TagSearchBox.xaml">
+    <Page Update="Controls\TagSearchBox.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\FileEditTagsPage.xaml">
@@ -61,7 +61,7 @@
     <Page Update="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="Views\NewConfigPage.xaml">
+    <Page Update="Views\SettingsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\TagEditFilesPage.xaml">

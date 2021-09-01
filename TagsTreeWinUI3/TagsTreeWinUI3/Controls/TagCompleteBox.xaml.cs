@@ -1,12 +1,12 @@
-﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using TagsTreeWinUI3.Services;
 using TagsTreeWinUI3.Services.ExtensionMethods;
 
-namespace TagsTreeWinUI3.Views.Controls
+namespace TagsTreeWinUI3.Controls
 {
 	/// <summary>
 	/// TagCompleteBox.xaml 的交互逻辑
@@ -36,6 +36,5 @@ namespace TagsTreeWinUI3.Views.Controls
 		public event PropertyChangedEventHandler? PropertyChanged;
 
 		private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
 	}
 }

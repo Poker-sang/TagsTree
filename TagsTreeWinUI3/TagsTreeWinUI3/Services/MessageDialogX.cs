@@ -17,7 +17,8 @@ namespace TagsTreeWinUI3.Services
 			var messageDialog = new MessageDialog(message, mode ? "错误" : "提示")
 			{
 				DefaultCommandIndex = 0,
-				CancelCommandIndex = 0
+				CancelCommandIndex = 0,
+				Options = MessageDialogOptions.AcceptUserInputAfterDelay
 			}.InitializeWithWindow();
 			messageDialog.Commands.Add(new UICommand("确定", _ => { }));
 			_ = await messageDialog.ShowAsync();
@@ -38,7 +39,8 @@ namespace TagsTreeWinUI3.Services
 			var messageDialog = new MessageDialog(message + ok + cancel, "警告")
 			{
 				DefaultCommandIndex = 0,
-				CancelCommandIndex = 1
+				CancelCommandIndex = 1,
+				Options = MessageDialogOptions.AcceptUserInputAfterDelay
 			}.InitializeWithWindow();
 			messageDialog.Commands.Add(new UICommand("确定", _ => result = true));
 			messageDialog.Commands.Add(new UICommand("取消", _ => result = false));
@@ -62,7 +64,8 @@ namespace TagsTreeWinUI3.Services
 			var messageDialog = new MessageDialog(message + yes + no + cancel, "提示")
 			{
 				DefaultCommandIndex = 0,
-				CancelCommandIndex = 1
+				CancelCommandIndex = 1,
+				Options = MessageDialogOptions.AcceptUserInputAfterDelay
 			}.InitializeWithWindow();
 			messageDialog.Commands.Add(new UICommand("是", _ => result = true));
 			messageDialog.Commands.Add(new UICommand("否", _ => result = false));
