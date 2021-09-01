@@ -62,7 +62,7 @@ namespace TagsTreeWinUI3.Services
 		public static async Task<bool?> Question(string message, string yesHint = "", string noHint = "", string cancelHint = "")
 		{
 			var yes = yesHint is "" ? "" : $"\n按“是”{yesHint}";
-			var no = yesHint is "" ? "" : $"\n按“否”{noHint}";
+			var no = noHint is "" ? "" : $"\n按“否”{noHint}";
 			var cancel = cancelHint is "" ? "" : $"\n按“取消”{cancelHint}";
 			bool? result = null;
 			var messageDialog = new ContentDialog()
