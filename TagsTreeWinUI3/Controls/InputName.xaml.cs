@@ -3,7 +3,7 @@ using System;
 using System.Text.RegularExpressions;
 using TagsTreeWinUI3.Services;
 
-namespace TagsTreeWinUI3.Views
+namespace TagsTreeWinUI3.Controls
 {
 	/// <summary>
 	/// InputName.xaml 的交互逻辑

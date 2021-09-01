@@ -10,7 +10,7 @@
     xmlns:viewModels="using:TagsTreeWinUI3.ViewModels"
     mc:Ignorable="d">
     <uiControls:DockPanel>
-        <local:InputName x:Name="InputName" />
+        <controls:InputName x:Name="InputName" />
         <uiControls:DockPanel uiControls:DockPanel.Dock="Top">
             <CommandBar uiControls:DockPanel.Dock="Right" DefaultLabelPosition="Right">
                 <AppBarButton

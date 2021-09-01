@@ -81,7 +81,7 @@
     <Page Update="Views\IndexPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="Views\InputName.xaml">
+    <Page Update="Controls\InputName.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="MainWindow.xaml">
