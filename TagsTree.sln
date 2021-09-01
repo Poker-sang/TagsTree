@@ -3,35 +3,35 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31613.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TagsTreeWinUI3", "TagsTreeWinUI3\TagsTreeWinUI3\TagsTreeWinUI3.csproj", "{688CC4A8-B843-47A9-8E63-3A0EBC3BB0AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TagsTreeWinUI3", "TagsTreeWinUI3\TagsTreeWinUI3.csproj", "{2C2F11B8-E743-40D9-ACD3-C8FB65DB85C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
 		Debug|arm64 = Debug|arm64
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
-		Release|Any CPU = Release|Any CPU
 		Release|arm64 = Release|arm64
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{688CC4A8-B843-47A9-8E63-3A0EBC3BB0AA}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{688CC4A8-B843-47A9-8E63-3A0EBC3BB0AA}.Debug|arm64.ActiveCfg = Debug|arm64
-		{688CC4A8-B843-47A9-8E63-3A0EBC3BB0AA}.Debug|arm64.Build.0 = Debug|arm64
-		{688CC4A8-B843-47A9-8E63-3A0EBC3BB0AA}.Debug|x64.ActiveCfg = Debug|x64
-		{688CC4A8-B843-47A9-8E63-3A0EBC3BB0AA}.Debug|x64.Build.0 = Debug|x64
-		{688CC4A8-B843-47A9-8E63-3A0EBC3BB0AA}.Debug|x64.Deploy.0 = Debug|x64
-		{688CC4A8-B843-47A9-8E63-3A0EBC3BB0AA}.Debug|x86.ActiveCfg = Debug|x86
-		{688CC4A8-B843-47A9-8E63-3A0EBC3BB0AA}.Debug|x86.Build.0 = Debug|x86
-		{688CC4A8-B843-47A9-8E63-3A0EBC3BB0AA}.Release|Any CPU.ActiveCfg = Release|x86
-		{688CC4A8-B843-47A9-8E63-3A0EBC3BB0AA}.Release|arm64.ActiveCfg = Release|arm64
-		{688CC4A8-B843-47A9-8E63-3A0EBC3BB0AA}.Release|arm64.Build.0 = Release|arm64
-		{688CC4A8-B843-47A9-8E63-3A0EBC3BB0AA}.Release|x64.ActiveCfg = Release|x64
-		{688CC4A8-B843-47A9-8E63-3A0EBC3BB0AA}.Release|x64.Build.0 = Release|x64
-		{688CC4A8-B843-47A9-8E63-3A0EBC3BB0AA}.Release|x86.ActiveCfg = Release|x86
-		{688CC4A8-B843-47A9-8E63-3A0EBC3BB0AA}.Release|x86.Build.0 = Release|x86
+		{2C2F11B8-E743-40D9-ACD3-C8FB65DB85C3}.Debug|arm64.ActiveCfg = Debug|arm64
+		{2C2F11B8-E743-40D9-ACD3-C8FB65DB85C3}.Debug|arm64.Build.0 = Debug|arm64
+		{2C2F11B8-E743-40D9-ACD3-C8FB65DB85C3}.Debug|arm64.Deploy.0 = Debug|arm64
+		{2C2F11B8-E743-40D9-ACD3-C8FB65DB85C3}.Debug|x64.ActiveCfg = Debug|x64
+		{2C2F11B8-E743-40D9-ACD3-C8FB65DB85C3}.Debug|x64.Build.0 = Debug|x64
+		{2C2F11B8-E743-40D9-ACD3-C8FB65DB85C3}.Debug|x64.Deploy.0 = Debug|x64
+		{2C2F11B8-E743-40D9-ACD3-C8FB65DB85C3}.Debug|x86.ActiveCfg = Debug|x86
+		{2C2F11B8-E743-40D9-ACD3-C8FB65DB85C3}.Debug|x86.Build.0 = Debug|x86
+		{2C2F11B8-E743-40D9-ACD3-C8FB65DB85C3}.Release|arm64.ActiveCfg = Release|arm64
+		{2C2F11B8-E743-40D9-ACD3-C8FB65DB85C3}.Release|arm64.Build.0 = Release|arm64
+		{2C2F11B8-E743-40D9-ACD3-C8FB65DB85C3}.Release|arm64.Deploy.0 = Release|arm64
+		{2C2F11B8-E743-40D9-ACD3-C8FB65DB85C3}.Release|x64.ActiveCfg = Release|x64
+		{2C2F11B8-E743-40D9-ACD3-C8FB65DB85C3}.Release|x64.Build.0 = Release|x64
+		{2C2F11B8-E743-40D9-ACD3-C8FB65DB85C3}.Release|x64.Deploy.0 = Release|x64
+		{2C2F11B8-E743-40D9-ACD3-C8FB65DB85C3}.Release|x86.ActiveCfg = Release|x86
+		{2C2F11B8-E743-40D9-ACD3-C8FB65DB85C3}.Release|x86.Build.0 = Release|x86
+		{2C2F11B8-E743-40D9-ACD3-C8FB65DB85C3}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
