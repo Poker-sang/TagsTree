@@ -19,6 +19,8 @@ namespace TagsTreeWinUI3
 			SetTitleBar(TitleBar);
 		}
 
+		public bool SetFilesObserverEnable { set => ((NavigationViewItem)NavigationView.MenuItems[4]).IsEnabled = value; }
+
 		private void NavigationView_OnLoaded(object sender, RoutedEventArgs e) => NavigateFrame.Content = new SettingsPage();
 
 		public async void ConfigModeUnlock()
@@ -43,6 +45,8 @@ namespace TagsTreeWinUI3
 				NavigateFrame.Navigate(typeof(FileImporterPage));
 			else if (e.SelectedItem == sender.MenuItems[3])
 				NavigateFrame.Navigate(typeof(TagEditFilesPage));
+			else if (e.SelectedItem == sender.MenuItems[4])
+				NavigateFrame.Navigate(typeof(FilesObserverPage));
 			else if (e.IsSettingsSelected)
 				NavigateFrame.Navigate(typeof(SettingsPage));
 			GC.Collect();
