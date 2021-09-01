@@ -1,0 +1,101 @@
+﻿<Page
+    x:Class="TagsTreeWinUI3.Views.TagsManagerPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:TagsTreeWinUI3.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:TagsTreeWinUI3.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:viewModels="using:TagsTreeWinUI3.ViewModels"
+    mc:Ignorable="d">
+    <uiControls:DockPanel>
+        <local:InputName x:Name="InputName" />
+        <uiControls:DockPanel uiControls:DockPanel.Dock="Top">
+            <CommandBar uiControls:DockPanel.Dock="Right" DefaultLabelPosition="Right">
+                <AppBarButton
+                    Click="NewBClick"
+                    Icon="Import"
+                    Label="添加" />
+                <AppBarButton
+                    Click="MoveBClick"
+                    Icon="MoveToFolder"
+                    Label="移动" />
+                <AppBarButton
+                    Click="RenameBClick"
+                    Icon="Rename"
+                    Label="重命名" />
+                <AppBarButton
+                    Click="DeleteBClick"
+                    Icon="Delete"
+                    Label="删除" />
+                <AppBarSeparator />
+                <AppBarButton
+                    x:Name="BSave"
+                    Click="SaveBClick"
+                    Icon="Save"
+                    IsEnabled="False"
+                    Label="保存" />
+            </CommandBar>
+            <AutoSuggestBox
+                x:Name="TbName"
+                VerticalAlignment="Center"
+                uiControls:DockPanel.Dock="Left"
+                PlaceholderText="标签名称（不包含\/:*?&quot;&lt;&gt;|,和空白字符且不为空）"
+                Text="{x:Bind _vm.Name, Mode=TwoWay}"
+                TextChanged="NameChanged" />
+        </uiControls:DockPanel>
+        <controls:TagCompleteBox
+            x:Name="TbPath"
+            VerticalAlignment="Center"
+            uiControls:DockPanel.Dock="Top" />
+        <TreeView
+            MinHeight="400"
+            AllowDrop="True"
+            CanDragItems="True"
+            DragItemsCompleted="TvTags_OnDragItemsCompleted"
+            ItemInvoked="Tags_OnItemInvoked"
+            ItemsSource="{x:Bind _vm.TagsSource, Mode=TwoWay}">
+            <TreeView.ItemTemplate>
+                <DataTemplate x:DataType="viewModels:TagViewModel">
+                    <TreeViewItem ItemsSource="{x:Bind SubTags, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind FullName}">
+                        <TextBlock Text="{x:Bind Name, Mode=OneWay}" />
+                        <TreeViewItem.ContextFlyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem
+                                    Click="NewCmClick"
+                                    Tag="{x:Bind}"
+                                    Text="新建" />
+                                <MenuFlyoutItem
+                                    Click="CutCmClick"
+                                    Tag="{x:Bind}"
+                                    Text="剪切" />
+                                <MenuFlyoutItem
+                                    Command="{x:Bind local:TagsManagerPage.Current.RPasteCmClick}"
+                                    CommandParameter="{x:Bind}"
+                                    Text="粘贴" />
+                                <MenuFlyoutItem
+                                    Click="RenameCmClick"
+                                    Tag="{x:Bind}"
+                                    Text="重命名" />
+                                <MenuFlyoutItem
+                                    Click="DeleteCmClick"
+                                    Tag="{x:Bind}"
+                                    Text="删除" />
+                            </MenuFlyout>
+                        </TreeViewItem.ContextFlyout>
+                    </TreeViewItem>
+                </DataTemplate>
+            </TreeView.ItemTemplate>
+            <TreeView.ContextFlyout>
+                <MenuFlyout>
+                    <MenuFlyoutItem Click="NewXCmClick" Text="新建" />
+                    <MenuFlyoutItem
+                        x:Name="CmPPasteX"
+                        Click="PasteXCmClick"
+                        Text="粘贴" />
+                </MenuFlyout>
+            </TreeView.ContextFlyout>
+        </TreeView>
+    </uiControls:DockPanel>
+</Page>
