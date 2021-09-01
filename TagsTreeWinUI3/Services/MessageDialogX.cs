@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Microsoft.UI.Xaml.Controls;
+using System;
 using System.Threading.Tasks;
-using TagsTreeWinUI3.Services.ExtensionMethods;
-using Windows.UI.Popups;
+using TagsTreeWinUI3.Commands;
 
 namespace TagsTreeWinUI3.Services
 {
@@ -14,13 +14,14 @@ namespace TagsTreeWinUI3.Services
 		/// <param name="message">错误信息</param>
 		public static async void Information(bool mode, string message)
 		{
-			var messageDialog = new MessageDialog(message, mode ? "错误" : "提示")
+			var messageDialog = new ContentDialog
 			{
-				DefaultCommandIndex = 0,
-				CancelCommandIndex = 0,
-				Options = MessageDialogOptions.AcceptUserInputAfterDelay
-			}.InitializeWithWindow();
-			messageDialog.Commands.Add(new UICommand("确定", _ => { }));
+				Title = mode ? "错误" : "提示",
+				Content = message,
+				CloseButtonText = "确定",
+				DefaultButton = ContentDialogButton.Close,
+				XamlRoot = App.Window.Content.XamlRoot
+			};
 			_ = await messageDialog.ShowAsync();
 		}
 
@@ -36,14 +37,17 @@ namespace TagsTreeWinUI3.Services
 			var ok = okHint is "" ? "" : $"\n按“确认”{okHint}";
 			var cancel = okHint is "" ? "" : $"\n按“取消”{cancelHint}";
 			var result = false;
-			var messageDialog = new MessageDialog(message + ok + cancel, "警告")
+			var messageDialog = new ContentDialog
 			{
-				DefaultCommandIndex = 0,
-				CancelCommandIndex = 1,
-				Options = MessageDialogOptions.AcceptUserInputAfterDelay
-			}.InitializeWithWindow();
-			messageDialog.Commands.Add(new UICommand("确定", _ => result = true));
-			messageDialog.Commands.Add(new UICommand("取消", _ => result = false));
+				Title = "警告",
+				Content = message + ok + cancel,
+				PrimaryButtonText = "确定",
+				CloseButtonText = "取消",
+				PrimaryButtonCommand = new RelayCommand(_ => result = true),
+				CloseButtonCommand = new RelayCommand(_ => result = false),
+				DefaultButton = ContentDialogButton.Close,
+				XamlRoot = App.Window.Content.XamlRoot
+			};
 			_ = await messageDialog.ShowAsync();
 			return result;
 		}
@@ -58,18 +62,22 @@ namespace TagsTreeWinUI3.Services
 		public static async Task<bool?> Question(string message, string yesHint = "", string noHint = "", string cancelHint = "")
 		{
 			var yes = yesHint is "" ? "" : $"\n按“是”{yesHint}";
-			var no = yesHint is "" ? "" : $"\n按“否”{noHint}";
+			var no = noHint is "" ? "" : $"\n按“否”{noHint}";
 			var cancel = cancelHint is "" ? "" : $"\n按“取消”{cancelHint}";
 			bool? result = null;
-			var messageDialog = new MessageDialog(message + yes + no + cancel, "提示")
+			var messageDialog = new ContentDialog()
 			{
-				DefaultCommandIndex = 0,
-				CancelCommandIndex = 1,
-				Options = MessageDialogOptions.AcceptUserInputAfterDelay
-			}.InitializeWithWindow();
-			messageDialog.Commands.Add(new UICommand("是", _ => result = true));
-			messageDialog.Commands.Add(new UICommand("否", _ => result = false));
-			messageDialog.Commands.Add(new UICommand("取消", _ => result = null));
+				Title = "提示",
+				Content = message + yes + no + cancel,
+				PrimaryButtonText = "是",
+				SecondaryButtonText = "否",
+				CloseButtonText = "取消",
+				PrimaryButtonCommand = new RelayCommand(_ => result = true),
+				SecondaryButtonCommand = new RelayCommand(_ => result = false),
+				CloseButtonCommand = new RelayCommand(_ => result = false),
+				DefaultButton = ContentDialogButton.Close,
+				XamlRoot = App.Window.Content.XamlRoot
+			};
 			_ = await messageDialog.ShowAsync();
 			return result;
 		}

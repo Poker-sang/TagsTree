@@ -2,6 +2,7 @@
     x:Class="TagsTreeWinUI3.Views.FilePropertiesPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:TagsTreeWinUI3.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:TagsTreeWinUI3.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -16,7 +17,7 @@
                     Click="BackBClick"
                     Icon="Back" />
             </CommandBar>
-            <CommandBar DefaultLabelPosition="Right" OverflowButtonVisibility="Collapsed">
+            <CommandBar DefaultLabelPosition="Right">
                 <AppBarButton
                     x:Name="BOpen"
                     Click="OpenBClick"
@@ -52,7 +53,7 @@
                     Label="删除" />
             </CommandBar>
         </uiControls:DockPanel>
-        <local:InputName x:Name="InputName" />
+        <controls:InputName x:Name="InputName" />
         <Grid MinHeight="500">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
