@@ -14,13 +14,13 @@ namespace TagsTreeWinUI3.Views
 	{
 		public IndexPage()
 		{
-			_vm = new MainViewModel();
+			_vm = new IndexViewModel();
 			InitializeComponent();
 			Storyboard0.Begin();
 			//_ = Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)(() => Keyboard.Focus(TbSearch)));
 		}
 
-		private readonly MainViewModel _vm;
+		private readonly IndexViewModel _vm;
 
 		private bool _isSearched;
 		private void Search(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e)
