@@ -14,6 +14,8 @@ namespace TagsTreeWinUI3.Models
 		public string Path { get; }
 		public string Type { get; }
 		public string Other { get; }
+		[JsonIgnore] public string PartialPath => "..." + Path[App.AppConfigurations.LibraryPath.Length..]; //Path必然包含文件路径
+		[JsonIgnore] public string FullName => Path + '\\' + Name; //Path必然包含文件路径
 
 		public static ObservableCollection<FilesChanged> Deserialize(string path) => Serialization.Deserialize<ObservableCollection<FilesChanged>>(path);
 		public static void Serialize(string path, ObservableCollection<FilesChanged> collection) => Serialization.Serialize(path, collection);

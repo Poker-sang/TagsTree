@@ -9,81 +9,93 @@
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
-    <uiControls:DataGrid
-        AlternatingRowBackground="LightGray"
-        AutoGenerateColumns="False"
-        ItemsSource="{x:Bind local:FilesObserverPage.Vm.FilesChangedList}">
-        <uiControls:DataGrid.Columns>
-            <uiControls:DataGridTemplateColumn
-                Width="*"
-                Header="序号"
-                IsReadOnly="True">
-                <uiControls:DataGridTemplateColumn.CellTemplate>
-                    <DataTemplate x:DataType="models:FilesChanged">
-                        <TextBlock
-                            Margin="10,0"
-                            VerticalAlignment="Center"
-                            Tag="{x:Bind}"
-                            Text="{x:Bind Id}" />
-                    </DataTemplate>
-                </uiControls:DataGridTemplateColumn.CellTemplate>
-            </uiControls:DataGridTemplateColumn>
-            <uiControls:DataGridTemplateColumn
-                Width="4*"
-                Header="名称"
-                IsReadOnly="True">
-                <uiControls:DataGridTemplateColumn.CellTemplate>
-                    <DataTemplate x:DataType="models:FilesChanged">
-                        <TextBlock
-                            Margin="10,0"
-                            VerticalAlignment="Center"
-                            Tag="{x:Bind}"
-                            Text="{x:Bind Name}" />
-                    </DataTemplate>
-                </uiControls:DataGridTemplateColumn.CellTemplate>
-            </uiControls:DataGridTemplateColumn>
-            <uiControls:DataGridTemplateColumn
-                Width="4*"
-                Header="路径"
-                IsReadOnly="True">
-                <uiControls:DataGridTemplateColumn.CellTemplate>
-                    <DataTemplate x:DataType="models:FilesChanged">
-                        <TextBlock
-                            Margin="10,0"
-                            VerticalAlignment="Center"
-                            Tag="{x:Bind}"
-                            Text="{x:Bind Path}" />
-                    </DataTemplate>
-                </uiControls:DataGridTemplateColumn.CellTemplate>
-            </uiControls:DataGridTemplateColumn>
-            <uiControls:DataGridTemplateColumn
-                Width="2*"
-                Header="类型"
-                IsReadOnly="True">
-                <uiControls:DataGridTemplateColumn.CellTemplate>
-                    <DataTemplate x:DataType="models:FilesChanged">
-                        <TextBlock
-                            Margin="10,0"
-                            VerticalAlignment="Center"
-                            Tag="{x:Bind}"
-                            Text="{x:Bind Type}" />
-                    </DataTemplate>
-                </uiControls:DataGridTemplateColumn.CellTemplate>
-            </uiControls:DataGridTemplateColumn>
-            <uiControls:DataGridTemplateColumn
-                Width="2*"
-                Header="备注"
-                IsReadOnly="True">
-                <uiControls:DataGridTemplateColumn.CellTemplate>
-                    <DataTemplate x:DataType="models:FilesChanged">
-                        <TextBlock
-                            Margin="10,0"
-                            VerticalAlignment="Center"
-                            Tag="{x:Bind}"
-                            Text="{x:Bind Other}" />
-                    </DataTemplate>
-                </uiControls:DataGridTemplateColumn.CellTemplate>
-            </uiControls:DataGridTemplateColumn>
-        </uiControls:DataGrid.Columns>
-    </uiControls:DataGrid>
+    <uiControls:DockPanel>
+        <CommandBar uiControls:DockPanel.Dock="Top" DefaultLabelPosition="Right">
+            <AppBarButton
+                Icon="Delete"
+                IsEnabled="False"
+                Label="删除所有" />
+            <AppBarButton
+                Icon="Save"
+                IsEnabled="False"
+                Label="应用所有更改" />
+        </CommandBar>
+        <uiControls:DataGrid
+            AlternatingRowBackground="LightGray"
+            AutoGenerateColumns="False"
+            ItemsSource="{x:Bind local:FilesObserverPage.Vm.FilesChangedList}">
+            <uiControls:DataGrid.Columns>
+                <uiControls:DataGridTemplateColumn
+                    Width="*"
+                    Header="序号"
+                    IsReadOnly="True">
+                    <uiControls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="models:FilesChanged">
+                            <TextBlock
+                                Margin="10,0"
+                                VerticalAlignment="Center"
+                                Tag="{x:Bind}"
+                                Text="{x:Bind Id}" />
+                        </DataTemplate>
+                    </uiControls:DataGridTemplateColumn.CellTemplate>
+                </uiControls:DataGridTemplateColumn>
+                <uiControls:DataGridTemplateColumn
+                    Width="4*"
+                    Header="名称"
+                    IsReadOnly="True">
+                    <uiControls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="models:FilesChanged">
+                            <TextBlock
+                                Margin="10,0"
+                                VerticalAlignment="Center"
+                                Tag="{x:Bind}"
+                                Text="{x:Bind Name}" />
+                        </DataTemplate>
+                    </uiControls:DataGridTemplateColumn.CellTemplate>
+                </uiControls:DataGridTemplateColumn>
+                <uiControls:DataGridTemplateColumn
+                    Width="4*"
+                    Header="路径"
+                    IsReadOnly="True">
+                    <uiControls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="models:FilesChanged">
+                            <TextBlock
+                                Margin="10,0"
+                                VerticalAlignment="Center"
+                                Tag="{x:Bind}"
+                                Text="{x:Bind PartialPath}" />
+                        </DataTemplate>
+                    </uiControls:DataGridTemplateColumn.CellTemplate>
+                </uiControls:DataGridTemplateColumn>
+                <uiControls:DataGridTemplateColumn
+                    Width="2*"
+                    Header="类型"
+                    IsReadOnly="True">
+                    <uiControls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="models:FilesChanged">
+                            <TextBlock
+                                Margin="10,0"
+                                VerticalAlignment="Center"
+                                Tag="{x:Bind}"
+                                Text="{x:Bind Type}" />
+                        </DataTemplate>
+                    </uiControls:DataGridTemplateColumn.CellTemplate>
+                </uiControls:DataGridTemplateColumn>
+                <uiControls:DataGridTemplateColumn
+                    Width="2*"
+                    Header="备注"
+                    IsReadOnly="True">
+                    <uiControls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="models:FilesChanged">
+                            <TextBlock
+                                Margin="10,0"
+                                VerticalAlignment="Center"
+                                Tag="{x:Bind}"
+                                Text="{x:Bind Other}" />
+                        </DataTemplate>
+                    </uiControls:DataGridTemplateColumn.CellTemplate>
+                </uiControls:DataGridTemplateColumn>
+            </uiControls:DataGrid.Columns>
+        </uiControls:DataGrid>
+    </uiControls:DockPanel>
 </Page>

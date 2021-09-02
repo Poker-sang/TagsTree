@@ -10,33 +10,45 @@
     mc:Ignorable="d">
     <NavigationView
         x:Name="NavigationView"
-        IsBackButtonVisible="Collapsed"
-        Loaded="NavigationView_OnLoaded"
+        BackRequested="BackRequested"
+        IsSettingsVisible="False"
+        ItemInvoked="ItemInvoked"
+        Loaded="Loaded"
         PaneDisplayMode="Left"
-        PaneTitle="TagsTree"
-        SelectionChanged="Selector_OnSelectionChanged">
+        PaneTitle="TagsTree">
         <NavigationView.MenuItems>
             <NavigationViewItem
                 Content="主页"
                 Icon="{ui:FontIcon Glyph=&#xE80F;}"
-                IsEnabled="False" />
+                IsEnabled="False"
+                Tag="IndexPage" />
             <NavigationViewItem
                 Content="标签管理"
                 Icon="{ui:FontIcon Glyph=&#xE8EC;}"
-                IsEnabled="False" />
+                IsEnabled="False"
+                Tag="TagsManagerPage" />
             <NavigationViewItem
                 Content="文件引入"
                 Icon="{ui:FontIcon Glyph=&#xEC50;}"
-                IsEnabled="False" />
+                IsEnabled="False"
+                Tag="FileImporterPage" />
             <NavigationViewItem
                 Content="为标签添加文件"
                 Icon="{ui:FontIcon Glyph=&#xECC8;}"
-                IsEnabled="False" />
+                IsEnabled="False"
+                Tag="TagEditFilesPage" />
             <NavigationViewItem
                 Content="监控文件"
                 Icon="{ui:FontIcon Glyph=&#xE7B3;}"
-                IsEnabled="False" />
+                IsEnabled="False"
+                Tag="FilesObserverPage" />
         </NavigationView.MenuItems>
+        <NavigationView.FooterMenuItems>
+            <NavigationViewItem
+                Content="设置"
+                Icon="{ui:FontIcon Glyph=&#xE713;}"
+                Tag="SettingsPage" />
+        </NavigationView.FooterMenuItems>
         <uiControls:DockPanel>
             <Rectangle
                 x:Name="TitleBar"

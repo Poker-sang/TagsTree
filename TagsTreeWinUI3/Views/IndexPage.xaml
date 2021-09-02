@@ -9,6 +9,7 @@
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:viewModels="using:TagsTreeWinUI3.ViewModels"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    NavigationCacheMode="Required"
     mc:Ignorable="d">
     <Grid>
         <Grid.ColumnDefinitions>
