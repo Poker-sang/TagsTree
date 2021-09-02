@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml.Controls;
 using System.IO;
 using System.Text.RegularExpressions;
 using TagsTreeWinUI3.Services;
+using TagsTreeWinUI3.Services.ExtensionMethods;
 
 namespace TagsTreeWinUI3.Views
 {

@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -10,8 +11,6 @@ using TagsTreeWinUI3.Services;
 using TagsTreeWinUI3.Services.ExtensionMethods;
 using TagsTreeWinUI3.ViewModels;
 using TagsTreeWinUI3.Views;
-using AppDomain = System.AppDomain;
-using Exception = System.Exception;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -24,10 +23,10 @@ namespace TagsTreeWinUI3
 	public partial class App : Application
 	{
 		public static MainWindow Window { get; private set; } = null!;
-		public static Frame RootFrame => Window.NavigateFrame;
 		public static AppConfigurations AppConfigurations { get; private set; } = null!;
 		public static FilesObserver FilesObserver { get; private set; } = null!;
-		public static ObservableCollection<FilesChanged> FilesChangedList => FilesObserverPage.Vm.FilesChangedList;
+		public static Frame RootFrame => Window.NavigateFrame;
+		public static ObservableCollection<FileChanged> FilesChangedList => FilesObserverPage.Vm.FilesChangedList;
 
 		public static bool ConfigSet
 		{
@@ -47,6 +46,7 @@ namespace TagsTreeWinUI3
 		public App()
 		{
 			InitializeComponent();
+			RegisterUnhandledExceptionHandler();
 			IconX.Initialize();
 			FilesObserver = new FilesObserver();
 			AppConfigurations.Initialize();
@@ -83,8 +83,8 @@ namespace TagsTreeWinUI3
 			Window.Activate();
 			FilesObserver.Initialize(AppConfigurations.LibraryPath);
 		}
-		
-		public static string FilesChangedPath => AppConfigurations.ProxyPath + @"\FilesChanged.json";
+
+		public static string FilesChangedPath => AppConfigurations.ProxyPath + @"\FileChanged.json";
 		private static string TagsPath => AppConfigurations.ProxyPath + @"\TagsTree.json";
 		private static string FilesPath => AppConfigurations.ProxyPath + @"\Files.json";
 		private static string RelationsPath => AppConfigurations.ProxyPath + @"\Relations.xml";
@@ -122,18 +122,6 @@ namespace TagsTreeWinUI3
 
 		private static bool _configSet;
 
-		public static bool TryRemoveFileModel(FileViewModel fileViewModel)
-		{
-			var fileModel = fileViewModel.GetFileModel();
-			if (!IdFile.Contains(fileModel)) return false;
-			_ = IdFile.Remove(fileModel);
-			Relations.Rows.Remove(Relations.RowAt(fileModel));
-			Relations.RefreshRowsDict();
-			SaveFiles();
-			SaveRelations();
-			return true;
-		}
-
 		///  <summary>
 		///  重新加载新的配置文件
 		///  </summary>
@@ -141,7 +129,7 @@ namespace TagsTreeWinUI3
 		private static async void LoadConfig()
 		{
 			//文件监视
-			FilesObserverPage.Vm = new FilesObserverViewModel(FilesChanged.Deserialize(FilesChangedPath));
+			FilesObserverPage.Vm = new FilesObserverViewModel(FileChanged.Deserialize(FilesChangedPath));
 
 			//标签
 			Tags.LoadTree(TagsPath);
@@ -171,7 +159,7 @@ namespace TagsTreeWinUI3
 			}
 			if (IdFile.Count != Relations.Rows.Count)
 			{
-				if (await MessageDialogX.Warning($"「路径{AppConfigurations.ProxyPath}」下，Files.json和Relations.xml存储的文件数不同", "删除关系文件Relations.xml并重新生成", "直接关闭软件"))
+				if (await MessageDialogX.Warning($"路径「{AppConfigurations.ProxyPath}」下，Files.json和Relations.xml存储的文件数不同", "删除关系文件Relations.xml并重新生成", "直接关闭软件"))
 				{
 					File.Delete(RelationsPath);
 					Relations.Load(RelationsPath);
@@ -201,12 +189,7 @@ namespace TagsTreeWinUI3
 			AppDomain.CurrentDomain.UnhandledException += async (_, args) =>
 			{
 				if (args.ExceptionObject is Exception e)
-				{
 					await Window.DispatcherQueue.EnqueueAsync(() => UncaughtExceptionHandler(e));
-				}
-				else
-				{
-				}
 			};
 
 			static void UncaughtExceptionHandler(Exception e)

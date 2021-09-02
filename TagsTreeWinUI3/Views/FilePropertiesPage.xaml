@@ -12,13 +12,16 @@
     mc:Ignorable="d">
     <uiControls:DockPanel>
         <uiControls:DockPanel uiControls:DockPanel.Dock="Top">
-            <CommandBar uiControls:DockPanel.Dock="Left" OverflowButtonVisibility="Collapsed">
+            <CommandBar
+                uiControls:DockPanel.Dock="Left"
+                Background="Transparent"
+                OverflowButtonVisibility="Collapsed">
                 <AppBarButton
                     Width="48"
                     Click="BackBClick"
                     Icon="Back" />
             </CommandBar>
-            <CommandBar DefaultLabelPosition="Right">
+            <CommandBar Background="Transparent" DefaultLabelPosition="Right">
                 <AppBarButton
                     x:Name="BOpen"
                     Click="OpenBClick"

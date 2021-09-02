@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using TagsTreeWinUI3.Services.ExtensionMethods;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using TagsTreeWinUI3.Services.ExtensionMethods;
 
 namespace TagsTreeWinUI3.Services
 {
@@ -17,6 +17,9 @@ namespace TagsTreeWinUI3.Services
 			Name = 0,
 			Path = 1
 		}
+
+		public static string GetName(this string fullName) => fullName[(fullName.LastIndexOf('\\') + 1)..];
+		public static string GetPath(this string fullName) => fullName.LastIndexOf('\\') is -1 ? "" : fullName[..fullName.LastIndexOf('\\')];
 
 		public static string CountSize(FileInfo file) => " " + file.Length switch
 		{

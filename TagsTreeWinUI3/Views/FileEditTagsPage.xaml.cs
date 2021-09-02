@@ -21,7 +21,7 @@ namespace TagsTreeWinUI3.Views
 
 		private readonly FileEditTagsViewModel _vm;
 
-		#region 事件
+		#region 事件处理
 
 		protected override void OnNavigatedTo(NavigationEventArgs e) => _vm.Load((FileViewModel)e.Parameter);
 		private void BackBClick(object sender, RoutedEventArgs e) => App.RootFrame.GoBack(new SlideNavigationTransitionInfo());

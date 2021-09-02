@@ -51,7 +51,7 @@ namespace TagsTreeWinUI3
 		/// 不为static方便绑定
 		/// </summary>
 		private Brush SystemColor => new SolidColorBrush(Application.Current.RequestedTheme is ApplicationTheme.Light ? Color.FromArgb(0x80, 0xFF, 0xFF, 0xFF) : Color.FromArgb(0x65, 0x00, 0x00, 0x00));
-		
+
 		private void ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs e)
 		{
 			if ((string)((NavigationViewItem)sender.SelectedItem).Tag == NavigateFrame.Content.GetType().Name) return;
