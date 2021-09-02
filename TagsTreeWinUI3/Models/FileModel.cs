@@ -83,7 +83,7 @@ namespace TagsTreeWinUI3.Models
 				return tags is "" ? "" : tags[1..];
 			}
 		}
-		[JsonIgnore] public IEnumerable<string> PathTags => PartialPath is "..."? Enumerable.Empty<string>() : PartialPath[4..].Split('\\', StringSplitOptions.RemoveEmptyEntries); //PartialPath不会是空串
+		[JsonIgnore] public IEnumerable<string> PathTags => PartialPath is "..." ? Enumerable.Empty<string>() : PartialPath[4..].Split('\\', StringSplitOptions.RemoveEmptyEntries); //PartialPath不会是空串
 	}
 }
 

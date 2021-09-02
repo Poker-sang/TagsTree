@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using TagsTreeWinUI3.Services.ExtensionMethods;
+﻿using TagsTreeWinUI3.Services.ExtensionMethods;
 using Windows.Storage;
 
 namespace TagsTreeWinUI3

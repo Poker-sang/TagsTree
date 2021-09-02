@@ -37,7 +37,7 @@ namespace TagsTreeWinUI3.Views
 			}
 		}
 
-		#region 事件处理处理
+		#region 事件处理
 
 		private void TvTags_OnDragItemsCompleted(TreeView sender, TreeViewDragItemsCompletedEventArgs e) => BSave.IsEnabled = true;
 

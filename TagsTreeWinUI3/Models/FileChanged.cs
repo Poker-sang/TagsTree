@@ -44,7 +44,7 @@ namespace TagsTreeWinUI3.Models
 		public static ObservableCollection<FileChanged> Deserialize(string path) => Serialization.Deserialize<ObservableCollection<FileChanged>>(path);
 		public static void Serialize(string path, ObservableCollection<FileChanged> collection) => Serialization.Serialize(path, collection);
 
-		
+
 		public enum ChangedType
 		{
 			Create = 0,

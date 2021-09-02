@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -10,7 +11,6 @@ using TagsTreeWinUI3.Services;
 using TagsTreeWinUI3.Services.ExtensionMethods;
 using TagsTreeWinUI3.ViewModels;
 using TagsTreeWinUI3.Views;
-using System;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -67,7 +67,7 @@ namespace TagsTreeWinUI3
 		}
 
 		/// <summary>
-		/// Invoked when the application is launched normally by the end user.  Remark entry points
+		/// Invoked when the application is launched normally by the end user.  Other entry points
 		/// will be used such as when the application is launched to open a specific file.
 		/// </summary>
 		/// <param name="args">Details about the launch request and process.</param>
@@ -83,7 +83,7 @@ namespace TagsTreeWinUI3
 			Window.Activate();
 			FilesObserver.Initialize(AppConfigurations.LibraryPath);
 		}
-		
+
 		public static string FilesChangedPath => AppConfigurations.ProxyPath + @"\FileChanged.json";
 		private static string TagsPath => AppConfigurations.ProxyPath + @"\TagsTree.json";
 		private static string FilesPath => AppConfigurations.ProxyPath + @"\Files.json";

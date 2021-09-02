@@ -1,17 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using TagsTreeWinUI3.Models;
 using TagsTreeWinUI3.Services;
 using TagsTreeWinUI3.Services.ExtensionMethods;
@@ -48,7 +38,7 @@ namespace TagsTreeWinUI3.Views
 				Vm.FilesChangedList.Remove(fileChanged);
 				exception = false;
 			}
-			if(exception)
+			if (exception)
 				MessageDialogX.Information(true, $"文件列表中不存在：{fileChanged.OldFullName}");
 			else
 			{
@@ -63,7 +53,7 @@ namespace TagsTreeWinUI3.Views
 		{
 			MergeAll();
 			var nameFile = new Dictionary<string, FileModel>();
-			foreach (var fileModel in App.IdFile.Values) 
+			foreach (var fileModel in App.IdFile.Values)
 				nameFile[fileModel.FullName] = fileModel;
 			var deleteList = new List<FileChanged>();
 			var exception = "";
@@ -78,7 +68,7 @@ namespace TagsTreeWinUI3.Views
 			}
 			foreach (var deleteItem in deleteList)
 				Vm.FilesChangedList.Remove(deleteItem);
-			if(exception is not "")
+			if (exception is not "")
 				MessageDialogX.Information(true, exception);
 			App.SaveFiles();
 			App.SaveRelations();
@@ -95,9 +85,9 @@ namespace TagsTreeWinUI3.Views
 		private static void Apply(FileChanged fileChanged)
 		{
 			switch (fileChanged.Type)
-			{ 
-				case FileChanged.ChangedType.Create: new FileViewModel(fileChanged.OldFullName).AddNew(); break; 
-				case FileChanged.ChangedType.Move: new FileViewModel(fileChanged.OldFullName).MoveOrRename(fileChanged.FullName); break; 
+			{
+				case FileChanged.ChangedType.Create: new FileViewModel(fileChanged.OldFullName).AddNew(); break;
+				case FileChanged.ChangedType.Move: new FileViewModel(fileChanged.OldFullName).MoveOrRename(fileChanged.FullName); break;
 				case FileChanged.ChangedType.Rename: new FileViewModel(fileChanged.OldFullName).MoveOrRename(fileChanged.FullName); break;
 				case FileChanged.ChangedType.Delete: new FileViewModel(fileChanged.OldFullName).RemoveAndSave(); break;
 			}

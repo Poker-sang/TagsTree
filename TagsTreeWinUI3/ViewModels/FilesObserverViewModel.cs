@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
 using TagsTreeWinUI3.Models;
 
 namespace TagsTreeWinUI3.ViewModels
@@ -19,7 +14,7 @@ namespace TagsTreeWinUI3.ViewModels
 			FilesChangedList = filesChangedList;
 			FilesChangedList.CollectionChanged += (_, e) =>
 			{
-				if(e.Action is NotifyCollectionChangedAction.Remove)
+				if (e.Action is NotifyCollectionChangedAction.Remove)
 					FileChanged.Num--;
 				FileChanged.Serialize(App.FilesChangedPath, FilesChangedList); //或App.FilesChangedList
 			};

@@ -27,7 +27,7 @@ namespace TagsTreeWinUI3.Services.ExtensionMethods
 		}
 		public static void Remove(this FileModel fileModel)
 		{
-			if (!App.IdFile.Contains(fileModel)) 
+			if (!App.IdFile.Contains(fileModel))
 				throw new NullReferenceException("文件列表中不存在：" + fileModel.FullName);
 			_ = App.IdFile.Remove(fileModel);
 			App.Relations.Rows.Remove(App.Relations.RowAt(fileModel));
