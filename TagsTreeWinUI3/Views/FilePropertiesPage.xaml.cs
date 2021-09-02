@@ -25,7 +25,7 @@ namespace TagsTreeWinUI3.Views
 
 		public FileViewModel FileViewModel { get; private set; } = null!;
 
-		#region 事件
+		#region 事件处理
 
 		protected override void OnNavigatedTo(NavigationEventArgs e) => Load((FileViewModel)e.Parameter);
 
@@ -55,7 +55,7 @@ namespace TagsTreeWinUI3.Views
 				return;
 			}
 			new FileInfo(FileViewModel.FullName).MoveTo(newFullName);
-			FileViewModel.Reload(newFullName);
+			FileViewModel.MoveOrRenameAndSave(newFullName);
 			Load(FileViewModel);
 		}
 		private async void MoveBClick(object sender, RoutedEventArgs e)
@@ -78,7 +78,7 @@ namespace TagsTreeWinUI3.Views
 				return;
 			}
 			new FileInfo(FileViewModel.FullName).MoveTo(newFullName);
-			FileViewModel.Reload(newFullName);
+			FileViewModel.MoveOrRenameAndSave(newFullName);
 			Load(FileViewModel);
 		}
 		private async void DeleteBClick(object sender, RoutedEventArgs e)
@@ -103,8 +103,8 @@ namespace TagsTreeWinUI3.Views
 		private static void Remove(FileViewModel fileViewModel)
 		{
 			GoBack();
-			if (App.TryRemoveFileModel(fileViewModel))
-				IndexPage.FileRemoved(fileViewModel);
+			fileViewModel.RemoveAndSave();
+			IndexPage.FileRemoved(fileViewModel);
 		}
 
 		private static void GoBack() => App.RootFrame.GoBack(new SlideNavigationTransitionInfo());

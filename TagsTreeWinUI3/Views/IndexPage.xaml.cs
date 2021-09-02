@@ -57,7 +57,7 @@ namespace TagsTreeWinUI3.Views
 		private async void RemoveCmClick(object sender, RoutedEventArgs e)
 		{
 			if (!await MessageDialogX.Warning("是否从软件移除该文件？")) return;
-			if (!App.TryRemoveFileModel((FileViewModel)((FrameworkElement)sender).Tag)) return;
+			((FileViewModel)((FrameworkElement)sender).Tag).RemoveAndSave();
 			_ = _vm.FileViewModels.Remove((FileViewModel)((FrameworkElement)sender).Tag);
 		}
 		private void PropertiesCmClick(object sender, RoutedEventArgs e) => PropertiesCmDoubleClick(((MenuFlyoutItem)sender).Tag, e);

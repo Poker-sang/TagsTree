@@ -30,12 +30,12 @@ namespace TagsTreeWinUI3.Services
 		{
 			_ = App.Window.DispatcherQueue.TryEnqueue(() =>
 			{
-				if (App.FilesChangedList.LastOrDefault() is { Type: "Delete" } item && item.Name == e.FullPath[(e.FullPath.LastIndexOf('\\') + 1)..] && item.FullName != e.FullPath)
+				if (App.FilesChangedList.LastOrDefault() is { Type: FileChanged.ChangedType.Delete } item && item.Name == e.FullPath.GetName() && item.FullName != e.FullPath)
 				{
 					_ = App.FilesChangedList.Remove(item);
-					App.FilesChangedList.Add(new FilesChanged(e.FullPath, "Move", "Old Path: " + item.PartialPath));
+					App.FilesChangedList.Add(new FileChanged(e.FullPath, FileChanged.ChangedType.Move, item.Path));
 				}
-				else App.FilesChangedList.Add(new FilesChanged(e.FullPath, "Create"));
+				else App.FilesChangedList.Add(new FileChanged(e.FullPath, FileChanged.ChangedType.Create));
 			});
 		}
 
@@ -43,7 +43,7 @@ namespace TagsTreeWinUI3.Services
 		{
 			_ = App.Window.DispatcherQueue.TryEnqueue
 			(
-				() => App.FilesChangedList.Add(new FilesChanged(e.FullPath, "Rename", "Old Name: " + e.OldName))
+				() => App.FilesChangedList.Add(new FileChanged(e.FullPath, FileChanged.ChangedType.Rename, e.OldFullPath.GetName()))
 			);
 		}
 
@@ -51,7 +51,7 @@ namespace TagsTreeWinUI3.Services
 		{
 			_ = App.Window.DispatcherQueue.TryEnqueue
 			(
-				() => App.FilesChangedList.Add(new FilesChanged(e.FullPath, "Delete"))
+				() => App.FilesChangedList.Add(new FileChanged(e.FullPath, FileChanged.ChangedType.Delete))
 			);
 		}
 	}

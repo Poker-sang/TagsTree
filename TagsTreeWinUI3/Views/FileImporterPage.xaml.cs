@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using TagsTreeWinUI3.Services;
+using TagsTreeWinUI3.Services.ExtensionMethods;
 using TagsTreeWinUI3.ViewModels;
 
 namespace TagsTreeWinUI3.Views
@@ -32,11 +33,11 @@ namespace TagsTreeWinUI3.Views
 						var dictionary = new Dictionary<string, bool>();
 						foreach (var fileViewModelModel in _vm.FileViewModels)
 							dictionary[fileViewModelModel.UniqueName] = true;
-						if (FileViewModel.ValidPath(files.First().Path[..files.First().Path.LastIndexOf('\\')]))
+						if (FileViewModel.ValidPath(files.First().Path.GetPath()))
 							foreach (var file in files)
 								if (!dictionary.ContainsKey(false + file.Path))
 									DataGrid.DispatcherQueue.TryEnqueue(() =>
-										_vm.FileViewModels.Add(new FileViewModel(file.Path, false)));
+										_vm.FileViewModels.Add(new FileViewModel(file.Path)));
 					});
 				_vm.Importing = false;
 				return;
@@ -50,31 +51,31 @@ namespace TagsTreeWinUI3.Views
 					switch ((string)parameter!)
 					{
 						case "Select_Folders":
-							if (FileViewModel.ValidPath(folder.Path[..folder.Path.LastIndexOf('\\')]))
+							if (FileViewModel.ValidPath(folder.Path.GetPath()))
 								if (!dictionary.ContainsKey(true + folder.Path))
-									DataGrid.DispatcherQueue.TryEnqueue(() => _vm.FileViewModels.Add(new FileViewModel(folder.Path, true)));
+									DataGrid.DispatcherQueue.TryEnqueue(() => _vm.FileViewModels.Add(new FileViewModel(folder.Path)));
 							break;
 						case "Path_Files":
 							if (FileViewModel.ValidPath(folder.Path))
 								foreach (var fileInfo in new DirectoryInfo(folder.Path).GetFiles())
 									if (!dictionary.ContainsKey(false + fileInfo.FullName))
-										DataGrid.DispatcherQueue.TryEnqueue(() => _vm.FileViewModels.Add(new FileViewModel(fileInfo.FullName, false)));
+										DataGrid.DispatcherQueue.TryEnqueue(() => _vm.FileViewModels.Add(new FileViewModel(fileInfo.FullName)));
 							break;
 						case "Path_Folders":
 							if (FileViewModel.ValidPath(folder.Path))
 								foreach (var directoryInfo in new DirectoryInfo(folder.Path).GetDirectories())
 									if (!dictionary.ContainsKey(true + directoryInfo.FullName))
-										DataGrid.DispatcherQueue.TryEnqueue(() => _vm.FileViewModels.Add(new FileViewModel(directoryInfo.FullName, true)));
+										DataGrid.DispatcherQueue.TryEnqueue(() => _vm.FileViewModels.Add(new FileViewModel(directoryInfo.FullName)));
 							break;
 						case "Path_Both":
 							if (FileViewModel.ValidPath(folder.Path))
 							{
 								foreach (var fileInfo in new DirectoryInfo(folder.Path).GetFiles())
 									if (!dictionary.ContainsKey(false + fileInfo.FullName))
-										DataGrid.DispatcherQueue.TryEnqueue(() => _vm.FileViewModels.Add(new FileViewModel(fileInfo.FullName, false)));
+										DataGrid.DispatcherQueue.TryEnqueue(() => _vm.FileViewModels.Add(new FileViewModel(fileInfo.FullName)));
 								foreach (var directoryInfo in new DirectoryInfo(folder.Path).GetDirectories())
 									if (!dictionary.ContainsKey(true + directoryInfo.FullName))
-										DataGrid.DispatcherQueue.TryEnqueue(() => _vm.FileViewModels.Add(new FileViewModel(directoryInfo.FullName, true)));
+										DataGrid.DispatcherQueue.TryEnqueue(() => _vm.FileViewModels.Add(new FileViewModel(directoryInfo.FullName)));
 							}
 							break;
 						case "All":
@@ -82,7 +83,7 @@ namespace TagsTreeWinUI3.Views
 							{
 								foreach (var fileInfo in new DirectoryInfo(folderName).GetFiles())
 									if (!dictionary!.ContainsKey(false + fileInfo.FullName))
-										DataGrid.DispatcherQueue.TryEnqueue(() => _vm.FileViewModels.Add(new FileViewModel(fileInfo.FullName, false)));
+										DataGrid.DispatcherQueue.TryEnqueue(() => _vm.FileViewModels.Add(new FileViewModel(fileInfo.FullName)));
 								foreach (var directoryInfo in new DirectoryInfo(folderName).GetDirectories())
 									RecursiveReadFiles(directoryInfo.FullName);
 							}
@@ -107,13 +108,10 @@ namespace TagsTreeWinUI3.Views
 					dictionary[fileModel.UniqueName] = true;
 				progressBar.ProcessValue = 1;
 				var unit = 98.0 / _vm.FileViewModels.Count;
-				foreach (var fileModel in _vm.FileViewModels)
+				foreach (var fileViewModel in _vm.FileViewModels)
 				{
-					if (!dictionary.ContainsKey(fileModel.UniqueName))
-					{
-						App.Relations.NewRow(fileModel.NewFileModel());
-						App.IdFile[fileModel.Id] = fileModel.NewFileModel();
-					}
+					if (!dictionary.ContainsKey(fileViewModel.UniqueName))
+						fileViewModel.AddNew();
 					else duplicated++;
 					progressBar.ProcessValue += unit;
 				}

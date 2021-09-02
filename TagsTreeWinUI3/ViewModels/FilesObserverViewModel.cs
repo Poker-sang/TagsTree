@@ -12,16 +12,16 @@ namespace TagsTreeWinUI3.ViewModels
 {
 	public class FilesObserverViewModel : ObservableObject
 	{
-		public ObservableCollection<FilesChanged> FilesChangedList { get; }
+		public ObservableCollection<FileChanged> FilesChangedList { get; }
 
-		public FilesObserverViewModel(ObservableCollection<FilesChanged> filesChangedList)
+		public FilesObserverViewModel(ObservableCollection<FileChanged> filesChangedList)
 		{
 			FilesChangedList = filesChangedList;
 			FilesChangedList.CollectionChanged += (_, e) =>
 			{
 				if(e.Action is NotifyCollectionChangedAction.Remove)
-					FilesChanged.Num--;
-				FilesChanged.Serialize(App.FilesChangedPath, FilesChangedList); //或App.FilesChangedList
+					FileChanged.Num--;
+				FileChanged.Serialize(App.FilesChangedPath, FilesChangedList); //或App.FilesChangedList
 			};
 		}
 	}

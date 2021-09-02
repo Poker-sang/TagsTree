@@ -10,8 +10,7 @@ using TagsTreeWinUI3.Services;
 using TagsTreeWinUI3.Services.ExtensionMethods;
 using TagsTreeWinUI3.ViewModels;
 using TagsTreeWinUI3.Views;
-using AppDomain = System.AppDomain;
-using Exception = System.Exception;
+using System;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -24,10 +23,10 @@ namespace TagsTreeWinUI3
 	public partial class App : Application
 	{
 		public static MainWindow Window { get; private set; } = null!;
-		public static Frame RootFrame => Window.NavigateFrame;
 		public static AppConfigurations AppConfigurations { get; private set; } = null!;
 		public static FilesObserver FilesObserver { get; private set; } = null!;
-		public static ObservableCollection<FilesChanged> FilesChangedList => FilesObserverPage.Vm.FilesChangedList;
+		public static Frame RootFrame => Window.NavigateFrame;
+		public static ObservableCollection<FileChanged> FilesChangedList => FilesObserverPage.Vm.FilesChangedList;
 
 		public static bool ConfigSet
 		{
@@ -47,6 +46,7 @@ namespace TagsTreeWinUI3
 		public App()
 		{
 			InitializeComponent();
+			RegisterUnhandledExceptionHandler();
 			IconX.Initialize();
 			FilesObserver = new FilesObserver();
 			AppConfigurations.Initialize();
@@ -67,7 +67,7 @@ namespace TagsTreeWinUI3
 		}
 
 		/// <summary>
-		/// Invoked when the application is launched normally by the end user.  Other entry points
+		/// Invoked when the application is launched normally by the end user.  Remark entry points
 		/// will be used such as when the application is launched to open a specific file.
 		/// </summary>
 		/// <param name="args">Details about the launch request and process.</param>
@@ -84,7 +84,7 @@ namespace TagsTreeWinUI3
 			FilesObserver.Initialize(AppConfigurations.LibraryPath);
 		}
 		
-		public static string FilesChangedPath => AppConfigurations.ProxyPath + @"\FilesChanged.json";
+		public static string FilesChangedPath => AppConfigurations.ProxyPath + @"\FileChanged.json";
 		private static string TagsPath => AppConfigurations.ProxyPath + @"\TagsTree.json";
 		private static string FilesPath => AppConfigurations.ProxyPath + @"\Files.json";
 		private static string RelationsPath => AppConfigurations.ProxyPath + @"\Relations.xml";
@@ -122,18 +122,6 @@ namespace TagsTreeWinUI3
 
 		private static bool _configSet;
 
-		public static bool TryRemoveFileModel(FileViewModel fileViewModel)
-		{
-			var fileModel = fileViewModel.GetFileModel();
-			if (!IdFile.Contains(fileModel)) return false;
-			_ = IdFile.Remove(fileModel);
-			Relations.Rows.Remove(Relations.RowAt(fileModel));
-			Relations.RefreshRowsDict();
-			SaveFiles();
-			SaveRelations();
-			return true;
-		}
-
 		///  <summary>
 		///  重新加载新的配置文件
 		///  </summary>
@@ -141,7 +129,7 @@ namespace TagsTreeWinUI3
 		private static async void LoadConfig()
 		{
 			//文件监视
-			FilesObserverPage.Vm = new FilesObserverViewModel(FilesChanged.Deserialize(FilesChangedPath));
+			FilesObserverPage.Vm = new FilesObserverViewModel(FileChanged.Deserialize(FilesChangedPath));
 
 			//标签
 			Tags.LoadTree(TagsPath);
@@ -201,12 +189,7 @@ namespace TagsTreeWinUI3
 			AppDomain.CurrentDomain.UnhandledException += async (_, args) =>
 			{
 				if (args.ExceptionObject is Exception e)
-				{
 					await Window.DispatcherQueue.EnqueueAsync(() => UncaughtExceptionHandler(e));
-				}
-				else
-				{
-				}
 			};
 
 			static void UncaughtExceptionHandler(Exception e)

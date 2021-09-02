@@ -26,13 +26,13 @@ namespace TagsTreeWinUI3.ViewModels
 			GetIcon();
 		}
 
-		public FileViewModel(string fullName, bool isFolder) : base(fullName, isFolder)
+		public FileViewModel(string fullName) : base(fullName)
 		{
 			_fileSystemInfo = IsFolder ? new DirectoryInfo(FullName) : new FileInfo(FullName);
 			GetIcon();
 		}
 
-		private async void GetIcon()
+		private void GetIcon()
 		{
 			if (Exists)
 				Icon = IsFolder ? IconX.FolderIcon : IconX.NotFoundIcon; // await IconX.GetIcon(Extension);
@@ -45,8 +45,7 @@ namespace TagsTreeWinUI3.ViewModels
 		public new void Reload(string fullName)
 		{
 			base.Reload(fullName);
-			GetFileModel().Reload(fullName);
-			App.SaveFiles();
+			GetFileModel().Reload(fullName); //更新UI
 			OnPropertyChanged(nameof(Name));
 			OnPropertyChanged(nameof(Extension));
 			OnPropertyChanged(nameof(Path));

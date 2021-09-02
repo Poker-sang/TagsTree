@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml;
 using TagsTreeWinUI3.ViewModels;
 
 namespace TagsTreeWinUI3.Models
@@ -91,7 +93,7 @@ namespace TagsTreeWinUI3.Models
 			}
 			if (App.AppConfigurations.PathTagsEnabled) //唯一需要判断是否能使用路径作为标签的地方
 				return lastRange
-					.SelectMany(dataRow => App.IdFile[(int)dataRow[0]].PartialPath[4..].Split('\\', StringSplitOptions.RemoveEmptyEntries), (dataRow, pathTag) => new { dataRow, pathTag })
+					.SelectMany(dataRow => App.IdFile[(int)dataRow[0]].PathTags, (dataRow, pathTag) => new { dataRow, pathTag })
 					.Where(t => t.pathTag == tag.Name)
 					.Select(t => t.dataRow).ToList();
 			return new List<DataRow>();
@@ -131,21 +133,17 @@ namespace TagsTreeWinUI3.Models
 		public RelationsDataTable() => TableName = "Relations";
 
 
-		public void RefreshRowsDict()
+		public async void Load(string path)
 		{
-			_rowsDict.Clear();
-			foreach (DataRow row in Rows)
-				_rowsDict[(int)row[0]] = row; //row[0]即为row["FileId"]
-		}
-
-		public void Load(string path)
-		{
+			await using var fileStream = new FileStream(path, FileMode.OpenOrCreate);
+			using var xmlReader = XmlReader.Create(fileStream);
 			try
 			{
-				ReadXml(path);
+				_ = ReadXml(xmlReader);
 			}
 			catch (Exception)
 			{
+				xmlReader.Close();
 				Clear();
 				Columns.Clear();
 				Columns.Add(new DataColumn
@@ -163,10 +161,23 @@ namespace TagsTreeWinUI3.Models
 				foreach (var fileModel in App.IdFile.Values)
 					NewRow(fileModel);
 			}
+			xmlReader.Close();
 			RefreshRowsDict();
-			Save(path);
+			await Task.Run(() => WriteXml(fileStream));
 		}
 
-		public async void Save(string path) => await Task.Run(() => WriteXml(path, XmlWriteMode.WriteSchema));
+		public async void Save(string path)
+		{
+			await using var fileStream = new FileStream(path, FileMode.OpenOrCreate);
+			RefreshRowsDict();
+			await Task.Run(() => WriteXml(fileStream, XmlWriteMode.WriteSchema));
+		}
+
+		private void RefreshRowsDict()
+		{
+			_rowsDict.Clear();
+			foreach (DataRow row in Rows)
+				_rowsDict[(int)row[0]] = row; //row[0]即为row["FileId"]
+		}
 	}
 }

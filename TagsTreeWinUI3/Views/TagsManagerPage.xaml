@@ -14,7 +14,10 @@
     <uiControls:DockPanel>
         <controls:InputName x:Name="InputName" />
         <uiControls:DockPanel uiControls:DockPanel.Dock="Top">
-            <CommandBar uiControls:DockPanel.Dock="Right" DefaultLabelPosition="Right">
+            <CommandBar
+                uiControls:DockPanel.Dock="Right"
+                Background="Transparent"
+                DefaultLabelPosition="Right">
                 <AppBarButton
                     Click="NewBClick"
                     Icon="Import"

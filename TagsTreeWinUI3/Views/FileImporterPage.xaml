@@ -13,7 +13,10 @@
     mc:Ignorable="d">
     <Grid x:Name="FileImporterGrid">
         <uiControls:DockPanel>
-            <CommandBar uiControls:DockPanel.Dock="Top" DefaultLabelPosition="Right">
+            <CommandBar
+                uiControls:DockPanel.Dock="Top"
+                Background="Transparent"
+                DefaultLabelPosition="Right">
                 <AppBarButton Icon="{ui:FontIcon Glyph=&#xE7C3;}" Label="选择">
                     <AppBarButton.Flyout>
                         <MenuFlyout Placement="BottomEdgeAlignedLeft">

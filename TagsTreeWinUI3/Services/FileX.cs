@@ -18,6 +18,9 @@ namespace TagsTreeWinUI3.Services
 			Path = 1
 		}
 
+		public static string GetName(this string fullName) => fullName[(fullName.LastIndexOf('\\') + 1)..];
+		public static string GetPath(this string fullName) => fullName.LastIndexOf('\\') is -1 ? "" : fullName[..fullName.LastIndexOf('\\')];
+
 		public static string CountSize(FileInfo file) => " " + file.Length switch
 		{
 			< 1 << 10 => file.Length.ToString("F2") + "Byte",
