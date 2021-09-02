@@ -26,7 +26,7 @@ namespace TagsTreeWinUI3.Views
 			_vm.Importing = true;
 			if ((string)parameter! is "Select_Files")
 			{
-				if (await FileX.GetStorageFiles() is { } files)
+				if (await FileX.GetStorageFiles() is { } files and not { Count: 0 })
 					await Task.Run(() =>
 					{
 						var dictionary = new Dictionary<string, bool>();

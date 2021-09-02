@@ -30,10 +30,10 @@ namespace TagsTreeWinUI3.Services
 		{
 			_ = App.Window.DispatcherQueue.TryEnqueue(() =>
 			{
-				if (App.FilesChangedList.Last() is { Type: "Delete" } item && App.FilesChangedList.Last().Name == e.FullPath[(e.FullPath.LastIndexOf('\\') + 1)..])
+				if (App.FilesChangedList.LastOrDefault() is { Type: "Delete" } item && item.Name == e.FullPath[(e.FullPath.LastIndexOf('\\') + 1)..] && item.FullName != e.FullPath)
 				{
 					_ = App.FilesChangedList.Remove(item);
-					App.FilesChangedList.Add(new FilesChanged(e.FullPath, "Move", "Old Path: " + item.Path));
+					App.FilesChangedList.Add(new FilesChanged(e.FullPath, "Move", "Old Path: " + item.PartialPath));
 				}
 				else App.FilesChangedList.Add(new FilesChanged(e.FullPath, "Create"));
 			});
