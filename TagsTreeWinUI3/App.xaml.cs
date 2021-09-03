@@ -159,7 +159,7 @@ namespace TagsTreeWinUI3
 			}
 			if (IdFile.Count != Relations.Rows.Count)
 			{
-				if (await MessageDialogX.Warning($"「路径{AppConfigurations.ProxyPath}」下，Files.json和Relations.xml存储的文件数不同", "删除关系文件Relations.xml并重新生成", "直接关闭软件"))
+				if (await MessageDialogX.Warning($"路径「{AppConfigurations.ProxyPath}」下，Files.json和Relations.xml存储的文件数不同", "删除关系文件Relations.xml并重新生成", "直接关闭软件"))
 				{
 					File.Delete(RelationsPath);
 					Relations.Load(RelationsPath);

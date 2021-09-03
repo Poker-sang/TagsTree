@@ -5,6 +5,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using TagsTreeWinUI3.Models;
 using TagsTreeWinUI3.Services;
+using TagsTreeWinUI3.Services.ExtensionMethods;
 
 namespace TagsTreeWinUI3.ViewModels
 {

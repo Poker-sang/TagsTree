@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using TagsTreeWinUI3.Services.ExtensionMethods;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using TagsTreeWinUI3.Services.ExtensionMethods;
 
 namespace TagsTreeWinUI3.Services
 {

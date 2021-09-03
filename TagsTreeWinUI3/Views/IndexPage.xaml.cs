@@ -52,8 +52,8 @@ namespace TagsTreeWinUI3.Views
 
 		private void QuerySubmitted(AutoSuggestBox autoSuggestBox, AutoSuggestBoxQuerySubmittedEventArgs e) => _vm.FileViewModels = autoSuggestBox.Text is "" ? _vm.ResultCallBack : RelationsDataTable.FuzzySearchName(autoSuggestBox.Text, _vm.ResultCallBack);
 
-		private void OpenCmClick(object sender, RoutedEventArgs e) => ((FileViewModel)((MenuFlyoutItem)sender).Tag).FullName.Open();
-		private void OpenExplorerCmClick(object sender, RoutedEventArgs e) => ((FileViewModel)((MenuFlyoutItem)sender).Tag).Path.Open();
+		private void OpenCmClick(object sender, RoutedEventArgs e) => ((FileViewModel)((MenuFlyoutItem)sender).Tag).Open();
+		private void OpenExplorerCmClick(object sender, RoutedEventArgs e) => ((FileViewModel)((MenuFlyoutItem)sender).Tag).OpenDirectory();
 		private async void RemoveCmClick(object sender, RoutedEventArgs e)
 		{
 			if (!await MessageDialogX.Warning("是否从软件移除该文件？")) return;

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using Microsoft.VisualBasic.FileIO;
 using TagsTreeWinUI3.Models;
 using TagsTreeWinUI3.ViewModels;
 
@@ -19,26 +21,25 @@ namespace TagsTreeWinUI3.Services.ExtensionMethods
 			App.IdFile[newFileModel.Id] = newFileModel;
 		}
 
-		public static void RemoveAndSave(this FileModel fileModel)
+		public static void RemoveAndSave(this FileViewModel fileViewModel)
 		{
-			Remove(fileModel);
+			Remove(fileViewModel);
 			App.SaveFiles();
 			App.SaveRelations();
 		}
-		public static void Remove(this FileModel fileModel)
+		public static void Remove(this FileViewModel fileViewModel)
 		{
-			if (!App.IdFile.Contains(fileModel))
-				throw new NullReferenceException("文件列表中不存在：" + fileModel.FullName);
+			var fileModel = fileViewModel.GetFileModel();
 			_ = App.IdFile.Remove(fileModel);
 			App.Relations.Rows.Remove(App.Relations.RowAt(fileModel));
 		}
 
-		public static void MoveOrRenameAndSave(this FileModel fileModel, string newFullName)
+		public static void MoveOrRenameAndSave(this FileViewModel fileViewModel, string newFullName)
 		{
-			MoveOrRename(fileModel, newFullName);
+			MoveOrRename(fileViewModel, newFullName);
 			App.SaveFiles();
 		}
-		public static void MoveOrRename(this FileModel fileViewModel, string newFullName)
+		public static void MoveOrRename(this FileViewModel fileViewModel, string newFullName)
 		{
 			fileViewModel.Reload(newFullName);
 		}
