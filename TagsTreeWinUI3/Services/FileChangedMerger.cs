@@ -21,9 +21,9 @@ namespace TagsTreeWinUI3.Services
 
 		public string OriginalName =>
 			Rename.Count is not 0 ? Rename.First().Remark : //Rename在第一个，其他随意
-			Move.Count is not 0 ? Move.First().Remark :
-			Create.Count is not 0 ? Create.First().Remark :
-			Delete.First().Remark;
+			Move.Count is not 0 ? Move.First().Name :
+			Create.Count is not 0 ? Create.First().Name :
+			Delete.First().Name;
 
 		public string CurrentPath =>
 			Move.Count is not 0 ? Move.Last().Path : //Move在第一个，其他随意
@@ -33,9 +33,9 @@ namespace TagsTreeWinUI3.Services
 
 		public string OriginalPath =>
 			Move.Count is not 0 ? Move.First().Remark : //Move在第一个，其他随意
-			Rename.Count is not 0 ? Rename.First().Remark :
-			Create.Count is not 0 ? Create.First().Remark :
-			Delete.First().Remark;
+			Rename.Count is not 0 ? Rename.First().Path :
+			Create.Count is not 0 ? Create.First().Path :
+			Delete.First().Path;
 
 		public string CurrentFullName => $"{CurrentPath}\\{CurrentName}";
 		public string OriginalFullName => $"{OriginalPath}\\{OriginalName}";
