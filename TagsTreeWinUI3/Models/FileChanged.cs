@@ -2,12 +2,13 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.Json.Serialization;
+using TagsTreeWinUI3.Interfaces;
 using TagsTreeWinUI3.Services;
 using TagsTreeWinUI3.Services.ExtensionMethods;
 
 namespace TagsTreeWinUI3.Models
 {
-	public class FileChanged
+	public class FileChanged : IFullName
 	{
 		public static int Num { get; set; } = 1;
 
@@ -39,7 +40,7 @@ namespace TagsTreeWinUI3.Models
 			_ => FullName
 		};
 		[JsonIgnore] public string FullName => Path + '\\' + Name; //Path必然包含文件路径
-		[JsonIgnore] public string PartialPath => "..." + Path[App.AppConfigurations.LibraryPath.Length..]; //Path必然包含文件路径
+		[JsonIgnore] public string PartialPath => this.GetPartialPath(); //Path必然包含文件路径
 		[JsonIgnore] public bool IsFolder => Directory.Exists(FullName);
 
 		public static ObservableCollection<FileChanged> Deserialize(string path) => Serialization.Deserialize<ObservableCollection<FileChanged>>(path);

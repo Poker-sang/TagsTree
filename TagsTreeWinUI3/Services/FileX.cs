@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using TagsTreeWinUI3.Services.ExtensionMethods;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using TagsTreeWinUI3.Services.ExtensionMethods;
 
 namespace TagsTreeWinUI3.Services
 {
@@ -18,8 +18,17 @@ namespace TagsTreeWinUI3.Services
 			Path = 1
 		}
 
-		public static string GetName(this string fullName) => fullName[(fullName.LastIndexOf('\\') + 1)..];
-		public static string GetPath(this string fullName) => fullName.LastIndexOf('\\') is -1 ? "" : fullName[..fullName.LastIndexOf('\\')];
+		public static string GetName(this string fullName)
+		{
+			var fullNameSpan = fullName.AsSpan();
+			return fullNameSpan[(fullNameSpan.LastIndexOf('\\') + 1)..].ToString();
+		}
+
+		public static string GetPath(this string fullName)
+		{
+			var fullNameSpan = fullName.AsSpan();
+			return fullNameSpan.LastIndexOf('\\') is -1 ? "" : fullNameSpan[..fullNameSpan.LastIndexOf('\\')].ToString();
+		}
 
 		public static string CountSize(FileInfo file) => " " + file.Length switch
 		{
@@ -38,12 +47,14 @@ namespace TagsTreeWinUI3.Services
 		}
 		public static async Task<StorageFile> GetStorageFile()
 		{
+			throw new NotSupportedException("FileOpenPicker目前不能选任意文件");
 			var fileOpenPicker = new FileOpenPicker().InitializeWithWindow();
 			fileOpenPicker.FileTypeFilter.Add(".");
 			return await fileOpenPicker.PickSingleFileAsync();
 		}
 		public static async Task<IReadOnlyList<StorageFile>> GetStorageFiles()
 		{
+			throw new NotSupportedException("FileOpenPicker目前不能选任意文件");
 			var fileOpenPicker = new FileOpenPicker().InitializeWithWindow();
 			fileOpenPicker.FileTypeFilter.Add(".");
 			return await fileOpenPicker.PickMultipleFilesAsync();

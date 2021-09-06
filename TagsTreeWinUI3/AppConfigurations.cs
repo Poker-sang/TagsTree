@@ -8,7 +8,6 @@ namespace TagsTreeWinUI3
 
 		public bool Theme { get; set; }
 		public string LibraryPath { get; set; }
-		public string ProxyPath { get; set; }
 		public bool PathTagsEnabled { get; set; }
 		private bool _filesObserverEnabled;
 		public bool FilesObserverEnabled
@@ -22,11 +21,10 @@ namespace TagsTreeWinUI3
 		private const string ConfigurationContainerKey = "Config";
 		public static StorageFolder AppLocalFolder { get; set; } = null!;
 
-		private AppConfigurations(bool theme, string libraryPath, string proxyPath, bool pathTagsEnabled, bool filesObserverEnabled)
+		private AppConfigurations(bool theme, string libraryPath, bool pathTagsEnabled, bool filesObserverEnabled)
 		{
 			Theme = theme;
 			LibraryPath = libraryPath;
-			ProxyPath = proxyPath;
 			PathTagsEnabled = pathTagsEnabled;
 			_filesObserverEnabled = filesObserverEnabled;
 		}
@@ -48,7 +46,6 @@ namespace TagsTreeWinUI3
 				return new AppConfigurations(
 					_configurationContainer.Values[nameof(Theme)].CastThrow<bool>(),
 					_configurationContainer.Values[nameof(LibraryPath)].CastThrow<string>(),
-					_configurationContainer.Values[nameof(ProxyPath)].CastThrow<string>(),
 					_configurationContainer.Values[nameof(PathTagsEnabled)].CastThrow<bool>(),
 					_configurationContainer.Values[nameof(FilesObserverEnabled)].CastThrow<bool>()
 					);
@@ -59,13 +56,12 @@ namespace TagsTreeWinUI3
 			}
 		}
 
-		public static AppConfigurations GetDefault() => new(false, "", "", true, false);
+		public static AppConfigurations GetDefault() => new(false, "", true, false);
 
 		public static void SaveConfiguration(AppConfigurations appConfigurations)
 		{
 			_configurationContainer.Values[nameof(Theme)] = appConfigurations.Theme;
 			_configurationContainer.Values[nameof(LibraryPath)] = appConfigurations.LibraryPath;
-			_configurationContainer.Values[nameof(ProxyPath)] = appConfigurations.ProxyPath;
 			_configurationContainer.Values[nameof(PathTagsEnabled)] = appConfigurations.PathTagsEnabled;
 			_configurationContainer.Values[nameof(FilesObserverEnabled)] = appConfigurations.FilesObserverEnabled;
 		}

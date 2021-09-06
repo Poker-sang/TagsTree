@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.FileIO;
 using System.Diagnostics;
 using System.IO;
-using Microsoft.VisualBasic.FileIO;
 using TagsTreeWinUI3.ViewModels;
 
 namespace TagsTreeWinUI3.Services.ExtensionMethods

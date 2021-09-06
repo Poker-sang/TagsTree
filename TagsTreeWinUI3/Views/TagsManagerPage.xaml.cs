@@ -156,8 +156,8 @@ namespace TagsTreeWinUI3.Views
 
 		private void NewTag(string name, TagViewModel path)
 		{
-			var tempId = App.Tags.AddTag(path, name);
-			App.Relations.NewColumn(tempId);
+			App.Tags.AddTag(path, name);
+			App.Relations.NewTag(path);
 			BSave.IsEnabled = true;
 		}
 
@@ -180,11 +180,11 @@ namespace TagsTreeWinUI3.Views
 		private void DeleteTag(TagViewModel path)
 		{
 			App.Tags.DeleteTag(path);
-			App.Relations.DeleteColumn(path.Id);
+			App.Relations.DeleteTag(path);
 			BSave.IsEnabled = true;
 		}
 
-		private bool NewTagCheck(string name)
+		private static bool NewTagCheck(string name)
 		{
 			if (name is "")
 			{

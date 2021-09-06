@@ -14,7 +14,6 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="4*" />
@@ -22,15 +21,8 @@
         </Grid.ColumnDefinitions>
 
         <AutoSuggestBox
-            x:Name="TbProxyPath"
-            Grid.Row="0"
-            Grid.Column="0"
-            VerticalAlignment="Center"
-            Header="配置路径"
-            PlaceholderText="存放配置文件的文件夹（最好是空文件夹）" />
-        <AutoSuggestBox
             x:Name="TbLibraryPath"
-            Grid.Row="1"
+            Grid.Row="0"
             Grid.Column="0"
             VerticalAlignment="Center"
             Header="文件路径"
@@ -41,36 +33,28 @@
             Width="40"
             Height="40"
             HorizontalAlignment="Center"
-            Click="BConfigPath_Click"
-            Content="{ui:FontIcon Glyph=&#xE8B7;}" />
-        <Button
-            Grid.Row="1"
-            Grid.Column="1"
-            Width="40"
-            Height="40"
-            HorizontalAlignment="Center"
             Click="BLibraryPath_Click"
             Content="{ui:FontIcon Glyph=&#xE8B7;}" />
         <ToggleSwitch
             x:Name="CbRootFoldersExist"
-            Grid.Row="2"
+            Grid.Row="1"
             Grid.Column="0"
             VerticalAlignment="Center"
             Header="将所在路径文件夹名作为标签使用" />
         <ToggleSwitch
             x:Name="TsTheme"
-            Grid.Row="3"
+            Grid.Row="2"
             Grid.Column="0"
             Header="主题色（保存后重启生效）"
             OffContent="浅色"
             OnContent="深色" />
         <ToggleSwitch
             x:Name="TsFilesObserver"
-            Grid.Row="4"
+            Grid.Row="3"
             Grid.Column="0"
             Header="监控文件" />
         <Button
-            Grid.Row="4"
+            Grid.Row="3"
             Grid.Column="1"
             HorizontalAlignment="Center"
             Click="BConfirm_Click"
