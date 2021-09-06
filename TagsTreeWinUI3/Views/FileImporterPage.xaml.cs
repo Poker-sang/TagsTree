@@ -25,6 +25,7 @@ namespace TagsTreeWinUI3.Views
 		public async void Import(object? parameter)
 		{
 			_vm.Importing = true;
+			await Task.Yield();
 			if ((string)parameter! is "Select_Files")
 			{
 				if (await FileX.GetStorageFiles() is { } files and not { Count: 0 })

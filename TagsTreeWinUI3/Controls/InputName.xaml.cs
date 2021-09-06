@@ -2,7 +2,6 @@
 using System;
 using System.Text.RegularExpressions;
 using TagsTreeWinUI3.Services;
-using TagsTreeWinUI3.Services.ExtensionMethods;
 
 namespace TagsTreeWinUI3.Controls
 {

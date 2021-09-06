@@ -12,16 +12,15 @@ namespace TagsTreeWinUI3.Models
 
 		public TagViewModel TagsTree { get; } = new(0, ""); //属于反序列化一部分
 
-		public IEnumerable<TagViewModel> TagsDictionaryValues => TagsDictionary.Values.Where(value => value.Id != 0);
+		public IEnumerable<TagViewModel> TagsDictionaryValues => TagsDictionary.Values.Skip(1);
 		public TagViewModel TagsDictionaryRoot => TagsDictionary[0]; //或TagsDictionary[""]
 
-		public int AddTag(TagViewModel path, string name)
+		public void AddTag(TagViewModel path, string name)
 		{
 			var temp = new TagViewModel(name, path.FullName);
 			path.SubTags.Add(temp);
 
 			TagsDictionary[temp.Id, name] = temp;
-			return temp.Id;
 		}
 		public void MoveTag(TagViewModel tag, TagViewModel newPath)
 		{
@@ -57,7 +56,7 @@ namespace TagsTreeWinUI3.Models
 				RecursiveLoadTags((path is "" ? "" : path + '\\') + tag.Name, subTag);
 		}
 
-		public void LoadTree(string path) => TagsTree.SubTags = Serialization.Deserialize<ObservableCollection<TagViewModel>>(path);
+		public void DeserializeTree(string path) => TagsTree.SubTags = Serialization.Deserialize<ObservableCollection<TagViewModel>>(path);
 
 		public void LoadDictionary()
 		{

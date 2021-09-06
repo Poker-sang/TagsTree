@@ -2,12 +2,10 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.VisualBasic.FileIO;
 using System;
 using System.ComponentModel;
-using System.IO;
-using System.Net;
 using System.Runtime.CompilerServices;
-using Microsoft.VisualBasic.FileIO;
 using TagsTreeWinUI3.Services;
 using TagsTreeWinUI3.Services.ExtensionMethods;
 using TagsTreeWinUI3.ViewModels;

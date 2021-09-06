@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using TagsTreeWinUI3.Interfaces;
 
 namespace TagsTreeWinUI3.Models
 {
@@ -9,7 +10,7 @@ namespace TagsTreeWinUI3.Models
 		public override string ToString() => Name; //AutoSuggestBox选择建议时会用到
 	}
 
-	public class TagModel : PathTagModel
+	public class TagModel : PathTagModel, IFullName
 	{
 		[JsonIgnore] private static int Num { get; set; } = 1;
 		public int Id { get; }
@@ -26,6 +27,7 @@ namespace TagsTreeWinUI3.Models
 			Num++;
 			Path = path;
 		}
+
 		public bool HasChildTag(TagModel child) => $"\\\\{child.Path}\\".Contains($"\\{Name}\\"); //不包含自己
 	}
 }

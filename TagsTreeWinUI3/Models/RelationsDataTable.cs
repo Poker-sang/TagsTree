@@ -1,49 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Xml;
+using TagsTreeWinUI3.Services;
 using TagsTreeWinUI3.ViewModels;
 
 namespace TagsTreeWinUI3.Models
 {
-	public class RelationsDataTable : DataTable
+	public class RelationsDataTable
 	{
-		private readonly Dictionary<int, DataRow> _rowsDict = new();
+		public Dictionary<int, Dictionary<int, bool>> Table { get; private set; } = new(); //外层是文件，内层是标签，键分别是文件和标签的Id
 		public bool this[FileModel fileModel, TagViewModel tag]
 		{
-			get => (bool)_rowsDict[fileModel.Id][tag.Id];
-			set => _rowsDict[fileModel.Id][tag.Id.ToString()] = value;
+			get => Table[fileModel.Id][tag.Id];
+			set => Table[fileModel.Id][tag.Id] = value;
 		}
-		public DataRow RowAt(FileModel rowKey) => _rowsDict[rowKey.Id];
+		public int FilesCount => Table.Count;
+		public int TagsCount => Table is { Count: 0 } ? 0 : Table.First().Value.Count;
 
-		public IEnumerable<TagViewModel> GetTags(FileModel file)
-		{
-			for (var i = 1; i < Columns.Count; i++)
-				if ((bool)_rowsDict[file.Id][Columns[i]])
-					yield return App.Tags.TagsDictionary[Convert.ToInt32(Columns[i].ColumnName)];
-		}
-		private readonly struct Part
-		{
-			public readonly int Num;
-			public readonly FileViewModel File;
-
-			public Part(int num, FileViewModel file)
-			{
-				Num = num;
-				File = file;
-			}
-		}
+		public IEnumerable<TagViewModel> GetTags(FileModel fileModel) => Table[fileModel.Id].Where(pair => pair.Value).Select(pair => App.Tags.TagsDictionary[pair.Key]);
 
 		public static ObservableCollection<FileViewModel> FuzzySearchName(string input, IEnumerable<FileViewModel> range)
 		{   //大小写不敏感
 			var precise = new List<FileViewModel>(); //完整包含搜索内容
 			var fuzzy = new List<FileViewModel>(); //有序并全部包含所有字符
-			var part = new List<Part>(); //包含任意一个字符
+			var part = new List<KeyValuePair<int, FileViewModel>>(); //包含任意一个字符，并按包含数排序
 			var fuzzyRegex = new Regex(Regex.Replace(input, "(.)", ".+$1", RegexOptions.IgnoreCase));
 			var partRegex = new Regex($"[{input}]", RegexOptions.IgnoreCase);
 			foreach (var fileViewModel in range)
@@ -55,13 +37,13 @@ namespace TagsTreeWinUI3.Models
 				else
 				{
 					var matches = partRegex.Matches(fileViewModel.Name);
-					if (matches.Count != 0)
-						part.Add(new Part(matches.Count, fileViewModel));
+					if (matches.Count is not 0)
+						part.Add(new KeyValuePair<int, FileViewModel>(matches.Count, fileViewModel));
 				}
 			}
 			precise.AddRange(fuzzy);
-			part.Sort((x, y) => x.Num.CompareTo(y.Num));
-			precise.AddRange(part.Select(item => item.File));
+			part.Sort((x, y) => x.Key.CompareTo(y.Key));
+			precise.AddRange(part.Select(item => item.Value));
 			var temp = new ObservableCollection<FileViewModel>();
 			foreach (var fileModel in precise)
 				temp.Add(fileModel);
@@ -69,115 +51,60 @@ namespace TagsTreeWinUI3.Models
 		}
 		public IEnumerable<FileModel> GetFileModels(List<PathTagModel>? tags = null)
 		{
-			if (tags is null || tags.Count == 0)
-				return App.IdFile.Values.ToList();
-			var validTags = new Dictionary<PathTagModel, bool>();
-			foreach (var tag in tags.Where(tag => !validTags.ContainsKey(tag)))
-				validTags[tag] = true;
-			var enumerator = tags.GetEnumerator();
-			_ = enumerator.MoveNext();
-			return GetFileModels(enumerator).Select(row => App.IdFile[(int)row[0]]).ToList();
+			IEnumerable<FileModel> filesRange = App.IdFile.Values;
+			if (tags is null or { Count: 0 })
+				return filesRange;
+			var individualTags = new Dictionary<PathTagModel, bool>();
+			foreach (var tag in tags.Where(tag => !individualTags.ContainsKey(tag)))
+				individualTags[tag] = true;
+			return individualTags.Keys.Aggregate(filesRange, (current, pathTagModel) => GetFileModels(pathTagModel, current));
 		}
-		private List<DataRow> GetFileModels(IEnumerator<PathTagModel> tags)
+		private IEnumerable<FileModel> GetFileModels(PathTagModel pathTagModel, IEnumerable<FileModel> filesRange)
 		{
-			var tag = tags.Current;
-			var lastRange = tags.MoveNext() ? GetFileModels(tags) : _rowsDict.Values.ToList();
-			if (App.Tags.TagsDictionary.GetValueOrDefault(tag.Name) is { } tagModel)
+			if (pathTagModel is TagViewModel tagViewModel)
 			{
-				var dataRows = lastRange.Where(row => (bool)row[tagModel.Id.ToString()]).ToList();
-				dataRows.AddRange(App.Tags.TagsDictionaryValues.Where(childTag => tagModel.HasChildTag(childTag))
-					.SelectMany(_ => lastRange, (childTag, row) => new { childTag, row })
-					.Where(t => (bool)t.row[t.childTag.Id.ToString()])
-					.Select(t => t.row));
-				return dataRows;
+				filesRange = tagViewModel.SubTags.Aggregate(filesRange, (current, subTag) => GetFileModels(subTag, current));
+				return filesRange.Where(fileModel => Table[fileModel.Id][tagViewModel.Id]);
 			}
-			if (App.AppConfigurations.PathTagsEnabled) //唯一需要判断是否能使用路径作为标签的地方
-				return lastRange
-					.SelectMany(dataRow => App.IdFile[(int)dataRow[0]].PathTags, (dataRow, pathTag) => new { dataRow, pathTag })
-					.Where(t => t.pathTag == tag.Name)
-					.Select(t => t.dataRow).ToList();
-			return new List<DataRow>();
+			else if (App.AppConfigurations.PathTagsEnabled) //唯一需要判断是否能使用路径作为标签的地方
+				return filesRange.Where(fileModel => fileModel.PathContains(pathTagModel));
+			return Enumerable.Empty<FileModel>();
 		}
-		public void NewRow(FileModel fileModel)
+		public void NewFile(FileModel fileModel)
 		{
-			var newRow = NewRow();
-			newRow[0] = fileModel.Id;
-			_rowsDict[(int)newRow[0]] = newRow;
-			Rows.Add(newRow);
+			Table[fileModel.Id] = new Dictionary<int, bool>();
+			foreach (var tagIds in Table.First().Value.Keys)
+				Table[fileModel.Id][tagIds] = false;
 		}
-		public void NewColumn(int id)
+		public void NewTag(TagViewModel tagViewModel)
 		{
-			var column = new DataColumn //不拎出来会因为"False"无法转化为bool类型而抛异常
+			foreach (var fileDict in Table.Values)
+				fileDict[tagViewModel.Id] = false;
+		}
+		public void DeleteFile(FileModel fileModel) => Table.Remove(fileModel.Id);
+
+		public void DeleteTag(TagViewModel tagViewModel)
+		{
+			foreach (var fileDict in Table.Values)
+				fileDict.Remove(tagViewModel.Id);
+		}
+
+		public void Reload()
+		{
+			foreach (var fileIds in App.IdFile.Keys)
 			{
-				AllowDBNull = false,
-				AutoIncrement = false,
-				ColumnName = id.ToString(),
-				Caption = id.ToString(),
-				DataType = typeof(bool),
-				ReadOnly = false,
-				Unique = false,
-				DefaultValue = false
-			};
-			Columns.Add(column);
-		}
-		public void DeleteColumn(int id)
-		{
-			foreach (DataColumn column in Columns)
-				if (column.ColumnName == id.ToString())
-				{
-					Columns.Remove(column);
-					return;
-				}
-		}
-
-		public RelationsDataTable() => TableName = "Relations";
-
-
-		public async void Load(string path)
-		{
-			await using var fileStream = new FileStream(path, FileMode.OpenOrCreate);
-			using var xmlReader = XmlReader.Create(fileStream);
-			try
-			{
-				_ = ReadXml(xmlReader);
+				Table[fileIds] = new Dictionary<int, bool>();
+				foreach (var tagIds in App.Tags.TagsDictionary.Keys1)
+					Table[fileIds][tagIds] = false;
 			}
-			catch (Exception)
-			{
-				xmlReader.Close();
-				Clear();
-				Columns.Clear();
-				Columns.Add(new DataColumn
-				{
-					AllowDBNull = false,
-					AutoIncrement = false,
-					ColumnName = "FileId",
-					Caption = "FileId",
-					DataType = typeof(int),
-					ReadOnly = false,
-					Unique = true
-				});
-				foreach (var tag in App.Tags.TagsDictionaryValues)
-					NewColumn(tag.Id);
-				foreach (var fileModel in App.IdFile.Values)
-					NewRow(fileModel);
-			}
-			xmlReader.Close();
-			RefreshRowsDict();
-			await Task.Run(() => WriteXml(fileStream));
 		}
 
-		public async void Save(string path)
+		public void Deserialize(string path)
 		{
-			await using var fileStream = new FileStream(path, FileMode.OpenOrCreate);
-			RefreshRowsDict();
-			await Task.Run(() => WriteXml(fileStream, XmlWriteMode.WriteSchema));
+			Table.Clear();
+			Table = Serialization.Deserialize<Dictionary<int, Dictionary<int, bool>>>(path);
 		}
 
-		private void RefreshRowsDict()
-		{
-			_rowsDict.Clear();
-			foreach (DataRow row in Rows)
-				_rowsDict[(int)row[0]] = row; //row[0]即为row["FileId"]
-		}
+		public void Serialize(string path) => Serialization.Serialize(path, Table);
 	}
 }

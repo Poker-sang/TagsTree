@@ -4,13 +4,14 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
+using TagsTreeWinUI3.Interfaces;
 using TagsTreeWinUI3.Services;
 using TagsTreeWinUI3.Services.ExtensionMethods;
 using TagsTreeWinUI3.ViewModels;
 
 namespace TagsTreeWinUI3.Models
 {
-	public class FileModel
+	public class FileModel : IFullName
 	{
 		private static int Num { get; set; }
 
@@ -70,7 +71,7 @@ namespace TagsTreeWinUI3.Models
 		public IEnumerable<TagViewModel> GetRelativeTags(TagViewModel parentTag) => Tags.GetTagViewModels().Where(parentTag.HasChildTag);
 
 		[JsonIgnore] public string Extension => IsFolder ? "文件夹" : Name.Split('.', StringSplitOptions.RemoveEmptyEntries).Last().ToUpper(CultureInfo.CurrentCulture);
-		[JsonIgnore] protected string PartialPath => "..." + Path[App.AppConfigurations.LibraryPath.Length..]; //Path必然包含文件路径
+		[JsonIgnore] protected string PartialPath => this.GetPartialPath(); //Path必然包含文件路径
 		[JsonIgnore] public string FullName => Path + '\\' + Name; //Path必然包含文件路径
 		[JsonIgnore] public string UniqueName => IsFolder + FullName;
 		[JsonIgnore] public bool IsFolder => Directory.Exists(FullName);
@@ -84,6 +85,8 @@ namespace TagsTreeWinUI3.Models
 			}
 		}
 		[JsonIgnore] public IEnumerable<string> PathTags => PartialPath is "..." ? Enumerable.Empty<string>() : PartialPath[4..].Split('\\', StringSplitOptions.RemoveEmptyEntries); //PartialPath不会是空串
+
+		public bool PathContains(PathTagModel pathTag) => PartialPath is not "..." && (PartialPath[3..] + "\\").Contains($"\\{pathTag.Name}\\");
 	}
 }
 

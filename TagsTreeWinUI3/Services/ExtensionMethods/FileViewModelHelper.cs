@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using Microsoft.VisualBasic.FileIO;
-using TagsTreeWinUI3.Models;
-using TagsTreeWinUI3.ViewModels;
+﻿using TagsTreeWinUI3.ViewModels;
 
 namespace TagsTreeWinUI3.Services.ExtensionMethods
 {
@@ -17,7 +13,7 @@ namespace TagsTreeWinUI3.Services.ExtensionMethods
 		public static void AddNew(this FileViewModel fileViewModel)
 		{
 			var newFileModel = fileViewModel.NewFileModel();
-			App.Relations.NewRow(newFileModel);
+			App.Relations.NewFile(newFileModel);
 			App.IdFile[newFileModel.Id] = newFileModel;
 		}
 
@@ -31,7 +27,7 @@ namespace TagsTreeWinUI3.Services.ExtensionMethods
 		{
 			var fileModel = fileViewModel.GetFileModel();
 			_ = App.IdFile.Remove(fileModel);
-			App.Relations.Rows.Remove(App.Relations.RowAt(fileModel));
+			App.Relations.DeleteFile(fileModel);
 		}
 
 		public static void MoveOrRenameAndSave(this FileViewModel fileViewModel, string newFullName)

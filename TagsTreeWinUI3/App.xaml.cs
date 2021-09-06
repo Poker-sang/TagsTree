@@ -28,6 +28,8 @@ namespace TagsTreeWinUI3
 		public static Frame RootFrame => Window.NavigateFrame;
 		public static ObservableCollection<FileChanged> FilesChangedList => FilesObserverPage.Vm.FilesChangedList;
 
+
+
 		public static bool ConfigSet
 		{
 			get => _configSet;
@@ -51,13 +53,10 @@ namespace TagsTreeWinUI3
 			FilesObserver = new FilesObserver();
 			AppConfigurations.Initialize();
 			if (AppConfigurations.LoadConfiguration() is { } appConfigurations)
-				if (!Directory.Exists(appConfigurations.ProxyPath))
-					MessageDialogX.Information(true, "配置路径不存在！"); //TODO FixBug
-				else
-				{
-					AppConfigurations = appConfigurations;
-					_configSet = true;
-				}
+			{
+				AppConfigurations = appConfigurations;
+				_configSet = true;
+			}
 			else
 			{
 				AppConfigurations = AppConfigurations.GetDefault();
@@ -84,10 +83,10 @@ namespace TagsTreeWinUI3
 			FilesObserver.Initialize(AppConfigurations.LibraryPath);
 		}
 
-		public static string FilesChangedPath => AppConfigurations.ProxyPath + @"\FileChanged.json";
-		private static string TagsPath => AppConfigurations.ProxyPath + @"\TagsTree.json";
-		private static string FilesPath => AppConfigurations.ProxyPath + @"\Files.json";
-		private static string RelationsPath => AppConfigurations.ProxyPath + @"\Relations.xml";
+		public static string FilesChangedPath => AppConfigurations.AppLocalFolder.Path + @"\FileChanged.json";
+		private static string TagsPath => AppConfigurations.AppLocalFolder.Path + @"\TagsTree.json";
+		private static string FilesPath => AppConfigurations.AppLocalFolder.Path + @"\Files.json";
+		private static string RelationsPath => AppConfigurations.AppLocalFolder.Path + @"\Relations.json";
 
 		/// <summary>
 		/// 保存标签
@@ -102,7 +101,7 @@ namespace TagsTreeWinUI3
 		/// <summary>
 		/// 保存关系
 		/// </summary>
-		public static void SaveRelations() => Relations.Save(RelationsPath);
+		public static void SaveRelations() => Relations.Serialize(RelationsPath);
 
 
 		/// <summary>
@@ -126,47 +125,52 @@ namespace TagsTreeWinUI3
 		///  重新加载新的配置文件
 		///  </summary>
 		///  <returns>true：已填写正确地址，进入软件；false：打开设置页面；null：关闭软件</returns>
-		private static async void LoadConfig()
+		private static void LoadConfig()
 		{
 			//文件监视
 			FilesObserverPage.Vm = new FilesObserverViewModel(FileChanged.Deserialize(FilesChangedPath));
 
 			//标签
-			Tags.LoadTree(TagsPath);
+			Tags.DeserializeTree(TagsPath);
 			Tags.LoadDictionary();
 
 			//文件
 			IdFile.Deserialize(FilesPath);
 
 			//关系
-			if (!File.Exists(RelationsPath))
-				_ = File.Create(RelationsPath);
-			Relations.Load(RelationsPath); //异常在内部处理
+			Relations.Deserialize(RelationsPath); //异常在内部处理
+
+			//如果本来是空，则按照标签和文件生成关系
+			if (Relations.TagsCount is 0 && Relations.FilesCount is 0)
+			{
+				Relations.Reload();
+				return;
+			}
 
 			//检查
-			if (Tags.TagsDictionary.Count != Relations.Columns.Count) //TagsDictionary第一个是总根标签，Relations第一列是文件Id 
+			if (Tags.TagsDictionary.Count != Relations.TagsCount + 1) //TagsDictionary第一个是总根标签，不算
 			{
-				if (await MessageDialogX.Warning($"路径「{AppConfigurations.ProxyPath}」下，TagsTree.xml和Relations.xml存储的标签数不同", "删除关系文件Relations.xml并重新生成", "直接关闭软件"))
+				if (true)//await MessageDialogX.Warning($"路径「{AppConfigurations.AppLocalFolder.Path}」下，TagsTree.xml和Relations.xml存储的标签数不同", "删除关系文件Relations.xml并重新生成", "直接关闭软件"))
 				{
 					File.Delete(RelationsPath);
-					Relations.Load(RelationsPath);
+					Relations.Reload();
 				}
 				else
 				{
-					Window.Close();
+					Current.Exit();
 					return;
 				}
 			}
-			if (IdFile.Count != Relations.Rows.Count)
+			if (IdFile.Count != Relations.FilesCount)
 			{
-				if (await MessageDialogX.Warning($"路径「{AppConfigurations.ProxyPath}」下，Files.json和Relations.xml存储的文件数不同", "删除关系文件Relations.xml并重新生成", "直接关闭软件"))
+				if (true)//await MessageDialogX.Warning($"路径「{AppConfigurations.AppLocalFolder.Path}」下，Files.json和Relations.xml存储的文件数不同", "删除关系文件Relations.xml并重新生成", "直接关闭软件"))
 				{
 					File.Delete(RelationsPath);
-					Relations.Load(RelationsPath);
+					Relations.Reload();
 				}
 				else
 				{
-					Window.Close();
+					Current.Exit();
 					return;
 				}
 			}
