@@ -41,6 +41,13 @@
             Grid.Column="0"
             VerticalAlignment="Center"
             Header="将所在路径文件夹名作为标签使用" />
+        <Button
+            Grid.Row="1"
+            Grid.Column="1"
+            Height="40"
+            HorizontalAlignment="Center"
+            Click="BPath_Click"
+            Content="打开软件配置目录" />
         <ToggleSwitch
             x:Name="TsTheme"
             Grid.Row="2"

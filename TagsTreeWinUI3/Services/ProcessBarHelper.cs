@@ -22,7 +22,7 @@ namespace TagsTreeWinUI3.Services
 		private readonly Border _border;
 		private readonly ProgressBar _progressBar;
 
-		public double ProcessValue
+		public double ProcessValue //TODO 不返回值
 		{
 			get
 			{

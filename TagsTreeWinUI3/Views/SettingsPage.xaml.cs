@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml;
+﻿using System.Diagnostics;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.Text.RegularExpressions;
 using TagsTreeWinUI3.Services;
@@ -21,6 +22,13 @@ namespace TagsTreeWinUI3.Views
 
 		private async void BLibraryPath_Click(object sender, RoutedEventArgs e) => TbLibraryPath.Text = (await FileX.GetStorageFolder())?.Path ?? TbLibraryPath.Text;
 
+		private void BPath_Click(object sender, RoutedEventArgs e)
+		{
+			var process = new Process { StartInfo = new ProcessStartInfo(AppConfigurations.AppLocalFolder.Path) };
+			process.StartInfo.UseShellExecute = true;
+			process.Start();
+		}
+
 		private void BConfirm_Click(object sender, RoutedEventArgs e)
 		{
 			var legalPath = new Regex($@"^[a-zA-Z]:\\[^{FileX.GetInvalidPathChars}]*$");
@@ -38,6 +46,5 @@ namespace TagsTreeWinUI3.Views
 				App.Window.ConfigModeUnlock();
 			}
 		}
-
 	}
 }
