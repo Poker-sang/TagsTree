@@ -37,8 +37,7 @@ namespace TagsTreeWinUI3.Views
 						if (FileViewModel.ValidPath(files.First().Path.GetPath()))
 							foreach (var file in files)
 								if (!dictionary.ContainsKey(false + file.Path))
-									DataGrid.DispatcherQueue.TryEnqueue(() =>
-										_vm.FileViewModels.Add(new FileViewModel(file.Path)));
+									DataGrid.DispatcherQueue.TryEnqueue(() => _vm.FileViewModels.Add(new FileViewModel(file.Path)));
 					});
 				_vm.Importing = false;
 				return;

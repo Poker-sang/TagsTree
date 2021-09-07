@@ -32,7 +32,7 @@ namespace TagsTreeWinUI3.Views
 		{
 			var fileChanged = (FileChanged)((MenuFlyoutItem)sender).Tag;
 			var exception = true;
-			if (App.IdFile.Values.Any(fileModel => fileModel.FullName == fileChanged.OldFullName))
+			if (fileChanged.Type is FileChanged.ChangedType.Create || App.IdFile.Values.Any(fileModel => fileModel.FullName == fileChanged.OldFullName))
 			{
 				Apply(fileChanged);
 				Vm.FilesChangedList.Remove(fileChanged);
@@ -58,14 +58,13 @@ namespace TagsTreeWinUI3.Views
 			var deleteList = new List<FileChanged>();
 			var exception = "";
 			foreach (var fileChanged in Vm.FilesChangedList)
-			{
-				if (nameFile.ContainsKey(fileChanged.OldFullName))
+				if (fileChanged.Type is FileChanged.ChangedType.Create || nameFile.ContainsKey(fileChanged.OldFullName))
 				{
 					Apply(fileChanged);
 					deleteList.Add(fileChanged);
 				}
 				else exception += $"文件列表中不存在：{fileChanged.OldFullName}\n";
-			}
+
 			foreach (var deleteItem in deleteList)
 				Vm.FilesChangedList.Remove(deleteItem);
 			if (exception is not "")
