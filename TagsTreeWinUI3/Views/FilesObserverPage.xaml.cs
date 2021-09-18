@@ -2,15 +2,15 @@
 using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
 using System.Linq;
-using TagsTreeWinUI3.Models;
-using TagsTreeWinUI3.Services;
-using TagsTreeWinUI3.Services.ExtensionMethods;
-using TagsTreeWinUI3.ViewModels;
+using TagsTree.Models;
+using TagsTree.Services;
+using TagsTree.Services.ExtensionMethods;
+using TagsTree.ViewModels;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace TagsTreeWinUI3.Views
+namespace TagsTree.Views
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -28,47 +28,56 @@ namespace TagsTreeWinUI3.Views
 
         #region 事件处理
 
-        private void ApplyCmClick(object sender, RoutedEventArgs e)
+        private async void ApplyCmClick(object sender, RoutedEventArgs e)
         {
-            var fileChanged = (FileChanged)((MenuFlyoutItem)sender).Tag;
-            var exception = true;
+            var fileChanged = (FileChanged)((MenuFlyoutItem)sender).DataContext;
             if (fileChanged.Type is FileChanged.ChangedType.Create || App.IdFile.Values.Any(fileModel => fileModel.FullName == fileChanged.OldFullName))
-            {
-                Apply(fileChanged);
-                Vm.FilesChangedList.Remove(fileChanged);
-                exception = false;
-            }
-            if (exception)
-                MessageDialogX.Information(true, $"文件列表中不存在：{fileChanged.OldFullName}");
-            else
-            {
-                App.SaveFiles();
-                if (fileChanged.Type is FileChanged.ChangedType.Create or FileChanged.ChangedType.Delete)
-                    App.SaveRelations();
-            }
+                if (FileViewModel.IsValidPath(fileChanged.Path))
+                {
+                    Apply(fileChanged);
+                    _ = Vm.FilesChangedList.Remove(fileChanged);
+                    App.SaveFiles();
+                    if (fileChanged.Type is FileChanged.ChangedType.Create or FileChanged.ChangedType.Delete)
+                        App.SaveRelations();
+                }
+                else await ShowMessageDialog.Information(true, $"不在指定文件路径下：{fileChanged.FullName}");
+            else await ShowMessageDialog.Information(true, $"文件列表中不存在：{fileChanged.OldFullName}");
         }
-        private void DeleteCmClick(object sender, RoutedEventArgs e) => _ = Vm.FilesChangedList.Remove((FileChanged)((MenuFlyoutItem)sender).Tag);
+        private void DeleteCmClick(object sender, RoutedEventArgs e) => _ = Vm.FilesChangedList.Remove((FileChanged)((MenuFlyoutItem)sender).DataContext);
 
-        private void ApplyAllBClick(object sender, RoutedEventArgs e)
+        private async void ApplyAllBClick(object sender, RoutedEventArgs e)
         {
             MergeAll();
             var nameFile = new Dictionary<string, FileModel>();
             foreach (var fileModel in App.IdFile.Values)
                 nameFile[fileModel.FullName] = fileModel;
             var deleteList = new List<FileChanged>();
-            var exception = "";
+            var invalidExceptions = new List<FileChanged>();
+            var notExistExceptions = new List<FileChanged>();
             foreach (var fileChanged in Vm.FilesChangedList)
                 if (fileChanged.Type is FileChanged.ChangedType.Create || nameFile.ContainsKey(fileChanged.OldFullName))
-                {
-                    Apply(fileChanged);
-                    deleteList.Add(fileChanged);
-                }
-                else exception += $"文件列表中不存在：{fileChanged.OldFullName}\n";
-
+                    if (FileViewModel.IsValidPath(fileChanged.Path))
+                    {
+                        Apply(fileChanged);
+                        deleteList.Add(fileChanged);
+                    }
+                    else invalidExceptions.Add(fileChanged);
+                else notExistExceptions.Add(fileChanged);
             foreach (var deleteItem in deleteList)
-                Vm.FilesChangedList.Remove(deleteItem);
+                _ = Vm.FilesChangedList.Remove(deleteItem);
+            var exception = "";
+            if (invalidExceptions.Count is not 0)
+            {
+                exception += "*以下文件（夹）不在指定文件路径下：\n";
+                exception = invalidExceptions.Aggregate(exception, (current, invalidException) => current + (invalidException.FullName + "\n"));
+            }
+            if (notExistExceptions.Count is not 0)
+            {
+                exception += "*以下文件（夹）不存在于文件列表中：\n";
+                exception = notExistExceptions.Aggregate(exception, (current, notExistException) => current + (notExistException.OldFullName + "\n"));
+            }
             if (exception is not "")
-                MessageDialogX.Information(true, exception);
+                await ShowMessageDialog.Information(true, exception);
             App.SaveFiles();
             App.SaveRelations();
         }

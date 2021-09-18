@@ -3,12 +3,12 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
 using System.Linq;
-using TagsTreeWinUI3.Models;
-using TagsTreeWinUI3.Services;
-using TagsTreeWinUI3.Services.ExtensionMethods;
-using TagsTreeWinUI3.ViewModels;
+using TagsTree.Models;
+using TagsTree.Services;
+using TagsTree.Services.ExtensionMethods;
+using TagsTree.ViewModels;
 
-namespace TagsTreeWinUI3.Views
+namespace TagsTree.Views
 {
     /// <summary>
     /// TagEditFilesPage.xaml 的交互逻辑
@@ -52,18 +52,18 @@ namespace TagsTreeWinUI3.Views
 
         private static bool _mode;
 
-        private void ConfirmBClick(object sender, RoutedEventArgs e)
+        private async void ConfirmBClick(object sender, RoutedEventArgs e)
         {
             if (!_mode)
             {
                 if (TbPath.Path.GetTagViewModel() is not { } pathTagModel)
                 {
-                    MessageDialogX.Information(true, "「标签路径」不存在！");
+                    await ShowMessageDialog.Information(true, "「标签路径」不存在！");
                     return;
                 }
                 if (pathTagModel == App.Tags.TagsDictionaryRoot)
                 {
-                    MessageDialogX.Information(true, "「标签路径」不能为空！");
+                    await ShowMessageDialog.Information(true, "「标签路径」不能为空！");
                     return;
                 }
                 Storyboard1.Begin();
@@ -75,7 +75,7 @@ namespace TagsTreeWinUI3.Views
             {
                 if (TbPath.Path.GetTagViewModel() is not { } pathTagModel)
                 {
-                    MessageDialogX.Information(true, "「标签路径」不存在！"); //理论上不会到达此代码
+                    await ShowMessageDialog.Information(true, "「标签路径」不存在！"); //理论上不会到达此代码
                     return;
                 }
                 foreach (var fileViewModel in _vm.FileViewModels)
@@ -93,7 +93,7 @@ namespace TagsTreeWinUI3.Views
                         fileViewModel.TagsUpdated();
                     }
                 App.SaveRelations();
-                MessageDialogX.Information(false, "已保存更改");
+                await ShowMessageDialog.Information(false, "已保存更改");
             }
         }
 

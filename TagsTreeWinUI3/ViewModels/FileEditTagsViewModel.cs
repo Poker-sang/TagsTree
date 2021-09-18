@@ -1,10 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
-using TagsTreeWinUI3.Services.ExtensionMethods;
+using TagsTree.Services.ExtensionMethods;
 
-namespace TagsTreeWinUI3.ViewModels
+namespace TagsTree.ViewModels
 {
-    public class FileEditTagsViewModel : ObservableObject
+    public partial class FileEditTagsViewModel : ObservableObject
     {
         public void Load(FileViewModel fileViewModel)
         {
@@ -14,29 +14,9 @@ namespace TagsTreeWinUI3.ViewModels
 
         public static ObservableCollection<TagViewModel> TagsSource => App.Tags.TagsTree.SubTags;
 
-
+        [ObservableProperty]
         private FileViewModel _fileViewModel = null!;
+        [ObservableProperty]
         private ObservableCollection<TagViewModel> _virtualTags = null!;
-
-        public FileViewModel FileViewModel
-        {
-            get => _fileViewModel;
-            set
-            {
-                if (Equals(_fileViewModel, value)) return;
-                _fileViewModel = value;
-                OnPropertyChanged(nameof(FileViewModel));
-            }
-        }
-        public ObservableCollection<TagViewModel> VirtualTags
-        {
-            get => _virtualTags;
-            set
-            {
-                if (Equals(_virtualTags, value)) return;
-                _virtualTags = value;
-                OnPropertyChanged(nameof(VirtualTags));
-            }
-        }
     }
 }

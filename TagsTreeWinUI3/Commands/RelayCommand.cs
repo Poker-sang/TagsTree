@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TagsTreeWinUI3.Commands
+namespace TagsTree.Commands
 {
     public class RelayCommand : System.Windows.Input.ICommand
     {

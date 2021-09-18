@@ -2,11 +2,11 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.Json.Serialization;
-using TagsTreeWinUI3.Interfaces;
-using TagsTreeWinUI3.Services;
-using TagsTreeWinUI3.Services.ExtensionMethods;
+using TagsTree.Interfaces;
+using TagsTree.Services;
+using TagsTree.Services.ExtensionMethods;
 
-namespace TagsTreeWinUI3.Models
+namespace TagsTree.Models
 {
     public class FileChanged : IFullName
     {
@@ -23,7 +23,8 @@ namespace TagsTreeWinUI3.Models
             ChangedType.Create => "Create",
             ChangedType.Move => "Move",
             ChangedType.Rename => "Rename",
-            ChangedType.Delete => "Delete"
+            ChangedType.Delete => "Delete",
+            _ => ""
         };
         [JsonIgnore]
         public string DisplayRemark => Type switch

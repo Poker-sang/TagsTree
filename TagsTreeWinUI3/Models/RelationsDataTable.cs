@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
-using TagsTreeWinUI3.Services;
-using TagsTreeWinUI3.ViewModels;
+using TagsTree.Services;
+using TagsTree.ViewModels;
 
-namespace TagsTreeWinUI3.Models
+namespace TagsTree.Models
 {
     public class RelationsDataTable
     {
@@ -86,7 +86,7 @@ namespace TagsTreeWinUI3.Models
         public void DeleteTag(TagViewModel tagViewModel)
         {
             foreach (var fileDict in Table.Values)
-                fileDict.Remove(tagViewModel.Id);
+                _ = fileDict.Remove(tagViewModel.Id);
         }
 
         public void Reload()

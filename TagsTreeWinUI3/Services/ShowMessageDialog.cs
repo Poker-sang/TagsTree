@@ -1,18 +1,18 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Threading.Tasks;
-using TagsTreeWinUI3.Commands;
+using TagsTree.Commands;
 
-namespace TagsTreeWinUI3.Services
+namespace TagsTree.Services
 {
-    public static class MessageDialogX
+    public static class ShowMessageDialog
     {
         /// <summary>
         /// 显示一条错误信息
         /// </summary>
         /// <param name="mode">true：错误，false：提示</param>
         /// <param name="message">错误信息</param>
-        public static async void Information(bool mode, string message)
+        public static async Task Information(bool mode, string message)
         {
             var messageDialog = new ContentDialog
             {
@@ -26,9 +26,9 @@ namespace TagsTreeWinUI3.Services
         }
 
         /// <summary>
-        /// 显示一条可选择的警告信息
+        /// 显示一条双项选择的警告（错误）信息
         /// </summary>
-        /// <param name="message">警告信息</param>
+        /// <param name="message">警告（错误）信息</param>
         /// <param name="okHint">选择确认结果（可选）</param>
         /// <param name="cancelHint">选择取消结果（可选）</param>
         /// <returns>选择确定则返回true</returns>
@@ -40,7 +40,7 @@ namespace TagsTreeWinUI3.Services
             var messageDialog = new ContentDialog
             {
                 Title = "警告",
-                Content = message + ok + cancel,
+                Content = message + "\n" + ok + cancel,
                 PrimaryButtonText = "确定",
                 CloseButtonText = "取消",
                 PrimaryButtonCommand = new RelayCommand(_ => result = true),
@@ -53,7 +53,7 @@ namespace TagsTreeWinUI3.Services
         }
 
         /// <summary>
-        /// 三项选择
+        /// 显示一条三项选择的询问信息
         /// </summary>
         /// <param name="message">询问信息</param>
         /// <param name="yesHint">选择是结果（可选）</param>
@@ -68,13 +68,13 @@ namespace TagsTreeWinUI3.Services
             var messageDialog = new ContentDialog()
             {
                 Title = "提示",
-                Content = message + yes + no + cancel,
+                Content = message + "\n" + yes + no + cancel,
                 PrimaryButtonText = "是",
                 SecondaryButtonText = "否",
                 CloseButtonText = "取消",
                 PrimaryButtonCommand = new RelayCommand(_ => result = true),
                 SecondaryButtonCommand = new RelayCommand(_ => result = false),
-                CloseButtonCommand = new RelayCommand(_ => result = false),
+                CloseButtonCommand = new RelayCommand(_ => result = null),
                 DefaultButton = ContentDialogButton.Close,
                 XamlRoot = App.Window.Content.XamlRoot
             };

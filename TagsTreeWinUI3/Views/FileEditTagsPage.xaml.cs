@@ -3,10 +3,10 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
-using TagsTreeWinUI3.Services;
-using TagsTreeWinUI3.ViewModels;
+using TagsTree.Services;
+using TagsTree.ViewModels;
 
-namespace TagsTreeWinUI3.Views
+namespace TagsTree.Views
 {
     /// <summary>
     /// FileEditTagsPage.xaml 的交互逻辑
@@ -32,16 +32,16 @@ namespace TagsTreeWinUI3.Views
             foreach (var tagExisted in _vm.VirtualTags)
                 if (tagExisted.Name == newTag.Name)
                 {
-                    MessageDialogX.Information(true, "已拥有该标签");
+                    await ShowMessageDialog.Information(true, "已拥有该标签");
                     return;
                 }
                 else if (newTag.HasChildTag(tagExisted))
                 {
-                    MessageDialogX.Information(true, $"已拥有下级标签「{tagExisted.Name}」或更多");
+                    await ShowMessageDialog.Information(true, $"已拥有下级标签「{tagExisted.Name}」或更多");
                     return;
                 }
                 else if (tagExisted.HasChildTag(newTag))
-                    if (await MessageDialogX.Warning($"将会覆盖上级标签「{tagExisted.Name}」，是否继续？"))
+                    if (await ShowMessageDialog.Warning($"将会覆盖上级标签「{tagExisted.Name}」，是否继续？"))
                     {
                         _ = _vm.VirtualTags.Remove(tagExisted);
                         break;
@@ -57,14 +57,14 @@ namespace TagsTreeWinUI3.Views
             BSave.IsEnabled = true;
         }
 
-        private void SaveBClick(object sender, RoutedEventArgs e)
+        private async void SaveBClick(object sender, RoutedEventArgs e)
         {
             foreach (var tag in App.Tags.TagsDictionaryValues)
                 App.Relations[_vm.FileViewModel.GetFileModel(), tag] = _vm.VirtualTags.Contains(tag);
             _vm.FileViewModel.TagsUpdated();
             App.SaveRelations();
             BSave.IsEnabled = false;
-            MessageDialogX.Information(false, "已保存更改");
+            await ShowMessageDialog.Information(false, "已保存更改");
         }
         #endregion
     }

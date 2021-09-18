@@ -4,7 +4,7 @@ using System;
 using System.Runtime.InteropServices;
 using WinRT;
 
-namespace TagsTreeWinUI3.Services.ExtensionMethods
+namespace TagsTree.Services.ExtensionMethods
 {
     public static class WindowHelper
     {

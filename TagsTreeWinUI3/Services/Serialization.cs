@@ -3,7 +3,7 @@ using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace TagsTreeWinUI3.Services
+namespace TagsTree.Services
 {
     public static class Serialization
     {

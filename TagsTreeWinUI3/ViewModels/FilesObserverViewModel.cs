@@ -1,9 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using TagsTreeWinUI3.Models;
+using TagsTree.Models;
 
-namespace TagsTreeWinUI3.ViewModels
+namespace TagsTree.ViewModels
 {
     public class FilesObserverViewModel : ObservableObject
     {

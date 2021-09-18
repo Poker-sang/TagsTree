@@ -1,8 +1,10 @@
 ﻿using System.IO;
 using System.Linq;
-using TagsTreeWinUI3.Models;
+using System.Threading.Tasks;
+using TagsTree.Models;
+using TagsTree.Services.ExtensionMethods;
 
-namespace TagsTreeWinUI3.Services
+namespace TagsTree.Services
 {
     public class FilesObserver : FileSystemWatcher
     {
@@ -15,10 +17,17 @@ namespace TagsTreeWinUI3.Services
             base.Deleted += Deleted;
         }
 
-        public void Initialize(string path)
+        public async Task<bool> Change(string path)
         {
-            Path = path;
-            App.AppConfigurations.FilesObserverEnabled = App.AppConfigurations.FilesObserverEnabled;
+            //路径是否存在
+            if (!Directory.Exists(App.AppConfigurations.LibraryPath))
+            {
+                await ShowMessageDialog.Information(true, $"路径「{App.AppConfigurations.LibraryPath}」不存在，无法开启文件监视，请在设置修改正确路径后保存");
+                return App.FilesObserver.EnableRaisingEvents = false;
+            }
+
+            Path = path; //不能是错误路径
+            return App.FilesObserver.EnableRaisingEvents = App.AppConfigurations.FilesObserverEnabled;
         }
 
         private new static void Created(object sender, FileSystemEventArgs e)

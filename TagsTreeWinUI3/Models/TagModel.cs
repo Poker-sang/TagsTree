@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
-using TagsTreeWinUI3.Interfaces;
+using TagsTree.Interfaces;
 
-namespace TagsTreeWinUI3.Models
+namespace TagsTree.Models
 {
     public class PathTagModel
     {

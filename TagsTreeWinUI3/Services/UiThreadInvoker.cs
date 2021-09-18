@@ -1,4 +1,4 @@
-﻿namespace TagsTreeWinUI3.Services
+﻿namespace TagsTree.Services
 {
     public static class UiThreadInvoker
     {

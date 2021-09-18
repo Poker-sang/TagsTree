@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace TagsTreeWinUI3.Models
+namespace TagsTree.Models
 {
     public class DoubleKeysDictionary<TKey1, TKey2, TValue> where TKey1 : notnull where TKey2 : notnull where TValue : notnull
     {

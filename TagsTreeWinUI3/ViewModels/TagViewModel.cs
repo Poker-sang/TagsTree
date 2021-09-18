@@ -2,10 +2,10 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
-using TagsTreeWinUI3.Models;
-using TagsTreeWinUI3.Services.ExtensionMethods;
+using TagsTree.Models;
+using TagsTree.Services.ExtensionMethods;
 
-namespace TagsTreeWinUI3.ViewModels
+namespace TagsTree.ViewModels
 {
     public class TagViewModel : TagModel, INotifyPropertyChanged
     {

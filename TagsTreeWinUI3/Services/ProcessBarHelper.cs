@@ -2,7 +2,7 @@
 using Microsoft.UI.Xaml.Media;
 using Windows.UI;
 
-namespace TagsTreeWinUI3.Services
+namespace TagsTree.Services
 {
     public class ProcessBarHelper
     {

@@ -1,13 +1,13 @@
 ﻿<Page
-    x:Class="TagsTreeWinUI3.Views.TagEditFilesPage"
+    x:Class="TagsTree.Views.TagEditFilesPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:TagsTreeWinUI3.Controls"
+    xmlns:controls="using:TagsTree.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:TagsTreeWinUI3.Views"
+    xmlns:local="using:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
-    xmlns:viewModels="using:TagsTreeWinUI3.ViewModels"
+    xmlns:viewModels="using:TagsTree.ViewModels"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
     <uiControls:DockPanel x:Name="Panel">
@@ -90,7 +90,7 @@
                             <Image
                                 Width="32"
                                 Height="32"
-                                Source="{x:Bind Icon}" />
+                                Source="{x:Bind Icon, Mode=OneWay}" />
                         </DataTemplate>
                     </uiControls:DataGridTemplateColumn.CellTemplate>
                 </uiControls:DataGridTemplateColumn>

@@ -1,39 +1,33 @@
-﻿using TagsTreeWinUI3.Services.ExtensionMethods;
+﻿using TagsTree.Services.ExtensionMethods;
 using Windows.Storage;
 
-namespace TagsTreeWinUI3
+namespace TagsTree
 {
-    public class AppConfigurations
+    public record AppConfigurations
     {
-
-        public bool Theme { get; set; }
+        public int Theme { get; set; }
         public string LibraryPath { get; set; }
         public bool PathTagsEnabled { get; set; }
-        private bool _filesObserverEnabled;
-        public bool FilesObserverEnabled
-        {
-            get => _filesObserverEnabled;
-            set => _filesObserverEnabled = App.FilesObserver.EnableRaisingEvents = App.Window.SetFilesObserverEnable = value;
-        }
+        public bool FilesObserverEnabled { get; set; }
 
         private static ApplicationDataContainer _configurationContainer = null!;
 
         private const string ConfigurationContainerKey = "Config";
-        public static StorageFolder AppLocalFolder { get; set; } = null!;
+        public static string AppLocalFolder { get; private set; } = null!;
 
-        private AppConfigurations(bool theme, string libraryPath, bool pathTagsEnabled, bool filesObserverEnabled)
+        private AppConfigurations(int theme, string libraryPath, bool pathTagsEnabled, bool filesObserverEnabled)
         {
             Theme = theme;
             LibraryPath = libraryPath;
             PathTagsEnabled = pathTagsEnabled;
-            _filesObserverEnabled = filesObserverEnabled;
+            FilesObserverEnabled = filesObserverEnabled;
         }
 
         public static void Initialize()
         {
-            AppLocalFolder = ApplicationData.Current.LocalFolder;
+            AppLocalFolder = ApplicationData.Current.LocalFolder.Path;
             if (!ApplicationData.Current.RoamingSettings.Containers.ContainsKey(ConfigurationContainerKey))
-                ApplicationData.Current.RoamingSettings.CreateContainer(ConfigurationContainerKey, ApplicationDataCreateDisposition.Always);
+                _ = ApplicationData.Current.RoamingSettings.CreateContainer(ConfigurationContainerKey, ApplicationDataCreateDisposition.Always);
 
             _configurationContainer = ApplicationData.Current.RoamingSettings.Containers[ConfigurationContainerKey];
         }
@@ -44,7 +38,7 @@ namespace TagsTreeWinUI3
             try
             {
                 return new AppConfigurations(
-                    _configurationContainer.Values[nameof(Theme)].CastThrow<bool>(),
+                    _configurationContainer.Values[nameof(Theme)].CastThrow<int>(),
                     _configurationContainer.Values[nameof(LibraryPath)].CastThrow<string>(),
                     _configurationContainer.Values[nameof(PathTagsEnabled)].CastThrow<bool>(),
                     _configurationContainer.Values[nameof(FilesObserverEnabled)].CastThrow<bool>()
@@ -56,7 +50,7 @@ namespace TagsTreeWinUI3
             }
         }
 
-        public static AppConfigurations GetDefault() => new(false, "", true, false);
+        public static AppConfigurations GetDefault() => new(0, "", true, false);
 
         public static void SaveConfiguration(AppConfigurations appConfigurations)
         {

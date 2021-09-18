@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using TagsTreeWinUI3.Delegates;
-using TagsTreeWinUI3.Models;
-using TagsTreeWinUI3.Services;
-using TagsTreeWinUI3.Services.ExtensionMethods;
-using TagsTreeWinUI3.ViewModels;
+using TagsTree.Delegates;
+using TagsTree.Models;
+using TagsTree.Services.ExtensionMethods;
+using TagsTree.ViewModels;
 using Windows.Foundation;
 
-namespace TagsTreeWinUI3.Controls
+namespace TagsTree.Controls
 {
     /// <summary>
     /// TagSearchBox.xaml 的交互逻辑
@@ -51,7 +50,7 @@ namespace TagsTreeWinUI3.Controls
                 ResultChanged.Invoke(App.IdFile.Values.Select(fileModel => new FileViewModel(fileModel)));
                 return;
             }
-            sender.Text = Regex.Replace(sender.Text, $@"[{FileX.GetInvalidPathChars}]+", "");
+            sender.Text = Regex.Replace(sender.Text, $@"[{FileSystemHelper.GetInvalidPathChars}]+", "");
             sender.Text = Regex.Replace(sender.Text, @"  +", " ").TrimStart();
             sender.ItemsSource = sender.Text.TagSuggest(' ');
         }

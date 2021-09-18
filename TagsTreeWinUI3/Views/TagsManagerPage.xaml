@@ -1,13 +1,14 @@
 ﻿<Page
-    x:Class="TagsTreeWinUI3.Views.TagsManagerPage"
+    x:Class="TagsTree.Views.TagsManagerPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:TagsTreeWinUI3.Controls"
+    xmlns:controls="using:TagsTree.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:TagsTreeWinUI3.Views"
+    xmlns:local="using:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="using:CommunityToolkit.WinUI.UI"
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
-    xmlns:viewModels="using:TagsTreeWinUI3.ViewModels"
+    xmlns:viewModels="using:TagsTree.ViewModels"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
@@ -17,28 +18,29 @@
             <CommandBar
                 uiControls:DockPanel.Dock="Right"
                 Background="Transparent"
-                DefaultLabelPosition="Right">
+                DefaultLabelPosition="Right"
+                OverflowButtonVisibility="Collapsed">
                 <AppBarButton
                     Click="NewBClick"
-                    Icon="Import"
+                    Icon="{ui:FontIcon Glyph=&#xE8B5;}"
                     Label="添加" />
                 <AppBarButton
                     Click="MoveBClick"
-                    Icon="MoveToFolder"
+                    Icon="{ui:FontIcon Glyph=&#xE8DE;}"
                     Label="移动" />
                 <AppBarButton
                     Click="RenameBClick"
-                    Icon="Rename"
+                    Icon="{ui:FontIcon Glyph=&#xE8AC;}"
                     Label="重命名" />
                 <AppBarButton
                     Click="DeleteBClick"
-                    Icon="Delete"
+                    Icon="{ui:FontIcon Glyph=&#xE74D;}"
                     Label="删除" />
                 <AppBarSeparator />
                 <AppBarButton
                     x:Name="BSave"
                     Click="SaveBClick"
-                    Icon="Save"
+                    Icon="{ui:FontIcon Glyph=&#xE74E;}"
                     IsEnabled="False"
                     Label="保存" />
             </CommandBar>

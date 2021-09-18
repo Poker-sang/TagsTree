@@ -6,11 +6,11 @@ using Microsoft.VisualBasic.FileIO;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using TagsTreeWinUI3.Services;
-using TagsTreeWinUI3.Services.ExtensionMethods;
-using TagsTreeWinUI3.ViewModels;
+using TagsTree.Services;
+using TagsTree.Services.ExtensionMethods;
+using TagsTree.ViewModels;
 
-namespace TagsTreeWinUI3.Views
+namespace TagsTree.Views
 {
     /// <summary>
     /// FilePropertiesPage.xaml 的交互逻辑
@@ -23,7 +23,9 @@ namespace TagsTreeWinUI3.Views
 
         public FilePropertiesPage() => InitializeComponent();
 
-        public FileViewModel FileViewModel { get; private set; } = null!;
+        private static readonly FileViewModel ConstFileViewModel = new(App.IdFile[0]);
+
+        public FileViewModel FileViewModel { get; private set; } = ConstFileViewModel;
 
         #region 事件处理
 
@@ -34,24 +36,24 @@ namespace TagsTreeWinUI3.Views
         private void EditTagsBClick(object sender, RoutedEventArgs e) => App.RootFrame.Navigate(typeof(FileEditTagsPage), FileViewModel);
         private async void RemoveBClick(object sender, RoutedEventArgs e)
         {
-            if (!await MessageDialogX.Warning("是否从软件移除该文件？")) return;
+            if (!await ShowMessageDialog.Warning("是否从软件移除该文件？")) return;
             Remove(FileViewModel);
         }
         private async void RenameBClick(object sender, RoutedEventArgs e)
         {
-            InputName.Load(FileX.InvalidMode.Name, FileViewModel.Name);
-            await InputName.ShowAsync();
+            InputName.Load(FileSystemHelper.InvalidMode.Name, FileViewModel.Name);
+            _ = await InputName.ShowAsync();
             if (InputName.Canceled) return;
             if (FileViewModel.Name == InputName.AsBox.Text)
             {
-                MessageDialogX.Information(true, "新文件名与原文件名一致！");
+                await ShowMessageDialog.Information(true, "新文件名与原文件名一致！");
                 return;
             }
             var newFullName = FileViewModel.Path + @"\" + InputName.AsBox.Text;
             if (FileViewModel.IsFolder ? FileSystem.DirectoryExists(newFullName) : FileSystem.FileExists(newFullName))
             {
                 var isFolder = FileViewModel.IsFolder ? "夹" : "";
-                MessageDialogX.Information(true, $"新文件{ isFolder }名与目录中其他文件{ isFolder }同名！");
+                await ShowMessageDialog.Information(true, $"新文件{isFolder}名与目录中其他文件{isFolder}同名！");
                 return;
             }
             FileViewModel.Rename(newFullName);
@@ -60,21 +62,21 @@ namespace TagsTreeWinUI3.Views
         }
         private async void MoveBClick(object sender, RoutedEventArgs e)
         {
-            if (await FileX.GetStorageFolder() is not { } folder) return;
+            if (await FileSystemHelper.GetStorageFolder() is not { } folder) return;
             if (FileViewModel.Path == folder.Path)
             {
-                MessageDialogX.Information(true, "新目录与原目录一致！");
+                await ShowMessageDialog.Information(true, "新目录与原目录一致！");
                 return;
             }
             if (folder.Path.Contains(FileViewModel.Path))
             {
-                MessageDialogX.Information(true, "不能将其移动到原目录下！");
+                await ShowMessageDialog.Information(true, "不能将其移动到原目录下！");
                 return;
             }
             var newFullName = folder.Path + @"\" + FileViewModel.Name;
             if (newFullName.Exists())
             {
-                MessageDialogX.Information(true, "新名称与目录下其他文件（夹）同名！");
+                await ShowMessageDialog.Information(true, "新名称与目录下其他文件（夹）同名！");
                 return;
             }
             FileViewModel.Move(newFullName);
@@ -83,7 +85,7 @@ namespace TagsTreeWinUI3.Views
         }
         private async void DeleteBClick(object sender, RoutedEventArgs e)
         {
-            if (!await MessageDialogX.Warning("是否删除该文件？")) return;
+            if (!await ShowMessageDialog.Warning("是否删除该文件？")) return;
             FileViewModel.Delete();
             Remove(FileViewModel);
         }

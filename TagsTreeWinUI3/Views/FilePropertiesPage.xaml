@@ -1,10 +1,10 @@
 ﻿<Page
-    x:Class="TagsTreeWinUI3.Views.FilePropertiesPage"
+    x:Class="TagsTree.Views.FilePropertiesPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:TagsTreeWinUI3.Controls"
+    xmlns:controls="using:TagsTree.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:TagsTreeWinUI3.Views"
+    xmlns:local="using:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI.UI"
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
@@ -19,17 +19,20 @@
                 <AppBarButton
                     Width="48"
                     Click="BackBClick"
-                    Icon="Back" />
+                    Icon="{ui:FontIcon Glyph=&#xE72B;}" />
             </CommandBar>
-            <CommandBar Background="Transparent" DefaultLabelPosition="Right">
+            <CommandBar
+                Background="Transparent"
+                DefaultLabelPosition="Right"
+                OverflowButtonVisibility="Collapsed">
                 <AppBarButton
                     x:Name="BOpen"
                     Click="OpenBClick"
-                    Icon="OpenFile"
+                    Icon="{ui:FontIcon Glyph=&#xE8E5;}"
                     Label="打开" />
                 <AppBarButton
                     Click="OpenExplorerBClick"
-                    Icon="OpenLocal"
+                    Icon="{ui:FontIcon Glyph=&#xE8DA;}"
                     Label="打开文件夹" />
                 <AppBarButton
                     Click="RemoveBClick"
@@ -37,23 +40,23 @@
                     Label="移除" />
                 <AppBarButton
                     Click="EditTagsBClick"
-                    Icon="Tag"
+                    Icon="{ui:FontIcon Glyph=&#xE8EC;}"
                     Label="更改标签" />
                 <AppBarSeparator />
                 <AppBarButton
                     x:Name="BRename"
                     Click="RenameBClick"
-                    Icon="Rename"
+                    Icon="{ui:FontIcon Glyph=&#xE8AC;}"
                     Label="重命名" />
                 <AppBarButton
                     x:Name="BMove"
                     Click="MoveBClick"
-                    Icon="MoveToFolder"
+                    Icon="{ui:FontIcon Glyph=&#xE8DE;}"
                     Label="移动" />
                 <AppBarButton
                     x:Name="BDelete"
                     Click="DeleteBClick"
-                    Icon="Delete"
+                    Icon="{ui:FontIcon Glyph=&#xE74D;}"
                     Label="删除" />
             </CommandBar>
         </uiControls:DockPanel>
