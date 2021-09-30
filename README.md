@@ -25,11 +25,11 @@ TagsTree 能在不干涉文件本身的前提下，为软件添加标签
 
 * 「配置路径」最好指定一个空文件夹，因为路径下会放置软件需要的文件，分别是：
 
-1. TagsTree.xml 以树状结构存储所有标签
+1. TagsTree.json 以树状结构存储所有标签
 
 2. Files.json 存储所有被引入的文件
 
-3. Relations.xml 存储文件和标签的对应关系
+3. Relations.json 存储文件和标签的对应关系
 
 4. FilesChanged.json 在开启文件监视的情况下，会存储未处理的文件改变事件
 
