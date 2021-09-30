@@ -63,7 +63,6 @@ namespace TagsTreeWinUI3.Views
                     }
                     else invalidExceptions.Add(fileChanged);
                 else notExistExceptions.Add(fileChanged);
-
             foreach (var deleteItem in deleteList)
                 Vm.FilesChangedList.Remove(deleteItem);
             var exception = "";

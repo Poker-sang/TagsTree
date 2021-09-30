@@ -34,7 +34,7 @@ namespace TagsTreeWinUI3.Views
                         var dictionary = new Dictionary<string, bool>();
                         foreach (var fileViewModelModel in _vm.FileViewModels)
                             dictionary[fileViewModelModel.UniqueName] = true;
-                        if (FileViewModel.ValidPath(files.First().Path.GetPath()))
+                        if (FileViewModel.ValidPath(files[0].Path.GetPath()))
                             foreach (var file in files)
                                 if (!dictionary.ContainsKey(false + file.Path))
                                     DataGrid.DispatcherQueue.TryEnqueue(() => _vm.FileViewModels.Add(new FileViewModel(file.Path)));
@@ -99,23 +99,21 @@ namespace TagsTreeWinUI3.Views
 
         public async void SaveBClick(object? parameter)
         {
-            var progressBar = new ProcessBarHelper((Grid)parameter!);
+            var progressBar = new ProcessBarHelper((Grid) parameter!);
             var duplicated = 0;
-            await Task.Run(() =>
+            await Task.Yield();
+            var dictionary = new Dictionary<string, bool>();
+            foreach (var fileModel in App.IdFile.Values)
+                dictionary[fileModel.UniqueName] = true;
+            progressBar.ProcessValue = 1;
+            var unit = 98.0 / _vm.FileViewModels.Count;
+            foreach (var fileViewModel in _vm.FileViewModels)
             {
-                var dictionary = new Dictionary<string, bool>();
-                foreach (var fileModel in App.IdFile.Values)
-                    dictionary[fileModel.UniqueName] = true;
-                progressBar.ProcessValue = 1;
-                var unit = 98.0 / _vm.FileViewModels.Count;
-                foreach (var fileViewModel in _vm.FileViewModels)
-                {
-                    if (!dictionary.ContainsKey(fileViewModel.UniqueName))
-                        fileViewModel.AddNew();
-                    else duplicated++;
-                    progressBar.ProcessValue += unit;
-                }
-            });
+                if (!dictionary.ContainsKey(fileViewModel.UniqueName))
+                    fileViewModel.AddNew();
+                else duplicated++;
+                progressBar.ProcessValue += unit;
+            }
             App.SaveFiles();
             App.SaveRelations();
             progressBar.ProcessValue = 100;
