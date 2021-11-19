@@ -8,7 +8,9 @@ using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
+using CommunityToolkit.WinUI.UI.Converters;
 using TagsTreeWinUI3.Models;
 using TagsTreeWinUI3.Services;
 using TagsTreeWinUI3.Services.ExtensionMethods;
@@ -118,17 +120,17 @@ namespace TagsTreeWinUI3
         /// <summary>
         /// 所有标签
         /// </summary>
-        public static TreeDictionary Tags { get; private set; } = new();
+        public static TreeDictionary Tags { get; } = new();
 
         /// <summary>
         /// 所有文件
         /// </summary>
-        public static BidirectionalDictionary<int, FileModel> IdFile { get; private set; } = new();
+        public static BidirectionalDictionary<int, FileModel> IdFile { get; } = new();
 
         /// <summary>
         /// 所有关系
         /// </summary>
-        public static RelationsDataTable Relations { get; private set; } = new();
+        public static RelationsDataTable Relations { get; } = new();
 
         /// <summary>
         /// 重新加载新的配置文件
@@ -159,11 +161,10 @@ namespace TagsTreeWinUI3
                 if (IdFile.Count != Relations.FilesCount)
                     return "Files.json";
             }
-            
             return null;
         }
 
-        #region 没用的错误捕捉
+        #region 错误捕捉
 
         private void RegisterUnhandledExceptionHandler()
         {

@@ -10,7 +10,7 @@ namespace TagsTreeWinUI3.ViewModels
         public ObservableCollection<TagViewModel> TagsSource { get; set; } = App.Tags.TagsTree.SubTags;
 
         private ObservableCollection<FileViewModel> _fileViewModels = Enumerable.Empty<FileViewModel>().ToObservableCollection();
-
+        
         public ObservableCollection<FileViewModel> FileViewModels
         {
             get => _fileViewModels;
