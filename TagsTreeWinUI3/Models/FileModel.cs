@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
 using TagsTreeWinUI3.Interfaces;
-using TagsTreeWinUI3.Services;
 using TagsTreeWinUI3.Services.ExtensionMethods;
 using TagsTreeWinUI3.ViewModels;
 
@@ -52,7 +51,6 @@ namespace TagsTreeWinUI3.Models
         public void Reload(string fullName)
         {
             FileSystemInfo info = IsFolder ? new DirectoryInfo(fullName) : new FileInfo(fullName);
-            var index =
             Name = info.Name;
             Path = fullName.GetPath();
         }

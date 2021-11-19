@@ -17,7 +17,8 @@
             <CommandBar
                 uiControls:DockPanel.Dock="Right"
                 Background="Transparent"
-                DefaultLabelPosition="Right">
+                DefaultLabelPosition="Right"
+                OverflowButtonVisibility="Collapsed">
                 <AppBarButton
                     Click="NewBClick"
                     Icon="Import"

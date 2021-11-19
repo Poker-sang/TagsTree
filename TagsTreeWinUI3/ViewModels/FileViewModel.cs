@@ -5,6 +5,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using TagsTreeWinUI3.Models;
 using TagsTreeWinUI3.Services;
+using TagsTreeWinUI3.Services.ExtensionMethods;
 
 namespace TagsTreeWinUI3.ViewModels
 {
@@ -16,27 +17,17 @@ namespace TagsTreeWinUI3.ViewModels
         public FileViewModel(FileModel fileModel) : base(fileModel)
         {
             _fileSystemInfo = IsFolder ? new DirectoryInfo(FullName) : new FileInfo(FullName);
-            GetIcon();
         }
 
         public FileViewModel(FileModel fileModel, TagViewModel tag) : base(fileModel)
         {
             _fileSystemInfo = IsFolder ? new DirectoryInfo(FullName) : new FileInfo(FullName);
             Selected = SelectedOriginal = HasTag(tag);
-            GetIcon();
         }
 
         public FileViewModel(string fullName) : base(fullName)
         {
             _fileSystemInfo = IsFolder ? new DirectoryInfo(FullName) : new FileInfo(FullName);
-            GetIcon();
-        }
-
-        private void GetIcon()
-        {
-            if (Exists)
-                Icon = IsFolder ? IconX.FolderIcon : IconX.NotFoundIcon; // await IconX.GetIcon(Extension);
-            else Icon = IconX.NotFoundIcon;
         }
 
         public FileModel GetFileModel() => App.IdFile[Id];
@@ -50,7 +41,6 @@ namespace TagsTreeWinUI3.ViewModels
             OnPropertyChanged(nameof(Extension));
             OnPropertyChanged(nameof(Path));
             OnPropertyChanged(nameof(PartialPath));
-            GetIcon();
             OnPropertyChanged(nameof(Icon));
             OnPropertyChanged(nameof(DateOfModification));
             OnPropertyChanged(nameof(Size));
@@ -58,10 +48,10 @@ namespace TagsTreeWinUI3.ViewModels
 
         private readonly FileSystemInfo _fileSystemInfo;
 
-        public BitmapImage Icon { get; private set; } = null!;
+        public BitmapImage Icon => Exists ? IsFolder ? IconX.FolderIcon : IconX.GetIcon(Extension) : IconX.NotFoundIcon;
 
         public string DateOfModification => Exists ? _fileSystemInfo.LastWriteTime.ToString(CultureInfo.CurrentCulture) : "";
-        public string Size => Exists && !IsFolder ? FileX.CountSize((FileInfo)_fileSystemInfo) : "";
+        public string Size => Exists && !IsFolder ? FileSystemHelper.CountSize((FileInfo)_fileSystemInfo) : "";
         public bool Exists => _fileSystemInfo.Exists;
 
         public new static bool ValidPath(string path) => FileModel.ValidPath(path);

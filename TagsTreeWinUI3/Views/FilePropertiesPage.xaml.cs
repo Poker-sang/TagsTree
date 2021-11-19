@@ -21,7 +21,10 @@ namespace TagsTreeWinUI3.Views
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        public FilePropertiesPage() => InitializeComponent();
+        public FilePropertiesPage()
+        {
+            InitializeComponent();
+        }
 
         public FileViewModel FileViewModel { get; private set; } = null!;
 
@@ -39,19 +42,19 @@ namespace TagsTreeWinUI3.Views
         }
         private async void RenameBClick(object sender, RoutedEventArgs e)
         {
-            InputName.Load(FileX.InvalidMode.Name, FileViewModel.Name);
-            await InputName.ShowAsync();
+            InputName.Load(FileSystemHelper.InvalidMode.Name, FileViewModel.Name);
+            _ = await InputName.ShowAsync();
             if (InputName.Canceled) return;
             if (FileViewModel.Name == InputName.AsBox.Text)
             {
-                MessageDialogX.Information(true, "新文件名与原文件名一致！");
+                await MessageDialogX.Information(true, "新文件名与原文件名一致！");
                 return;
             }
             var newFullName = FileViewModel.Path + @"\" + InputName.AsBox.Text;
             if (FileViewModel.IsFolder ? FileSystem.DirectoryExists(newFullName) : FileSystem.FileExists(newFullName))
             {
                 var isFolder = FileViewModel.IsFolder ? "夹" : "";
-                MessageDialogX.Information(true, $"新文件{ isFolder }名与目录中其他文件{ isFolder }同名！");
+                await MessageDialogX.Information(true, $"新文件{ isFolder }名与目录中其他文件{ isFolder }同名！");
                 return;
             }
             FileViewModel.Rename(newFullName);
@@ -60,21 +63,21 @@ namespace TagsTreeWinUI3.Views
         }
         private async void MoveBClick(object sender, RoutedEventArgs e)
         {
-            if (await FileX.GetStorageFolder() is not { } folder) return;
+            if (await FileSystemHelper.GetStorageFolder() is not { } folder) return;
             if (FileViewModel.Path == folder.Path)
             {
-                MessageDialogX.Information(true, "新目录与原目录一致！");
+                await MessageDialogX.Information(true, "新目录与原目录一致！");
                 return;
             }
             if (folder.Path.Contains(FileViewModel.Path))
             {
-                MessageDialogX.Information(true, "不能将其移动到原目录下！");
+                await MessageDialogX.Information(true, "不能将其移动到原目录下！");
                 return;
             }
             var newFullName = folder.Path + @"\" + FileViewModel.Name;
             if (newFullName.Exists())
             {
-                MessageDialogX.Information(true, "新名称与目录下其他文件（夹）同名！");
+                await MessageDialogX.Information(true, "新名称与目录下其他文件（夹）同名！");
                 return;
             }
             FileViewModel.Move(newFullName);

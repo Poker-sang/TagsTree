@@ -5,66 +5,54 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:TagsTreeWinUI3.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="using:CommunityToolkit.WinUI.UI"
+    xmlns:ui="using:CommunityToolkit.WinUI.UI.Controls"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
-    <Grid Margin="40,30,40,30">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="4*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-
-        <AutoSuggestBox
-            x:Name="TbLibraryPath"
-            Grid.Row="0"
-            Grid.Column="0"
-            VerticalAlignment="Center"
-            Header="文件路径"
-            PlaceholderText="被归类文件的根目录文件夹" />
-        <Button
-            Grid.Row="0"
-            Grid.Column="1"
-            Width="40"
-            Height="40"
-            HorizontalAlignment="Center"
-            Click="BLibraryPath_Click"
-            Content="{ui:FontIcon Glyph=&#xE8B7;}" />
-        <ToggleSwitch
-            x:Name="CbRootFoldersExist"
-            Grid.Row="1"
-            Grid.Column="0"
-            VerticalAlignment="Center"
-            Header="将所在路径文件夹名作为标签使用" />
-        <Button
-            Grid.Row="1"
-            Grid.Column="1"
-            Height="40"
-            HorizontalAlignment="Center"
-            Click="BPath_Click"
-            Content="打开软件配置目录" />
-        <ToggleSwitch
-            x:Name="TsTheme"
-            Grid.Row="2"
-            Grid.Column="0"
-            Header="主题色（保存后重启生效）"
-            OffContent="浅色"
-            OnContent="深色" />
-        <ToggleSwitch
-            x:Name="TsFilesObserver"
-            Grid.Row="3"
-            Grid.Column="0"
-            Header="监控文件" />
-        <Button
-            Grid.Row="3"
-            Grid.Column="1"
-            HorizontalAlignment="Center"
-            Click="BConfirm_Click"
-            Content="确认" />
-    </Grid>
+    <ScrollViewer>
+        <StackPanel Margin="40,30" Spacing="50">
+            <StackPanel Spacing="10">
+                <TextBlock
+                    ui:DockPanel.Dock="Top"
+                    FontSize="20"
+                    Text="主题色（保存后重启才能完全生效）" />
+                <ComboBox x:Name="CbTheme">
+                    <ComboBoxItem Content="跟随系统" />
+                    <ComboBoxItem Content="浅色" />
+                    <ComboBoxItem Content="深色" />
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Spacing="10">
+                <TextBlock
+                    ui:DockPanel.Dock="Top"
+                    FontSize="20"
+                    Text="文件路径" />
+                <ui:DockPanel>
+                    <Button
+                        Margin="20,0,0,0"
+                        ui:DockPanel.Dock="Right"
+                        Click="BLibraryPath_Click"
+                        Content="设置文件夹" />
+                    <AutoSuggestBox
+                        x:Name="TbLibraryPath"
+                        VerticalAlignment="Center"
+                        PlaceholderText="被归类文件的根目录文件夹" />
+                </ui:DockPanel>
+            </StackPanel>
+            <ToggleSwitch
+                x:Name="CbRootFoldersExist"
+                VerticalAlignment="Center"
+                Header="将所在路径文件夹名作为标签使用" />
+            <ToggleSwitch x:Name="TsFilesObserver" Header="监控文件" />
+            <DropDownButton Content="文件和标签记录">
+                <DropDownButton.Flyout>
+                    <MenuFlyout Placement="BottomEdgeAlignedRight">
+                        <MenuFlyoutItem Click="BImport_Click" Text="导入" />
+                        <MenuFlyoutItem Click="BExport_Click" Text="导出" />
+                        <MenuFlyoutItem Click="BOpenDirectory_Click" Text="打开目录" />
+                    </MenuFlyout>
+                </DropDownButton.Flyout>
+            </DropDownButton>
+            <Button Click="BSave_Click" Content="保存" />
+        </StackPanel>
+    </ScrollViewer>
 </Page>

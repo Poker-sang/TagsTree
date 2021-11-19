@@ -3,7 +3,6 @@ using Microsoft.UI.Xaml.Controls;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using TagsTreeWinUI3.Services;
 using TagsTreeWinUI3.Services.ExtensionMethods;
 
 namespace TagsTreeWinUI3.Controls
@@ -17,7 +16,7 @@ namespace TagsTreeWinUI3.Controls
         private void PathComplement(object sender, RoutedEventArgs routedEventArgs) => Path = Path.GetTagViewModel()?.FullName ?? Path;
         private void PathChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
         {
-            Path = Regex.Replace(Path, $@"[{FileX.GetInvalidPathChars}]+", "");
+            Path = Regex.Replace(Path, $@"[{FileSystemHelper.GetInvalidPathChars}]+", "");
             sender.ItemsSource = sender.Text.TagSuggest('\\');
         }
         private void SuggestionChosen(AutoSuggestBox autoSuggestBox, AutoSuggestBoxSuggestionChosenEventArgs e) => autoSuggestBox.Text = e.SelectedItem.ToString();

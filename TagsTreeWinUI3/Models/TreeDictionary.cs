@@ -37,9 +37,9 @@ namespace TagsTreeWinUI3.Models
         }
         public void DeleteTag(TagViewModel tag)
         {
-            TagsDictionary[tag.Id].GetParentTag().SubTags.Remove(tag);
+            _ = TagsDictionary[tag.Id].GetParentTag().SubTags.Remove(tag);
 
-            TagsDictionary.Remove(tag.Id);
+            _ = TagsDictionary.Remove(tag.Id);
         }
 
 

@@ -23,7 +23,8 @@ namespace TagsTreeWinUI3.Models
             ChangedType.Create => "Create",
             ChangedType.Move => "Move",
             ChangedType.Rename => "Rename",
-            ChangedType.Delete => "Delete"
+            ChangedType.Delete => "Delete",
+            _ => ""
         };
         [JsonIgnore]
         public string DisplayRemark => Type switch

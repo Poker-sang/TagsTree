@@ -32,12 +32,12 @@ namespace TagsTreeWinUI3.Views
             foreach (var tagExisted in _vm.VirtualTags)
                 if (tagExisted.Name == newTag.Name)
                 {
-                    MessageDialogX.Information(true, "已拥有该标签");
+                    await MessageDialogX.Information(true, "已拥有该标签");
                     return;
                 }
                 else if (newTag.HasChildTag(tagExisted))
                 {
-                    MessageDialogX.Information(true, $"已拥有下级标签「{tagExisted.Name}」或更多");
+                    await MessageDialogX.Information(true, $"已拥有下级标签「{tagExisted.Name}」或更多");
                     return;
                 }
                 else if (tagExisted.HasChildTag(newTag))
@@ -57,14 +57,14 @@ namespace TagsTreeWinUI3.Views
             BSave.IsEnabled = true;
         }
 
-        private void SaveBClick(object sender, RoutedEventArgs e)
+        private async void SaveBClick(object sender, RoutedEventArgs e)
         {
             foreach (var tag in App.Tags.TagsDictionaryValues)
                 App.Relations[_vm.FileViewModel.GetFileModel(), tag] = _vm.VirtualTags.Contains(tag);
             _vm.FileViewModel.TagsUpdated();
             App.SaveRelations();
             BSave.IsEnabled = false;
-            MessageDialogX.Information(false, "已保存更改");
+            await MessageDialogX.Information(false, "已保存更改");
         }
         #endregion
     }

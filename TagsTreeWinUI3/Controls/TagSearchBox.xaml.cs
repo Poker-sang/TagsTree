@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using TagsTreeWinUI3.Delegates;
 using TagsTreeWinUI3.Models;
-using TagsTreeWinUI3.Services;
 using TagsTreeWinUI3.Services.ExtensionMethods;
 using TagsTreeWinUI3.ViewModels;
 using Windows.Foundation;
@@ -51,7 +50,7 @@ namespace TagsTreeWinUI3.Controls
                 ResultChanged.Invoke(App.IdFile.Values.Select(fileModel => new FileViewModel(fileModel)));
                 return;
             }
-            sender.Text = Regex.Replace(sender.Text, $@"[{FileX.GetInvalidPathChars}]+", "");
+            sender.Text = Regex.Replace(sender.Text, $@"[{FileSystemHelper.GetInvalidPathChars}]+", "");
             sender.Text = Regex.Replace(sender.Text, @"  +", " ").TrimStart();
             sender.ItemsSource = sender.Text.TagSuggest(' ');
         }

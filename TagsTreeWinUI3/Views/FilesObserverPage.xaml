@@ -15,7 +15,8 @@
         <CommandBar
             uiControls:DockPanel.Dock="Top"
             Background="Transparent"
-            DefaultLabelPosition="Right">
+            DefaultLabelPosition="Right"
+            OverflowButtonVisibility="Collapsed">
             <AppBarButton
                 x:Name="BMergeAll"
                 Click="MergeAllBClick"

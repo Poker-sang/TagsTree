@@ -28,7 +28,7 @@ namespace TagsTreeWinUI3.Views
 
         #region 事件处理
 
-        private void ApplyCmClick(object sender, RoutedEventArgs e)
+        private async void ApplyCmClick(object sender, RoutedEventArgs e)
         {
             var fileChanged = (FileChanged)((MenuFlyoutItem)sender).Tag;
             if (fileChanged.Type is FileChanged.ChangedType.Create || App.IdFile.Values.Any(fileModel => fileModel.FullName == fileChanged.OldFullName))
@@ -40,12 +40,12 @@ namespace TagsTreeWinUI3.Views
                     if (fileChanged.Type is FileChanged.ChangedType.Create or FileChanged.ChangedType.Delete)
                         App.SaveRelations();
                 }
-                else MessageDialogX.Information(true, $"不在指定文件路径下：{fileChanged.FullName}");
-            else MessageDialogX.Information(true, $"文件列表中不存在：{fileChanged.OldFullName}");
+                else await MessageDialogX.Information(true, $"不在指定文件路径下：{fileChanged.FullName}");
+            else await MessageDialogX.Information(true, $"文件列表中不存在：{fileChanged.OldFullName}");
         }
         private void DeleteCmClick(object sender, RoutedEventArgs e) => _ = Vm.FilesChangedList.Remove((FileChanged)((MenuFlyoutItem)sender).Tag);
 
-        private void ApplyAllBClick(object sender, RoutedEventArgs e)
+        private async void ApplyAllBClick(object sender, RoutedEventArgs e)
         {
             MergeAll();
             var nameFile = new Dictionary<string, FileModel>();
@@ -66,7 +66,7 @@ namespace TagsTreeWinUI3.Views
             foreach (var deleteItem in deleteList)
                 Vm.FilesChangedList.Remove(deleteItem);
             var exception = "";
-            if(invalidExceptions.Count is not 0)
+            if (invalidExceptions.Count is not 0)
             {
                 exception += "*以下文件（夹）不在指定文件路径下：\n";
                 exception = invalidExceptions.Aggregate(exception, (current, invalidException) => current + (invalidException.FullName + "\n"));
@@ -77,7 +77,7 @@ namespace TagsTreeWinUI3.Views
                 exception = notExistExceptions.Aggregate(exception, (current, notExistException) => current + (notExistException.OldFullName + "\n"));
             }
             if (exception is not "")
-                MessageDialogX.Information(true, exception);
+                await MessageDialogX.Information(true, exception);
             App.SaveFiles();
             App.SaveRelations();
         }

@@ -1,4 +1,7 @@
-﻿using CommunityToolkit.WinUI;
+﻿//#define DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION
+//#define DISABLE_XAML_GENERATED_BINDING_DEBUG_OUTPUT
+using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
@@ -25,22 +28,12 @@ namespace TagsTreeWinUI3
         public static MainWindow Window { get; private set; } = null!;
         public static AppConfigurations AppConfigurations { get; private set; } = null!;
         public static FilesObserver FilesObserver { get; private set; } = null!;
-        public static Frame RootFrame => Window.NavigateFrame;
+        public static NavigationView RootNavigationView { get; set; } = null!;
+        public static Frame RootFrame { get; set; } = null!;
         public static ObservableCollection<FileChanged> FilesChangedList => FilesObserverPage.Vm.FilesChangedList;
+        public static bool ConfigSet { get; set; }
 
-
-
-        public static bool ConfigSet
-        {
-            get => _configSet;
-            set
-            {
-                if (_configSet != value && value)
-                    LoadConfig();
-                _configSet = value;
-            }
-        }
-
+       
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -55,14 +48,20 @@ namespace TagsTreeWinUI3
             if (AppConfigurations.LoadConfiguration() is { } appConfigurations)
             {
                 AppConfigurations = appConfigurations;
-                _configSet = true;
+                ConfigSet = true;
             }
             else
             {
                 AppConfigurations = AppConfigurations.GetDefault();
-                _configSet = false;
+                ConfigSet = false;
             }
-            RequestedTheme = AppConfigurations.Theme ? ApplicationTheme.Dark : ApplicationTheme.Light;
+
+            RequestedTheme = AppConfigurations.Theme switch
+            {
+                1 => ApplicationTheme.Light,
+                2 => ApplicationTheme.Dark,
+                _ => RequestedTheme
+            };
         }
 
         /// <summary>
@@ -73,20 +72,32 @@ namespace TagsTreeWinUI3
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
             Window = new MainWindow { ExtendsContentIntoTitleBar = true };
-            WindowHelper.SetWindowSize(1280, 720);
-            if (ConfigSet)
-            {
-                LoadConfig();
-                Window.ConfigModeUnlock();
-            }
+            WindowHelper.SetWindowSize(800, 450);
             Window.Activate();
-            FilesObserver.Initialize(AppConfigurations.LibraryPath);
         }
 
-        public static string FilesChangedPath => AppConfigurations.AppLocalFolder.Path + @"\FileChanged.json";
-        private static string TagsPath => AppConfigurations.AppLocalFolder.Path + @"\TagsTree.json";
-        private static string FilesPath => AppConfigurations.AppLocalFolder.Path + @"\Files.json";
-        private static string RelationsPath => AppConfigurations.AppLocalFolder.Path + @"\Relations.json";
+        public static async Task<bool> ChangeFilesObserver() => await FilesObserver.Change(AppConfigurations.LibraryPath);
+
+        public static async Task ExceptionHandler(string exception)
+        {
+            switch (await MessageDialogX.Warning($"路径「{AppConfigurations.AppLocalFolder}」下，{exception}和Relations.json存储的文件数不同", "删除关系文件Relations.json并重新生成", "关闭软件并打开目录"))
+            {
+                case true:
+                    File.Delete(RelationsPath);
+                    Relations.Reload();
+                    break;
+                case false:
+                    AppConfigurations.AppLocalFolder.Open();
+                    Current.Exit();
+                    break;
+            }
+        }
+
+
+        public static string FilesChangedPath => AppConfigurations.AppLocalFolder + @"\FileChanged.json";
+        private static string TagsPath => AppConfigurations.AppLocalFolder + @"\TagsTree.json";
+        private static string FilesPath => AppConfigurations.AppLocalFolder + @"\Files.json";
+        private static string RelationsPath => AppConfigurations.AppLocalFolder + @"\Relations.json";
 
         /// <summary>
         /// 保存标签
@@ -107,102 +118,107 @@ namespace TagsTreeWinUI3
         /// <summary>
         /// 所有标签
         /// </summary>
-        public static TreeDictionary Tags { get; } = new();
+        public static TreeDictionary Tags { get; private set; } = new();
 
         /// <summary>
         /// 所有文件
         /// </summary>
-        public static BidirectionalDictionary<int, FileModel> IdFile { get; } = new();
+        public static BidirectionalDictionary<int, FileModel> IdFile { get; private set; } = new();
 
         /// <summary>
         /// 所有关系
         /// </summary>
-        public static RelationsDataTable Relations { get; } = new();
+        public static RelationsDataTable Relations { get; private set; } = new();
 
-        private static bool _configSet;
-
-        ///  <summary>
-        ///  重新加载新的配置文件
-        ///  </summary>
-        ///  <returns>true：已填写正确地址，进入软件；false：打开设置页面；null：关闭软件</returns>
-        private static void LoadConfig()
+        /// <summary>
+        /// 重新加载新的配置文件
+        /// </summary>
+        public static string? LoadConfig()
         {
             //文件监视
             FilesObserverPage.Vm = new FilesObserverViewModel(FileChanged.Deserialize(FilesChangedPath));
 
             //标签
-            Tags.DeserializeTree(TagsPath);
-            Tags.LoadDictionary();
+            var tempTags = new TreeDictionary();
+            tempTags.DeserializeTree(TagsPath);
+            tempTags.LoadDictionary();
 
             //文件
-            IdFile.Deserialize(FilesPath);
+            var tempIdFile = new BidirectionalDictionary<int, FileModel>();
+            tempIdFile.Deserialize(FilesPath);
 
             //关系
-            Relations.Deserialize(RelationsPath); //异常在内部处理
+            var tempRelations = new RelationsDataTable();
+            tempRelations.Deserialize(RelationsPath); //异常在内部处理
 
             //如果本来是空，则按照标签和文件生成关系
-            if (Relations.TagsCount is 0 && Relations.FilesCount is 0)
+            if (tempRelations.TagsCount is 0 && tempRelations.FilesCount is 0)
+                tempRelations.Reload();
+            else
             {
-                Relations.Reload();
-                return;
+                //检查
+                if (tempTags.TagsDictionary.Count != tempRelations.TagsCount + 1) //TagsDictionary第一个是总根标签，不算
+                    return "TagsTree.json";
+                if (tempIdFile.Count != tempRelations.FilesCount)
+                    return "Files.json";
             }
 
-            //检查
-            if (Tags.TagsDictionary.Count != Relations.TagsCount + 1) //TagsDictionary第一个是总根标签，不算
-            {
-                if (true)//await MessageDialogX.Warning($"路径「{AppConfigurations.AppLocalFolder.Path}」下，TagsTree.xml和Relations.xml存储的标签数不同", "删除关系文件Relations.xml并重新生成", "直接关闭软件"))
-                {
-                    File.Delete(RelationsPath);
-                    Relations.Reload();
-                }
-                else
-                {
-                    Current.Exit();
-                    return;
-                }
-            }
-            if (IdFile.Count != Relations.FilesCount)
-            {
-                if (true)//await MessageDialogX.Warning($"路径「{AppConfigurations.AppLocalFolder.Path}」下，Files.json和Relations.xml存储的文件数不同", "删除关系文件Relations.xml并重新生成", "直接关闭软件"))
-                {
-                    File.Delete(RelationsPath);
-                    Relations.Reload();
-                }
-                else
-                {
-                    Current.Exit();
-                    return;
-                }
-            }
+            Tags = tempTags;
+            IdFile = tempIdFile;
+            Relations = tempRelations;
+            return null;
         }
+
+        #region 没用的错误捕捉
 
         private void RegisterUnhandledExceptionHandler()
         {
             UnhandledException += async (_, args) =>
             {
                 args.Handled = true;
-                await Window.DispatcherQueue.EnqueueAsync(() => UncaughtExceptionHandler(args.Exception));
+                await Window.DispatcherQueue.EnqueueAsync(async () => await UncaughtExceptionHandler(args.Exception));
             };
 
             TaskScheduler.UnobservedTaskException += async (_, args) =>
             {
                 args.SetObserved();
-                await Window.DispatcherQueue.EnqueueAsync(() => UncaughtExceptionHandler(args.Exception));
+                await Window.DispatcherQueue.EnqueueAsync(async () => await UncaughtExceptionHandler(args.Exception));
             };
 
             AppDomain.CurrentDomain.UnhandledException += async (_, args) =>
             {
                 if (args.ExceptionObject is Exception e)
-                    await Window.DispatcherQueue.EnqueueAsync(() => UncaughtExceptionHandler(e));
+                    await Window.DispatcherQueue.EnqueueAsync(async () => await UncaughtExceptionHandler(e));
+                else ExitWithPushedNotification();
             };
 
-            static void UncaughtExceptionHandler(Exception e)
+            DebugSettings.BindingFailed += (sender, args) =>
             {
+                Debug.WriteLine(args.Message);
+            };
+
 #if DEBUG
-                Debugger.Break();
-#endif
-                MessageDialogX.Information(true, e.ToString());
+            static Task UncaughtExceptionHandler(Exception e)
+            {
+                if (Debugger.IsAttached)
+                    Debugger.Break();
+                return Task.CompletedTask;
             }
+#elif RELEASE
+            static async Task UncaughtExceptionHandler(Exception e)
+            {
+                await MessageDialogX.Information(true, e.ToString());
+                ExitWithPushedNotification();
+            }
+#endif
         }
+        private static void ExitWithPushedNotification()
+        {
+            _ = WeakReferenceMessenger.Default.Send(new ApplicationExitingMessage());
+            Current.Exit();
+        }
+        public record ApplicationExitingMessage;
+
+        #endregion
     }
 }

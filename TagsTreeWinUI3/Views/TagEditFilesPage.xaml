@@ -90,7 +90,7 @@
                             <Image
                                 Width="32"
                                 Height="32"
-                                Source="{x:Bind Icon}" />
+                                Source="{x:Bind Icon, Mode=OneWay}" />
                         </DataTemplate>
                     </uiControls:DataGridTemplateColumn.CellTemplate>
                 </uiControls:DataGridTemplateColumn>

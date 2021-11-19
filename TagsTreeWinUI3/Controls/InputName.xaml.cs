@@ -2,6 +2,7 @@
 using System;
 using System.Text.RegularExpressions;
 using TagsTreeWinUI3.Services;
+using TagsTreeWinUI3.Services.ExtensionMethods;
 
 namespace TagsTreeWinUI3.Controls
 {
@@ -12,18 +13,18 @@ namespace TagsTreeWinUI3.Controls
     {
         public InputName() => InitializeComponent();
 
-        public void Load(FileX.InvalidMode mode, string text = "")
+        public void Load(FileSystemHelper.InvalidMode mode, string text = "")
         {
             InitializeComponent();
             switch (mode)
             {
-                case FileX.InvalidMode.Name:
+                case FileSystemHelper.InvalidMode.Name:
                     AsBox.PlaceholderText = @"不能包含\/:*?""<>|和除空格外的空白字符";
-                    _invalidRegex = FileX.GetInvalidNameChars;
+                    _invalidRegex = FileSystemHelper.GetInvalidNameChars;
                     break;
-                case FileX.InvalidMode.Path:
+                case FileSystemHelper.InvalidMode.Path:
                     AsBox.PlaceholderText = @"不能包含/:*?""<>|和除空格外的空白字符";
-                    _invalidRegex = FileX.GetInvalidPathChars;
+                    _invalidRegex = FileSystemHelper.GetInvalidPathChars;
                     break;
                 default: throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
             }
@@ -33,11 +34,11 @@ namespace TagsTreeWinUI3.Controls
         public bool Canceled = true;
         private string _invalidRegex = "";
 
-        private void InputName_OnPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs e)
+        private async void InputName_OnPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs e)
         {
             if (!new Regex($@"^[^{_invalidRegex}]+$").IsMatch(AsBox.Text))
             {
-                MessageDialogX.Information(true, AsBox.PlaceholderText);
+                await MessageDialogX.Information(true, AsBox.PlaceholderText);
                 e.Cancel = true;
             }
             else Canceled = false;
