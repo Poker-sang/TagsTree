@@ -55,7 +55,7 @@ namespace TagsTreeWinUI3
                     NavigationView.PaneDisplayMode = NavigationViewPaneDisplayMode.Left; //不加就不会显示PaneTitle
                     OnPropertyChanged(nameof(PaneWidth));
                 }
-                IconX.LoadFilesIcons();
+                IconsHelper.LoadFilesIcons();
 
                 foreach (NavigationViewItem menuItem in NavigationView.MenuItems)
                     menuItem.IsEnabled = true;

@@ -22,7 +22,7 @@ namespace TagsTreeWinUI3.Services
             //路径是否存在
             if (!Directory.Exists(App.AppConfigurations.LibraryPath))
             {
-                await MessageDialogX.Information(true, $"路径「{App.AppConfigurations.LibraryPath}」不存在，无法开启文件监视，请在设置修改正确路径后保存");
+                await ShowMessageDialog.Information(true, $"路径「{App.AppConfigurations.LibraryPath}」不存在，无法开启文件监视，请在设置修改正确路径后保存");
                 return App.FilesObserver.EnableRaisingEvents = false;
             }
 

@@ -5,7 +5,7 @@ using TagsTreeWinUI3.Commands;
 
 namespace TagsTreeWinUI3.Services
 {
-    public static class MessageDialogX
+    public static class ShowMessageDialog
     {
         /// <summary>
         /// 显示一条错误信息

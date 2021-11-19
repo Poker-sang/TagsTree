@@ -50,7 +50,7 @@ namespace TagsTreeWinUI3.Views
         {
             if (TbPath.Path.GetTagViewModel() is not { } pathTagModel)
             {
-                await MessageDialogX.Information(true, "「标签路径」不存在！");
+                await ShowMessageDialog.Information(true, "「标签路径」不存在！");
                 return;
             }
             if (!await NewTagCheck(_vm.Name)) return;
@@ -61,12 +61,12 @@ namespace TagsTreeWinUI3.Views
         {
             if (TbPath.Path.GetTagViewModel() is not { } pathTagModel)
             {
-                await MessageDialogX.Information(true, "「标签路径」不存在！");
+                await ShowMessageDialog.Information(true, "「标签路径」不存在！");
                 return;
             }
             if (_vm.Name.GetTagViewModel() is not { } nameTagModel)
             {
-                await MessageDialogX.Information(true, "「标签名称」不存在！");
+                await ShowMessageDialog.Information(true, "「标签名称」不存在！");
                 return;
             }
             MoveTag(nameTagModel, pathTagModel);
@@ -76,12 +76,12 @@ namespace TagsTreeWinUI3.Views
         {
             if (TbPath.Path is "")
             {
-                await MessageDialogX.Information(true, "未输入希望重命名的标签");
+                await ShowMessageDialog.Information(true, "未输入希望重命名的标签");
                 return;
             }
             if (TbPath.Path.GetTagViewModel() is not { } pathTagModel)
             {
-                await MessageDialogX.Information(true, "「标签路径」不存在！");
+                await ShowMessageDialog.Information(true, "「标签路径」不存在！");
                 return;
             }
             if (!await NewTagCheck(_vm.Name)) return;
@@ -93,12 +93,12 @@ namespace TagsTreeWinUI3.Views
         {
             if (TbPath.Path is "")
             {
-                await MessageDialogX.Information(true, "未输入希望删除的标签");
+                await ShowMessageDialog.Information(true, "未输入希望删除的标签");
                 return;
             }
             if (TbPath.Path.GetTagViewModel() is not { } pathTagModel)
             {
-                await MessageDialogX.Information(true, "「标签路径」不存在！");
+                await ShowMessageDialog.Information(true, "「标签路径」不存在！");
                 return;
             }
             DeleteTag(pathTagModel);
@@ -166,7 +166,7 @@ namespace TagsTreeWinUI3.Views
         {
             if (name == path || App.Tags.TagsDictionary.GetValueOrDefault(name.Id)!.HasChildTag(App.Tags.TagsDictionary.GetValueOrDefault(path.Id)!))
             {
-                await MessageDialogX.Information(true, "禁止将标签移动到自己目录下");
+                await ShowMessageDialog.Information(true, "禁止将标签移动到自己目录下");
                 return;
             }
             App.Tags.MoveTag(name, path);
@@ -189,12 +189,12 @@ namespace TagsTreeWinUI3.Views
         {
             if (name is "")
             {
-                await MessageDialogX.Information(true, "标签名称不能为空！");
+                await ShowMessageDialog.Information(true, "标签名称不能为空！");
                 return false;
             }
             if (name.GetTagViewModel() is not null)
             {
-                await MessageDialogX.Information(true, "与现有标签重名！");
+                await ShowMessageDialog.Information(true, "与现有标签重名！");
                 return false;
             }
             return true;

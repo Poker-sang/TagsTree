@@ -24,7 +24,7 @@ namespace TagsTreeWinUI3.Services.ExtensionMethods
             }
             catch (System.ComponentModel.Win32Exception)
             {
-                await MessageDialogX.Information(true, "找不到文件（夹），源文件可能已被更改");
+                await ShowMessageDialog.Information(true, "找不到文件（夹），源文件可能已被更改");
             }
         }
         public static async void Open(this string fullName)
@@ -37,7 +37,7 @@ namespace TagsTreeWinUI3.Services.ExtensionMethods
             }
             catch (System.ComponentModel.Win32Exception)
             {
-                await MessageDialogX.Information(true, $"打开路径「{AppConfigurations.AppLocalFolder}」时出现错误");
+                await ShowMessageDialog.Information(true, $"打开路径「{AppConfigurations.AppLocalFolder}」时出现错误");
             }
         }
         public static async void OpenDirectory(this FileViewModel fileViewModel)
@@ -50,7 +50,7 @@ namespace TagsTreeWinUI3.Services.ExtensionMethods
             }
             catch (System.ComponentModel.Win32Exception)
             {
-                await MessageDialogX.Information(true, "找不到目录，源文件目录可能已被更改");
+                await ShowMessageDialog.Information(true, "找不到目录，源文件目录可能已被更改");
             }
         }
 

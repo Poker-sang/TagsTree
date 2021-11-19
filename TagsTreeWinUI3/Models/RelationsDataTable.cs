@@ -86,7 +86,7 @@ namespace TagsTreeWinUI3.Models
         public void DeleteTag(TagViewModel tagViewModel)
         {
             foreach (var fileDict in Table.Values)
-                fileDict.Remove(tagViewModel.Id);
+                _ = fileDict.Remove(tagViewModel.Id);
         }
 
         public void Reload()

@@ -42,7 +42,7 @@ namespace TagsTreeWinUI3
         {
             InitializeComponent();
             RegisterUnhandledExceptionHandler();
-            IconX.Initialize();
+            IconsHelper.Initialize();
             FilesObserver = new FilesObserver();
             AppConfigurations.Initialize();
             if (AppConfigurations.LoadConfiguration() is { } appConfigurations)
@@ -80,7 +80,7 @@ namespace TagsTreeWinUI3
 
         public static async Task ExceptionHandler(string exception)
         {
-            switch (await MessageDialogX.Warning($"路径「{AppConfigurations.AppLocalFolder}」下，{exception}和Relations.json存储的文件数不同", "删除关系文件Relations.json并重新生成", "关闭软件并打开目录"))
+            switch (await ShowMessageDialog.Warning($"路径「{AppConfigurations.AppLocalFolder}」下，{exception}和Relations.json存储的文件数不同", "删除关系文件Relations.json并重新生成", "关闭软件并打开目录"))
             {
                 case true:
                     File.Delete(RelationsPath);
@@ -139,33 +139,27 @@ namespace TagsTreeWinUI3
             FilesObserverPage.Vm = new FilesObserverViewModel(FileChanged.Deserialize(FilesChangedPath));
 
             //标签
-            var tempTags = new TreeDictionary();
-            tempTags.DeserializeTree(TagsPath);
-            tempTags.LoadDictionary();
+            Tags.DeserializeTree(TagsPath);
+            Tags.LoadDictionary();
 
             //文件
-            var tempIdFile = new BidirectionalDictionary<int, FileModel>();
-            tempIdFile.Deserialize(FilesPath);
+            IdFile.Deserialize(FilesPath);
 
             //关系
-            var tempRelations = new RelationsDataTable();
-            tempRelations.Deserialize(RelationsPath); //异常在内部处理
+            Relations.Deserialize(RelationsPath); //异常在内部处理
 
             //如果本来是空，则按照标签和文件生成关系
-            if (tempRelations.TagsCount is 0 && tempRelations.FilesCount is 0)
-                tempRelations.Reload();
+            if (Relations.TagsCount is 0 && Relations.FilesCount is 0)
+                Relations.Reload();
             else
             {
                 //检查
-                if (tempTags.TagsDictionary.Count != tempRelations.TagsCount + 1) //TagsDictionary第一个是总根标签，不算
+                if (Tags.TagsDictionary.Count != Relations.TagsCount + 1) //TagsDictionary第一个是总根标签，不算
                     return "TagsTree.json";
-                if (tempIdFile.Count != tempRelations.FilesCount)
+                if (IdFile.Count != Relations.FilesCount)
                     return "Files.json";
             }
-
-            Tags = tempTags;
-            IdFile = tempIdFile;
-            Relations = tempRelations;
+            
             return null;
         }
 
@@ -207,8 +201,8 @@ namespace TagsTreeWinUI3
 #elif RELEASE
             static async Task UncaughtExceptionHandler(Exception e)
             {
-                await MessageDialogX.Information(true, e.ToString());
-                ExitWithPushedNotification();
+                await ShowMessageDialog.Information(true, e.ToString());
+                //ExitWithPushedNotification();
             }
 #endif
         }

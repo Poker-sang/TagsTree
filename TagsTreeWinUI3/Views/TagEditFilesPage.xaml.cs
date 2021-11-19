@@ -58,12 +58,12 @@ namespace TagsTreeWinUI3.Views
             {
                 if (TbPath.Path.GetTagViewModel() is not { } pathTagModel)
                 {
-                    await MessageDialogX.Information(true, "「标签路径」不存在！");
+                    await ShowMessageDialog.Information(true, "「标签路径」不存在！");
                     return;
                 }
                 if (pathTagModel == App.Tags.TagsDictionaryRoot)
                 {
-                    await MessageDialogX.Information(true, "「标签路径」不能为空！");
+                    await ShowMessageDialog.Information(true, "「标签路径」不能为空！");
                     return;
                 }
                 Storyboard1.Begin();
@@ -75,7 +75,7 @@ namespace TagsTreeWinUI3.Views
             {
                 if (TbPath.Path.GetTagViewModel() is not { } pathTagModel)
                 {
-                    await MessageDialogX.Information(true, "「标签路径」不存在！"); //理论上不会到达此代码
+                    await ShowMessageDialog.Information(true, "「标签路径」不存在！"); //理论上不会到达此代码
                     return;
                 }
                 foreach (var fileViewModel in _vm.FileViewModels)
@@ -93,7 +93,7 @@ namespace TagsTreeWinUI3.Views
                         fileViewModel.TagsUpdated();
                     }
                 App.SaveRelations();
-                await MessageDialogX.Information(false, "已保存更改");
+                await ShowMessageDialog.Information(false, "已保存更改");
             }
         }
 

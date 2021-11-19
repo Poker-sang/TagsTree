@@ -45,7 +45,7 @@ namespace TagsTreeWinUI3.Views
         {
             var legalPath = new Regex($@"^[a-zA-Z]:\\[^{FileSystemHelper.GetInvalidPathChars}]*$");
             if (!legalPath.IsMatch(TbLibraryPath.Text))
-                await MessageDialogX.Information(true, "路径错误！请填写正确完整的文件夹路径！");
+                await ShowMessageDialog.Information(true, "路径错误！请填写正确完整的文件夹路径！");
             else
             {
                 App.AppConfigurations.LibraryPath = TbLibraryPath.Text;
@@ -59,7 +59,7 @@ namespace TagsTreeWinUI3.Views
                 };
                 App.AppConfigurations.FilesObserverEnabled = TsFilesObserver.IsOn;
                 AppConfigurations.SaveConfiguration(App.AppConfigurations);
-                await MessageDialogX.Information(false, "已保存");
+                await ShowMessageDialog.Information(false, "已保存");
                 App.ConfigSet = true;
 
                 ((NavigationViewItem)App.RootNavigationView.FooterMenuItems[0]).IsEnabled = await App.ChangeFilesObserver(); //就是App.AppConfigurations.FilesObserverEnabled;

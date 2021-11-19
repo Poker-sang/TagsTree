@@ -10,7 +10,7 @@ using TagsTreeWinUI3.Properties;
 
 namespace TagsTreeWinUI3.Services
 {
-    public static class IconX
+    public static class IconsHelper
     {
         private const uint Size = 32;
 
@@ -18,15 +18,15 @@ namespace TagsTreeWinUI3.Services
         {
             await using var ms1 = new MemoryStream(Resources.Folder);
             using var folder = ms1.AsRandomAccessStream();
-            FolderIcon = await GetBitmapImage(folder);
+            _folderIcon = await GetBitmapImage(folder);
             await using var ms2 = new MemoryStream(Resources.NotFound);
             using var notFound = ms2.AsRandomAccessStream();
-            NotFoundIcon = await GetBitmapImage(notFound);
+            _notFoundIcon = await GetBitmapImage(notFound);
         }
         public static async void LoadFilesIcons()
         {
             foreach (var fileModel in App.IdFile.Values)
-                IconList[fileModel.Extension] = NotFoundIcon;
+                IconList[fileModel.Extension] = _notFoundIcon;
             foreach (var extension in IconList.Keys)
                 IconList[extension] = await CreateAndGetIcon(extension);
         }
@@ -44,17 +44,17 @@ namespace TagsTreeWinUI3.Services
             return await GetBitmapImage(storageItemThumbnail);
         }
 
-        public static BitmapImage GetIcon(string extension)
-        {
-            if (IconList.ContainsKey(extension))
-                return IconList[extension];
-            //IconList[extension] = CreateAndGetIcon(extension);
-            //return IconList[extension];
-            return NotFoundIcon;
-        }
+        public static BitmapImage GetIcon(bool exists, bool isFolder, string extension) =>
+            exists
+                ? isFolder
+                    ? _folderIcon
+                    : IconList.ContainsKey(extension)
+                        ? IconList[extension]
+                        : IconList[extension] = CreateAndGetIcon(extension).Result
+                : _notFoundIcon;
 
-        public static BitmapImage FolderIcon { get; private set; } = null!;
-        public static BitmapImage NotFoundIcon { get; private set; } = null!;
+        private static BitmapImage _folderIcon = null!;
+        private static BitmapImage _notFoundIcon = null!;
 
         private static readonly Dictionary<string, BitmapImage> IconList = new();
     }

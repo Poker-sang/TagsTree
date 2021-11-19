@@ -119,7 +119,7 @@ namespace TagsTreeWinUI3.Views
             var former = _vm.FileViewModels.Count;
             _vm.FileViewModels.Clear();
             progressBar.Dispose();
-            await MessageDialogX.Information(false, $"共导入「{former}」个文件，其中成功导入「{former - duplicated}」个，有「{duplicated}」个因重复未导入");
+            await ShowMessageDialog.Information(false, $"共导入「{former}」个文件，其中成功导入「{former - duplicated}」个，有「{duplicated}」个因重复未导入");
         }
     }
 }

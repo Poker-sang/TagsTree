@@ -38,7 +38,7 @@ namespace TagsTreeWinUI3.Controls
         {
             if (!new Regex($@"^[^{_invalidRegex}]+$").IsMatch(AsBox.Text))
             {
-                await MessageDialogX.Information(true, AsBox.PlaceholderText);
+                await ShowMessageDialog.Information(true, AsBox.PlaceholderText);
                 e.Cancel = true;
             }
             else Canceled = false;

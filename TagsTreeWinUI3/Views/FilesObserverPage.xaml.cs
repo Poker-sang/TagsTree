@@ -40,8 +40,8 @@ namespace TagsTreeWinUI3.Views
                     if (fileChanged.Type is FileChanged.ChangedType.Create or FileChanged.ChangedType.Delete)
                         App.SaveRelations();
                 }
-                else await MessageDialogX.Information(true, $"不在指定文件路径下：{fileChanged.FullName}");
-            else await MessageDialogX.Information(true, $"文件列表中不存在：{fileChanged.OldFullName}");
+                else await ShowMessageDialog.Information(true, $"不在指定文件路径下：{fileChanged.FullName}");
+            else await ShowMessageDialog.Information(true, $"文件列表中不存在：{fileChanged.OldFullName}");
         }
         private void DeleteCmClick(object sender, RoutedEventArgs e) => _ = Vm.FilesChangedList.Remove((FileChanged)((MenuFlyoutItem)sender).Tag);
 
@@ -77,7 +77,7 @@ namespace TagsTreeWinUI3.Views
                 exception = notExistExceptions.Aggregate(exception, (current, notExistException) => current + (notExistException.OldFullName + "\n"));
             }
             if (exception is not "")
-                await MessageDialogX.Information(true, exception);
+                await ShowMessageDialog.Information(true, exception);
             App.SaveFiles();
             App.SaveRelations();
         }

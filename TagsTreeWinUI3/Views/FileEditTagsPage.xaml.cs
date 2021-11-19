@@ -32,16 +32,16 @@ namespace TagsTreeWinUI3.Views
             foreach (var tagExisted in _vm.VirtualTags)
                 if (tagExisted.Name == newTag.Name)
                 {
-                    await MessageDialogX.Information(true, "已拥有该标签");
+                    await ShowMessageDialog.Information(true, "已拥有该标签");
                     return;
                 }
                 else if (newTag.HasChildTag(tagExisted))
                 {
-                    await MessageDialogX.Information(true, $"已拥有下级标签「{tagExisted.Name}」或更多");
+                    await ShowMessageDialog.Information(true, $"已拥有下级标签「{tagExisted.Name}」或更多");
                     return;
                 }
                 else if (tagExisted.HasChildTag(newTag))
-                    if (await MessageDialogX.Warning($"将会覆盖上级标签「{tagExisted.Name}」，是否继续？"))
+                    if (await ShowMessageDialog.Warning($"将会覆盖上级标签「{tagExisted.Name}」，是否继续？"))
                     {
                         _ = _vm.VirtualTags.Remove(tagExisted);
                         break;
@@ -64,7 +64,7 @@ namespace TagsTreeWinUI3.Views
             _vm.FileViewModel.TagsUpdated();
             App.SaveRelations();
             BSave.IsEnabled = false;
-            await MessageDialogX.Information(false, "已保存更改");
+            await ShowMessageDialog.Information(false, "已保存更改");
         }
         #endregion
     }
