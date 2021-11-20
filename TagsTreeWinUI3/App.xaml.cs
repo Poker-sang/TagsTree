@@ -47,7 +47,11 @@ namespace TagsTreeWinUI3
             IconsHelper.Initialize();
             FilesObserver = new FilesObserver();
             AppConfigurations.Initialize();
-            if (AppConfigurations.LoadConfiguration() is { } appConfigurations)
+            if (AppConfigurations.LoadConfiguration() is { } appConfigurations
+#if FIRST_TIME
+                && false
+#endif 
+                )
             {
                 AppConfigurations = appConfigurations;
                 ConfigSet = true;
@@ -164,7 +168,7 @@ namespace TagsTreeWinUI3
             return null;
         }
 
-        #region 错误捕捉
+#region 错误捕捉
 
         private void RegisterUnhandledExceptionHandler()
         {
@@ -214,6 +218,6 @@ namespace TagsTreeWinUI3
         }
         public record ApplicationExitingMessage;
 
-        #endregion
+#endregion
     }
 }

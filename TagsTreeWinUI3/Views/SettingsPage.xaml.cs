@@ -60,7 +60,11 @@ namespace TagsTreeWinUI3.Views
                 App.AppConfigurations.FilesObserverEnabled = TsFilesObserver.IsOn;
                 AppConfigurations.SaveConfiguration(App.AppConfigurations);
                 await ShowMessageDialog.Information(false, "已保存");
-                App.ConfigSet = true;
+                if (!App.ConfigSet)
+                {
+                    App.ConfigSet = true;
+                    await App.Window.ConfigIsSet();
+                }
 
                 ((NavigationViewItem)App.RootNavigationView.FooterMenuItems[0]).IsEnabled = await App.ChangeFilesObserver(); //就是App.AppConfigurations.FilesObserverEnabled;
             }

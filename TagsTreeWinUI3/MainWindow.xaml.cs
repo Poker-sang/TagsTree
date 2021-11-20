@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml.Media;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using TagsTreeWinUI3.Views;
 using Windows.UI;
 using TagsTreeWinUI3.Services;
@@ -37,29 +38,37 @@ namespace TagsTreeWinUI3
         private async void Loaded(object sender, RoutedEventArgs e)
         {
             if (App.ConfigSet)
+                await ConfigIsSet();
+            else DisplaySettings();
+        }
+
+        public async Task ConfigIsSet()
+        {
+            if (App.LoadConfig() is { } exception)
             {
-                if (App.LoadConfig() is { } exception)
-                {
-                    _ = NavigateFrame.Navigate(typeof(SettingsPage));
-                    NavigationView.SelectedItem = NavigationView.FooterMenuItems[1];
-                    NavigationView.PaneDisplayMode = NavigationViewPaneDisplayMode.Left; //不加就不会显示PaneTitle
-                    OnPropertyChanged(nameof(PaneWidth));
-
-                    await App.ExceptionHandler(exception);
-                }
-                else
-                {
-                    _ = NavigateFrame.Navigate(typeof(IndexPage));
-                    NavigationView.SelectedItem = NavigationView.MenuItems[0];
-                    NavigationView.PaneDisplayMode = NavigationViewPaneDisplayMode.Left; //不加就不会显示PaneTitle
-                    OnPropertyChanged(nameof(PaneWidth));
-                }
-                IconsHelper.LoadFilesIcons();
-
-                foreach (NavigationViewItem menuItem in NavigationView.MenuItems)
-                    menuItem.IsEnabled = true;
-                ((NavigationViewItem)NavigationView.FooterMenuItems[0]).IsEnabled = await App.ChangeFilesObserver(); //就是App.AppConfigurations.FilesObserverEnabled;
+                DisplaySettings();
+                await App.ExceptionHandler(exception);
             }
+            else
+            {
+                _ = NavigateFrame.Navigate(typeof(IndexPage));
+                NavigationView.SelectedItem = NavigationView.MenuItems[0];
+                NavigationView.PaneDisplayMode = NavigationViewPaneDisplayMode.Left; //不加就不会显示PaneTitle
+                OnPropertyChanged(nameof(PaneWidth));
+            }
+            IconsHelper.LoadFilesIcons();
+
+            foreach (NavigationViewItem menuItem in NavigationView.MenuItems)
+                menuItem.IsEnabled = true;
+            ((NavigationViewItem)NavigationView.FooterMenuItems[0]).IsEnabled = await App.ChangeFilesObserver(); //就是App.AppConfigurations.FilesObserverEnabled;
+        }
+
+        private void DisplaySettings()
+        {
+            _ = NavigateFrame.Navigate(typeof(SettingsPage));
+            NavigationView.SelectedItem = NavigationView.FooterMenuItems[1];
+            NavigationView.PaneDisplayMode = NavigationViewPaneDisplayMode.Left; //不加就不会显示PaneTitle
+            OnPropertyChanged(nameof(PaneWidth));
         }
 
         private void BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs e)
