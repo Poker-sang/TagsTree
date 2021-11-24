@@ -3,10 +3,10 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
-using TagsTreeWinUI3.Services;
-using TagsTreeWinUI3.ViewModels;
+using TagsTree.Services;
+using TagsTree.ViewModels;
 
-namespace TagsTreeWinUI3.Views
+namespace TagsTree.Views
 {
     /// <summary>
     /// FileEditTagsPage.xaml 的交互逻辑

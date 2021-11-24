@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TagsTreeWinUI3.Services.ExtensionMethods
+namespace TagsTree.Services.ExtensionMethods
 {
     public static class Misc
     {

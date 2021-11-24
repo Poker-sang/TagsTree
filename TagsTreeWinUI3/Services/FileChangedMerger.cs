@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TagsTreeWinUI3.Models;
+using TagsTree.Models;
 
-namespace TagsTreeWinUI3.Services
+namespace TagsTree.Services
 {
     public class FileChangedMerger
     {

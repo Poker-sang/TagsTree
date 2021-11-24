@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using TagsTreeWinUI3.Delegates;
-using TagsTreeWinUI3.Models;
-using TagsTreeWinUI3.Services.ExtensionMethods;
-using TagsTreeWinUI3.ViewModels;
+using TagsTree.Delegates;
+using TagsTree.Models;
+using TagsTree.Services.ExtensionMethods;
+using TagsTree.ViewModels;
 using Windows.Foundation;
 
-namespace TagsTreeWinUI3.Controls
+namespace TagsTree.Controls
 {
     /// <summary>
     /// TagSearchBox.xaml 的交互逻辑

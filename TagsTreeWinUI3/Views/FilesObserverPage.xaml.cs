@@ -2,15 +2,15 @@
 using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
 using System.Linq;
-using TagsTreeWinUI3.Models;
-using TagsTreeWinUI3.Services;
-using TagsTreeWinUI3.Services.ExtensionMethods;
-using TagsTreeWinUI3.ViewModels;
+using TagsTree.Models;
+using TagsTree.Services;
+using TagsTree.Services.ExtensionMethods;
+using TagsTree.ViewModels;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace TagsTreeWinUI3.Views
+namespace TagsTree.Views
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -30,12 +30,12 @@ namespace TagsTreeWinUI3.Views
 
         private async void ApplyCmClick(object sender, RoutedEventArgs e)
         {
-            var fileChanged = (FileChanged)((MenuFlyoutItem)sender).Tag;
+            var fileChanged = (FileChanged)((MenuFlyoutItem)sender).DataContext;
             if (fileChanged.Type is FileChanged.ChangedType.Create || App.IdFile.Values.Any(fileModel => fileModel.FullName == fileChanged.OldFullName))
-                if (FileViewModel.ValidPath(fileChanged.Path))
+                if (FileViewModel.IsValidPath(fileChanged.Path))
                 {
                     Apply(fileChanged);
-                    Vm.FilesChangedList.Remove(fileChanged);
+                    _ = Vm.FilesChangedList.Remove(fileChanged);
                     App.SaveFiles();
                     if (fileChanged.Type is FileChanged.ChangedType.Create or FileChanged.ChangedType.Delete)
                         App.SaveRelations();
@@ -43,7 +43,7 @@ namespace TagsTreeWinUI3.Views
                 else await ShowMessageDialog.Information(true, $"不在指定文件路径下：{fileChanged.FullName}");
             else await ShowMessageDialog.Information(true, $"文件列表中不存在：{fileChanged.OldFullName}");
         }
-        private void DeleteCmClick(object sender, RoutedEventArgs e) => _ = Vm.FilesChangedList.Remove((FileChanged)((MenuFlyoutItem)sender).Tag);
+        private void DeleteCmClick(object sender, RoutedEventArgs e) => _ = Vm.FilesChangedList.Remove((FileChanged)((MenuFlyoutItem)sender).DataContext);
 
         private async void ApplyAllBClick(object sender, RoutedEventArgs e)
         {
@@ -56,7 +56,7 @@ namespace TagsTreeWinUI3.Views
             var notExistExceptions = new List<FileChanged>();
             foreach (var fileChanged in Vm.FilesChangedList)
                 if (fileChanged.Type is FileChanged.ChangedType.Create || nameFile.ContainsKey(fileChanged.OldFullName))
-                    if (FileViewModel.ValidPath(fileChanged.Path))
+                    if (FileViewModel.IsValidPath(fileChanged.Path))
                     {
                         Apply(fileChanged);
                         deleteList.Add(fileChanged);
@@ -64,7 +64,7 @@ namespace TagsTreeWinUI3.Views
                     else invalidExceptions.Add(fileChanged);
                 else notExistExceptions.Add(fileChanged);
             foreach (var deleteItem in deleteList)
-                Vm.FilesChangedList.Remove(deleteItem);
+                _ = Vm.FilesChangedList.Remove(deleteItem);
             var exception = "";
             if (invalidExceptions.Count is not 0)
             {

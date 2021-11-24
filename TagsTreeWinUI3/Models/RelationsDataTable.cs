@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
-using TagsTreeWinUI3.Services;
-using TagsTreeWinUI3.ViewModels;
+using TagsTree.Services;
+using TagsTree.ViewModels;
 
-namespace TagsTreeWinUI3.Models
+namespace TagsTree.Models
 {
     public class RelationsDataTable
     {

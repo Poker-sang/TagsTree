@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace TagsTreeWinUI3.Services.ExtensionMethods
+namespace TagsTree.Services.ExtensionMethods
 {
     public static class ObservableCollectionHelper
     {

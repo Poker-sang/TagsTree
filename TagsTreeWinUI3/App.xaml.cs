@@ -8,19 +8,17 @@ using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
-using CommunityToolkit.WinUI.UI.Converters;
-using TagsTreeWinUI3.Models;
-using TagsTreeWinUI3.Services;
-using TagsTreeWinUI3.Services.ExtensionMethods;
-using TagsTreeWinUI3.ViewModels;
-using TagsTreeWinUI3.Views;
+using TagsTree.Models;
+using TagsTree.Services;
+using TagsTree.Services.ExtensionMethods;
+using TagsTree.ViewModels;
+using TagsTree.Views;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace TagsTreeWinUI3
+namespace TagsTree
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.

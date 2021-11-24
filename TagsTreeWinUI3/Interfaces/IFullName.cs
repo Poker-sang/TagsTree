@@ -1,4 +1,4 @@
-﻿namespace TagsTreeWinUI3.Interfaces
+﻿namespace TagsTree.Interfaces
 {
     public interface IFullName
     {

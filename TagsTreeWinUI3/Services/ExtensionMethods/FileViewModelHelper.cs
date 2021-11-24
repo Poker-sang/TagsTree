@@ -1,6 +1,6 @@
-﻿using TagsTreeWinUI3.ViewModels;
+﻿using TagsTree.ViewModels;
 
-namespace TagsTreeWinUI3.Services.ExtensionMethods
+namespace TagsTree.Services.ExtensionMethods
 {
     public static class FileViewModelHelper
     {

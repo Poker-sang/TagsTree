@@ -3,12 +3,12 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
 using System.Linq;
-using TagsTreeWinUI3.Models;
-using TagsTreeWinUI3.Services;
-using TagsTreeWinUI3.Services.ExtensionMethods;
-using TagsTreeWinUI3.ViewModels;
+using TagsTree.Models;
+using TagsTree.Services;
+using TagsTree.Services.ExtensionMethods;
+using TagsTree.ViewModels;
 
-namespace TagsTreeWinUI3.Views
+namespace TagsTree.Views
 {
     /// <summary>
     /// TagEditFilesPage.xaml 的交互逻辑

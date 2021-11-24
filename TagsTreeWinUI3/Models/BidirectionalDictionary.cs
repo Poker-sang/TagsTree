@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using TagsTreeWinUI3.Services;
+using TagsTree.Services;
 
-namespace TagsTreeWinUI3.Models
+namespace TagsTree.Models
 {
     /// <summary>
     /// 包含两个不同类型的双向字典

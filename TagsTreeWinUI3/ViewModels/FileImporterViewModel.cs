@@ -1,11 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
-using TagsTreeWinUI3.Commands;
-using TagsTreeWinUI3.Views;
+using TagsTree.Commands;
+using TagsTree.Views;
 
-namespace TagsTreeWinUI3.ViewModels
+namespace TagsTree.ViewModels
 {
-    public sealed class FileImporterViewModel : ObservableObject
+    public partial class FileImporterViewModel : ObservableObject
     {
         public FileImporterViewModel(FileImporterPage page)
         {
@@ -18,25 +18,21 @@ namespace TagsTreeWinUI3.ViewModels
                 DeleteBClick.OnCanExecuteChanged();
                 SaveBClick.OnCanExecuteChanged();
             };
+            PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName is nameof(Importing))
+                {
+                    Import.OnCanExecuteChanged();
+                    DeleteBClick.OnCanExecuteChanged();
+                    SaveBClick.OnCanExecuteChanged();
+                }
+            };
         }
-
         public RelayCommand Import { get; }
         public RelayCommand DeleteBClick { get; }
         public RelayCommand SaveBClick { get; }
         public ObservableCollection<FileViewModel> FileViewModels { get; } = new();
-        private bool _importing;
 
-        public bool Importing
-        {
-            get => _importing;
-            set
-            {
-                if (Equals(_importing, value)) return;
-                _importing = value;
-                Import.OnCanExecuteChanged();
-                DeleteBClick.OnCanExecuteChanged();
-                SaveBClick.OnCanExecuteChanged();
-            }
-        }
+        [ObservableProperty] private bool _importing;
     }
 }

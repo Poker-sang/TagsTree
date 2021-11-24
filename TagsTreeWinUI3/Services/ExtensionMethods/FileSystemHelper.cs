@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using TagsTreeWinUI3.ViewModels;
+using TagsTree.ViewModels;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 
-namespace TagsTreeWinUI3.Services.ExtensionMethods
+namespace TagsTree.Services.ExtensionMethods
 {
     public static class FileSystemHelper
     {

@@ -4,11 +4,11 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
-using TagsTreeWinUI3.Interfaces;
-using TagsTreeWinUI3.Services.ExtensionMethods;
-using TagsTreeWinUI3.ViewModels;
+using TagsTree.Interfaces;
+using TagsTree.Services.ExtensionMethods;
+using TagsTree.ViewModels;
 
-namespace TagsTreeWinUI3.Models
+namespace TagsTree.Models
 {
     public class FileModel : IFullName
     {
@@ -55,7 +55,7 @@ namespace TagsTreeWinUI3.Models
             Path = fullName.GetPath();
         }
 
-        protected static bool ValidPath(string path) => path.Contains(App.AppConfigurations.LibraryPath);
+        protected static bool IsValidPath(string path) => path.Contains(App.AppConfigurations.LibraryPath);
 
         protected bool? HasTag(TagViewModel tag) //null表示拥有标签的上级标签存在本标签
         {

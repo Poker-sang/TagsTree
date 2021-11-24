@@ -6,11 +6,11 @@ using Microsoft.VisualBasic.FileIO;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using TagsTreeWinUI3.Services;
-using TagsTreeWinUI3.Services.ExtensionMethods;
-using TagsTreeWinUI3.ViewModels;
+using TagsTree.Services;
+using TagsTree.Services.ExtensionMethods;
+using TagsTree.ViewModels;
 
-namespace TagsTreeWinUI3.Views
+namespace TagsTree.Views
 {
     /// <summary>
     /// FilePropertiesPage.xaml 的交互逻辑

@@ -1,9 +1,9 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Threading.Tasks;
-using TagsTreeWinUI3.Commands;
+using TagsTree.Commands;
 
-namespace TagsTreeWinUI3.Services
+namespace TagsTree.Services
 {
     public static class ShowMessageDialog
     {

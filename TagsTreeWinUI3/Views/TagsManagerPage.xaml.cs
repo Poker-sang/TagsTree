@@ -3,12 +3,12 @@ using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using TagsTreeWinUI3.Commands;
-using TagsTreeWinUI3.Services;
-using TagsTreeWinUI3.Services.ExtensionMethods;
-using TagsTreeWinUI3.ViewModels;
+using TagsTree.Commands;
+using TagsTree.Services;
+using TagsTree.Services.ExtensionMethods;
+using TagsTree.ViewModels;
 
-namespace TagsTreeWinUI3.Views
+namespace TagsTree.Views
 {
     public partial class TagsManagerPage : Page
     {

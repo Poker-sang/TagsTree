@@ -1,10 +1,10 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using TagsTreeWinUI3.Models;
-using TagsTreeWinUI3.Services.ExtensionMethods;
+using TagsTree.Models;
+using TagsTree.Services.ExtensionMethods;
 
-namespace TagsTreeWinUI3.Services
+namespace TagsTree.Services
 {
     public class FilesObserver : FileSystemWatcher
     {

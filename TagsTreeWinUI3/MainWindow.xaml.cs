@@ -5,11 +5,11 @@ using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using TagsTreeWinUI3.Views;
+using TagsTree.Views;
 using Windows.UI;
-using TagsTreeWinUI3.Services;
+using TagsTree.Services;
 
-namespace TagsTreeWinUI3
+namespace TagsTree
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -25,7 +25,7 @@ namespace TagsTreeWinUI3
             InitializeComponent();
             App.RootNavigationView = NavigationView;
             App.RootFrame = NavigateFrame;
-            SetTitleBar(TitleBar);
+            //SetTitleBar(TitleBar);
         }
 
         private double PaneWidth => Math.Max(NavigationView.ActualWidth, NavigationView.CompactModeThresholdWidth) / 4;

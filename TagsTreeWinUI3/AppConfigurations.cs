@@ -1,7 +1,7 @@
-﻿using TagsTreeWinUI3.Services.ExtensionMethods;
+﻿using TagsTree.Services.ExtensionMethods;
 using Windows.Storage;
 
-namespace TagsTreeWinUI3
+namespace TagsTree
 {
     public record AppConfigurations
     {

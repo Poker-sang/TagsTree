@@ -1,10 +1,10 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Text.RegularExpressions;
-using TagsTreeWinUI3.Services;
-using TagsTreeWinUI3.Services.ExtensionMethods;
+using TagsTree.Services;
+using TagsTree.Services.ExtensionMethods;
 
-namespace TagsTreeWinUI3.Controls
+namespace TagsTree.Controls
 {
     /// <summary>
     /// InputName.xaml 的交互逻辑

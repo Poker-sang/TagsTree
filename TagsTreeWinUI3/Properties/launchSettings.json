@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "TagsTreeWinUI3": {
+    "TagsTree": {
       "commandName": "MsixPackage"
     }
   }

@@ -3,9 +3,9 @@ using Microsoft.UI.Xaml.Controls;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using TagsTreeWinUI3.Services.ExtensionMethods;
+using TagsTree.Services.ExtensionMethods;
 
-namespace TagsTreeWinUI3.Controls
+namespace TagsTree.Controls
 {
     /// <summary>
     /// TagCompleteBox.xaml 的交互逻辑

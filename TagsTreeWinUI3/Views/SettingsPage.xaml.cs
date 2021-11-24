@@ -1,10 +1,10 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.Text.RegularExpressions;
-using TagsTreeWinUI3.Services;
-using TagsTreeWinUI3.Services.ExtensionMethods;
+using TagsTree.Services;
+using TagsTree.Services.ExtensionMethods;
 
-namespace TagsTreeWinUI3.Views
+namespace TagsTree.Views
 {
     /// <summary>
     /// SettingsPage.xaml 的交互逻辑
