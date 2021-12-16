@@ -5,6 +5,7 @@ using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -33,7 +34,7 @@ namespace TagsTree
         public static ObservableCollection<FileChanged> FilesChangedList => FilesObserverPage.Vm.FilesChangedList;
         public static bool ConfigSet { get; set; }
 
-       
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -84,7 +85,7 @@ namespace TagsTree
 
         public static async Task ExceptionHandler(string exception)
         {
-            switch (await ShowMessageDialog.Warning($"路径「{AppConfigurations.AppLocalFolder}」下，{exception}和Relations.json存储的文件数不同", "删除关系文件Relations.json并重新生成", "关闭软件并打开目录"))
+            switch (await ShowMessageDialog.Warning($"路径「{AppConfigurations.AppLocalFolder}」下，{exception}和Relations.csv存储数据数不同", "删除关系文件Relations.csv并重新生成", "关闭软件并打开目录"))
             {
                 case true:
                     File.Delete(RelationsPath);
@@ -101,7 +102,7 @@ namespace TagsTree
         public static string FilesChangedPath => AppConfigurations.AppLocalFolder + @"\FileChanged.json";
         private static string TagsPath => AppConfigurations.AppLocalFolder + @"\TagsTree.json";
         private static string FilesPath => AppConfigurations.AppLocalFolder + @"\Files.json";
-        private static string RelationsPath => AppConfigurations.AppLocalFolder + @"\Relations.json";
+        private static string RelationsPath => AppConfigurations.AppLocalFolder + @"\Relations.csv";
 
         /// <summary>
         /// 保存标签
@@ -141,7 +142,7 @@ namespace TagsTree
         {
             //文件监视
             FilesObserverPage.Vm = new FilesObserverViewModel(FileChanged.Deserialize(FilesChangedPath));
-
+            
             //标签
             Tags.DeserializeTree(TagsPath);
             Tags.LoadDictionary();
@@ -158,15 +159,16 @@ namespace TagsTree
             else
             {
                 //检查
-                if (Tags.TagsDictionary.Count != Relations.TagsCount + 1) //TagsDictionary第一个是总根标签，不算
+                if (Tags.TagsDictionary.Count != Relations.TagsCount)
                     return "TagsTree.json";
                 if (IdFile.Count != Relations.FilesCount)
                     return "Files.json";
             }
+
             return null;
         }
 
-#region 错误捕捉
+        #region 错误捕捉
 
         private void RegisterUnhandledExceptionHandler()
         {
@@ -216,6 +218,6 @@ namespace TagsTree
         }
         public record ApplicationExitingMessage;
 
-#endregion
+        #endregion
     }
 }

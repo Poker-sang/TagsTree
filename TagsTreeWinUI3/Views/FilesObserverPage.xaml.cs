@@ -20,9 +20,11 @@ namespace TagsTree.Views
         public FilesObserverPage()
         {
             InitializeComponent();
-            Vm.FilesChangedList.CollectionChanged += (_, _) => BMergeAll.IsEnabled = BDeleteAll.IsEnabled = BApplyAll.IsEnabled = Vm.FilesChangedList is not { Count: 0 };
-            BMergeAll.IsEnabled = BDeleteAll.IsEnabled = BApplyAll.IsEnabled = Vm.FilesChangedList is not { Count: 0 };
+            Vm.FilesChangedList.CollectionChanged += (_, _) => CollectionChanged();
+            CollectionChanged();
+            void CollectionChanged() => BMergeAll.IsEnabled = BDeleteAll.IsEnabled = BApplyAll.IsEnabled = Vm.FilesChangedList.Count is not 0;
         }
+
 
         public static FilesObserverViewModel Vm { get; set; } = null!;
 
@@ -105,8 +107,9 @@ namespace TagsTree.Views
         {
             var fileChangedMergers = new List<FileChangedMerger>();
             foreach (var fileChanged in Vm.FilesChangedList)
-                if (fileChangedMergers.LastOrDefault()?.CanMerge(fileChanged) is not true)
+                if (!fileChangedMergers.Any(fileChangedMerger => fileChangedMerger.CanMerge(fileChanged)))
                     fileChangedMergers.Add(new FileChangedMerger(fileChanged));
+
             ClearAll();
             foreach (var fileChangedMerger in fileChangedMergers)
                 switch (fileChangedMerger.GetMergeResult())

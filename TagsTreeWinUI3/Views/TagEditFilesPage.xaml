@@ -6,61 +6,41 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="using:CommunityToolkit.WinUI.UI"
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:viewModels="using:TagsTree.ViewModels"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
-    <uiControls:DockPanel x:Name="Panel">
-        <uiControls:DockPanel.Resources>
-            <Storyboard x:Name="Storyboard0" Completed="Storyboard2_OnCompleted">
-                <FadeOutThemeAnimation Storyboard.TargetName="TbInput" Duration="0:0:0.2" />
-                <FadeOutThemeAnimation Storyboard.TargetName="DgResult" Duration="0:0:0.2" />
-            </Storyboard>
-            <Storyboard x:Name="Storyboard1" Completed="Storyboard1_OnCompleted">
-                <FadeOutThemeAnimation Storyboard.TargetName="Tags" Duration="0:0:0.5" />
-            </Storyboard>
-            <Storyboard x:Name="Storyboard2" Completed="Storyboard2_OnCompleted">
-                <FadeInThemeAnimation Storyboard.TargetName="TbInput" Duration="0:0:0.5" />
-                <FadeInThemeAnimation Storyboard.TargetName="DgResult" Duration="0:0:0.5" />
-            </Storyboard>
-        </uiControls:DockPanel.Resources>
+    <uiControls:DockPanel>
         <uiControls:DockPanel uiControls:DockPanel.Dock="Top">
-            <Button
-                x:Name="BConfirm"
+            <CommandBar
+                uiControls:DockPanel.Dock="Left"
+                Background="Transparent"
+                OverflowButtonVisibility="Collapsed">
+                <AppBarButton
+                    Width="48"
+                    Click="BackBClick"
+                    Icon="{ui:FontIcon Glyph=&#xE72B;}" />
+            </CommandBar>
+            <CommandBar
                 uiControls:DockPanel.Dock="Right"
-                Click="ConfirmBClick"
-                Content="确定" />
-            <controls:TagCompleteBox x:Name="TbPath" />
+                Background="Transparent"
+                DefaultLabelPosition="Right"
+                OverflowButtonVisibility="Collapsed">
+                <AppBarButton
+                    Click="SaveBClick"
+                    Icon="{ui:FontIcon Glyph=&#xE74E;}"
+                    Label="保存" />
+            </CommandBar>
+            <Grid>
+                <BreadcrumbBar VerticalAlignment="Center" ItemsSource="{x:Bind _vm.Tags}" />
+            </Grid>
         </uiControls:DockPanel>
-        <TreeView
-            x:Name="Tags"
-            VerticalAlignment="Stretch"
-            uiControls:DockPanel.Dock="Top"
-            AllowDrop="False"
-            CanDragItems="False"
-            ItemInvoked="Tags_OnItemInvoked"
-            ItemsSource="{x:Bind _vm.TagsSource, Mode=TwoWay}">
-            <TreeView.ItemTemplate>
-                <DataTemplate x:DataType="viewModels:TagViewModel">
-                    <TreeViewItem ItemsSource="{x:Bind SubTags}" ToolTipService.ToolTip="{x:Bind FullName}">
-                        <TextBlock Text="{x:Bind Name}" />
-                    </TreeViewItem>
-                </DataTemplate>
-            </TreeView.ItemTemplate>
-        </TreeView>
-        <controls:TagSearchBox
-            x:Name="TbInput"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Top"
-            uiControls:DockPanel.Dock="Top"
-            IsHitTestVisible="False"
-            ResultChanged="ResultChanged" />
+        <controls:TagSearchBox uiControls:DockPanel.Dock="Top" ResultChanged="ResultChanged" />
         <uiControls:DataGrid
-            x:Name="DgResult"
             AlternatingRowBackground="LightGray"
             AutoGenerateColumns="False"
             CanUserReorderColumns="False"
-            IsHitTestVisible="False"
             ItemsSource="{x:Bind _vm.FileViewModels, Mode=OneWay}"
             SelectionChanged="Selected"
             SelectionMode="Single">

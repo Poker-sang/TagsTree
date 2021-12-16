@@ -1,11 +1,11 @@
-﻿using Microsoft.UI.Xaml;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.VisualBasic.FileIO;
 using System;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
@@ -15,12 +15,9 @@ namespace TagsTree.Views
     /// <summary>
     /// FilePropertiesPage.xaml 的交互逻辑
     /// </summary>
-    public partial class FilePropertiesPage : Page, INotifyPropertyChanged
+    [INotifyPropertyChanged]
+    public partial class FilePropertiesPage : Page
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
         public FilePropertiesPage() => InitializeComponent();
 
         private static readonly FileViewModel ConstFileViewModel = new(App.IdFile[0]);

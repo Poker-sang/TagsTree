@@ -1,7 +1,6 @@
-﻿using Microsoft.UI.Xaml;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using TagsTree.Services.ExtensionMethods;
 
@@ -10,7 +9,8 @@ namespace TagsTree.Controls
     /// <summary>
     /// TagCompleteBox.xaml 的交互逻辑
     /// </summary>
-    public partial class TagCompleteBox : UserControl, INotifyPropertyChanged
+    [INotifyPropertyChanged]
+    public partial class TagCompleteBox : UserControl
     {
         public TagCompleteBox() => InitializeComponent();
         private void PathComplement(object sender, RoutedEventArgs routedEventArgs) => Path = Path.GetTagViewModel()?.FullName ?? Path;
@@ -32,8 +32,5 @@ namespace TagsTree.Controls
                 OnPropertyChanged(nameof(Path));
             }
         }
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

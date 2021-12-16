@@ -38,10 +38,10 @@ namespace TagsTree.Controls
 
         private void SuggestionChosen(AutoSuggestBox autoSuggestBox, AutoSuggestBoxSuggestionChosenEventArgs e)
         {
-            var index = autoSuggestBox.Text.LastIndexOf(' ') + 1;
-            if (index is 0)
-                autoSuggestBox.Text = e.SelectedItem.ToString();
-            else autoSuggestBox.Text = autoSuggestBox.Text[..index] + e.SelectedItem;
+        //    var index = autoSuggestBox.Text.LastIndexOf(' ') + 1;
+        //    if (index is 0)
+        //        autoSuggestBox.Text = e.SelectedItem.ToString();
+        //    else autoSuggestBox.Text = autoSuggestBox.Text[..index] + e.SelectedItem;
         }
         private void TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
         {
