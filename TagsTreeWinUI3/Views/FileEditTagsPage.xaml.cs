@@ -60,7 +60,7 @@ namespace TagsTree.Views
         private async void SaveBClick(object sender, RoutedEventArgs e)
         {
             foreach (var tag in App.Tags.TagsDictionaryValues)
-                App.Relations[_vm.FileViewModel.GetFileModel(), tag] = _vm.VirtualTags.Contains(tag);
+                App.Relations[tag, _vm.FileViewModel.GetFileModel()] = _vm.VirtualTags.Contains(tag);
             _vm.FileViewModel.TagsUpdated();
             App.SaveRelations();
             BSave.IsEnabled = false;

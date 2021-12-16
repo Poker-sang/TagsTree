@@ -7,7 +7,10 @@ namespace TagsTree.Models
     {
         public string Name { get; protected set; }
         public PathTagModel(string name) => Name = name;
-        public override string ToString() => Name; //AutoSuggestBox选择建议时会用到
+        /// <summary>
+        /// AutoSuggestBox选择建议时会用到
+        /// </summary>
+        public override string ToString() => Name;
     }
 
     public class TagModel : PathTagModel, IFullName

@@ -1,13 +1,13 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.ObjectModel;
 using System.Text.Json.Serialization;
 using TagsTree.Models;
 using TagsTree.Services.ExtensionMethods;
 
 namespace TagsTree.ViewModels
 {
-    public class TagViewModel : TagModel, INotifyPropertyChanged
+    [INotifyPropertyChanged]
+    public partial class TagViewModel : TagModel
     {
         public new string Name
         {
@@ -26,11 +26,14 @@ namespace TagsTree.ViewModels
         /// </summary>
         [JsonConstructor]
         public TagViewModel(int id, string name, ObservableCollection<TagViewModel>? subTags = null) : base(id, name) => SubTags = subTags ?? new ObservableCollection<TagViewModel>();
+        /// <summary>
+        /// 创建新的TagViewModel
+        /// </summary>
+        /// <param name="name">标签名</param>
+        /// <param name="path">标签路径</param>
+        /// <param name="subTags">子标签</param>
         public TagViewModel(string name, string path, ObservableCollection<TagViewModel>? subTags = null) : base(name, path) => SubTags = subTags ?? new ObservableCollection<TagViewModel>();
 
         public TagViewModel GetParentTag() => Path.GetTagViewModel()!;
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

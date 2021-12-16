@@ -40,6 +40,7 @@
     <None Remove="Images\Wide310x150Logo.scale-200.png" />
     <None Remove="Package.appxmanifest" />
     <None Remove="Views\FilesObserverPage.xaml" />
+    <None Remove="Views\TagEditFilesPage.xaml" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -81,6 +82,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Views\TagEditFilesPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
     <Page Update="Views\FilesObserverPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -114,7 +121,7 @@
     <Page Update="Views\SettingsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="Views\TagEditFilesPage.xaml">
+    <Page Update="Views\SelectTagToEditPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\TagsManagerPage.xaml">

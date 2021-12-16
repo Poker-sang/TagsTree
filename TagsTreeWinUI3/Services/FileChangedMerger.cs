@@ -57,6 +57,7 @@ namespace TagsTree.Services
                     Delete.Add(fileChanged);
                     IsExisted = false;
                     break;
+                default: break;
             }
         }
 

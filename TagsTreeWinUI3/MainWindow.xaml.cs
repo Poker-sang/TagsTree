@@ -1,25 +1,22 @@
-﻿using Microsoft.UI.Xaml;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using System;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using TagsTree.Services;
 using TagsTree.Views;
 using Windows.UI;
-using TagsTree.Services;
 
 namespace TagsTree
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public sealed partial class MainWindow : Window, INotifyPropertyChanged
+    [INotifyPropertyChanged]
+    public sealed partial class MainWindow : Window
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
         public MainWindow()
         {
             InitializeComponent();
@@ -77,8 +74,11 @@ namespace TagsTree
             sender.SelectedItem = NavigateFrame.Content switch
             {
                 IndexPage => sender.MenuItems[0],
+                FilePropertiesPage => sender.MenuItems[0],
+                FileEditTagsPage => sender.MenuItems[0],
                 TagsManagerPage => sender.MenuItems[1],
                 FileImporterPage => sender.MenuItems[2],
+                SelectTagToEditPage => sender.MenuItems[3],
                 TagEditFilesPage => sender.MenuItems[3],
                 FilesObserverPage => sender.FooterMenuItems[0],
                 SettingsPage => sender.FooterMenuItems[1],
@@ -104,7 +104,7 @@ namespace TagsTree
                 else if (item == (string)((NavigationViewItem)sender.MenuItems[2]).Content)
                     _ = NavigateFrame.Navigate(typeof(FileImporterPage));
                 else if (item == (string)((NavigationViewItem)sender.MenuItems[3]).Content)
-                    _ = NavigateFrame.Navigate(typeof(TagEditFilesPage));
+                    _ = NavigateFrame.Navigate(typeof(SelectTagToEditPage));
                 else if (item == (string)((NavigationViewItem)sender.FooterMenuItems[0]).Content)
                     _ = NavigateFrame.Navigate(typeof(FilesObserverPage));
                 else if (item == (string)((NavigationViewItem)sender.FooterMenuItems[1]).Content)

@@ -18,12 +18,20 @@ namespace TagsTree.Models
         public string Name { get; private set; }
         public string Path { get; private set; }
 
+        /// <summary>
+        /// FileViewModel用的复制构造
+        /// </summary>
+        /// <param name="fileModel"></param>
         protected FileModel(FileModel fileModel)
         {
             Id = fileModel.Id;
             Name = fileModel.Name;
             Path = fileModel.Path;
         }
+        /// <summary>
+        /// FileViewModel用的虚拟构造
+        /// </summary>
+        /// <param name="fullName"></param>
         protected FileModel(string fullName)
         {
             Id = -1;
@@ -41,6 +49,10 @@ namespace TagsTree.Models
             Name = name;
             Path = path;
         }
+        /// <summary>
+        /// 由虚拟构造的FileViewModel复制而成
+        /// </summary>
+        /// <param name="fileViewModel"></param>
         public FileModel(FileViewModel fileViewModel)
         {
             Id = Num;

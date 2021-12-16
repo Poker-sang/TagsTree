@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using TagsTree.Properties;
+using TagsTree.ViewModels;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
-using TagsTree.Properties;
-using TagsTree.ViewModels;
 
 namespace TagsTree.Services
 {
@@ -44,7 +44,7 @@ namespace TagsTree.Services
             //        IconList[extension] = await CreateIcon(extension);
             //}
         }
-        
+
         /// <summary>
         /// 同步获取图标，如果没有加载图标则先返回加载图片，在加载后更新UI
         /// </summary>
@@ -75,7 +75,6 @@ namespace TagsTree.Services
                 return _loadingIcon;
             }
 
-            //_ = CreateIcon(fileViewModel.Extension).ContinueWith(_ => fileViewModel.IconChange());
             IconRequest.Add(new IconGetter(fileViewModel.Extension, fileViewModel.IconChange));
             if (IconRequest.Count <= 1)
                 _ = StartAsync();
@@ -87,7 +86,6 @@ namespace TagsTree.Services
         /// </summary>
         private static async Task StartAsync()
         {
-            // IconRequest.Any(); using System.Linq;
             while (IconRequest.Count is not 0)
             {
                 IconList[IconRequest[0].Extension] = await CreateIcon(IconRequest[0].Extension);
@@ -95,8 +93,6 @@ namespace TagsTree.Services
                 IconRequest.RemoveAt(0);
             }
         }
-
-
 
         /// <summary>
         /// 从流中获取图标
@@ -136,8 +132,6 @@ namespace TagsTree.Services
             public readonly string Extension;
             public Action CallBack;
         }
-
-        private sealed record IconGetter2(string Extension);
 
         /// <summary>
         /// 图标边长
