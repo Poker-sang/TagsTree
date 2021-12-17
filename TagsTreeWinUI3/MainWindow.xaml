@@ -23,7 +23,7 @@
                 Content="主页"
                 Icon="{ui:FontIcon Glyph=&#xE80F;}"
                 IsEnabled="False"
-                Tag="IndexPage" />
+                Tag="TagSearchFilesPage" />
             <NavigationViewItem
                 Content="标签管理"
                 Icon="{ui:FontIcon Glyph=&#xE8EC;}"

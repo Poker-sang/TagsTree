@@ -13,13 +13,6 @@ namespace TagsTree.Controls
     public partial class TagCompleteBox : UserControl
     {
         public TagCompleteBox() => InitializeComponent();
-        private void PathComplement(object sender, RoutedEventArgs routedEventArgs) => Path = Path.GetTagViewModel()?.FullName ?? Path;
-        private void PathChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
-        {
-            Path = Regex.Replace(Path, $@"[{FileSystemHelper.GetInvalidPathChars}]+", "");
-            sender.ItemsSource = sender.Text.TagSuggest('\\');
-        }
-        private void SuggestionChosen(AutoSuggestBox autoSuggestBox, AutoSuggestBoxSuggestionChosenEventArgs e) => autoSuggestBox.Text = e.SelectedItem.ToString();
 
         private string _path = "";
         public string Path
@@ -32,5 +25,17 @@ namespace TagsTree.Controls
                 OnPropertyChanged(nameof(Path));
             }
         }
+
+        #region 事件处理
+
+        private void PathComplement(object sender, RoutedEventArgs routedEventArgs) => Path = Path.GetTagViewModel()?.FullName ?? Path;
+        private void PathChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
+        {
+            Path = Regex.Replace(Path, $@"[{FileSystemHelper.GetInvalidPathChars}]+", "");
+            sender.ItemsSource = sender.Text.TagSuggest('\\');
+        }
+        private void SuggestionChosen(AutoSuggestBox autoSuggestBox, AutoSuggestBoxSuggestionChosenEventArgs e) => autoSuggestBox.Text = e.SelectedItem.ToString();
+
+        #endregion
     }
 }

@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
-using TagsTree.Services;
 using TagsTree.ViewModels;
 
 namespace TagsTree.Models
@@ -79,7 +76,8 @@ namespace TagsTree.Models
                 filesRange = tagViewModel.SubTags.Aggregate(filesRange, (current, subTag) => GetFileModels(subTag, current));
                 return filesRange.Where(fileModel => this[tagViewModel,fileModel]);
             }
-            else if (App.AppConfigurations.PathTagsEnabled) //唯一需要判断是否能使用路径作为标签的地方
+            //唯一需要判断是否能使用路径作为标签的地方
+            else if (App.AppConfigurations.PathTagsEnabled)
                 return filesRange.Where(fileModel => fileModel.PathContains(pathTagModel));
             return Enumerable.Empty<FileModel>();
         }

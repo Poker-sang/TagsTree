@@ -30,7 +30,11 @@ namespace TagsTree.Models
             Num++;
             Path = path;
         }
-
-        public bool HasChildTag(TagModel child) => $"\\\\{child.Path}\\".Contains($"\\{Name}\\"); //不包含自己
+        /// <summary>
+        /// 不包含自己
+        /// </summary>
+        /// <param name="child"></param>
+        /// <returns></returns>
+        public bool HasChildTag(TagModel child) => $"\\\\{child.Path}\\".Contains($"\\{Name}\\"); 
     }
 }

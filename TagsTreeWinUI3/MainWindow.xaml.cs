@@ -3,7 +3,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using System;
-using System.ComponentModel;
 using System.Threading.Tasks;
 using TagsTree.Services;
 using TagsTree.Views;
@@ -74,6 +73,7 @@ namespace TagsTree
             sender.SelectedItem = NavigateFrame.Content switch
             {
                 IndexPage => sender.MenuItems[0],
+                TagSearchFilesPage => sender.MenuItems[0],
                 FilePropertiesPage => sender.MenuItems[0],
                 FileEditTagsPage => sender.MenuItems[0],
                 TagsManagerPage => sender.MenuItems[1],

@@ -69,7 +69,12 @@ namespace TagsTree.Models
 
         protected static bool IsValidPath(string path) => path.Contains(App.AppConfigurations.LibraryPath);
 
-        protected bool? HasTag(TagViewModel tag) //null表示拥有标签的上级标签存在本标签
+        /// <summary>
+        /// null表示拥有标签的上级标签存在本标签
+        /// </summary>
+        /// <param name="tag"></param>
+        /// <returns></returns>
+        protected bool? HasTag(TagViewModel tag)
         {
             foreach (var tagPossessed in Tags.GetTagViewModels())
                 if (tag == tagPossessed)

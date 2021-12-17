@@ -15,7 +15,6 @@ namespace TagsTree.Controls
 
         public void Load(FileSystemHelper.InvalidMode mode, string text = "")
         {
-            InitializeComponent();
             switch (mode)
             {
                 case FileSystemHelper.InvalidMode.Name:
@@ -34,6 +33,8 @@ namespace TagsTree.Controls
         public bool Canceled = true;
         private string _invalidRegex = "";
 
+        #region 事件处理
+
         private async void InputName_OnPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs e)
         {
             if (!new Regex($@"^[^{_invalidRegex}]+$").IsMatch(AsBox.Text))
@@ -45,5 +46,7 @@ namespace TagsTree.Controls
         }
 
         private void InputName_OnCloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args) => Canceled = true;
+
+        #endregion
     }
 }

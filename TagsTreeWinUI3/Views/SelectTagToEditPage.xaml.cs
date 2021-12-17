@@ -16,10 +16,7 @@ namespace TagsTree.Views
     /// </summary>
     public partial class SelectTagToEditPage : Page
     {
-        public SelectTagToEditPage()
-        {
-            InitializeComponent();
-        }
+        public SelectTagToEditPage() => InitializeComponent();
 
         /// <summary>
         /// 不为static方便绑定
