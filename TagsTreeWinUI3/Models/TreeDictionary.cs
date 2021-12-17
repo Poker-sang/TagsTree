@@ -15,12 +15,13 @@ namespace TagsTree.Models
         public IEnumerable<TagViewModel> TagsDictionaryValues => TagsDictionary.Values.Skip(1);
         public TagViewModel TagsDictionaryRoot => TagsDictionary[0]; //或TagsDictionary[""]
 
-        public void AddTag(TagViewModel path, string name)
+        public TagViewModel AddTag(TagViewModel path, string name)
         {
             var temp = new TagViewModel(name, path.FullName);
             path.SubTags.Add(temp);
 
             TagsDictionary[temp.Id, name] = temp;
+            return temp;
         }
         public void MoveTag(TagViewModel tag, TagViewModel newPath)
         {

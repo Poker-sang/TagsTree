@@ -84,8 +84,9 @@ namespace TagsTree.Models
         public void NewTag(TagViewModel tagViewModel)
         {
             Table[tagViewModel.Id] = new Dictionary<int, bool>();
-            foreach (var fileIds in Table.First().Value.Keys)
-                Table[tagViewModel.Id][fileIds] = false;
+            if (Table.LastOrDefault()is var (_, value))
+                foreach (var fileIds in value.Keys)
+                    Table[tagViewModel.Id][fileIds] = false;
         }
         public void NewFile(FileModel fileModel)
         {
@@ -137,12 +138,16 @@ namespace TagsTree.Models
 
         public void Serialize(string path)
         {
-            var buffer = Table.First().Value.Keys.Aggregate("", (current, fileId) => current + (fileId + ","));
-            buffer = buffer.Remove(buffer.Length - 1) + ";";
-            foreach (var (tagId, tagDict) in Table)
-                buffer = tagDict.Values.Aggregate(buffer + tagId + ",", (current, relation) => current + (relation ? 1 : 0)) + ";";
-            buffer = buffer.Remove(buffer.Length - 1);
-            File.WriteAllText(path, buffer, Encoding.UTF8);
+            if (Table.FirstOrDefault() is var (_, value))
+            {
+                var buffer = value.Keys.Aggregate("", (current, key) => current + (key + ","));
+                buffer = buffer.Remove(buffer.Length - 1) + ";";
+                foreach (var (tagId, tagDict) in Table)
+                    buffer = tagDict.Values.Aggregate(buffer + tagId + ",",
+                        (current, relation) => current + (relation ? 1 : 0)) + ";";
+                buffer = buffer.Remove(buffer.Length - 1);
+                File.WriteAllText(path, buffer, Encoding.UTF8);
+            }
         }
     }
 }

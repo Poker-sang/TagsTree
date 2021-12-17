@@ -62,7 +62,7 @@
             </CommandBar>
         </uiControls:DockPanel>
         <controls:InputName x:Name="InputName" />
-        <Grid MinHeight="500">
+        <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="9*" />

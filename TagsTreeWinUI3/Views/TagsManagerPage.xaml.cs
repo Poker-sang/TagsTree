@@ -157,8 +157,7 @@ namespace TagsTree.Views
 
         private void NewTag(string name, TagViewModel path)
         {
-            App.Tags.AddTag(path, name);
-            App.Relations.NewTag(path);
+            App.Relations.NewTag(App.Tags.AddTag(path, name));
             BSave.IsEnabled = true;
         }
 

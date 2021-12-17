@@ -57,7 +57,6 @@
             VerticalAlignment="Center"
             uiControls:DockPanel.Dock="Top" />
         <TreeView
-            MinHeight="400"
             AllowDrop="True"
             CanDragItems="True"
             DragItemsCompleted="TvTags_OnDragItemsCompleted"
