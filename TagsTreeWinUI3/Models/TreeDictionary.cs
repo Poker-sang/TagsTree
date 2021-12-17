@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using TagsTree.Services;
@@ -25,7 +26,7 @@ namespace TagsTree.Models
         }
         public void MoveTag(TagViewModel tag, TagViewModel newPath)
         {
-            _ = TagsDictionary[tag.Id].GetParentTag().SubTags.Remove(tag);
+            _ = TagsDictionary[tag.Id].GetParentTag(this).SubTags.Remove(tag);
             newPath.SubTags.Add(tag);
 
             TagsDictionary[tag.Id].Path = TagsDictionary[newPath.Id].FullName;
@@ -38,11 +39,10 @@ namespace TagsTree.Models
         }
         public void DeleteTag(TagViewModel tag)
         {
-            _ = TagsDictionary[tag.Id].GetParentTag().SubTags.Remove(tag);
+            _ = TagsDictionary[tag.Id].GetParentTag(this).SubTags.Remove(tag);
 
             _ = TagsDictionary.Remove(tag.Id);
         }
-
 
         /// <summary>
         /// 递归读取标签
@@ -64,5 +64,7 @@ namespace TagsTree.Models
             TagsDictionary.Clear();
             RecursiveLoadTags("", TagsTree);
         }
+        
+        public void Serialize(string path) => Serialization.Serialize(path, TagsTree.SubTags);
     }
 }

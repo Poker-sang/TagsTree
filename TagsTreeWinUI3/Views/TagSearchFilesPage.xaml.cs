@@ -1,9 +1,9 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Microsoft.UI.Xaml.Navigation;
 using TagsTree.Models;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;

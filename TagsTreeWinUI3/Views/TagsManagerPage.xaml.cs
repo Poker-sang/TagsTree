@@ -1,12 +1,14 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TagsTree.Commands;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace TagsTree.Views
 {
@@ -40,7 +42,11 @@ namespace TagsTree.Views
 
         #region 事件处理
 
-        private void TvTags_OnDragItemsCompleted(TreeView sender, TreeViewDragItemsCompletedEventArgs e) => BSave.IsEnabled = true;
+        //private void TvTags_OnDragItemsCompleted(TreeView sender, TreeViewDragItemsCompletedEventArgs e)
+        //{
+        //    if (e.DropResult is DataPackageOperation.Move)
+        //        MoveTag((TagViewModel)e.Items[0], (TagViewModel)e.NewParentItem);
+        //}
 
         private void NameChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e) => _vm.Name = Regex.Replace(_vm.Name, $@"[{FileSystemHelper.GetInvalidNameChars}]+", "");
 
@@ -48,7 +54,7 @@ namespace TagsTree.Views
 
         private async void NewBClick(object sender, RoutedEventArgs e)
         {
-            if (TbPath.Path.GetTagViewModel() is not { } pathTagModel)
+            if (TbPath.Path.GetTagViewModel(_vm.TagsSource) is not { } pathTagModel)
             {
                 await ShowMessageDialog.Information(true, "「标签路径」不存在！");
                 return;
@@ -59,12 +65,12 @@ namespace TagsTree.Views
         }
         private async void MoveBClick(object sender, RoutedEventArgs e)
         {
-            if (TbPath.Path.GetTagViewModel() is not { } pathTagModel)
+            if (TbPath.Path.GetTagViewModel(_vm.TagsSource) is not { } pathTagModel)
             {
                 await ShowMessageDialog.Information(true, "「标签路径」不存在！");
                 return;
             }
-            if (_vm.Name.GetTagViewModel() is not { } nameTagModel)
+            if (_vm.Name.GetTagViewModel(_vm.TagsSource) is not { } nameTagModel)
             {
                 await ShowMessageDialog.Information(true, "「标签名称」不存在！");
                 return;
@@ -79,7 +85,7 @@ namespace TagsTree.Views
                 await ShowMessageDialog.Information(true, "未输入希望重命名的标签");
                 return;
             }
-            if (TbPath.Path.GetTagViewModel() is not { } pathTagModel)
+            if (TbPath.Path.GetTagViewModel(_vm.TagsSource) is not { } pathTagModel)
             {
                 await ShowMessageDialog.Information(true, "「标签路径」不存在！");
                 return;
@@ -96,7 +102,7 @@ namespace TagsTree.Views
                 await ShowMessageDialog.Information(true, "未输入希望删除的标签");
                 return;
             }
-            if (TbPath.Path.GetTagViewModel() is not { } pathTagModel)
+            if (TbPath.Path.GetTagViewModel(_vm.TagsSource) is not { } pathTagModel)
             {
                 await ShowMessageDialog.Information(true, "「标签路径」不存在！");
                 return;
@@ -106,7 +112,13 @@ namespace TagsTree.Views
         }
         private void SaveBClick(object sender, RoutedEventArgs e)
         {
-            App.SaveTags(_vm.TagsSource);
+            App.Tags = _vm.TagsSource;
+            App.SaveTags();
+            foreach (var (mode, tagViewModel) in _buffer)
+                if (mode)
+                    App.Relations.NewTag(tagViewModel);
+                else App.Relations.DeleteTag(tagViewModel);
+            _buffer.Clear();
             App.SaveRelations();
             BSave.IsEnabled = false;
         }
@@ -115,27 +127,27 @@ namespace TagsTree.Views
         {
             InputName.Load(FileSystemHelper.InvalidMode.Name);
             await InputName.ShowAsync();
-            if (!InputName.Canceled && await NewTagCheck(InputName.AsBox.Text))
-                NewTag(InputName.AsBox.Text, (TagViewModel)((MenuFlyoutItem)sender).Tag!);
+            if (!InputName.Canceled && await NewTagCheck(InputName.Text))
+                NewTag(InputName.Text, (TagViewModel)((MenuFlyoutItem)sender).Tag!);
         }
         private async void NewXCmClick(object sender, RoutedEventArgs e)
         {
             InputName.Load(FileSystemHelper.InvalidMode.Name);
             await InputName.ShowAsync();
-            if (!InputName.Canceled && await NewTagCheck(InputName.AsBox.Text))
-                NewTag(InputName.AsBox.Text, App.Tags.TagsTree);
+            if (!InputName.Canceled && await NewTagCheck(InputName.Text))
+                NewTag(InputName.Text, _vm.TagsSource.TagsTree);
         }
         private void CutCmClick(object sender, RoutedEventArgs e) => ClipBoard = (TagViewModel)((MenuFlyoutItem)sender).Tag!;
         private async void RenameCmClick(object sender, RoutedEventArgs e)
         {
             InputName.Load(FileSystemHelper.InvalidMode.Name);
             await InputName.ShowAsync();
-            if (!InputName.Canceled && await NewTagCheck(InputName.AsBox.Text))
-                RenameTag(InputName.AsBox.Text, (TagViewModel)((MenuFlyoutItem)sender).Tag!);
+            if (!InputName.Canceled && await NewTagCheck(InputName.Text))
+                RenameTag(InputName.Text, (TagViewModel)((MenuFlyoutItem)sender).Tag!);
         }
         private void PasteXCmClick(object sender, RoutedEventArgs e)
         {
-            MoveTag(ClipBoard!, App.Tags.TagsTree);
+            MoveTag(ClipBoard!, _vm.TagsSource.TagsTree);
             ClipBoard = null;
         }
 
@@ -153,45 +165,51 @@ namespace TagsTree.Views
 
         #endregion
 
+        /// <summary>
+        /// 暂存关系表的变化
+        /// true表示添加，false表示删除
+        /// </summary>
+        private readonly List<(bool,TagViewModel)> _buffer = new();
+
         #region 操作
 
         private void NewTag(string name, TagViewModel path)
         {
-            App.Relations.NewTag(App.Tags.AddTag(path, name));
+            _buffer.Add(new(true, _vm.TagsSource.AddTag(path, name)));
             BSave.IsEnabled = true;
         }
 
         private async void MoveTag(TagViewModel name, TagViewModel path)
         {
-            if (name == path || App.Tags.TagsDictionary.GetValueOrDefault(name.Id)!.HasChildTag(App.Tags.TagsDictionary.GetValueOrDefault(path.Id)!))
+            if (name == path || _vm.TagsSource.TagsDictionary.GetValueOrDefault(name.Id)!.HasChildTag(_vm.TagsSource.TagsDictionary.GetValueOrDefault(path.Id)!))
             {
                 await ShowMessageDialog.Information(true, "禁止将标签移动到自己目录下");
                 return;
             }
-            App.Tags.MoveTag(name, path);
+            _vm.TagsSource.MoveTag(name, path);
             BSave.IsEnabled = true;
         }
 
         private void RenameTag(string name, TagViewModel path)
         {
-            App.Tags.RenameTag(path, name);
+            _vm.TagsSource.RenameTag(path, name);
             BSave.IsEnabled = true;
         }
         private void DeleteTag(TagViewModel path)
         {
-            App.Tags.DeleteTag(path);
-            App.Relations.DeleteTag(path);
+            _vm.TagsSource.DeleteTag(path);
+            _buffer.Add(new(false, path));
             BSave.IsEnabled = true;
         }
 
-        private static async Task<bool> NewTagCheck(string name)
+        private async Task<bool> NewTagCheck(string name)
         {
             if (name is "")
             {
                 await ShowMessageDialog.Information(true, "标签名称不能为空！");
                 return false;
             }
-            if (name.GetTagViewModel() is not null)
+            if (name.GetTagViewModel(_vm.TagsSource) is not null)
             {
                 await ShowMessageDialog.Information(true, "与现有标签重名！");
                 return false;

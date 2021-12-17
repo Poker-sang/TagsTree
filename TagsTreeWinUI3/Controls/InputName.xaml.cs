@@ -13,6 +13,11 @@ namespace TagsTree.Controls
     {
         public InputName() => InitializeComponent();
 
+        public string Text
+        {
+            get => AsBox.Text;
+            set => AsBox.Text = value;
+        }
         public void Load(FileSystemHelper.InvalidMode mode, string text = "")
         {
             switch (mode)

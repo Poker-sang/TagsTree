@@ -51,8 +51,7 @@
                                 Width="32"
                                 Height="32"
                                 DoubleTapped="PropertiesCmDoubleClick"
-                                Source="{x:Bind Icon, Mode=OneWay}"
-                                Tag="{x:Bind}" />
+                                Source="{x:Bind Icon, Mode=OneWay}" />
                         </DataTemplate>
                     </uiControls:DataGridTemplateColumn.CellTemplate>
                 </uiControls:DataGridTemplateColumn>
@@ -66,7 +65,6 @@
                                 Margin="10,0"
                                 VerticalAlignment="Center"
                                 DoubleTapped="PropertiesCmDoubleClick"
-                                Tag="{x:Bind}"
                                 Text="{x:Bind Name}" />
                         </DataTemplate>
                     </uiControls:DataGridTemplateColumn.CellTemplate>
@@ -81,7 +79,6 @@
                                 Margin="10,0"
                                 VerticalAlignment="Center"
                                 DoubleTapped="PropertiesCmDoubleClick"
-                                Tag="{x:Bind}"
                                 Text="{x:Bind Tags}" />
                         </DataTemplate>
                     </uiControls:DataGridTemplateColumn.CellTemplate>
@@ -96,7 +93,6 @@
                                 Margin="10,0"
                                 VerticalAlignment="Center"
                                 DoubleTapped="PropertiesCmDoubleClick"
-                                Tag="{x:Bind}"
                                 Text="{x:Bind PartialPath}" />
                         </DataTemplate>
                     </uiControls:DataGridTemplateColumn.CellTemplate>
