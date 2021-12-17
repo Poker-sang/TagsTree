@@ -151,7 +151,7 @@ namespace TagsTree
             IdFile.Deserialize(FilesPath);
 
             //关系
-            Relations.Deserialize(RelationsPath); //异常在内部处理
+            Relations.Deserialize(RelationsPath);
 
             //如果本来是空，则按照标签和文件生成关系
             if (Relations.TagsCount is 0 && Relations.FilesCount is 0)
@@ -159,7 +159,7 @@ namespace TagsTree
             else
             {
                 //检查
-                if (Tags.TagsDictionary.Count != Relations.TagsCount)
+                if (Tags.TagsDictionary.Count != Relations.TagsCount + 1)//第一个是空标签减去
                     return "TagsTree.json";
                 if (IdFile.Count != Relations.FilesCount)
                     return "Files.json";

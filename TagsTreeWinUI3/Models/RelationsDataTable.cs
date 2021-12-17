@@ -1,35 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using TagsTree.ViewModels;
 
 namespace TagsTree.Models
 {
-    public class RelationsDataTable
+    /// <summary>
+    /// Column标签，Row是文件，键分别是文件和标签的Id
+    /// 数字记录节省文件空间
+    /// </summary>
+    public class RelationsDataTable: TableDictionary<int, int>
     {
-        /// <summary>
-        /// 外层是标签，内层是文件，键分别是文件和标签的Id
-        /// 数字记录节省文件空间
-        /// </summary>
-        private Dictionary<int, Dictionary<int, bool>> Table { get; set; } = new();
+
+        public RelationsDataTable() : base(int.Parse, int.Parse) { }
+
         public bool this[TagViewModel tag,FileModel fileModel]
         {
-            get => Table[tag.Id][fileModel.Id];
-            set => Table[tag.Id][fileModel.Id] = value;
+            get => base[tag.Id, fileModel.Id];
+            set => base[tag.Id, fileModel.Id] = value;
         }
-        public int TagsCount => Table.Count;
-        public int FilesCount => Table is { Count: 0 } ? 0 : Table.Values.First().Count; 
+
+        private Dictionary<int, int> Tags => Columns;
+        private Dictionary<int, int> Files => Rows;
+        public int TagsCount => Tags.Count;
+        public int FilesCount => Files.Count; 
         
-        public IEnumerable<TagViewModel> GetTags(FileModel fileModel)
-        {
-            foreach (var (tagId,tagDict) in Table)
-                if (tagDict[fileModel.Id])
-                    yield return App.Tags.TagsDictionary[tagId];
-        }
+        public IEnumerable<TagViewModel> GetTags(FileModel fileModel) => Tags.Where(pair => base[pair.Key, fileModel.Id]).Select(pair => App.Tags.TagsDictionary[pair.Key]);
 
         public static ObservableCollection<FileViewModel> FuzzySearchName(string input, IEnumerable<FileViewModel> range)
         {   //大小写不敏感
@@ -74,79 +72,43 @@ namespace TagsTree.Models
             if (pathTagModel is TagViewModel tagViewModel)
             {
                 filesRange = tagViewModel.SubTags.Aggregate(filesRange, (current, subTag) => GetFileModels(subTag, current));
-                return filesRange.Where(fileModel => this[tagViewModel,fileModel]);
+                return filesRange.Where(fileModel => this[tagViewModel, fileModel]);
             }
             //唯一需要判断是否能使用路径作为标签的地方
             else if (App.AppConfigurations.PathTagsEnabled)
                 return filesRange.Where(fileModel => fileModel.PathContains(pathTagModel));
             return Enumerable.Empty<FileModel>();
         }
-        public void NewTag(TagViewModel tagViewModel)
-        {
-            Table[tagViewModel.Id] = new Dictionary<int, bool>();
-            if (Table.LastOrDefault()is var (_, value))
-                foreach (var fileIds in value.Keys)
-                    Table[tagViewModel.Id][fileIds] = false;
-        }
-        public void NewFile(FileModel fileModel)
-        {
-            foreach (var tagDict in Table.Values)
-                tagDict[fileModel.Id] = false;
-        }
-        public void DeleteTag(TagViewModel tagViewModel)
-        {
-            Table.Remove(tagViewModel.Id);
-        }
-        public void DeleteFile(FileModel fileModel)
-        {
-            foreach (var tagDict in Table.Values)
-                _ = tagDict.Remove(fileModel.Id);
-        }
+        public void NewTag(TagViewModel tagViewModel) => AddColumn(tagViewModel.Id);
+        public void NewFile(FileModel fileModel) => AddRow(fileModel.Id);
+        public void DeleteTag(TagViewModel tagViewModel) => RemoveColumn(tagViewModel.Id);
+        public void DeleteFile(FileModel fileModel) => RemoveRow(fileModel.Id);
 
         public void Reload()
         {
-            foreach (var tagIds in App.Tags.TagsDictionary.Keys1)
+            Table.Clear();
+            Columns.Clear();
+            Rows.Clear();
+            foreach (var fileIds in App.IdFile.Keys) 
+                Files[fileIds] = FilesCount;
+            foreach (var tagIds in App.Tags.TagsDictionary.Keys1.Skip(1))
             {
-                Table[tagIds] = new Dictionary<int, bool>();
-                foreach (var fileIds in App.IdFile.Keys)
-                    Table[tagIds][fileIds] = false;
+                Tags[tagIds] = TagsCount;
+                Table.Add(new());
+                for (var i = 0; i < App.IdFile.Keys.Count; ++i)
+                    this[tagIds].Add(false);
             }
         }
 
-        public void Deserialize(string path)
+        public new void Deserialize(string path)
         {
             try
             {
-                Table.Clear();
-                var buffer = File.ReadAllText(path);
-                var rows = buffer.Split(';');
-                var fileIds = rows[0].Split(',').Select(int.Parse).ToArray();
-                foreach (var row in rows.Skip(1))
-                {
-                    var columns = row.Split(',');
-                    var tagId = int.Parse(columns[0]);
-                    Table[tagId] = new Dictionary<int, bool>();
-                    for (var i = 0; i < fileIds.Length; ++i)
-                        Table[tagId][fileIds[i]] = columns[1][i] is '1';
-                }
+                base.Deserialize(path);
             }
             catch (Exception)
             {
                 Reload();
-            }
-        }
-
-        public void Serialize(string path)
-        {
-            if (Table.FirstOrDefault() is var (_, value))
-            {
-                var buffer = value.Keys.Aggregate("", (current, key) => current + (key + ","));
-                buffer = buffer.Remove(buffer.Length - 1) + ";";
-                foreach (var (tagId, tagDict) in Table)
-                    buffer = tagDict.Values.Aggregate(buffer + tagId + ",",
-                        (current, relation) => current + (relation ? 1 : 0)) + ";";
-                buffer = buffer.Remove(buffer.Length - 1);
-                File.WriteAllText(path, buffer, Encoding.UTF8);
             }
         }
     }
