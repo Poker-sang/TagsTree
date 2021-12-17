@@ -6,7 +6,7 @@ using TagsTree.Services.ExtensionMethods;
 
 namespace TagsTree.ViewModels
 {
-    public partial class IndexViewModel : ObservableObject
+    public partial class TagSearchFilesViewModel : ObservableObject
     {
         private ObservableCollection<FileViewModel> _resultCallBack = Enumerable.Empty<FileViewModel>().ToObservableCollection();
         [ObservableProperty] private ObservableCollection<FileViewModel> _fileViewModels = Enumerable.Empty<FileViewModel>().ToObservableCollection();

@@ -43,7 +43,7 @@ namespace TagsTree.Views
         }
         private async void SaveBClick(object sender, RoutedEventArgs e)
         {
-            if (_vm.TagViewModel.Path.GetTagViewModel() is not { } pathTagModel)
+            if (_vm.TagViewModel.FullName.GetTagViewModel() is not { } pathTagModel)
             {
                 await ShowMessageDialog.Information(true, "「标签路径」不存在！"); //理论上不会到达此代码
                 return;
@@ -54,8 +54,18 @@ namespace TagsTree.Views
                     switch (fileViewModel.SelectedOriginal)
                     {
                         case true: App.Relations[pathTagModel, fileViewModel] = false; break;
-                        case false: App.Relations[pathTagModel, fileViewModel] = true; break;
-                        case null: //如果原本是null，则删除fileViewModel拥有的相应子标签
+                        //如果原本有上级标签，则覆盖相应上级标签
+                        case false:
+                            App.Relations[pathTagModel, fileViewModel] = true;
+                            foreach (var tagViewModel in fileViewModel.Tags.GetTagViewModels())
+                                if (tagViewModel.HasChildTag(pathTagModel))
+                                {
+                                    App.Relations[tagViewModel, fileViewModel] = false;
+                                    break;
+                                }
+                            break;
+                        //如果原本是null，则删除fileViewModel拥有的相应子标签
+                        case null: 
                             foreach (var tag in fileViewModel.GetRelativeTags(pathTagModel))
                                 App.Relations[tag, fileViewModel] = false;
                             break;

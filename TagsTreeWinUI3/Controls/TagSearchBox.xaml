@@ -6,20 +6,19 @@
     xmlns:local="using:TagsTree.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI.UI"
-    xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:viewModels="using:TagsTree.ViewModels"
     mc:Ignorable="d">
-    <uiControls:TokenizingTextBox
-        x:Name="TokenizingTextBox"
+    <AutoSuggestBox
+        x:Name="AutoSuggestBox"
         PlaceholderText="搜索标签（不包含/:*?&quot;&lt;&gt;|,和空白字符，留空显示全部）"
-        QueryIcon="{ui:SymbolIconSource Symbol=Find}"
+        QueryIcon="{ui:FontIcon Glyph=&#xE721;}"
         QuerySubmitted="QuerySubmitted"
         SuggestionChosen="SuggestionChosen"
         TextChanged="TextChanged">
-        <uiControls:TokenizingTextBox.ItemTemplate>
+        <AutoSuggestBox.ItemTemplate>
             <DataTemplate x:DataType="viewModels:TagViewModel">
                 <TextBlock Text="{x:Bind FullName}" />
             </DataTemplate>
-        </uiControls:TokenizingTextBox.ItemTemplate>
-    </uiControls:TokenizingTextBox>
+        </AutoSuggestBox.ItemTemplate>
+    </AutoSuggestBox>
 </UserControl>

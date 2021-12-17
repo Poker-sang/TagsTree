@@ -15,11 +15,11 @@ namespace TagsTree.Services.ExtensionMethods
         public static TagViewModel? GetTagViewModel(this string name)
         {
             var temp = name.Split('\\', StringSplitOptions.RemoveEmptyEntries);
-            return temp.Length == 0 ? App.Tags.TagsDictionaryRoot : App.Tags.TagsDictionary.GetValueOrDefault(temp.Last());
+            return temp.Length is 0 ? App.Tags.TagsDictionaryRoot : App.Tags.TagsDictionary.GetValueOrDefault(temp.Last());
         }
         public static IEnumerable<TagViewModel> GetTagViewModels(this string name)
         {
-            foreach (string tagName in name.Split(' ', StringSplitOptions.RemoveEmptyEntries))
+            foreach (var tagName in name.Split(' ', StringSplitOptions.RemoveEmptyEntries))
                 if (App.Tags.TagsDictionary.GetValueOrDefault(tagName) is { } tagModel)
                     yield return tagModel;
         }

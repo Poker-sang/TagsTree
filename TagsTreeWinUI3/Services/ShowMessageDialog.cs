@@ -20,7 +20,7 @@ namespace TagsTree.Services
                 Content = message,
                 CloseButtonText = "确定",
                 DefaultButton = ContentDialogButton.Close,
-                XamlRoot = App.Window.Content.XamlRoot
+                XamlRoot = App.RootNavigationView.XamlRoot
             };
             _ = await messageDialog.ShowAsync();
         }
