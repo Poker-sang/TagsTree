@@ -100,14 +100,14 @@ namespace TagsTree
 
 
         public static string FilesChangedPath => AppConfigurations.AppLocalFolder + @"\FileChanged.json";
-        private static string TagsPath => AppConfigurations.AppLocalFolder + @"\TagsTree.json";
+        public static string TagsPath => AppConfigurations.AppLocalFolder + @"\TagsTree.json";
         private static string FilesPath => AppConfigurations.AppLocalFolder + @"\Files.json";
         private static string RelationsPath => AppConfigurations.AppLocalFolder + @"\Relations.csv";
 
         /// <summary>
         /// 保存标签
         /// </summary>
-        public static void SaveTags(ObservableCollection<TagViewModel> tags) => Serialization.Serialize(TagsPath, tags);
+        public static void SaveTags() => Tags.Serialize(TagsPath);
 
         /// <summary>
         /// 保存文件
@@ -123,7 +123,7 @@ namespace TagsTree
         /// <summary>
         /// 所有标签
         /// </summary>
-        public static TreeDictionary Tags { get; } = new();
+        public static TreeDictionary Tags { get; set; } = new();
 
         /// <summary>
         /// 所有文件

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TagsTree.Models;
 using TagsTree.ViewModels;
 
 namespace TagsTree.Services.ExtensionMethods
@@ -11,11 +12,13 @@ namespace TagsTree.Services.ExtensionMethods
         /// 补全标签的路径（为空则为根标签）
         /// </summary>
         /// <param name="name">需要找的单个标签</param>
+        /// <param name="range">搜索范围</param>
         /// <returns>找到的标签，若返回null即没找到路径</returns>
-        public static TagViewModel? GetTagViewModel(this string name)
+        public static TagViewModel? GetTagViewModel(this string name, TreeDictionary? range = null)
         {
+            range ??= App.Tags;
             var temp = name.Split('\\', StringSplitOptions.RemoveEmptyEntries);
-            return temp.Length is 0 ? App.Tags.TagsDictionaryRoot : App.Tags.TagsDictionary.GetValueOrDefault(temp.Last());
+            return temp.Length is 0 ? range.TagsDictionaryRoot : range.TagsDictionary.GetValueOrDefault(temp.Last());
         }
         public static IEnumerable<TagViewModel> GetTagViewModels(this string name)
         {

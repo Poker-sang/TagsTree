@@ -34,6 +34,6 @@ namespace TagsTree.ViewModels
         /// <param name="subTags">子标签</param>
         public TagViewModel(string name, string path, ObservableCollection<TagViewModel>? subTags = null) : base(name, path) => SubTags = subTags ?? new ObservableCollection<TagViewModel>();
 
-        public TagViewModel GetParentTag() => Path.GetTagViewModel()!;
+        public TagViewModel GetParentTag(TreeDictionary? range = null) => Path.GetTagViewModel(range)!;
     }
 }

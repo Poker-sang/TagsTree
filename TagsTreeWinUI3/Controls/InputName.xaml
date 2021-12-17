@@ -10,5 +10,5 @@
     PrimaryButtonClick="InputName_OnPrimaryButtonClick"
     PrimaryButtonText="确定"
     mc:Ignorable="d">
-    <AutoSuggestBox x:Name="AsBox" x:FieldModifier="public" />
+    <AutoSuggestBox x:Name="AsBox" />
 </ContentDialog>

@@ -40,12 +40,12 @@ namespace TagsTree.Views
             InputName.Load(FileSystemHelper.InvalidMode.Name, FileViewModel.Name);
             _ = await InputName.ShowAsync();
             if (InputName.Canceled) return;
-            if (FileViewModel.Name == InputName.AsBox.Text)
+            if (FileViewModel.Name == InputName.Text)
             {
                 await ShowMessageDialog.Information(true, "新文件名与原文件名一致！");
                 return;
             }
-            var newFullName = FileViewModel.Path + @"\" + InputName.AsBox.Text;
+            var newFullName = FileViewModel.Path + @"\" + InputName.Text;
             if (FileViewModel.IsFolder ? FileSystem.DirectoryExists(newFullName) : FileSystem.FileExists(newFullName))
             {
                 var isFolder = FileViewModel.IsFolder ? "夹" : "";

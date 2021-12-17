@@ -45,7 +45,6 @@
                     Label="保存" />
             </CommandBar>
             <AutoSuggestBox
-                x:Name="TbName"
                 VerticalAlignment="Center"
                 uiControls:DockPanel.Dock="Left"
                 PlaceholderText="标签名称（不包含\/:*?&quot;&lt;&gt;|,和空白字符且不为空）"
@@ -56,12 +55,12 @@
             x:Name="TbPath"
             VerticalAlignment="Center"
             uiControls:DockPanel.Dock="Top" />
+        <!--  DragItemsCompleted="TvTags_OnDragItemsCompleted"  -->
         <TreeView
-            AllowDrop="True"
-            CanDragItems="True"
-            DragItemsCompleted="TvTags_OnDragItemsCompleted"
+            AllowDrop="False"
+            CanDragItems="False"
             ItemInvoked="Tags_OnItemInvoked"
-            ItemsSource="{x:Bind _vm.TagsSource, Mode=TwoWay}">
+            ItemsSource="{x:Bind _vm.TagsSource.TagsTree.SubTags, Mode=OneWay}">
             <TreeView.ItemTemplate>
                 <DataTemplate x:DataType="viewModels:TagViewModel">
                     <TreeViewItem ItemsSource="{x:Bind SubTags, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind FullName}">
