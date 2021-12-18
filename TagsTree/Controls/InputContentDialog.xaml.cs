@@ -57,14 +57,14 @@ public partial class InputContentDialog : ContentDialog
 
     #region 事件处理
 
-    private void InputName_OnPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs e)
+    private void OnPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs e)
     {
         if (!new Regex($@"^[^{_invalidRegex}]+$").IsMatch(Text))
             _exceptionThrown = true;
         else Canceled = false;
     }
 
-    private void InputName_OnCloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args) => Canceled = true;
+    private void OnCloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args) => Canceled = true;
 
     #endregion
 }
