@@ -13,7 +13,7 @@
     NavigationCacheMode="Required"
     mc:Ignorable="d">
     <uiControls:DockPanel>
-        <controls:InputName x:Name="InputName" />
+        <controls:InputContentDialog x:Name="InputName" />
         <uiControls:DockPanel uiControls:DockPanel.Dock="Top">
             <CommandBar
                 uiControls:DockPanel.Dock="Right"
