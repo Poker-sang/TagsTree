@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace TagsTree.Models;
+namespace TagsTree.Algorithm;
 
 public class TableDictionary<TColumn, TRow> where TColumn : notnull where TRow : notnull
 {
@@ -35,7 +35,7 @@ public class TableDictionary<TColumn, TRow> where TColumn : notnull where TRow :
     {
         Columns[column] = Columns.Count;
         var temp = new List<bool>(Rows.Count);
-        for (var i = 0; i < Rows.Count; ++i) 
+        for (var i = 0; i < Rows.Count; ++i)
             temp.Add(false);
         Table.Add(temp);
     }
@@ -73,7 +73,7 @@ public class TableDictionary<TColumn, TRow> where TColumn : notnull where TRow :
         var buffer = File.ReadAllText(path);
         var lines = buffer.Split(';');
         var rows = lines[0].Split(',').Select(row => _rowParse(row)).ToArray();
-        foreach (var row in rows) 
+        foreach (var row in rows)
             Rows[row] = Rows.Count;
         foreach (var line in lines.Skip(1))
         {
@@ -81,7 +81,7 @@ public class TableDictionary<TColumn, TRow> where TColumn : notnull where TRow :
             var column = _columnParse(columns[0]);
             Columns[column] = Columns.Count;
             Table.Add(new());
-            foreach (var c in columns[1]) 
+            foreach (var c in columns[1])
                 this[column].Add(c is '1');
         }
     }

@@ -1,9 +1,8 @@
-﻿namespace TagsTree.Interfaces
+﻿namespace TagsTree.Interfaces;
+
+public interface IFullName
 {
-    public interface IFullName
-    {
-        public string Name { get; }
-        public string Path { get; }
-        public string FullName { get; }
-    }
+    public string Name { get; }
+    public string Path { get; }
+    public string FullName { get; }
 }

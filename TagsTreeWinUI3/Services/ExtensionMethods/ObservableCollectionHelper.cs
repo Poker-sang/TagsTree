@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace TagsTree.Services.ExtensionMethods
+namespace TagsTree.Services.ExtensionMethods;
+
+public static class ObservableCollectionHelper
 {
-    public static class ObservableCollectionHelper
+    public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> iEnumerable)
     {
-        public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> iEnumerable)
-        {
-            var observableCollection = new ObservableCollection<T>();
-            foreach (var item in iEnumerable)
-                observableCollection.Add(item);
-            return observableCollection;
-        }
+        var observableCollection = new ObservableCollection<T>();
+        foreach (var item in iEnumerable)
+            observableCollection.Add(item);
+        return observableCollection;
     }
 }

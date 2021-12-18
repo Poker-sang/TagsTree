@@ -4,21 +4,20 @@ using System.Linq;
 using TagsTree.Services.ExtensionMethods;
 
 
-namespace TagsTree.ViewModels
+namespace TagsTree.ViewModels;
+
+public partial class TagSearchFilesViewModel : ObservableObject
 {
-    public partial class TagSearchFilesViewModel : ObservableObject
+    private ObservableCollection<FileViewModel> _resultCallBack = Enumerable.Empty<FileViewModel>().ToObservableCollection();
+    [ObservableProperty] private ObservableCollection<FileViewModel> _fileViewModels = Enumerable.Empty<FileViewModel>().ToObservableCollection();
+    public ObservableCollection<FileViewModel> ResultCallBack
     {
-        private ObservableCollection<FileViewModel> _resultCallBack = Enumerable.Empty<FileViewModel>().ToObservableCollection();
-        [ObservableProperty] private ObservableCollection<FileViewModel> _fileViewModels = Enumerable.Empty<FileViewModel>().ToObservableCollection();
-        public ObservableCollection<FileViewModel> ResultCallBack
+        get => _resultCallBack;
+        set
         {
-            get => _resultCallBack;
-            set
-            {
-                if (Equals(_resultCallBack, value)) return;
-                _resultCallBack = value;
-                FileViewModels = value;
-            }
+            if (Equals(_resultCallBack, value)) return;
+            _resultCallBack = value;
+            FileViewModels = value;
         }
     }
 }
