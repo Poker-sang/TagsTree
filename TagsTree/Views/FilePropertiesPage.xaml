@@ -61,7 +61,7 @@
                     Label="删除" />
             </CommandBar>
         </uiControls:DockPanel>
-        <controls:InputName x:Name="InputName" />
+        <controls:InputContentDialog x:Name="InputName" />
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />

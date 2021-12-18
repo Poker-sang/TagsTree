@@ -119,7 +119,7 @@
     <Page Update="Views\TagSearchFilesPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="Controls\InputName.xaml">
+    <Page Update="Controls\InputContentDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="MainWindow.xaml">
