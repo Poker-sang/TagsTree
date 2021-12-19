@@ -84,7 +84,6 @@ public partial class FilePropertiesPage : Page
         FileViewModel.Delete();
         Remove(FileViewModel);
     }
-    private void BackBClick(object sender, RoutedEventArgs e) => GoBack();
 
     #endregion
 
@@ -99,12 +98,10 @@ public partial class FilePropertiesPage : Page
 
     private static void Remove(FileViewModel fileViewModel)
     {
-        GoBack();
+        App.RootFrame.GoBack(new SlideNavigationTransitionInfo());
         fileViewModel.RemoveAndSave();
         TagSearchFilesPage.FileRemoved(fileViewModel);
     }
-
-    private static void GoBack() => App.RootFrame.GoBack(new SlideNavigationTransitionInfo());
 
     #endregion
 }

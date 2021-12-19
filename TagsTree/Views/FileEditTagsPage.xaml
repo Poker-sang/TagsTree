@@ -2,6 +2,7 @@
     x:Class="TagsTree.Views.FileEditTagsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:TagsTree.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -17,11 +18,7 @@
                 uiControls:DockPanel.Dock="Left"
                 Background="Transparent"
                 OverflowButtonVisibility="Collapsed">
-                <AppBarButton
-                    Width="48"
-                    Click="BackBClick"
-                    Icon="{ui:FontIcon Glyph=&#xE72B;}"
-                    LabelPosition="Collapsed" />
+                <controls:BackRequestAppBarButton />
             </CommandBar>
             <CommandBar
                 Background="Transparent"

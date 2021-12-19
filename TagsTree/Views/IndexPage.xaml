@@ -16,15 +16,12 @@
             <ColumnDefinition Width="0.191*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*" />
-            <RowDefinition Height="3*" />
-            <RowDefinition Height="3*" />
-            <RowDefinition Height="1*" />
-            <RowDefinition Height="8*" />
-            <RowDefinition Height="16*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="2*" />
         </Grid.RowDefinitions>
         <TextBlock
-            Grid.Row="4"
+            Grid.Row="1"
             Grid.Column="1"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
@@ -32,7 +29,7 @@
             Text="TagsTree" />
         <controls:TagSearchBox
             x:Name="TagSearchBox"
-            Grid.Row="5"
+            Grid.Row="2"
             Grid.Column="1"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Top" />

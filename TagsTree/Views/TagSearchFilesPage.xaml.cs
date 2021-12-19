@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml.Navigation;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using CommunityToolkit.WinUI.UI.Controls;
 using TagsTree.Models;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
@@ -22,7 +23,6 @@ public partial class TagSearchFilesPage : Page
         _current = this;
         InitializeComponent();
         TbSearch.InvokeQuerySubmitted();
-        //_ = Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)(() => Keyboard.Focus(TbSearch)));
     }
     protected override void OnNavigatedTo(NavigationEventArgs e) => TbSearch.Text = (string)e.Parameter;
 
@@ -48,7 +48,11 @@ public partial class TagSearchFilesPage : Page
     }
     private void PropertiesCmClick(object sender, RoutedEventArgs e) => App.RootFrame.Navigate(typeof(FilePropertiesPage), (FileViewModel)((MenuFlyoutItem)sender).DataContext);
 
-    private void PropertiesCmDoubleClick(object sender, RoutedEventArgs e) => App.RootFrame.Navigate(typeof(FilePropertiesPage), (FileViewModel)((FrameworkElement)sender).DataContext);
+    private void PropertiesCmDoubleClick(object sender, RoutedEventArgs e)
+    {
+        if ((FileViewModel)((DataGrid)sender).SelectedItem is { } fileViewModel)
+            App.RootFrame.Navigate(typeof(FilePropertiesPage), fileViewModel);
+    }
 
     #endregion
 
