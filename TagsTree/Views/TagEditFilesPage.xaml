@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:TagsTree.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:items="using:TagsTree.Controls.Items"
     xmlns:local="using:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI.UI"
@@ -18,10 +19,7 @@
                 uiControls:DockPanel.Dock="Left"
                 Background="Transparent"
                 OverflowButtonVisibility="Collapsed">
-                <AppBarButton
-                    Width="48"
-                    Click="BackBClick"
-                    Icon="{ui:FontIcon Glyph=&#xE72B;}" />
+                <controls:BackRequestAppBarButton />
             </CommandBar>
             <CommandBar
                 uiControls:DockPanel.Dock="Right"
@@ -61,59 +59,10 @@
                         </DataTemplate>
                     </uiControls:DataGridTemplateColumn.CellTemplate>
                 </uiControls:DataGridTemplateColumn>
-                <uiControls:DataGridTemplateColumn
-                    Width="45"
-                    CanUserResize="False"
-                    CanUserSort="False"
-                    IsReadOnly="True">
-                    <uiControls:DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate x:DataType="viewModels:FileViewModel">
-                            <Image
-                                Width="32"
-                                Height="32"
-                                Source="{x:Bind Icon, Mode=OneWay}" />
-                        </DataTemplate>
-                    </uiControls:DataGridTemplateColumn.CellTemplate>
-                </uiControls:DataGridTemplateColumn>
-                <uiControls:DataGridTemplateColumn
-                    Width="2*"
-                    Header="名称"
-                    IsReadOnly="True">
-                    <uiControls:DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate x:DataType="viewModels:FileViewModel">
-                            <TextBlock
-                                Margin="10,0"
-                                VerticalAlignment="Center"
-                                Text="{x:Bind Name}" />
-                        </DataTemplate>
-                    </uiControls:DataGridTemplateColumn.CellTemplate>
-                </uiControls:DataGridTemplateColumn>
-                <uiControls:DataGridTemplateColumn
-                    Width="*"
-                    Header="标签"
-                    IsReadOnly="True">
-                    <uiControls:DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate x:DataType="viewModels:FileViewModel">
-                            <TextBlock
-                                Margin="10,0"
-                                VerticalAlignment="Center"
-                                Text="{x:Bind Tags}" />
-                        </DataTemplate>
-                    </uiControls:DataGridTemplateColumn.CellTemplate>
-                </uiControls:DataGridTemplateColumn>
-                <uiControls:DataGridTemplateColumn
-                    Width="*"
-                    Header="路径"
-                    IsReadOnly="True">
-                    <uiControls:DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate x:DataType="viewModels:FileViewModel">
-                            <TextBlock
-                                Margin="10,0"
-                                VerticalAlignment="Center"
-                                Text="{x:Bind PartialPath}" />
-                        </DataTemplate>
-                    </uiControls:DataGridTemplateColumn.CellTemplate>
-                </uiControls:DataGridTemplateColumn>
+                <items:DataGridIconColumn />
+                <items:DataGridNameColumn />
+                <items:DataGridTagsColumn />
+                <items:DataGridPartialPathColumn />
             </uiControls:DataGrid.Columns>
         </uiControls:DataGrid>
     </uiControls:DockPanel>

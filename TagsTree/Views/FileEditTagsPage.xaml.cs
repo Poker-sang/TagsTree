@@ -21,11 +21,10 @@ public partial class FileEditTagsPage : Page
 
     private readonly FileEditTagsViewModel _vm;
 
-    #region 事件处理
-
     protected override void OnNavigatedTo(NavigationEventArgs e) => _vm.Load((FileViewModel)e.Parameter);
-    private void BackBClick(object sender, RoutedEventArgs e) => App.RootFrame.GoBack(new SlideNavigationTransitionInfo());
 
+    #region 事件处理
+    
     private async void AddTag(object sender, DoubleTappedRoutedEventArgs e)
     {
         var newTag = (TagViewModel)((TreeViewItem)sender).Tag;

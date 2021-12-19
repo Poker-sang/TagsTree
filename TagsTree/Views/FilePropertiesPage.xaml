@@ -17,10 +17,7 @@
                 uiControls:DockPanel.Dock="Left"
                 Background="Transparent"
                 OverflowButtonVisibility="Collapsed">
-                <AppBarButton
-                    Width="48"
-                    Click="BackBClick"
-                    Icon="{ui:FontIcon Glyph=&#xE72B;}" />
+                <controls:BackRequestAppBarButton />
             </CommandBar>
             <CommandBar
                 Background="Transparent"

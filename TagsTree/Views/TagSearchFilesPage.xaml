@@ -3,7 +3,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:TagsTree.Controls"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:items="using:TagsTree.Controls.Items"
     xmlns:local="using:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI.UI"
@@ -27,6 +30,8 @@
             AlternatingRowBackground="LightGray"
             AutoGenerateColumns="False"
             CanUserReorderColumns="False"
+            CanUserSortColumns="True"
+            DoubleTapped="PropertiesCmDoubleClick"
             ItemsSource="{x:Bind _vm.FileViewModels, Mode=OneWay}"
             SelectionMode="Single">
             <uiControls:DataGrid.RowStyle>
@@ -44,59 +49,10 @@
                 </Style>
             </uiControls:DataGrid.RowStyle>
             <uiControls:DataGrid.Columns>
-                <uiControls:DataGridTemplateColumn Width="45" IsReadOnly="True">
-                    <uiControls:DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate x:DataType="viewModels:FileViewModel">
-                            <Image
-                                Width="32"
-                                Height="32"
-                                DoubleTapped="PropertiesCmDoubleClick"
-                                Source="{x:Bind Icon, Mode=OneWay}" />
-                        </DataTemplate>
-                    </uiControls:DataGridTemplateColumn.CellTemplate>
-                </uiControls:DataGridTemplateColumn>
-                <uiControls:DataGridTemplateColumn
-                    Width="2*"
-                    Header="名称"
-                    IsReadOnly="True">
-                    <uiControls:DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate x:DataType="viewModels:FileViewModel">
-                            <TextBlock
-                                Margin="10,0"
-                                VerticalAlignment="Center"
-                                DoubleTapped="PropertiesCmDoubleClick"
-                                Text="{x:Bind Name}" />
-                        </DataTemplate>
-                    </uiControls:DataGridTemplateColumn.CellTemplate>
-                </uiControls:DataGridTemplateColumn>
-                <uiControls:DataGridTemplateColumn
-                    Width="*"
-                    Header="标签"
-                    IsReadOnly="True">
-                    <uiControls:DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate x:DataType="viewModels:FileViewModel">
-                            <TextBlock
-                                Margin="10,0"
-                                VerticalAlignment="Center"
-                                DoubleTapped="PropertiesCmDoubleClick"
-                                Text="{x:Bind Tags}" />
-                        </DataTemplate>
-                    </uiControls:DataGridTemplateColumn.CellTemplate>
-                </uiControls:DataGridTemplateColumn>
-                <uiControls:DataGridTemplateColumn
-                    Width="*"
-                    Header="路径"
-                    IsReadOnly="True">
-                    <uiControls:DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate x:DataType="viewModels:FileViewModel">
-                            <TextBlock
-                                Margin="10,0"
-                                VerticalAlignment="Center"
-                                DoubleTapped="PropertiesCmDoubleClick"
-                                Text="{x:Bind PartialPath}" />
-                        </DataTemplate>
-                    </uiControls:DataGridTemplateColumn.CellTemplate>
-                </uiControls:DataGridTemplateColumn>
+                <items:DataGridIconColumn />
+                <items:DataGridNameColumn />
+                <items:DataGridTagsColumn />
+                <items:DataGridPartialPathColumn />
             </uiControls:DataGrid.Columns>
         </uiControls:DataGrid>
     </uiControls:DockPanel>
