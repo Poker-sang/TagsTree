@@ -37,7 +37,6 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-
             <TreeView
                 Grid.Column="0"
                 Margin="0,0,8,0"

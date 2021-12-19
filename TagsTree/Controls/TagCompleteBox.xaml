@@ -6,19 +6,29 @@
     xmlns:local="using:TagsTree.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:TagsTree.ViewModels"
+    LostFocus="OnLostFocus"
     mc:Ignorable="d">
-    <AutoSuggestBox
-        VerticalAlignment="Center"
-        LostFocus="PathComplement"
-        PlaceholderText="标签路径（不包含/:*?&quot;&lt;&gt;|,和空白字符且不为空）"
-        SuggestionChosen="SuggestionChosen"
-        Text="{x:Bind Path, Mode=TwoWay}"
-        TextChanged="PathChanged"
-        UpdateTextOnSelect="False">
-        <AutoSuggestBox.ItemTemplate>
-            <DataTemplate x:DataType="viewModels:TagViewModel">
-                <TextBlock Text="{x:Bind FullName}" />
-            </DataTemplate>
-        </AutoSuggestBox.ItemTemplate>
-    </AutoSuggestBox>
+    <Grid>
+        <BreadcrumbBar
+            x:Name="BreadcrumbBar"
+            Margin="10,0"
+            VerticalAlignment="Center"
+            ItemClicked="OnItemClicked"
+            ItemsSource="{x:Bind Tags, Mode=OneWay}" />
+        <AutoSuggestBox
+            x:Name="AutoSuggestBox"
+            VerticalAlignment="Center"
+            LostFocus="PathComplement"
+            PlaceholderText="标签路径（不包含/:*?&quot;&lt;&gt;|,和空白字符且不为空）"
+            SuggestionChosen="SuggestionChosen"
+            Text="{x:Bind Path, Mode=TwoWay}"
+            TextChanged="PathChanged"
+            UpdateTextOnSelect="False">
+            <AutoSuggestBox.ItemTemplate>
+                <DataTemplate x:DataType="viewModels:TagViewModel">
+                    <TextBlock Text="{x:Bind FullName}" />
+                </DataTemplate>
+            </AutoSuggestBox.ItemTemplate>
+        </AutoSuggestBox>
+    </Grid>
 </UserControl>
