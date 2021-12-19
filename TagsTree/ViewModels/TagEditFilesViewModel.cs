@@ -9,6 +9,6 @@ namespace TagsTree.ViewModels;
 public partial class TagEditFilesViewModel : ObservableObject
 {
     public TagViewModel TagViewModel = null!;
-    public IEnumerable<string>? Tags => TagViewModel?.FullName.Split("\\");
+    public IEnumerable<string>? Tags => TagViewModel?.FullName.Split('\\');
     [ObservableProperty] private ObservableCollection<FileViewModel> _fileViewModels = Enumerable.Empty<FileViewModel>().ToObservableCollection();
 }

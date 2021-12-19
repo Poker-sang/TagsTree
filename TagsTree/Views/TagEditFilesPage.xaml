@@ -31,9 +31,12 @@
                     Icon="{ui:FontIcon Glyph=&#xE74E;}"
                     Label="保存" />
             </CommandBar>
-            <Grid>
-                <BreadcrumbBar VerticalAlignment="Center" ItemsSource="{x:Bind _vm.Tags}" />
-            </Grid>
+            <UserControl>
+                <BreadcrumbBar
+                    Margin="10,0"
+                    VerticalAlignment="Center"
+                    ItemsSource="{x:Bind _vm.Tags}" />
+            </UserControl>
         </uiControls:DockPanel>
         <controls:TagSearchBox uiControls:DockPanel.Dock="Top" ResultChanged="ResultChanged" />
         <uiControls:DataGrid
