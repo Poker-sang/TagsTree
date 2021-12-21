@@ -31,8 +31,8 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="TagsTreeWinUI3 (Package)"
-        Description="TagsTreeWinUI3 (Package)"
+        DisplayName="TagsTree"
+        Description="TagsTree是一个用树状结构标签管理文件的软件，能在不干涉文件本身的前提下，为文件添加标签"
         BackgroundColor="transparent"
         Square150x150Logo="Images\Square150x150Logo.png"
         Square44x44Logo="Images\Square44x44Logo.png">

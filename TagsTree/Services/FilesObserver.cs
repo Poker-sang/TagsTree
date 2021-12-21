@@ -20,14 +20,14 @@ public class FilesObserver : FileSystemWatcher
     public async Task<bool> Change(string path)
     {
         //路径是否存在
-        if (!Directory.Exists(App.AppConfigurations.LibraryPath))
+        if (!Directory.Exists(App.AppConfiguration.LibraryPath))
         {
-            await ShowMessageDialog.Information(true, $"路径「{App.AppConfigurations.LibraryPath}」不存在，无法开启文件监视，请在设置修改正确路径后保存");
+            await ShowMessageDialog.Information(true, $"路径「{App.AppConfiguration.LibraryPath}」不存在，无法开启文件监视，请在设置修改正确路径后保存");
             return App.FilesObserver.EnableRaisingEvents = false;
         }
 
         Path = path; //不能是错误路径
-        return App.FilesObserver.EnableRaisingEvents = App.AppConfigurations.FilesObserverEnabled;
+        return App.FilesObserver.EnableRaisingEvents = App.AppConfiguration.FilesObserverEnabled;
     }
 
     private new static void Created(object sender, FileSystemEventArgs e)

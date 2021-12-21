@@ -1,7 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using TagsTree.Services;
 using TagsTree.ViewModels;
@@ -24,7 +23,7 @@ public partial class FileEditTagsPage : Page
     protected override void OnNavigatedTo(NavigationEventArgs e) => _vm.Load((FileViewModel)e.Parameter);
 
     #region 事件处理
-    
+
     private async void AddTag(object sender, DoubleTappedRoutedEventArgs e)
     {
         var newTag = (TagViewModel)((TreeViewItem)sender).Tag;

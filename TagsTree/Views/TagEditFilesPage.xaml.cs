@@ -73,7 +73,7 @@ public sealed partial class TagEditFilesPage : Page
                 fileViewModel.TagsUpdated();
             }
         App.SaveRelations();
-        await ShowMessageDialog.Information(false, "已保存更改"); 
+        await ShowMessageDialog.Information(false, "已保存更改");
         App.RootFrame.GoBack(new SlideNavigationTransitionInfo());
     }
 

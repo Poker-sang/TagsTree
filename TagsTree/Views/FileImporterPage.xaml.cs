@@ -27,73 +27,71 @@ public partial class FileImporterPage : Page
     {
         _vm.Importing = true;
         var temp = new List<FileViewModel>();
-        if ((string)parameter! is "Select_Files")
-        {
-            if (await FileSystemHelper.GetStorageFiles() is { } files and not { Count: 0 })
+        var dictionary = new Dictionary<string, bool>();
+
+        if (parameter is string mode)
+            if (mode is "Select_Files")
             {
+                if (await FileSystemHelper.GetStorageFiles() is { } files and not { Count: 0 })
+                    await Task.Run(() =>
+                    {
+                        if (FileViewModel.IsValidPath(files[0].Path.GetPath()))
+                        {
+                            foreach (var fileViewModelModel in _vm.FileViewModels)
+                                dictionary[fileViewModelModel.UniqueName] = true;
+                            if (FileViewModel.IsValidPath(files[0].Path.GetPath()))
+                                temp.AddRange(files.Where(file => !dictionary.ContainsKey(false + file.Path))
+                                    .Select(file => new FileViewModel(file.Path)));
+                        }
+                    });
+            }
+            else if (await FileSystemHelper.GetStorageFolder() is { } folder)
                 await Task.Run(() =>
                 {
-                    var dictionary = new Dictionary<string, bool>();
                     foreach (var fileViewModelModel in _vm.FileViewModels)
                         dictionary[fileViewModelModel.UniqueName] = true;
-                    if (FileViewModel.IsValidPath(files[0].Path.GetPath()))
-                        temp.AddRange(files.Where(file => !dictionary.ContainsKey(false + file.Path))
-                            .Select(file => new FileViewModel(file.Path)));
+                    if (mode is "Select_Folders")
+                    {
+                        if (FileViewModel.IsValidPath(folder.Path.GetPath()))
+                            if (!dictionary.ContainsKey(true + folder.Path))
+                                temp.Add(new FileViewModel(folder.Path));
+                    }
+                    else if (FileViewModel.IsValidPath(folder.Path))
+                        switch (mode)
+                        {
+                            case "Path_Files":
+                                temp.AddRange(new DirectoryInfo(folder.Path).GetFiles()
+                                    .Where(fileInfo => !dictionary.ContainsKey(false + fileInfo.FullName))
+                                    .Select(fileInfo => new FileViewModel(fileInfo.FullName)));
+                                break;
+                            case "Path_Folders":
+                                temp.AddRange(new DirectoryInfo(folder.Path).GetDirectories()
+                                    .Where(directoryInfo => !dictionary.ContainsKey(true + directoryInfo.FullName))
+                                    .Select(directoryInfo => new FileViewModel(directoryInfo.FullName)));
+                                break;
+                            case "Path_Both":
+                                {
+                                    temp.AddRange(new DirectoryInfo(folder.Path).GetFiles()
+                                        .Where(fileInfo => !dictionary.ContainsKey(false + fileInfo.FullName))
+                                        .Select(fileInfo => new FileViewModel(fileInfo.FullName)));
+                                    temp.AddRange(new DirectoryInfo(folder.Path).GetDirectories()
+                                        .Where(directoryInfo => !dictionary.ContainsKey(true + directoryInfo.FullName))
+                                        .Select(directoryInfo => new FileViewModel(directoryInfo.FullName)));
+                                }
+                                break;
+                            case "All":
+                                void RecursiveReadFiles(string folderName)
+                                {
+                                    temp.AddRange(new DirectoryInfo(folderName).GetFiles()
+                                        .Where(fileInfo => !dictionary!.ContainsKey(false + fileInfo.FullName))
+                                        .Select(fileInfo => new FileViewModel(fileInfo.FullName)));
+                                    foreach (var directoryInfo in new DirectoryInfo(folderName).GetDirectories())
+                                        RecursiveReadFiles(directoryInfo.FullName);
+                                }
+                                RecursiveReadFiles(folder.Path);
+                                break;
+                        }
                 });
-            }
-        }
-        else if (await FileSystemHelper.GetStorageFolder() is { } folder)
-        {
-            await Task.Run(() =>
-            {
-                var dictionary = new Dictionary<string, bool>();
-                foreach (var fileViewModelModel in _vm.FileViewModels)
-                    dictionary[fileViewModelModel.UniqueName] = true;
-                switch ((string)parameter!)
-                {
-                    case "Select_Folders":
-                        if (FileViewModel.IsValidPath(folder.Path.GetPath()) &&
-                            !dictionary.ContainsKey(true + folder.Path))
-                            temp.Add(new FileViewModel(folder.Path));
-                        break;
-                    case "Path_Files":
-                        if (FileViewModel.IsValidPath(folder.Path))
-                            temp.AddRange(new DirectoryInfo(folder.Path).GetFiles()
-                                .Where(fileInfo => !dictionary.ContainsKey(false + fileInfo.FullName))
-                                .Select(fileInfo => new FileViewModel(fileInfo.FullName)));
-                        break;
-                    case "Path_Folders":
-                        if (FileViewModel.IsValidPath(folder.Path))
-                            temp.AddRange(new DirectoryInfo(folder.Path).GetDirectories()
-                                .Where(directoryInfo => !dictionary.ContainsKey(true + directoryInfo.FullName))
-                                .Select(directoryInfo => new FileViewModel(directoryInfo.FullName)));
-                        break;
-                    case "Path_Both":
-                        if (FileViewModel.IsValidPath(folder.Path))
-                        {
-                            temp.AddRange(new DirectoryInfo(folder.Path).GetFiles()
-                                .Where(fileInfo => !dictionary.ContainsKey(false + fileInfo.FullName))
-                                .Select(fileInfo => new FileViewModel(fileInfo.FullName)));
-                            temp.AddRange(new DirectoryInfo(folder.Path).GetDirectories()
-                                .Where(directoryInfo => !dictionary.ContainsKey(true + directoryInfo.FullName))
-                                .Select(directoryInfo => new FileViewModel(directoryInfo.FullName)));
-                        }
-                        break;
-                    case "All":
-                        void RecursiveReadFiles(string folderName)
-                        {
-                            temp.AddRange(new DirectoryInfo(folderName).GetFiles()
-                                .Where(fileInfo => !dictionary!.ContainsKey(false + fileInfo.FullName))
-                                .Select(fileInfo => new FileViewModel(fileInfo.FullName)));
-                            foreach (var directoryInfo in new DirectoryInfo(folderName).GetDirectories())
-                                RecursiveReadFiles(directoryInfo.FullName);
-                        }
-                        if (FileViewModel.IsValidPath(folder.Path))
-                            RecursiveReadFiles(folder.Path);
-                        break;
-                }
-            });
-        }
         foreach (var fileViewModel in temp)
             _vm.FileViewModels.Add(fileViewModel);
         _vm.Importing = false;

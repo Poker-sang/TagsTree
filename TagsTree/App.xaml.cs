@@ -27,7 +27,7 @@ namespace TagsTree;
 public partial class App : Application
 {
     public static MainWindow Window { get; private set; } = null!;
-    public static AppConfigurations AppConfigurations { get; private set; } = null!;
+    public static AppConfiguration AppConfiguration { get; private set; } = null!;
     public static FilesObserver FilesObserver { get; private set; } = null!;
     public static NavigationView RootNavigationView { get; set; } = null!;
     public static Frame RootFrame { get; set; } = null!;
@@ -45,23 +45,23 @@ public partial class App : Application
         RegisterUnhandledExceptionHandler();
         IconsHelper.Initialize();
         FilesObserver = new FilesObserver();
-        AppConfigurations.Initialize();
-        if (AppConfigurations.LoadConfiguration() is { } appConfigurations
+        AppContext.Initialize();
+        if (AppContext.LoadConfiguration() is { } appConfigurations
 #if FIRST_TIME
                 && false
 #endif 
            )
         {
-            AppConfigurations = appConfigurations;
+            AppConfiguration = appConfigurations;
             ConfigSet = true;
         }
         else
         {
-            AppConfigurations = AppConfigurations.GetDefault();
+            AppConfiguration = AppContext.GetDefault();
             ConfigSet = false;
         }
 
-        RequestedTheme = AppConfigurations.Theme switch
+        RequestedTheme = AppConfiguration.Theme switch
         {
             1 => ApplicationTheme.Light,
             2 => ApplicationTheme.Dark,
@@ -81,28 +81,28 @@ public partial class App : Application
         Window.Activate();
     }
 
-    public static async Task<bool> ChangeFilesObserver() => await FilesObserver.Change(AppConfigurations.LibraryPath);
+    public static async Task<bool> ChangeFilesObserver() => await FilesObserver.Change(AppConfiguration.LibraryPath);
 
     public static async Task ExceptionHandler(string exception)
     {
-        switch (await ShowMessageDialog.Warning($"路径「{AppConfigurations.AppLocalFolder}」下，{exception}和Relations.csv存储数据数不同", "删除关系文件Relations.csv并重新生成", "关闭软件并打开目录"))
+        switch (await ShowMessageDialog.Warning($"路径「{AppContext.AppLocalFolder}」下，{exception}和Relations.csv存储数据数不同", "删除关系文件Relations.csv并重新生成", "关闭软件并打开目录"))
         {
             case true:
                 File.Delete(RelationsPath);
                 Relations.Reload();
                 break;
             case false:
-                AppConfigurations.AppLocalFolder.Open();
+                AppContext.AppLocalFolder.Open();
                 Current.Exit();
                 break;
         }
     }
 
 
-    public static string FilesChangedPath => AppConfigurations.AppLocalFolder + @"\FileChanged.json";
-    public static string TagsPath => AppConfigurations.AppLocalFolder + @"\TagsTree.json";
-    private static string FilesPath => AppConfigurations.AppLocalFolder + @"\Files.json";
-    private static string RelationsPath => AppConfigurations.AppLocalFolder + @"\Relations.csv";
+    public static string FilesChangedPath => AppContext.AppLocalFolder + @"\FileChanged.json";
+    public static string TagsPath => AppContext.AppLocalFolder + @"\TagsTree.json";
+    private static string FilesPath => AppContext.AppLocalFolder + @"\Files.json";
+    private static string RelationsPath => AppContext.AppLocalFolder + @"\Relations.csv";
 
     /// <summary>
     /// 保存标签

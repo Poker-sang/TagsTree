@@ -11,7 +11,7 @@
     <AutoSuggestBox
         x:Name="AutoSuggestBox"
         PlaceholderText="搜索标签（不包含/:*?&quot;&lt;&gt;|,和空白字符，留空显示全部）"
-        QueryIcon="{ui:FontIcon Glyph=&#xE721;}"
+        QueryIcon="Find"
         QuerySubmitted="QuerySubmitted"
         SuggestionChosen="SuggestionChosen"
         TextChanged="TextChanged">

@@ -56,7 +56,7 @@ public sealed partial class MainWindow : Window
 
         foreach (NavigationViewItem menuItem in NavigationView.MenuItems)
             menuItem.IsEnabled = true;
-        ((NavigationViewItem)NavigationView.FooterMenuItems[0]).IsEnabled = await App.ChangeFilesObserver(); //就是App.AppConfigurations.FilesObserverEnabled;
+        ((NavigationViewItem)NavigationView.FooterMenuItems[0]).IsEnabled = await App.ChangeFilesObserver(); //就是App.AppContext.FilesObserverEnabled;
     }
 
     private void DisplaySettings()
