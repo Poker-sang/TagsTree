@@ -9,6 +9,8 @@ using TagsTree.ViewModels;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 
 namespace TagsTree.Services;
 

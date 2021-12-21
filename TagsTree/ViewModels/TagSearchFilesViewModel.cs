@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using TagsTree.Services.ExtensionMethods;
 
-
 namespace TagsTree.ViewModels;
 
 public partial class TagSearchFilesViewModel : ObservableObject

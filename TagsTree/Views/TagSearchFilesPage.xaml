@@ -12,6 +12,9 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
+    <Page.Resources>
+        <ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
+    </Page.Resources>
     <uiControls:DockPanel>
         <controls:TagSearchBox
             x:Name="TbSearch"
@@ -20,7 +23,7 @@
         <AutoSuggestBox
             uiControls:DockPanel.Dock="Top"
             PlaceholderText="文件名（模糊搜索，不包含\/:*?&quot;&lt;&gt;|,和空白字符，留空显示全部）"
-            QueryIcon="{ui:FontIcon Glyph=&#xE721;}"
+            QueryIcon="Find"
             QuerySubmitted="QuerySubmitted"
             TextChanged="TextChanged" />
         <uiControls:DataGrid

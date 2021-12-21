@@ -13,6 +13,9 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
+    <Page.Resources>
+        <ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
+    </Page.Resources>
     <uiControls:DockPanel>
         <uiControls:DockPanel uiControls:DockPanel.Dock="Top">
             <CommandBar
