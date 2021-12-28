@@ -18,9 +18,11 @@ TagsTree 能在不干涉文件本身的前提下，为文件添加标签
 
 版本：1.20
 
-作者：[扑克](https://github.com/Poker-sang)
+## 联系方式
 
-联系方式：[邮箱](poker_sang@outlook.com)
+作者：[扑克](https://github.com/Poker-sang)：
+
+邮箱：poker_sang@outlook.com
 
 QQ：2639914082
 
