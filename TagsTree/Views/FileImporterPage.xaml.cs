@@ -70,14 +70,14 @@ public partial class FileImporterPage : Page
                                     .Select(directoryInfo => new FileViewModel(directoryInfo.FullName)));
                                 break;
                             case "Path_Both":
-                            {
-                                temp.AddRange(new DirectoryInfo(folder.Path).GetFiles()
-                                    .Where(fileInfo => !dictionary.ContainsKey(false + fileInfo.FullName))
-                                    .Select(fileInfo => new FileViewModel(fileInfo.FullName)));
-                                temp.AddRange(new DirectoryInfo(folder.Path).GetDirectories()
-                                    .Where(directoryInfo => !dictionary.ContainsKey(true + directoryInfo.FullName))
-                                    .Select(directoryInfo => new FileViewModel(directoryInfo.FullName)));
-                            }
+                                {
+                                    temp.AddRange(new DirectoryInfo(folder.Path).GetFiles()
+                                        .Where(fileInfo => !dictionary.ContainsKey(false + fileInfo.FullName))
+                                        .Select(fileInfo => new FileViewModel(fileInfo.FullName)));
+                                    temp.AddRange(new DirectoryInfo(folder.Path).GetDirectories()
+                                        .Where(directoryInfo => !dictionary.ContainsKey(true + directoryInfo.FullName))
+                                        .Select(directoryInfo => new FileViewModel(directoryInfo.FullName)));
+                                }
                                 break;
                             case "All":
                                 void RecursiveReadFiles(string folderName)

@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using TagsTree.SourceGenerator.Utilities;
 
 namespace TagsTree.SourceGenerator;
@@ -107,7 +107,7 @@ partial class {name}
     private static string Spacing(int n)
     {
         var temp = "";
-        for (var i = 0; i < n; i++) 
+        for (var i = 0; i < n; i++)
             temp += "    ";
         return temp;
     }

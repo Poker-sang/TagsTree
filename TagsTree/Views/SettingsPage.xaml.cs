@@ -65,8 +65,7 @@ public partial class SettingsPage : Page
                 App.ConfigSet = true;
                 await App.Window.ConfigIsSet();
             }
-
-            ((NavigationViewItem)App.RootNavigationView.FooterMenuItems[0]).IsEnabled = await App.ChangeFilesObserver(); //就是App.AppContext.FilesObserverEnabled;
+            else ((NavigationViewItem)App.RootNavigationView.FooterMenuItems[0]).IsEnabled = await App.ChangeFilesObserver(); //就是App.AppContext.FilesObserverEnabled;
         }
     }
 }
