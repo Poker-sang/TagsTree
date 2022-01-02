@@ -67,7 +67,7 @@ public class FileModel : IFullName
         Path = fullName.GetPath();
     }
 
-    protected static bool IsValidPath(string path) => path.Contains(App.AppConfigurations.LibraryPath);
+    protected static bool IsValidPath(string path) => path.Contains(App.AppConfiguration.LibraryPath);
 
     /// <summary>
     /// null表示拥有标签的上级标签存在本标签
