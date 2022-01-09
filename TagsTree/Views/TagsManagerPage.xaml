@@ -37,7 +37,7 @@
                 <AppBarButton
                     Width="50"
                     Click="DeleteBClick"
-                    Icon="{ui:FontIcon Glyph=&#xE74D;}"
+                    Icon="{ui:FontIcon Glyph=&#xECC9;}"
                     ToolTipService.ToolTip="删除" />
                 <AppBarSeparator />
                 <AppBarButton
