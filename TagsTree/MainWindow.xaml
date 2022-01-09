@@ -22,34 +22,26 @@
             <NavigationViewItem
                 Content="主页"
                 Icon="{ui:FontIcon Glyph=&#xE80F;}"
-                IsEnabled="False"
-                Tag="TagSearchFilesPage" />
+                IsEnabled="False" />
             <NavigationViewItem
                 Content="标签管理"
                 Icon="{ui:FontIcon Glyph=&#xE8EC;}"
-                IsEnabled="False"
-                Tag="TagsManagerPage" />
+                IsEnabled="False" />
             <NavigationViewItem
                 Content="文件引入"
                 Icon="{ui:FontIcon Glyph=&#xEC50;}"
-                IsEnabled="False"
-                Tag="FileImporterPage" />
+                IsEnabled="False" />
             <NavigationViewItem
                 Content="为标签添加文件"
                 Icon="{ui:FontIcon Glyph=&#xECC8;}"
-                IsEnabled="False"
-                Tag="SelectTagToEditPage" />
+                IsEnabled="False" />
         </NavigationView.MenuItems>
         <NavigationView.FooterMenuItems>
             <NavigationViewItem
                 Content="监控文件"
                 Icon="{ui:FontIcon Glyph=&#xE7B3;}"
-                IsEnabled="False"
-                Tag="FilesObserverPage" />
-            <NavigationViewItem
-                Content="设置"
-                Icon="{ui:FontIcon Glyph=&#xE713;}"
-                Tag="SettingsPage" />
+                IsEnabled="False" />
+            <NavigationViewItem Content="设置" Icon="{ui:FontIcon Glyph=&#xE713;}" />
         </NavigationView.FooterMenuItems>
         <uiControls:DockPanel>
             <!--<Rectangle

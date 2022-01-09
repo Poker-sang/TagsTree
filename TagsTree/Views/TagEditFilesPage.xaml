@@ -27,12 +27,11 @@
             <CommandBar
                 uiControls:DockPanel.Dock="Right"
                 Background="Transparent"
-                DefaultLabelPosition="Right"
                 OverflowButtonVisibility="Collapsed">
                 <AppBarButton
                     Click="SaveBClick"
                     Icon="{ui:FontIcon Glyph=&#xE74E;}"
-                    Label="保存" />
+                    ToolTipService.ToolTip="保存" />
             </CommandBar>
             <UserControl>
                 <BreadcrumbBar

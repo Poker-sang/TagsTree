@@ -15,26 +15,25 @@
         <CommandBar
             uiControls:DockPanel.Dock="Top"
             Background="Transparent"
-            DefaultLabelPosition="Right"
             OverflowButtonVisibility="Collapsed">
             <AppBarButton
                 x:Name="BMergeAll"
                 Click="MergeAllBClick"
                 Icon="{ui:FontIcon Glyph=&#xEA3C;}"
                 IsEnabled="False"
-                Label="合并" />
+                ToolTipService.ToolTip="合并" />
             <AppBarButton
                 x:Name="BDeleteAll"
                 Click="DeleteAllBClick"
                 Icon="{ui:FontIcon Glyph=&#xE74D;}"
                 IsEnabled="False"
-                Label="删除全部" />
+                ToolTipService.ToolTip="删除全部" />
             <AppBarButton
                 x:Name="BApplyAll"
                 Click="ApplyAllBClick"
                 Icon="{ui:FontIcon Glyph=&#xE74E;}"
                 IsEnabled="False"
-                Label="应用全部更改" />
+                ToolTipService.ToolTip="应用全部更改" />
         </CommandBar>
         <uiControls:DataGrid
             AlternatingRowBackground="LightGray"

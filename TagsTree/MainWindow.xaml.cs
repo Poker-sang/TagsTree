@@ -56,7 +56,7 @@ public sealed partial class MainWindow : Window
 
         foreach (NavigationViewItem menuItem in NavigationView.MenuItems)
             menuItem.IsEnabled = true;
-        ((NavigationViewItem)NavigationView.FooterMenuItems[0]).IsEnabled = await App.ChangeFilesObserver(); //就是App.AppContext.FilesObserverEnabled;
+        ((NavigationViewItem)NavigationView.FooterMenuItems[0]).IsEnabled = await App.ChangeFilesObserver();
     }
 
     private void DisplaySettings()
@@ -84,32 +84,32 @@ public sealed partial class MainWindow : Window
             SettingsPage => sender.FooterMenuItems[1],
             _ => sender.SelectedItem
         };
-        NavigationView.IsBackEnabled = NavigateFrame.CanGoBack;
+        sender.IsBackEnabled = NavigateFrame.CanGoBack;
     }
 
     /// <summary>
     /// 不为static方便绑定
     /// </summary>
+#pragma warning disable IDE0052 // 删除未读的私有成员
     private readonly Brush _systemColor = new SolidColorBrush(Application.Current.RequestedTheme is ApplicationTheme.Light ? Color.FromArgb(0x80, 0xFF, 0xFF, 0xFF) : Color.FromArgb(0x65, 0x00, 0x00, 0x00));
+#pragma warning restore IDE0052
 
     private void ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs e)
     {
         if (e.InvokedItem is string item)
-            if ((string)((NavigationViewItem)sender.SelectedItem).Tag == NavigateFrame.Content.GetType().Name)
+            if (Equals(((NavigationViewItem)sender.SelectedItem).Content, NavigateFrame.Content.GetType().Name))
                 return;
-            else if (item == (string)((NavigationViewItem)sender.MenuItems[0]).Content)
-                _ = NavigateFrame.Navigate(typeof(IndexPage));
-            else if (item == (string)((NavigationViewItem)sender.MenuItems[1]).Content)
-                _ = NavigateFrame.Navigate(typeof(TagsManagerPage));
-            else if (item == (string)((NavigationViewItem)sender.MenuItems[2]).Content)
-                _ = NavigateFrame.Navigate(typeof(FileImporterPage));
-            else if (item == (string)((NavigationViewItem)sender.MenuItems[3]).Content)
-                _ = NavigateFrame.Navigate(typeof(SelectTagToEditPage));
-            else if (item == (string)((NavigationViewItem)sender.FooterMenuItems[0]).Content)
-                _ = NavigateFrame.Navigate(typeof(FilesObserverPage));
-            else if (item == (string)((NavigationViewItem)sender.FooterMenuItems[1]).Content)
-                _ = NavigateFrame.Navigate(typeof(SettingsPage));
-        NavigationView.IsBackEnabled = true;
+            else _ = NavigateFrame.Navigate(0 switch
+            {
+                0 when Equals(item, ((NavigationViewItem)sender.MenuItems[0]).Content) => typeof(IndexPage),
+                0 when Equals(item, ((NavigationViewItem)sender.MenuItems[1]).Content) => typeof(TagsManagerPage),
+                0 when Equals(item, ((NavigationViewItem)sender.MenuItems[2]).Content) => typeof(FileImporterPage),
+                0 when Equals(item, ((NavigationViewItem)sender.MenuItems[3]).Content) => typeof(SelectTagToEditPage),
+                0 when Equals(item, ((NavigationViewItem)sender.FooterMenuItems[0]).Content) => typeof(FilesObserverPage),
+                0 when Equals(item, ((NavigationViewItem)sender.FooterMenuItems[1]).Content) => typeof(SettingsPage),
+                _ => throw new ArgumentOutOfRangeException()
+            });
+        sender.IsBackEnabled = true;
         GC.Collect();
     }
 }

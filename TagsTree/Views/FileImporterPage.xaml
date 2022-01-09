@@ -16,9 +16,8 @@
             <CommandBar
                 uiControls:DockPanel.Dock="Top"
                 Background="Transparent"
-                DefaultLabelPosition="Right"
                 OverflowButtonVisibility="Collapsed">
-                <AppBarButton Icon="{ui:FontIcon Glyph=&#xE7C3;}" Label="选择">
+                <AppBarButton Icon="{ui:FontIcon Glyph=&#xE7C3;}" ToolTipService.ToolTip="选择">
                     <AppBarButton.Flyout>
                         <MenuFlyout Placement="BottomEdgeAlignedLeft">
                             <MenuFlyoutItem
@@ -32,7 +31,7 @@
                         </MenuFlyout>
                     </AppBarButton.Flyout>
                 </AppBarButton>
-                <AppBarButton Icon="{ui:FontIcon Glyph=&#xE8F4;}" Label="目录">
+                <AppBarButton Icon="{ui:FontIcon Glyph=&#xE8F4;}" ToolTipService.ToolTip="目录">
                     <AppBarButton.Flyout>
                         <MenuFlyout Placement="BottomEdgeAlignedLeft">
                             <MenuFlyoutItem
@@ -54,17 +53,17 @@
                     Command="{x:Bind _vm.Import}"
                     CommandParameter="All"
                     Icon="{ui:FontIcon Glyph=&#xE82E;}"
-                    Label="全部" />
+                    ToolTipService.ToolTip="全部" />
                 <AppBarSeparator />
                 <AppBarButton
                     Command="{x:Bind _vm.DeleteBClick}"
                     Icon="{ui:FontIcon Glyph=&#xE74D;}"
-                    Label="清空" />
+                    ToolTipService.ToolTip="清空" />
                 <AppBarButton
                     Command="{x:Bind _vm.SaveBClick}"
                     CommandParameter="{x:Bind FileImporterGrid}"
                     Icon="{ui:FontIcon Glyph=&#xE74E;}"
-                    Label="保存" />
+                    ToolTipService.ToolTip="保存" />
             </CommandBar>
             <uiControls:DataGrid
                 x:Name="FileImporterDataGird"
