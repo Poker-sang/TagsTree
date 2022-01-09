@@ -31,7 +31,7 @@
                     ToolTipService.ToolTip="打开文件夹" />
                 <AppBarButton
                     Click="RemoveBClick"
-                    Icon="{ui:FontIcon Glyph=&#xEDE1;}"
+                    Icon="{ui:FontIcon Glyph=&#xECC9;}"
                     ToolTipService.ToolTip="移除" />
                 <AppBarButton
                     Click="EditTagsBClick"
