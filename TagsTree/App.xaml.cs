@@ -1,5 +1,6 @@
 ﻿//#define DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION
 //#define DISABLE_XAML_GENERATED_BINDING_DEBUG_OUTPUT
+//#define FIRST_TIME
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
@@ -204,11 +205,11 @@ public partial class App : Application
             return Task.CompletedTask;
         }
 #elif RELEASE
-            static async Task UncaughtExceptionHandler(Exception e)
-            {
-                await ShowMessageDialog.Information(true, e.ToString());
-                //ExitWithPushedNotification();
-            }
+        static async Task UncaughtExceptionHandler(Exception e)
+        {
+            await ShowMessageDialog.Information(true, e.ToString());
+            //ExitWithPushedNotification();
+        }
 #endif
     }
     private static void ExitWithPushedNotification()

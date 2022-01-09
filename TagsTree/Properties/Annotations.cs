@@ -31,6 +31,8 @@ using System;
 // ReSharper disable MemberCanBeProtected.Global
 // ReSharper disable InconsistentNaming
 
+#pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的 属性“ ”必须包含非 null 值。请考虑将 属性 声明为可以为 null。
+
 namespace TagsTree.Annotations
 {
     /// <summary>
@@ -1601,3 +1603,4 @@ namespace TagsTree.Annotations
         public string SuppressionKey { get; set; }
     }
 }
+#pragma warning restore CS8618

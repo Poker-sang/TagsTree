@@ -20,16 +20,13 @@
                 OverflowButtonVisibility="Collapsed">
                 <controls:BackRequestAppBarButton />
             </CommandBar>
-            <CommandBar
-                Background="Transparent"
-                DefaultLabelPosition="Right"
-                OverflowButtonVisibility="Collapsed">
+            <CommandBar Background="Transparent" OverflowButtonVisibility="Collapsed">
                 <AppBarButton
                     x:Name="BSave"
                     Click="SaveBClick"
                     Icon="{ui:FontIcon Glyph=&#xE74E;}"
                     IsEnabled="False"
-                    Label="保存" />
+                    ToolTipService.ToolTip="保存" />
             </CommandBar>
         </uiControls:DockPanel>
         <Grid>

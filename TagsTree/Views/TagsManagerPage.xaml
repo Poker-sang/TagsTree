@@ -18,31 +18,35 @@
             <CommandBar
                 uiControls:DockPanel.Dock="Right"
                 Background="Transparent"
-                DefaultLabelPosition="Right"
                 OverflowButtonVisibility="Collapsed">
                 <AppBarButton
+                    Width="50"
                     Click="NewBClick"
-                    Icon="{ui:FontIcon Glyph=&#xE8B5;}"
-                    Label="添加" />
+                    Icon="{ui:FontIcon Glyph=&#xECC8;}"
+                    ToolTipService.ToolTip="添加" />
                 <AppBarButton
+                    Width="50"
                     Click="MoveBClick"
                     Icon="{ui:FontIcon Glyph=&#xE8DE;}"
-                    Label="移动" />
+                    ToolTipService.ToolTip="移动" />
                 <AppBarButton
+                    Width="50"
                     Click="RenameBClick"
                     Icon="{ui:FontIcon Glyph=&#xE8AC;}"
-                    Label="重命名" />
+                    ToolTipService.ToolTip="重命名" />
                 <AppBarButton
+                    Width="50"
                     Click="DeleteBClick"
                     Icon="{ui:FontIcon Glyph=&#xE74D;}"
-                    Label="删除" />
+                    ToolTipService.ToolTip="删除" />
                 <AppBarSeparator />
                 <AppBarButton
                     x:Name="BSave"
+                    Width="50"
                     Click="SaveBClick"
                     Icon="{ui:FontIcon Glyph=&#xE74E;}"
                     IsEnabled="False"
-                    Label="保存" />
+                    ToolTipService.ToolTip="保存" />
             </CommandBar>
             <AutoSuggestBox
                 VerticalAlignment="Center"

@@ -19,43 +19,40 @@
                 OverflowButtonVisibility="Collapsed">
                 <controls:BackRequestAppBarButton />
             </CommandBar>
-            <CommandBar
-                Background="Transparent"
-                DefaultLabelPosition="Right"
-                OverflowButtonVisibility="Collapsed">
+            <CommandBar Background="Transparent" OverflowButtonVisibility="Collapsed">
                 <AppBarButton
                     x:Name="BOpen"
                     Click="OpenBClick"
                     Icon="{ui:FontIcon Glyph=&#xE8E5;}"
-                    Label="打开" />
+                    ToolTipService.ToolTip="打开" />
                 <AppBarButton
                     Click="OpenExplorerBClick"
                     Icon="{ui:FontIcon Glyph=&#xE8DA;}"
-                    Label="打开文件夹" />
+                    ToolTipService.ToolTip="打开文件夹" />
                 <AppBarButton
                     Click="RemoveBClick"
                     Icon="{ui:FontIcon Glyph=&#xEDE1;}"
-                    Label="移除" />
+                    ToolTipService.ToolTip="移除" />
                 <AppBarButton
                     Click="EditTagsBClick"
                     Icon="{ui:FontIcon Glyph=&#xE8EC;}"
-                    Label="更改标签" />
+                    ToolTipService.ToolTip="更改标签" />
                 <AppBarSeparator />
                 <AppBarButton
                     x:Name="BRename"
                     Click="RenameBClick"
                     Icon="{ui:FontIcon Glyph=&#xE8AC;}"
-                    Label="重命名" />
+                    ToolTipService.ToolTip="重命名" />
                 <AppBarButton
                     x:Name="BMove"
                     Click="MoveBClick"
                     Icon="{ui:FontIcon Glyph=&#xE8DE;}"
-                    Label="移动" />
+                    ToolTipService.ToolTip="移动" />
                 <AppBarButton
                     x:Name="BDelete"
                     Click="DeleteBClick"
                     Icon="{ui:FontIcon Glyph=&#xE74D;}"
-                    Label="删除" />
+                    ToolTipService.ToolTip="删除" />
             </CommandBar>
         </uiControls:DockPanel>
         <controls:InputContentDialog x:Name="InputName" />
