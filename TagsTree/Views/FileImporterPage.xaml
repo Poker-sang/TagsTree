@@ -17,7 +17,7 @@
                 uiControls:DockPanel.Dock="Top"
                 Background="Transparent"
                 OverflowButtonVisibility="Collapsed">
-                <AppBarButton Icon="{ui:FontIcon Glyph=&#xE7C3;}" ToolTipService.ToolTip="选择">
+                <AppBarButton Icon="{ui:FontIcon Glyph=&#xE7C3;}" ToolTipService.ToolTip="选择引入：引入选择的文件或文件夹">
                     <AppBarButton.Flyout>
                         <MenuFlyout Placement="BottomEdgeAlignedLeft">
                             <MenuFlyoutItem
@@ -31,7 +31,7 @@
                         </MenuFlyout>
                     </AppBarButton.Flyout>
                 </AppBarButton>
-                <AppBarButton Icon="{ui:FontIcon Glyph=&#xE8F4;}" ToolTipService.ToolTip="目录">
+                <AppBarButton Icon="{ui:FontIcon Glyph=&#xE8F4;}" ToolTipService.ToolTip="目录引入：引入选择的目录下一级所有文件或文件夹或全部">
                     <AppBarButton.Flyout>
                         <MenuFlyout Placement="BottomEdgeAlignedLeft">
                             <MenuFlyoutItem
@@ -53,7 +53,7 @@
                     Command="{x:Bind _vm.Import}"
                     CommandParameter="All"
                     Icon="{ui:FontIcon Glyph=&#xE82E;}"
-                    ToolTipService.ToolTip="全部" />
+                    ToolTipService.ToolTip="全部引入：引入选择的目录下所有深度所有文件" />
                 <AppBarSeparator />
                 <AppBarButton
                     Command="{x:Bind _vm.DeleteBClick}"
