@@ -4,11 +4,23 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
     CloseButtonClick="OnCloseButtonClick"
     CloseButtonText="取消"
     DefaultButton="Close"
     PrimaryButtonClick="OnPrimaryButtonClick"
     PrimaryButtonText="确定"
     mc:Ignorable="d">
-    <AutoSuggestBox PlaceholderText="{x:Bind WarningText, Mode=OneWay}" Text="{x:Bind Text, Mode=TwoWay}" />
+    <uiControls:DockPanel>
+        <AutoSuggestBox
+            uiControls:DockPanel.Dock="Top"
+            PlaceholderText="{x:Bind WarningText, Mode=OneWay}"
+            Text="{x:Bind Text, Mode=TwoWay}" />
+        <Rectangle Height="5" uiControls:DockPanel.Dock="Top" />
+        <InfoBar
+            x:Name="InfoBar"
+            Title="错误"
+            IsOpen="False"
+            Severity="Error" />
+    </uiControls:DockPanel>
 </ContentDialog>

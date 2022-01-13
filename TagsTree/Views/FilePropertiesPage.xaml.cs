@@ -36,21 +36,22 @@ public partial class FilePropertiesPage : Page
     }
     private async void RenameBClick(object sender, RoutedEventArgs e)
     {
-        InputName.Load(FileSystemHelper.InvalidMode.Name, FileViewModel.Name);
-        await InputName.ShowAsync();
-        if (InputName.Canceled) return;
-        if (FileViewModel.Name == InputName.Text)
+        InputName.Load($"文件重命名 {FileViewModel.Name}", () =>
         {
-            await ShowMessageDialog.Information(true, "新文件名与原文件名一致！");
-            return;
-        }
+            if (FileViewModel.Name == InputName.Text)
+            {
+                return "新文件名与原文件名一致！";
+            }
+            var newFullName = FileViewModel.Path + @"\" + InputName.Text;
+            if (FileViewModel.IsFolder ? FileSystem.DirectoryExists(newFullName) : FileSystem.FileExists(newFullName))
+            {
+                var isFolder = FileViewModel.IsFolder ? "夹" : "";
+                return $"新文件{isFolder}名与目录中其他文件{isFolder}同名！";
+            }
+            return null;
+        }, FileSystemHelper.InvalidMode.Name, FileViewModel.Name);
+        if (await InputName.ShowAsync()) return;
         var newFullName = FileViewModel.Path + @"\" + InputName.Text;
-        if (FileViewModel.IsFolder ? FileSystem.DirectoryExists(newFullName) : FileSystem.FileExists(newFullName))
-        {
-            var isFolder = FileViewModel.IsFolder ? "夹" : "";
-            await ShowMessageDialog.Information(true, $"新文件{isFolder}名与目录中其他文件{isFolder}同名！");
-            return;
-        }
         FileViewModel.Rename(newFullName);
         FileViewModel.MoveOrRenameAndSave(newFullName);
         Load(FileViewModel);

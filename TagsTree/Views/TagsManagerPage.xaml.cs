@@ -2,7 +2,6 @@
 using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using TagsTree.Commands;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
@@ -60,7 +59,12 @@ public partial class TagsManagerPage : Page
             await ShowMessageDialog.Information(true, "「标签路径」不存在！");
             return;
         }
-        if (!await NewTagCheck(_vm.Name)) return;
+        var result = NewTagCheck(_vm.Name);
+        if (result is not null)
+        {
+            await ShowMessageDialog.Information(true, result);
+            return;
+        }
         NewTag(_vm.Name, pathTagModel);
         _vm.Name = "";
     }
@@ -91,7 +95,13 @@ public partial class TagsManagerPage : Page
             await ShowMessageDialog.Information(true, "「标签路径」不存在！");
             return;
         }
-        if (!await NewTagCheck(_vm.Name)) return;
+
+        var result = NewTagCheck(_vm.Name);
+        if (result is not null)
+        {
+            await ShowMessageDialog.Information(true, result);
+            return;
+        }
         RenameTag(_vm.Name, pathTagModel);
         _vm.Name = "";
         TbPath.Path = "";
@@ -126,24 +136,21 @@ public partial class TagsManagerPage : Page
 
     private async void NewCmClick(object sender, RoutedEventArgs e)
     {
-        InputName.Load(FileSystemHelper.InvalidMode.Name);
-        await InputName.ShowAsync();
-        if (!InputName.Canceled && await NewTagCheck(InputName.Text))
+        InputName.Load($"新建子标签 {((TagViewModel)((MenuFlyoutItem)sender).Tag!).Name}", () => NewTagCheck(InputName.Text), FileSystemHelper.InvalidMode.Name);
+        if (!await InputName.ShowAsync())
             NewTag(InputName.Text, (TagViewModel)((MenuFlyoutItem)sender).Tag!);
     }
     private async void NewXCmClick(object sender, RoutedEventArgs e)
     {
-        InputName.Load(FileSystemHelper.InvalidMode.Name);
-        await InputName.ShowAsync();
-        if (!InputName.Canceled && await NewTagCheck(InputName.Text))
+        InputName.Load("新建根标签", () => NewTagCheck(InputName.Text), FileSystemHelper.InvalidMode.Name);
+        if (!await InputName.ShowAsync())
             NewTag(InputName.Text, _vm.TagsSource.TagsTree);
     }
     private void CutCmClick(object sender, RoutedEventArgs e) => ClipBoard = (TagViewModel)((MenuFlyoutItem)sender).Tag!;
     private async void RenameCmClick(object sender, RoutedEventArgs e)
     {
-        InputName.Load(FileSystemHelper.InvalidMode.Name);
-        await InputName.ShowAsync();
-        if (!InputName.Canceled && await NewTagCheck(InputName.Text))
+        InputName.Load($"标签重命名 {((TagViewModel)((MenuFlyoutItem)sender).Tag!).Name}", () => NewTagCheck(InputName.Text), FileSystemHelper.InvalidMode.Name);
+        if (!await InputName.ShowAsync())
             RenameTag(InputName.Text, (TagViewModel)((MenuFlyoutItem)sender).Tag!);
     }
     private void PasteXCmClick(object sender, RoutedEventArgs e)
@@ -203,20 +210,12 @@ public partial class TagsManagerPage : Page
         BSave.IsEnabled = true;
     }
 
-    private async Task<bool> NewTagCheck(string name)
-    {
-        if (name is "")
-        {
-            await ShowMessageDialog.Information(true, "标签名称不能为空！");
-            return false;
-        }
-        if (name.GetTagViewModel(_vm.TagsSource) is not null)
-        {
-            await ShowMessageDialog.Information(true, "与现有标签重名！");
-            return false;
-        }
-        return true;
-    }
+    private string? NewTagCheck(string name) =>
+        name is ""
+            ? "标签名称不能为空！"
+            : name.GetTagViewModel(_vm.TagsSource) is not null
+                ? "与现有标签重名！"
+                : null;
 
     #endregion
 }
