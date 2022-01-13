@@ -3,7 +3,6 @@ using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
 
 namespace TagsTree.Controls;
@@ -23,8 +22,11 @@ public partial class InputContentDialog : ContentDialog
     /// 输入的格式
     /// </summary>
     [ObservableProperty] private string _warningText = "";
-    public void Load(FileSystemHelper.InvalidMode mode, string text = "")
+    public void Load(string title, Func<string?> judge, FileSystemHelper.InvalidMode mode, string text = "")
     {
+        Title = title;
+        _judge = judge;
+        InfoBar.IsOpen = false;
         switch (mode)
         {
             case FileSystemHelper.InvalidMode.Name:
@@ -42,29 +44,40 @@ public partial class InputContentDialog : ContentDialog
     /// <summary>
     /// 是否取消这次输入
     /// </summary>
-    public bool Canceled;
-    private bool _exceptionThrown;
+    private bool _canceled;
+    private Func<string?> _judge = null!;
     private string _invalidRegex = "";
-
-    public new async Task ShowAsync()
-    {
-        Canceled = true;
-        _exceptionThrown = false;
-        _ = await base.ShowAsync();
-        if (_exceptionThrown)
-            await ShowMessageDialog.Information(true, WarningText);
-    }
 
     #region 事件处理
 
-    private void OnPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs e)
+    public new async Task<bool> ShowAsync()
     {
-        if (!new Regex($@"^[^{_invalidRegex}]+$").IsMatch(Text))
-            _exceptionThrown = true;
-        else Canceled = false;
+        _canceled = true;
+        _ = await base.ShowAsync();
+        return _canceled;
     }
 
-    private void OnCloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args) => Canceled = true;
+    private void OnPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs e)
+    {
+        e.Cancel = true;
+        if (!new Regex($@"^[^{_invalidRegex}]+$").IsMatch(Text))
+        {
+            InfoBar.Message = WarningText;
+            InfoBar.IsOpen = true;
+            return;
+        }
+        var result = _judge();
+        if (result is not null)
+        {
+            InfoBar.Message = result;
+            InfoBar.IsOpen = true;
+            return;
+        }
+        e.Cancel = false;
+        _canceled = false;
+    }
+
+    private void OnCloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args) => _canceled = true;
 
     #endregion
 }
