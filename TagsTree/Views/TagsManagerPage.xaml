@@ -48,17 +48,14 @@
                     IsEnabled="False"
                     ToolTipService.ToolTip="保存" />
             </CommandBar>
-            <AutoSuggestBox
-                VerticalAlignment="Center"
-                uiControls:DockPanel.Dock="Left"
-                PlaceholderText="标签名称（不包含\/:*?&quot;&lt;&gt;|,和空白字符且不为空）"
-                Text="{x:Bind _vm.Name, Mode=TwoWay}"
-                TextChanged="NameChanged" />
+            <InfoBar x:Name="InfoBar" />
         </uiControls:DockPanel>
-        <controls:TagCompleteBox
-            x:Name="TbPath"
-            VerticalAlignment="Center"
-            uiControls:DockPanel.Dock="Top" />
+        <AutoSuggestBox
+            uiControls:DockPanel.Dock="Top"
+            PlaceholderText="标签名称（不包含\/:*?&quot;&lt;&gt;|,和空白字符且不为空）"
+            Text="{x:Bind _vm.Name, Mode=TwoWay}"
+            TextChanged="NameChanged" />
+        <controls:TagCompleteBox x:Name="TbPath" uiControls:DockPanel.Dock="Top" />
         <!--  DragItemsCompleted="TvTags_OnDragItemsCompleted"  -->
         <TreeView
             AllowDrop="False"

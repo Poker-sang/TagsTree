@@ -20,6 +20,7 @@
                 OverflowButtonVisibility="Collapsed">
                 <controls:BackRequestAppBarButton />
             </CommandBar>
+            <InfoBar x:Name="InfoBar" />
             <CommandBar Background="Transparent" OverflowButtonVisibility="Collapsed">
                 <AppBarButton
                     x:Name="BSave"

@@ -53,7 +53,13 @@
                     </MenuFlyout>
                 </DropDownButton.Flyout>
             </DropDownButton>
-            <Button Click="BSave_Click" Content="保存" />
+            <ui:DockPanel>
+                <Button
+                    ui:DockPanel.Dock="Left"
+                    Click="BSave_Click"
+                    Content="保存" />
+                <InfoBar x:Name="InfoBar" />
+            </ui:DockPanel>
         </StackPanel>
     </ScrollViewer>
 </Page>
