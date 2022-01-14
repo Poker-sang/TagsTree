@@ -20,7 +20,6 @@
         <InfoBar
             x:Name="InfoBar"
             Title="错误"
-            IsOpen="False"
             Severity="Error" />
     </uiControls:DockPanel>
 </ContentDialog>

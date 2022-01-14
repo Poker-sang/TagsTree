@@ -45,7 +45,11 @@ public partial class SettingsPage : Page
     {
         var legalPath = new Regex($@"^[a-zA-Z]:\\[^{FileSystemHelper.GetInvalidPathChars}]*$");
         if (!legalPath.IsMatch(TbLibraryPath.Text))
-            await ShowMessageDialog.Information(true, "路径错误！请填写正确完整的文件夹路径！");
+        {
+            InfoBar.Severity = InfoBarSeverity.Error;
+            InfoBar.Message = "错误";
+            InfoBar.Message = "路径错误！请填写正确完整的文件夹路径！";
+        }
         else
         {
             App.AppConfiguration.LibraryPath = TbLibraryPath.Text;
@@ -59,7 +63,9 @@ public partial class SettingsPage : Page
             };
             App.AppConfiguration.FilesObserverEnabled = TsFilesObserver.IsOn;
             AppContext.SaveConfiguration(App.AppConfiguration);
-            await ShowMessageDialog.Information(false, "已保存");
+            InfoBar.Severity = InfoBarSeverity.Success;
+            InfoBar.Title = "成功";
+            InfoBar.Message = "已保存";
             if (!App.ConfigSet)
             {
                 App.ConfigSet = true;
@@ -67,5 +73,6 @@ public partial class SettingsPage : Page
             }
             else ((NavigationViewItem)App.RootNavigationView.FooterMenuItems[0]).IsEnabled = await App.ChangeFilesObserver();
         }
+        InfoBar.IsOpen = true;
     }
 }

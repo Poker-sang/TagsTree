@@ -24,27 +24,43 @@ public partial class FileEditTagsPage : Page
 
     #region 事件处理
 
-    private async void AddTag(object sender, DoubleTappedRoutedEventArgs e)
+    private void AddTag(object sender, DoubleTappedRoutedEventArgs e)
     {
         var newTag = (TagViewModel)((TreeViewItem)sender).Tag;
         foreach (var tagExisted in _vm.VirtualTags)
             if (tagExisted.Name == newTag.Name)
             {
-                await ShowMessageDialog.Information(true, "已拥有该标签");
+                InfoBar.Severity = InfoBarSeverity.Error;
+                InfoBar.Title = "错误";
+                InfoBar.Message = "已拥有该标签";
+                InfoBar.IsOpen = true;
                 return;
             }
             else if (newTag.HasChildTag(tagExisted))
             {
-                await ShowMessageDialog.Information(true, $"已拥有下级标签「{tagExisted.Name}」或更多");
+                InfoBar.Severity = InfoBarSeverity.Error;
+                InfoBar.Title = "错误";
+                InfoBar.Message = $"已拥有下级标签「{tagExisted.Name}」或更多";
+                InfoBar.IsOpen = true;
                 return;
             }
             else if (tagExisted.HasChildTag(newTag))
-                if (await ShowMessageDialog.Warning($"将会覆盖上级标签「{tagExisted.Name}」，是否继续？"))
+            {
+                InfoBar.Severity = InfoBarSeverity.Warning;
+                InfoBar.Title = "警告";
+                InfoBar.Message = $"将会覆盖上级标签「{tagExisted.Name}」，是否继续？";
+                InfoBar.ActionButton = new Button { Content = "确认" };
+                InfoBar.ActionButton.Click += (_, _) =>
                 {
                     _ = _vm.VirtualTags.Remove(tagExisted);
-                    break;
-                }
-                else return;
+                    _vm.VirtualTags.Add(newTag);
+                    BSave.IsEnabled = true;
+                    InfoBar.ActionButton = null;
+                    InfoBar.IsOpen = false;
+                };
+                InfoBar.IsOpen = true;
+                return;
+            }
         _vm.VirtualTags.Add(newTag);
         BSave.IsEnabled = true;
     }
@@ -55,14 +71,17 @@ public partial class FileEditTagsPage : Page
         BSave.IsEnabled = true;
     }
 
-    private async void SaveBClick(object sender, RoutedEventArgs e)
+    private void SaveBClick(object sender, RoutedEventArgs e)
     {
         foreach (var tag in App.Tags.TagsDictionaryValues)
             App.Relations[tag, _vm.FileViewModel.GetFileModel()] = _vm.VirtualTags.Contains(tag);
         _vm.FileViewModel.TagsUpdated();
         App.SaveRelations();
         BSave.IsEnabled = false;
-        await ShowMessageDialog.Information(false, "已保存更改");
+        InfoBar.Severity = InfoBarSeverity.Success;
+        InfoBar.Title = "成功";
+        InfoBar.Message = "已保存更改";
+        InfoBar.IsOpen = true;
     }
     #endregion
 }
