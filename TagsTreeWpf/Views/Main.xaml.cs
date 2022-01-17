@@ -1,25 +1,26 @@
-﻿using ModernWpf;
+﻿using JetBrains.Annotations;
+using ModernWpf;
+using ModernWpf.Controls;
 using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Navigation;
 using TagsTreeWpf.Services;
 using static TagsTreeWpf.Properties.Settings;
 using Frame = System.Windows.Controls.Frame;
-using ListView = System.Windows.Controls.ListView;
 
 namespace TagsTreeWpf.Views
 {
     /// <summary>
     /// Interaction logic for Main.xaml
     /// </summary>
-    public partial class Main : Window
+    public partial class Main : Window, INotifyPropertyChanged
     {
         public Main()
         {
             App.Win = this;
             InitializeComponent();
-            ListView.SelectedIndex = 0;
+            _ = Frame.Navigate(new IndexPage());
             if (!CheckConfig()) Close();
         }
         #region 操作
@@ -41,35 +42,54 @@ namespace TagsTreeWpf.Views
         }
 
         #endregion
+        private double PaneWidth => Math.Max(NavigationView.ActualWidth, NavigationView.CompactModeThresholdWidth) / 4;
 
-        private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs e)
         {
-            if (e.AddedItems.Count > 0 && e.RemovedItems.Count > 0 && e.AddedItems[0] == e.RemovedItems[0]) return;
-            switch (((ListView)sender).SelectedIndex)
-            {
-                case 0: Frame.Content = new IndexPage(); break;
-                case 1: Frame.Content = new TagsManagerPage(); break;
-                case 2: Frame.Content = new FileImporterPage(); break;
-                case 3: Frame.Content = new TagEditFilesPage(); break;
-                case 4:
+            if (e.InvokedItem is string item)
+                if (Equals(((NavigationViewItem)sender.SelectedItem).Content, Frame.Content.GetType().Name))
+                    return;
+                else if (Equals(item, ((NavigationViewItem)sender.FooterMenuItems[0]!).Content))
+                {
                     if (MessageBoxX.Warning("更改设置后需要重启软件，请确保已保存") && new NewConfig().ShowDialog() == true)
                         Close();
-                    ((ListView)sender).SelectedItem = e.RemovedItems[0];
-                    return;
-            }
+                }
+                else _ = Frame.Navigate(0 switch
+                {
+                    0 when Equals(item, ((NavigationViewItem)sender.MenuItems[0]!).Content) => new IndexPage(),
+                    0 when Equals(item, ((NavigationViewItem)sender.MenuItems[1]!).Content) => new TagsManagerPage(),
+                    0 when Equals(item, ((NavigationViewItem)sender.MenuItems[2]!).Content) => new FileImporterPage(),
+                    0 when Equals(item, ((NavigationViewItem)sender.MenuItems[3]!).Content) => new TagEditFilesPage(),
+                    _ => throw new ArgumentOutOfRangeException()
+                });
+            sender.IsBackEnabled = true;
             GC.Collect();
         }
 
-        private void Frame_OnNavigated(object sender, NavigationEventArgs e)
+        private void BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs e)
         {
-            if (((Frame)sender).Content.GetType() == typeof(IndexPage))
-                ListView.SelectedIndex = 0;
-            else if (((Frame)sender).Content.GetType() == typeof(TagsManagerPage))
-                ListView.SelectedIndex = 1;
-            else if (((Frame)sender).Content.GetType() == typeof(FileImporterPage))
-                ListView.SelectedIndex = 2;
-            else if (((Frame)sender).Content.GetType() == typeof(TagEditFilesPage))
-                ListView.SelectedIndex = 3;
+            Frame.GoBack();
+            sender.SelectedItem = Frame.Content switch
+            {
+                IndexPage => sender.MenuItems[0],
+                TagsManagerPage => sender.MenuItems[1],
+                FileImporterPage => sender.MenuItems[2],
+                TagEditFilesPage => sender.MenuItems[3],
+                NewConfig => sender.FooterMenuItems[0],
+                _ => sender.SelectedItem
+            };
+            sender.IsBackEnabled = Frame.CanGoBack;
         }
+
+        private void OnSizeChanged(object sender, SizeChangedEventArgs sizeChangedEventArgs)
+        {
+            NavigationView.PaneDisplayMode = NavigationView.ActualWidth < NavigationView.CompactModeThresholdWidth ? NavigationViewPaneDisplayMode.LeftCompact : NavigationViewPaneDisplayMode.Left;
+            OnPropertyChanged(nameof(PaneWidth));
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        private void OnPropertyChanged([CallerMemberName] string? propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

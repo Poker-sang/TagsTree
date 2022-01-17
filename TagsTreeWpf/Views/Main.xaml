@@ -10,70 +10,44 @@
     xmlns:viewModels="clr-namespace:TagsTreeWpf.ViewModels"
     x:Name="MainWindow"
     Title="TagsTree"
-    Width="1280"
-    Height="720"
+    Width="800"
+    Height="450"
     d:DataContext="{d:DesignInstance viewModels:MainViewModel}"
+    ui:TitleBar.ExtendViewIntoTitleBar="True"
     ui:WindowHelper.UseModernWindowStyle="True"
-    ResizeMode="CanMinimize"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
-
-
     <DockPanel>
-        <ListView
-            x:Name="ListView"
+        <ui:NavigationView
+            x:Name="NavigationView"
+            BackRequested="BackRequested"
+            DataContext=""
             DockPanel.Dock="Top"
-            SelectionChanged="Selector_OnSelectionChanged"
-            SelectionMode="Single">
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal" />
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
-            <ListViewItem>
-                <ListViewItem.Content>
-                    <TextBlock FontSize="20">
-                        <ui:FontIcon Glyph="&#xe80f;" />
-                        主页
-                    </TextBlock>
-                </ListViewItem.Content>
-            </ListViewItem>
-            <ListViewItem>
-                <ListViewItem.Content>
-                    <TextBlock FontSize="20">
-                        <ui:FontIcon Glyph="&#xE8EC;" />
-                        标签管理
-                    </TextBlock>
-                </ListViewItem.Content>
-            </ListViewItem>
-            <ListViewItem>
-                <ListViewItem.Content>
-                    <TextBlock FontSize="20">
+            IsBackButtonVisible="Visible"
+            IsSettingsVisible="False"
+            ItemInvoked="ItemInvoked"
+            OpenPaneLength="{Binding PaneWidth, Mode=OneWay}"
+            PaneDisplayMode="Left"
+            PaneTitle="TagsTree"
+            SizeChanged="OnSizeChanged">
+            <ui:NavigationView.MenuItems>
+                <ui:NavigationViewItem Content="主页" Icon="Home" />
+                <ui:NavigationViewItem Content="标签管理" Icon="Tag" />
+                <ui:NavigationViewItem Content="文件引入">
+                    <ui:NavigationViewItem.Icon>
                         <ui:FontIcon Glyph="&#xEC50;" />
-                        文件引入
-                    </TextBlock>
-                </ListViewItem.Content>
-            </ListViewItem>
-            <ListViewItem>
-                <ListViewItem.Content>
-                    <TextBlock FontSize="20">
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="为标签添加文件">
+                    <ui:NavigationViewItem.Icon>
                         <ui:FontIcon Glyph="&#xECC8;" />
-                        为标签添加文件
-                    </TextBlock>
-                </ListViewItem.Content>
-            </ListViewItem>
-            <ListViewItem>
-                <ListViewItem.Content>
-                    <TextBlock FontSize="20">
-                        <ui:FontIcon Glyph="&#xE713;" />
-                        更改配置文件
-                    </TextBlock>
-                </ListViewItem.Content>
-            </ListViewItem>
-        </ListView>
-        <Frame
-            x:Name="Frame"
-            Navigated="Frame_OnNavigated"
-            NavigationUIVisibility="Hidden" />
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+            </ui:NavigationView.MenuItems>
+            <ui:NavigationView.FooterMenuItems>
+                <ui:NavigationViewItem Content="设置" Icon="Setting" />
+            </ui:NavigationView.FooterMenuItems>
+            <Frame x:Name="Frame" NavigationUIVisibility="Hidden" />
+        </ui:NavigationView>
     </DockPanel>
 </Window>
