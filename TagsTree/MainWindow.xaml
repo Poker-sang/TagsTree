@@ -44,14 +44,43 @@
             <NavigationViewItem Content="设置" Icon="{ui:FontIcon Glyph=&#xE713;}" />
         </NavigationView.FooterMenuItems>
         <uiControls:DockPanel>
-            <!--<Rectangle
+            <Grid
                 x:Name="TitleBar"
                 Height="28"
-                VerticalAlignment="Top"
                 uiControls:DockPanel.Dock="Top"
-                Fill="{x:Bind _systemColor}"
-                IsHitTestVisible="False" />-->
-            <Frame x:Name="NavigateFrame" Margin="0,28,0,0" />
+                Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                <Grid.Resources>
+                    <ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
+                </Grid.Resources>
+                <CommandBar OverflowButtonVisibility="Collapsed">
+                    <AppBarButton Width="40">
+                        <AppBarButton.Content>
+                            <TextBlock
+                                FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                FontSize="1"
+                                Text="&#xE921;"
+                                TextAlignment="Center" />
+                        </AppBarButton.Content>
+                    </AppBarButton>
+                    <AppBarButton Width="40">
+                        <AppBarButton.Content>
+                            <TextBlock
+                                FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                FontSize="1"
+                                Text="&#xE922;"
+                                TextAlignment="Center" />
+                        </AppBarButton.Content>
+                    </AppBarButton>
+                    <AppBarButton Width="40" Click="CloseButtonClick">
+                        <TextBlock
+                            FontFamily="{StaticResource SymbolThemeFontFamily}"
+                            FontSize="1"
+                            Text="&#xE8BB;"
+                            TextAlignment="Center" />
+                    </AppBarButton>
+                </CommandBar>
+            </Grid>
+            <Frame x:Name="NavigateFrame" />
         </uiControls:DockPanel>
     </NavigationView>
 </Window>
