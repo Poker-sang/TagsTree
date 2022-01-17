@@ -2,7 +2,7 @@
 
 namespace TagsTreeWpf.Delegates
 {
-	public delegate void WindowCloseEventHandler(Page sender, WindowCloseEventArgs e);
+    public delegate void WindowCloseEventHandler(Page sender, WindowCloseEventArgs e);
 
-	public class WindowCloseEventArgs { }
+    public class WindowCloseEventArgs { }
 }

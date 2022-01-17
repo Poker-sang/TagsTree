@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows10.0.19041.0</TargetFramework>
+    <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
 	  <LangVersion>preview</LangVersion>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>false</UseWindowsForms>
