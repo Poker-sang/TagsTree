@@ -21,7 +21,7 @@ public sealed partial class MainWindow : Window
         InitializeComponent();
         App.RootNavigationView = NavigationView;
         App.RootFrame = NavigateFrame;
-        //SetTitleBar(TitleBar);
+        SetTitleBar(TitleBar);
     }
 
     private double PaneWidth => Math.Max(NavigationView.ActualWidth, NavigationView.CompactModeThresholdWidth) / 4;
@@ -112,4 +112,8 @@ public sealed partial class MainWindow : Window
         sender.IsBackEnabled = true;
         GC.Collect();
     }
+
+    private void CloseButtonClick(object sender, RoutedEventArgs e) => Close();
+
+    
 }

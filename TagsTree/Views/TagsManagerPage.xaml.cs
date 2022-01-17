@@ -3,7 +3,6 @@ using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using TagsTree.Commands;
-using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
 
