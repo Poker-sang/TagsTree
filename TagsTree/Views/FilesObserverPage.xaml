@@ -12,29 +12,85 @@
     NavigationCacheMode="Required"
     mc:Ignorable="d">
     <uiControls:DockPanel>
-        <CommandBar
-            uiControls:DockPanel.Dock="Top"
-            Background="Transparent"
-            OverflowButtonVisibility="Collapsed">
-            <AppBarButton
-                x:Name="BMergeAll"
-                Click="MergeAllBClick"
-                Icon="{ui:FontIcon Glyph=&#xEA3C;}"
-                IsEnabled="False"
-                ToolTipService.ToolTip="合并" />
-            <AppBarButton
-                x:Name="BDeleteAll"
-                Click="DeleteAllBClick"
-                Icon="{ui:FontIcon Glyph=&#xE74D;}"
-                IsEnabled="False"
-                ToolTipService.ToolTip="删除全部" />
-            <AppBarButton
-                x:Name="BApplyAll"
-                Click="ApplyAllBClick"
-                Icon="{ui:FontIcon Glyph=&#xE74E;}"
-                IsEnabled="False"
-                ToolTipService.ToolTip="应用全部更改" />
-        </CommandBar>
+        <ContentDialog
+            x:Name="CdDeleteRange"
+            Title="删除序号"
+            CloseButtonText="取消"
+            DefaultButton="Close"
+            PrimaryButtonText="确认">
+            <uiControls:DockPanel>
+                <Grid uiControls:DockPanel.Dock="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <NumberBox
+                        x:Name="NbLower"
+                        Grid.Column="0"
+                        Minimum="1"
+                        SpinButtonPlacementMode="Inline"
+                        Value="1" />
+                    <NumberBox
+                        x:Name="NbUpper"
+                        Grid.Column="1"
+                        Minimum="{x:Bind NbLower.Value, Mode=OneWay}"
+                        SpinButtonPlacementMode="Inline"
+                        Value="1" />
+                </Grid>
+                <InfoBar
+                    x:Name="CdInfoBar"
+                    Title="错误"
+                    Message="必须保证 0&lt;左值&lt;=右值"
+                    Severity="Error" />
+            </uiControls:DockPanel>
+        </ContentDialog>
+        <uiControls:DockPanel uiControls:DockPanel.Dock="Top">
+            <CommandBar
+                uiControls:DockPanel.Dock="Right"
+                Background="Transparent"
+                OverflowButtonVisibility="Collapsed">
+                <AppBarButton
+                    x:Name="BDeleteRange"
+                    Width="50"
+                    Click="DeleteRangeBClick"
+                    Icon="{ui:FontIcon Glyph=&#xECC9;}"
+                    IsEnabled="False"
+                    ToolTipService.ToolTip="删除范围" />
+                <AppBarButton
+                    x:Name="BMergeAll"
+                    Width="50"
+                    Click="MergeAllBClick"
+                    Icon="{ui:FontIcon Glyph=&#xEA3C;}"
+                    IsEnabled="False"
+                    ToolTipService.ToolTip="合并全部" />
+                <AppBarButton
+                    x:Name="BApplyAll"
+                    Width="50"
+                    Click="ApplyAllBClick"
+                    Icon="{ui:FontIcon Glyph=&#xE73E;}"
+                    IsEnabled="False"
+                    ToolTipService.ToolTip="应用全部更改" />
+                <AppBarButton
+                    x:Name="BDeleteAll"
+                    Width="50"
+                    Click="DeleteAllBClick"
+                    Icon="{ui:FontIcon Glyph=&#xE74D;}"
+                    IsEnabled="False"
+                    ToolTipService.ToolTip="清除全部" />
+                <AppBarSeparator />
+                <AppBarButton
+                    x:Name="BSaveAll"
+                    Width="50"
+                    Click="BSaveAllBClick"
+                    Icon="{ui:FontIcon Glyph=&#xE74E;}"
+                    IsEnabled="False"
+                    ToolTipService.ToolTip="暂存更改" />
+            </CommandBar>
+            <InfoBar
+                x:Name="InfoBar"
+                Title="成功"
+                Severity="Success" />
+        </uiControls:DockPanel>
         <uiControls:DataGrid
             AlternatingRowBackground="LightGray"
             AutoGenerateColumns="False"
@@ -45,7 +101,9 @@
                         <Setter.Value>
                             <MenuFlyout>
                                 <MenuFlyoutItem Click="ApplyCmClick" Text="应用更改" />
-                                <MenuFlyoutItem Click="DeleteCmClick" Text="删除" />
+                                <MenuFlyoutItem Click="DeleteCmClick" Text="删除本条" />
+                                <MenuFlyoutItem Click="DeleteAboveCmClick" Text="删除本条及更小序号项" />
+                                <MenuFlyoutItem Click="DeleteFollowCmClick" Text="删除本条及更大序号项" />
                             </MenuFlyout>
                         </Setter.Value>
                     </Setter>

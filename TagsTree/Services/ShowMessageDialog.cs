@@ -43,11 +43,11 @@ public static class ShowMessageDialog
             Content = message + "\n" + ok + cancel,
             PrimaryButtonText = "确定",
             CloseButtonText = "取消",
-            PrimaryButtonCommand = new RelayCommand(_ => result = true),
-            CloseButtonCommand = new RelayCommand(_ => result = false),
             DefaultButton = ContentDialogButton.Close,
             XamlRoot = App.Window.Content.XamlRoot
         };
+        messageDialog.PrimaryButtonClick += (_, _) => result = true;
+        messageDialog.CloseButtonClick += (_, _) => result = false;
         _ = await messageDialog.ShowAsync();
         return result;
     }
@@ -72,12 +72,12 @@ public static class ShowMessageDialog
             PrimaryButtonText = "是",
             SecondaryButtonText = "否",
             CloseButtonText = "取消",
-            PrimaryButtonCommand = new RelayCommand(_ => result = true),
-            SecondaryButtonCommand = new RelayCommand(_ => result = false),
-            CloseButtonCommand = new RelayCommand(_ => result = null),
             DefaultButton = ContentDialogButton.Close,
             XamlRoot = App.Window.Content.XamlRoot
         };
+        messageDialog.PrimaryButtonClick += (_, _) => result = true;
+        messageDialog.SecondaryButtonClick += (_, _) => result = false;
+        messageDialog.CloseButtonClick += (_, _) => result = null;
         _ = await messageDialog.ShowAsync();
         return result;
     }
