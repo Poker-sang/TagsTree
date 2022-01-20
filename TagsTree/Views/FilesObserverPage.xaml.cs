@@ -30,17 +30,25 @@ public sealed partial class FilesObserverPage : Page
     private async void ApplyCmClick(object sender, RoutedEventArgs e)
     {
         var fileChanged = (FileChanged)((MenuFlyoutItem)sender).DataContext;
-        if (fileChanged.Type is FileChanged.ChangedType.Create || App.IdFile.Values.Any(fileModel => fileModel.FullName == fileChanged.OldFullName))
-            if (FileViewModel.IsValidPath(fileChanged.Path))
+        if (FileViewModel.IsValidPath(fileChanged.Path))
+            if (fileChanged.Type is FileChanged.ChangedType.Create)
             {
-                Apply(fileChanged);
+                Apply(fileChanged, null);
                 _ = Vm.FilesChangedList.Remove(fileChanged);
                 App.SaveFiles();
                 if (fileChanged.Type is FileChanged.ChangedType.Create or FileChanged.ChangedType.Delete)
                     App.SaveRelations();
             }
-            else await ShowMessageDialog.Information(true, $"不在指定文件路径下：{fileChanged.FullName}");
-        else await ShowMessageDialog.Information(true, $"文件列表中不存在：{fileChanged.OldFullName}");
+            else if (App.IdFile.Values.FirstOrDefault(f => f.FullName == fileChanged.OldFullName) is { } fileModel)
+            {
+                Apply(fileChanged, fileModel);
+                _ = Vm.FilesChangedList.Remove(fileChanged);
+                App.SaveFiles();
+                if (fileChanged.Type is FileChanged.ChangedType.Create or FileChanged.ChangedType.Delete)
+                    App.SaveRelations();
+            }
+            else await ShowMessageDialog.Information(true, $"文件列表中不存在：{fileChanged.OldFullName}");
+        else await ShowMessageDialog.Information(true, $"不在指定文件路径下：{fileChanged.FullName}");
     }
     private void DeleteCmClick(object sender, RoutedEventArgs e) => _ = Vm.FilesChangedList.Remove((FileChanged)((MenuFlyoutItem)sender).DataContext);
 
@@ -54,14 +62,19 @@ public sealed partial class FilesObserverPage : Page
         var invalidExceptions = new List<FileChanged>();
         var notExistExceptions = new List<FileChanged>();
         foreach (var fileChanged in Vm.FilesChangedList)
-            if (fileChanged.Type is FileChanged.ChangedType.Create || nameFile.ContainsKey(fileChanged.OldFullName))
-                if (FileViewModel.IsValidPath(fileChanged.Path))
+            if (FileViewModel.IsValidPath(fileChanged.Path))
+                if (fileChanged.Type is FileChanged.ChangedType.Create)
                 {
-                    Apply(fileChanged);
+                    Apply(fileChanged, null);
                     deleteList.Add(fileChanged);
                 }
-                else invalidExceptions.Add(fileChanged);
-            else notExistExceptions.Add(fileChanged);
+                else if (nameFile.ContainsKey(fileChanged.OldFullName))
+                { 
+                    Apply(fileChanged, nameFile[fileChanged.OldFullName]);
+                    deleteList.Add(fileChanged);
+                }
+                else notExistExceptions.Add(fileChanged);
+            else invalidExceptions.Add(fileChanged);
         foreach (var deleteItem in deleteList)
             _ = Vm.FilesChangedList.Remove(deleteItem);
         var exception = "";
@@ -89,14 +102,14 @@ public sealed partial class FilesObserverPage : Page
 
     #region 操作
 
-    private static void Apply(FileChanged fileChanged)
+    private static void Apply(FileChanged fileChanged, FileModel? fileModel)
     {
         switch (fileChanged.Type)
         {
-            case FileChanged.ChangedType.Create: new FileViewModel(fileChanged.OldFullName).AddNew(); break;
-            case FileChanged.ChangedType.Move: new FileViewModel(fileChanged.OldFullName).MoveOrRename(fileChanged.FullName); break;
-            case FileChanged.ChangedType.Rename: new FileViewModel(fileChanged.OldFullName).MoveOrRename(fileChanged.FullName); break;
-            case FileChanged.ChangedType.Delete: new FileViewModel(fileChanged.OldFullName).RemoveAndSave(); break;
+            case FileChanged.ChangedType.Create: new FileViewModel(fileChanged.OldFullName).NewFileModel().AddNew(); break;
+            case FileChanged.ChangedType.Move: fileModel!.MoveOrRename(fileChanged.FullName); break;
+            case FileChanged.ChangedType.Rename: fileModel!.MoveOrRename(fileChanged.FullName); break;
+            case FileChanged.ChangedType.Delete: fileModel!.Remove(); break;
         }
     }
 

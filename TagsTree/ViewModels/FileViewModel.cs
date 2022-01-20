@@ -32,6 +32,9 @@ public partial class FileViewModel : FileModel
         _fileSystemInfo = IsFolder ? new DirectoryInfo(FullName) : new FileInfo(FullName);
     }
 
+    /// <summary>
+    /// 从IdFile中获取FileModel
+    /// </summary>
     public FileModel GetFileModel() => App.IdFile[Id];
     public FileModel NewFileModel() => new(this);
 

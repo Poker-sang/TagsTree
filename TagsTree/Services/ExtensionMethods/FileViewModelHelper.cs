@@ -1,42 +1,39 @@
-﻿using TagsTree.ViewModels;
+﻿using TagsTree.Models;
 
 namespace TagsTree.Services.ExtensionMethods;
 
-public static class FileViewModelHelper
+public static class FileModelHelper
 {
-    public static void AddNewAndSave(this FileViewModel fileViewModel)
+    public static void AddNewAndSave(this FileModel fileModel)
     {
-        AddNew(fileViewModel);
+        AddNew(fileModel);
         App.SaveFiles();
         App.SaveRelations();
     }
-    public static void AddNew(this FileViewModel fileViewModel)
+    public static void RemoveAndSave(this FileModel fileModel)
     {
-        var newFileModel = fileViewModel.NewFileModel();
-        App.Relations.NewFile(newFileModel);
-        App.IdFile[newFileModel.Id] = newFileModel;
+        Remove(fileModel);
+        App.SaveFiles();
+        App.SaveRelations();
+    }
+    public static void MoveOrRenameAndSave(this FileModel fileModel, string newFullName)
+    {
+        MoveOrRename(fileModel, newFullName);
+        App.SaveFiles();
     }
 
-    public static void RemoveAndSave(this FileViewModel fileViewModel)
+    public static void AddNew(this FileModel fileModel)
     {
-        Remove(fileViewModel);
-        App.SaveFiles();
-        App.SaveRelations();
+        App.Relations.NewFile(fileModel);
+        App.IdFile[fileModel.Id] = fileModel;
     }
-    public static void Remove(this FileViewModel fileViewModel)
+    public static void Remove(this FileModel fileModel)
     {
-        var fileModel = fileViewModel.GetFileModel();
         _ = App.IdFile.Remove(fileModel);
         App.Relations.DeleteFile(fileModel);
     }
-
-    public static void MoveOrRenameAndSave(this FileViewModel fileViewModel, string newFullName)
+    public static void MoveOrRename(this FileModel fileModel, string newFullName)
     {
-        MoveOrRename(fileViewModel, newFullName);
-        App.SaveFiles();
-    }
-    public static void MoveOrRename(this FileViewModel fileViewModel, string newFullName)
-    {
-        fileViewModel.Reload(newFullName);
+        fileModel.Reload(newFullName);
     }
 }
