@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml;
+﻿using System;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,8 @@ public sealed partial class FilesObserverPage : Page
         InitializeComponent();
         Vm.FilesChangedList.CollectionChanged += (_, _) => CollectionChanged();
         CollectionChanged();
-        void CollectionChanged() => BMergeAll.IsEnabled = BDeleteAll.IsEnabled = BApplyAll.IsEnabled = Vm.FilesChangedList.Count is not 0;
+
+        void CollectionChanged() => BDeleteRange.IsEnabled = BMergeAll.IsEnabled = BDeleteAll.IsEnabled = BApplyAll.IsEnabled = BSaveAll.IsEnabled = Vm.FilesChangedList.Count is not 0;
     }
 
 
@@ -32,32 +34,98 @@ public sealed partial class FilesObserverPage : Page
         var fileChanged = (FileChanged)((MenuFlyoutItem)sender).DataContext;
         if (FileViewModel.IsValidPath(fileChanged.Path))
             if (fileChanged.Type is FileChanged.ChangedType.Create)
-            {
                 Apply(fileChanged, null);
-                _ = Vm.FilesChangedList.Remove(fileChanged);
-                App.SaveFiles();
-                if (fileChanged.Type is FileChanged.ChangedType.Create or FileChanged.ChangedType.Delete)
-                    App.SaveRelations();
-            }
             else if (App.IdFile.Values.FirstOrDefault(f => f.FullName == fileChanged.OldFullName) is { } fileModel)
-            {
                 Apply(fileChanged, fileModel);
-                _ = Vm.FilesChangedList.Remove(fileChanged);
-                App.SaveFiles();
-                if (fileChanged.Type is FileChanged.ChangedType.Create or FileChanged.ChangedType.Delete)
-                    App.SaveRelations();
+            else
+            {
+                await ShowMessageDialog.Information(true, $"文件列表中不存在：{fileChanged.OldFullName}");
+                return;
             }
-            else await ShowMessageDialog.Information(true, $"文件列表中不存在：{fileChanged.OldFullName}");
-        else await ShowMessageDialog.Information(true, $"不在指定文件路径下：{fileChanged.FullName}");
+        else 
+        {
+            await ShowMessageDialog.Information(true, $"不在指定文件路径下：{fileChanged.FullName}");
+            return;
+        }
+        _ = Vm.FilesChangedList.Remove(fileChanged);
+        App.SaveFiles();
+        if (fileChanged.Type is FileChanged.ChangedType.Create or FileChanged.ChangedType.Delete)
+            App.SaveRelations();
+        Save();
+        InfoBar.Message = "已应用一项并保存";
+        InfoBar.IsOpen = true;
     }
-    private void DeleteCmClick(object sender, RoutedEventArgs e) => _ = Vm.FilesChangedList.Remove((FileChanged)((MenuFlyoutItem)sender).DataContext);
+
+    private void DeleteCmClick(object sender, RoutedEventArgs e)
+    {
+        _ = Vm.FilesChangedList.Remove((FileChanged) ((MenuFlyoutItem) sender).DataContext);
+        InfoBar.Message = "已删除一项";
+        InfoBar.IsOpen = true;
+    }
+
+    private void DeleteAboveCmClick(object sender, RoutedEventArgs e)
+    {
+        if ((FileChanged)((MenuFlyoutItem)sender).DataContext == Vm.FilesChangedList.Last())
+        {
+            Vm.FilesChangedList.Clear();
+            return;
+        }
+        var id = ((FileChanged)((MenuFlyoutItem) sender).DataContext).Id;
+        while (Vm.FilesChangedList[0].Id <= id)
+            Vm.FilesChangedList.RemoveAt(0);
+        InfoBar.Message = $"已删除序号{id}及之前项";
+        InfoBar.IsOpen = true;
+    }
+
+    private void DeleteFollowCmClick(object sender, RoutedEventArgs e)
+    {
+        if ((FileChanged)((MenuFlyoutItem)sender).DataContext == Vm.FilesChangedList[0])
+        {
+            Vm.FilesChangedList.Clear();
+            return;
+        }
+        var id = ((FileChanged)((MenuFlyoutItem)sender).DataContext).Id;
+        while (Vm.FilesChangedList.Last().Id >= id)
+            _ = Vm.FilesChangedList.Remove(Vm.FilesChangedList.Last());
+        InfoBar.Message = $"已删除序号{id}及之后项";
+        InfoBar.IsOpen = true;
+    }
+
+    private async void DeleteRangeBClick(object sender, RoutedEventArgs e)
+    {
+        var count = 0;
+        CdInfoBar.IsOpen = false;
+        CdDeleteRange.PrimaryButtonClick += (_, args) =>
+        {
+            if (0 < NbLower.Value && NbLower.Value <= NbUpper.Value)
+                for (var i = 0; i < Vm.FilesChangedList.Count; )
+                    if (NbLower.Value > Vm.FilesChangedList[i].Id)
+                        ++i;
+                    else if (Vm.FilesChangedList[i].Id > NbUpper.Value)
+                        break;
+                    else
+                    {
+                        Vm.FilesChangedList.RemoveAt(i);
+                        ++count;
+                    }
+            else
+            {
+                args.Cancel = true;
+                CdInfoBar.IsOpen = true;
+            }
+        };
+        _ = await CdDeleteRange.ShowAsync();
+        InfoBar.Message = $"已删除{count}项";
+        InfoBar.IsOpen = true;
+    }
+    
 
     private async void ApplyAllBClick(object sender, RoutedEventArgs e)
     {
         MergeAll();
         var nameFile = new Dictionary<string, FileModel>();
         foreach (var fileModel in App.IdFile.Values)
-            nameFile[fileModel.FullName] = fileModel;
+            nameFile[fileModel.FullName] = fileModel; 
         var deleteList = new List<FileChanged>();
         var invalidExceptions = new List<FileChanged>();
         var notExistExceptions = new List<FileChanged>();
@@ -92,11 +160,33 @@ public sealed partial class FilesObserverPage : Page
             await ShowMessageDialog.Information(true, exception);
         App.SaveFiles();
         App.SaveRelations();
+        Save();
+        InfoBar.Message = "已全部应用并保存";
+        InfoBar.IsOpen = true;
     }
 
-    private void DeleteAllBClick(object sender, RoutedEventArgs e) => ClearAll();
+    private void MergeAllBClick(object sender, RoutedEventArgs e)
+    {
+        MergeAll();
+        Save();
+        InfoBar.Message = "已全部合并并保存";
+        InfoBar.IsOpen = true;
+    }
 
-    private void MergeAllBClick(object sender, RoutedEventArgs e) => MergeAll();
+    private void DeleteAllBClick(object sender, RoutedEventArgs e)
+    {
+        ClearAll();
+        Save();
+        InfoBar.Message = "已全部清除并保存";
+        InfoBar.IsOpen = true;
+    }
+
+    private void BSaveAllBClick(object sender, RoutedEventArgs e)
+    {
+        Save();
+        InfoBar.Message = "已保存";
+        InfoBar.IsOpen = true;
+    }
 
     #endregion
 
@@ -150,6 +240,8 @@ public sealed partial class FilesObserverPage : Page
         Vm.FilesChangedList.Clear();
         FileChanged.Num = 1;
     }
+
+    private static void Save() => FileChanged.Serialize(App.FilesChangedPath, Vm.FilesChangedList); //或App.FilesChangedList
 
     #endregion
 }

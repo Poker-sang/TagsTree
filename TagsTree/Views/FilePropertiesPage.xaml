@@ -12,6 +12,7 @@
     NavigationCacheMode="Required"
     mc:Ignorable="d">
     <uiControls:DockPanel>
+        <controls:InputContentDialog x:Name="InputName" />
         <uiControls:DockPanel uiControls:DockPanel.Dock="Top">
             <CommandBar
                 uiControls:DockPanel.Dock="Left"
@@ -55,7 +56,6 @@
                     ToolTipService.ToolTip="删除" />
             </CommandBar>
         </uiControls:DockPanel>
-        <controls:InputContentDialog x:Name="InputName" />
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
