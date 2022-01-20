@@ -33,12 +33,10 @@
                     Icon="{ui:FontIcon Glyph=&#xE74E;}"
                     ToolTipService.ToolTip="保存" />
             </CommandBar>
-            <UserControl>
-                <BreadcrumbBar
-                    Margin="10,0"
-                    VerticalAlignment="Center"
-                    ItemsSource="{x:Bind _vm.Tags}" />
-            </UserControl>
+            <BreadcrumbBar
+                Margin="10,0"
+                VerticalAlignment="Center"
+                ItemsSource="{x:Bind _vm.Tags, Mode=OneWay}" />
         </uiControls:DockPanel>
         <controls:TagSearchBox uiControls:DockPanel.Dock="Top" ResultChanged="ResultChanged" />
         <uiControls:DataGrid

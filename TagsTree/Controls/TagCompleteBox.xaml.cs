@@ -34,7 +34,7 @@ public partial class TagCompleteBox : UserControl
                 Tags.Clear();
                 foreach (var s in Path.Split('\\'))
                     Tags.Add(s);
-                Tags.Add("");
+                Tags.Add(""); //BreadcrumbBar中最后一个item无法点击，需要多加个空元素
             }
             Switch();
         }
