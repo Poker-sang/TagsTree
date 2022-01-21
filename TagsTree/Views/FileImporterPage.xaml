@@ -17,52 +17,60 @@
                 uiControls:DockPanel.Dock="Top"
                 Background="Transparent"
                 OverflowButtonVisibility="Collapsed">
-                <AppBarButton Icon="{ui:FontIcon Glyph=&#xE7C3;}" ToolTipService.ToolTip="选择引入：引入选择的文件或文件夹">
+                <AppBarButton
+                    x:Name="BSelect"
+                    Icon="{ui:FontIcon Glyph=&#xE7C3;}"
+                    ToolTipService.ToolTip="选择引入：引入选择的文件或文件夹">
                     <AppBarButton.Flyout>
                         <MenuFlyout Placement="BottomEdgeAlignedLeft">
                             <MenuFlyoutItem
-                                Command="{x:Bind _vm.Import}"
-                                CommandParameter="Select_Files"
+                                x:Name="SelectFiles"
+                                Click="Import"
                                 Text="文件" />
                             <MenuFlyoutItem
-                                Command="{x:Bind _vm.Import}"
-                                CommandParameter="Select_Folders"
+                                x:Name="SelectFolders"
+                                Click="Import"
                                 Text="文件夹" />
                         </MenuFlyout>
                     </AppBarButton.Flyout>
                 </AppBarButton>
-                <AppBarButton Icon="{ui:FontIcon Glyph=&#xE8F4;}" ToolTipService.ToolTip="目录引入：引入选择的目录下一级所有文件或文件夹或全部">
+                <AppBarButton
+                    x:Name="BPath"
+                    Icon="{ui:FontIcon Glyph=&#xE8F4;}"
+                    ToolTipService.ToolTip="目录引入：引入选择的目录下一级所有文件或文件夹或全部">
                     <AppBarButton.Flyout>
                         <MenuFlyout Placement="BottomEdgeAlignedLeft">
                             <MenuFlyoutItem
-                                Command="{x:Bind _vm.Import}"
-                                CommandParameter="Path_Files"
+                                x:Name="PathFiles"
+                                Click="Import"
                                 Text="文件" />
                             <MenuFlyoutItem
-                                Command="{x:Bind _vm.Import}"
-                                CommandParameter="Path_Folders"
+                                x:Name="PathFolders"
+                                Click="Import"
                                 Text="文件夹" />
                             <MenuFlyoutItem
-                                Command="{x:Bind _vm.Import}"
-                                CommandParameter="Path_Both"
+                                x:Name="PathBoth"
+                                Click="Import"
                                 Text="全部" />
                         </MenuFlyout>
                     </AppBarButton.Flyout>
                 </AppBarButton>
                 <AppBarButton
-                    Command="{x:Bind _vm.Import}"
-                    CommandParameter="All"
+                    x:Name="All"
+                    Click="Import"
                     Icon="{ui:FontIcon Glyph=&#xE82E;}"
                     ToolTipService.ToolTip="全部引入：引入选择的目录下所有深度所有文件" />
                 <AppBarSeparator />
                 <AppBarButton
-                    Command="{x:Bind _vm.DeleteBClick}"
+                    x:Name="BDelete"
+                    Click="{x:Bind DeleteBClick}"
                     Icon="{ui:FontIcon Glyph=&#xE74D;}"
                     ToolTipService.ToolTip="清空" />
                 <AppBarButton
-                    Command="{x:Bind _vm.SaveBClick}"
-                    CommandParameter="{x:Bind FileImporterGrid}"
+                    x:Name="BSave"
+                    Click="{x:Bind SaveBClick}"
                     Icon="{ui:FontIcon Glyph=&#xE74E;}"
+                    Tag="{x:Bind FileImporterGrid}"
                     ToolTipService.ToolTip="保存" />
             </CommandBar>
             <uiControls:DataGrid

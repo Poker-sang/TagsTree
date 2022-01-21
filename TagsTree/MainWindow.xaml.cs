@@ -115,5 +115,5 @@ public sealed partial class MainWindow : Window
 
     private void CloseButtonClick(object sender, RoutedEventArgs e) => Close();
 
-    
+
 }

@@ -1,12 +1,11 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using TagsTree.Models;
 
 namespace TagsTree.ViewModels;
 
-public class FilesObserverViewModel : ObservableObject
+public class FilesObserverViewModel
 {
     public ObservableCollection<FileChanged> FilesChangedList { get; }
 

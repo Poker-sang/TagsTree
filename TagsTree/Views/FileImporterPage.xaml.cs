@@ -17,20 +17,34 @@ public partial class FileImporterPage : Page
 {
     public FileImporterPage()
     {
-        _vm = new FileImporterViewModel(this);
+        _vm = new FileImporterViewModel();
+        _vm.FileViewModels.CollectionChanged += (_, _) => BDelete.IsEnabled = BSave.IsEnabled = !Importing && _vm.FileViewModels.Count is not 0;
         InitializeComponent();
     }
 
     private readonly FileImporterViewModel _vm;
 
-    public async void Import(object? parameter)
+    private bool _importing;
+    private bool Importing
     {
-        _vm.Importing = true;
+        get => _importing;
+        set
+        {
+            if (Equals(value, _importing)) return;
+            _importing = value;
+            BPath.IsEnabled = BSelect.IsEnabled = !value; //虽然写上更安全，但一般看不到这些选项：SelectFiles.IsEnabled = SelectFolders.IsEnabled = PathFiles.IsEnabled = PathFolders.IsEnabled = PathBoth.IsEnabled = All.IsEnabled
+            BDelete.IsEnabled = BSave.IsEnabled = !value && _vm.FileViewModels.Count is not 0;
+        }
+    }
+
+    private async void Import(object sender, RoutedEventArgs e)
+    {
+        Importing = true;
         var temp = new List<FileViewModel>();
         var dictionary = new Dictionary<string, bool>();
 
-        if (parameter is string mode)
-            if (mode is "Select_Files")
+        if (((FrameworkElement)sender).Name is { } mode)
+            if (mode is nameof(SelectFiles))
             {
                 if (await FileSystemHelper.GetStorageFiles() is { } files and not { Count: 0 })
                     await Task.Run(() =>
@@ -50,7 +64,7 @@ public partial class FileImporterPage : Page
                 {
                     foreach (var fileViewModelModel in _vm.FileViewModels)
                         dictionary[fileViewModelModel.UniqueName] = true;
-                    if (mode is "Select_Folders")
+                    if (mode is nameof(SelectFolders))
                     {
                         if (FileViewModel.IsValidPath(folder.Path.GetPath()))
                             if (!dictionary.ContainsKey(true + folder.Path))
@@ -59,17 +73,17 @@ public partial class FileImporterPage : Page
                     else if (FileViewModel.IsValidPath(folder.Path))
                         switch (mode)
                         {
-                            case "Path_Files":
+                            case nameof(PathFiles):
                                 temp.AddRange(new DirectoryInfo(folder.Path).GetFiles()
                                     .Where(fileInfo => !dictionary.ContainsKey(false + fileInfo.FullName))
                                     .Select(fileInfo => new FileViewModel(fileInfo.FullName)));
                                 break;
-                            case "Path_Folders":
+                            case nameof(PathFolders):
                                 temp.AddRange(new DirectoryInfo(folder.Path).GetDirectories()
                                     .Where(directoryInfo => !dictionary.ContainsKey(true + directoryInfo.FullName))
                                     .Select(directoryInfo => new FileViewModel(directoryInfo.FullName)));
                                 break;
-                            case "Path_Both":
+                            case nameof(PathBoth):
                                 {
                                     temp.AddRange(new DirectoryInfo(folder.Path).GetFiles()
                                         .Where(fileInfo => !dictionary.ContainsKey(false + fileInfo.FullName))
@@ -79,7 +93,7 @@ public partial class FileImporterPage : Page
                                         .Select(directoryInfo => new FileViewModel(directoryInfo.FullName)));
                                 }
                                 break;
-                            case "All":
+                            case nameof(All):
                                 void RecursiveReadFiles(string folderName)
                                 {
                                     temp.AddRange(new DirectoryInfo(folderName).GetFiles()
@@ -94,14 +108,14 @@ public partial class FileImporterPage : Page
                 });
         foreach (var fileViewModel in temp)
             _vm.FileViewModels.Add(fileViewModel);
-        _vm.Importing = false;
+        Importing = false;
     }
 
-    public void DeleteBClick(object? parameter) => _vm.FileViewModels.Clear();
+    private void DeleteBClick(object sender, RoutedEventArgs e) => _vm.FileViewModels.Clear();
 
-    public async void SaveBClick(object? parameter)
+    private async void SaveBClick(object sender, RoutedEventArgs e)
     {
-        var progressBar = new ProcessBarHelper((Grid)parameter!);
+        var progressBar = new ProcessBarHelper((Grid)((FrameworkElement)sender).Tag);
         var duplicated = 0;
         await Task.Yield();
         var dictionary = new Dictionary<string, bool>();
