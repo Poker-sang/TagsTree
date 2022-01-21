@@ -1,8 +1,8 @@
-﻿using Microsoft.UI.Xaml;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using TagsTree.Commands;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
 
@@ -11,20 +11,21 @@ namespace TagsTree.Views;
 /// <summary>
 /// TagsManagerPage.xaml 的交互逻辑
 /// </summary>
+[INotifyPropertyChanged]
 public partial class TagsManagerPage : Page
 {
     public TagsManagerPage()
     {
         Current = this;
         _vm = new TagsManagerViewModel();
-        RPasteCmClick = new RelayCommand(_ => _clipBoard is not null, PasteCmClick);
         InitializeComponent();
     }
 
     public static TagsManagerPage Current = null!;
 
     private readonly TagsManagerViewModel _vm;
-    public RelayCommand RPasteCmClick { get; }
+
+    [ObservableProperty] private bool _canPaste;
 
     private TagViewModel? _clipBoard;
     private TagViewModel? ClipBoard
@@ -34,13 +35,13 @@ public partial class TagsManagerPage : Page
         {
             if (Equals(value, _clipBoard)) return;
             _clipBoard = value;
-            CmPPasteX.IsEnabled = value is not null;
-            RPasteCmClick.OnCanExecuteChanged();
+            CanPaste = CmPPasteX.IsEnabled = value is not null;
         }
     }
 
     #region 事件处理
 
+    //TODO 条目拖拽
     //private void TvTags_OnDragItemsCompleted(TreeView sender, TreeViewDragItemsCompletedEventArgs e)
     //{
     //    if (e.DropResult is DataPackageOperation.Move)
@@ -183,6 +184,11 @@ public partial class TagsManagerPage : Page
         if (!await InputName.ShowAsync())
             RenameTag(InputName.Text, (TagViewModel)((MenuFlyoutItem)sender).Tag!);
     }
+    private void PasteCmClick(object sender, RoutedEventArgs e)
+    {
+        MoveTag(ClipBoard!, (TagViewModel)((MenuFlyoutItem)sender).Tag!);
+        ClipBoard = null;
+    }
     private void PasteXCmClick(object sender, RoutedEventArgs e)
     {
         MoveTag(ClipBoard!, _vm.TagsSource.TagsTree);
@@ -190,16 +196,6 @@ public partial class TagsManagerPage : Page
     }
 
     private void DeleteCmClick(object sender, RoutedEventArgs e) => DeleteTag((TagViewModel)((MenuFlyoutItem)sender).Tag!);
-
-    #endregion
-
-    #region 命令
-
-    private void PasteCmClick(object? parameter)
-    {
-        MoveTag(ClipBoard!, (TagViewModel)parameter!);
-        ClipBoard = null;
-    }
 
     #endregion
 

@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using TagsTree.Services.ExtensionMethods;
@@ -12,7 +12,7 @@ public partial class TagEditFilesViewModel : ObservableObject
     public TagViewModel TagViewModel
     {
         get => _tagViewModel;
-        set 
+        set
         {
             _tagViewModel = value;
             OnPropertyChanged(nameof(Tags));

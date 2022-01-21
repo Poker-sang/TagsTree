@@ -77,8 +77,9 @@
                                     Tag="{x:Bind}"
                                     Text="剪切" />
                                 <MenuFlyoutItem
-                                    Command="{x:Bind local:TagsManagerPage.Current.RPasteCmClick}"
-                                    CommandParameter="{x:Bind}"
+                                    Click="PasteCmClick"
+                                    IsEnabled="{x:Bind local:TagsManagerPage.Current.CanPaste, Mode=OneWay}"
+                                    Tag="{x:Bind}"
                                     Text="粘贴" />
                                 <MenuFlyoutItem
                                     Click="RenameCmClick"

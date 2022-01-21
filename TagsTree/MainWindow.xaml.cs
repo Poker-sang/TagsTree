@@ -21,6 +21,7 @@ public sealed partial class MainWindow : Window
         InitializeComponent();
         App.RootNavigationView = NavigationView;
         App.RootFrame = NavigateFrame;
+        //TODO 标题栏
         SetTitleBar(TitleBar);
     }
 
@@ -87,13 +88,6 @@ public sealed partial class MainWindow : Window
         sender.IsBackEnabled = NavigateFrame.CanGoBack;
     }
 
-    /// <summary>
-    /// 不为static方便绑定
-    /// </summary>
-#pragma warning disable IDE0052 // 删除未读的私有成员
-    private readonly Brush _systemColor = new SolidColorBrush(Application.Current.RequestedTheme is ApplicationTheme.Light ? Color.FromArgb(0x80, 0xFF, 0xFF, 0xFF) : Color.FromArgb(0x65, 0x00, 0x00, 0x00));
-#pragma warning restore IDE0052
-
     private void ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs e)
     {
         if (e.InvokedItem is string item)
@@ -115,5 +109,5 @@ public sealed partial class MainWindow : Window
 
     private void CloseButtonClick(object sender, RoutedEventArgs e) => Close();
 
-    
+
 }

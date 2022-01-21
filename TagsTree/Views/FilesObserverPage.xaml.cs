@@ -1,6 +1,6 @@
-﻿using System;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TagsTree.Models;
@@ -42,7 +42,7 @@ public sealed partial class FilesObserverPage : Page
                 await ShowMessageDialog.Information(true, $"文件列表中不存在：{fileChanged.OldFullName}");
                 return;
             }
-        else 
+        else
         {
             await ShowMessageDialog.Information(true, $"不在指定文件路径下：{fileChanged.FullName}");
             return;
@@ -58,7 +58,7 @@ public sealed partial class FilesObserverPage : Page
 
     private void DeleteCmClick(object sender, RoutedEventArgs e)
     {
-        _ = Vm.FilesChangedList.Remove((FileChanged) ((MenuFlyoutItem) sender).DataContext);
+        _ = Vm.FilesChangedList.Remove((FileChanged)((MenuFlyoutItem)sender).DataContext);
         InfoBar.Message = "已删除一项";
         InfoBar.IsOpen = true;
     }
@@ -70,7 +70,7 @@ public sealed partial class FilesObserverPage : Page
             Vm.FilesChangedList.Clear();
             return;
         }
-        var id = ((FileChanged)((MenuFlyoutItem) sender).DataContext).Id;
+        var id = ((FileChanged)((MenuFlyoutItem)sender).DataContext).Id;
         while (Vm.FilesChangedList[0].Id <= id)
             Vm.FilesChangedList.RemoveAt(0);
         InfoBar.Message = $"已删除序号{id}及之前项";
@@ -98,7 +98,7 @@ public sealed partial class FilesObserverPage : Page
         CdDeleteRange.PrimaryButtonClick += (_, args) =>
         {
             if (0 < NbLower.Value && NbLower.Value <= NbUpper.Value)
-                for (var i = 0; i < Vm.FilesChangedList.Count; )
+                for (var i = 0; i < Vm.FilesChangedList.Count;)
                     if (NbLower.Value > Vm.FilesChangedList[i].Id)
                         ++i;
                     else if (Vm.FilesChangedList[i].Id > NbUpper.Value)
@@ -118,14 +118,14 @@ public sealed partial class FilesObserverPage : Page
         InfoBar.Message = $"已删除{count}项";
         InfoBar.IsOpen = true;
     }
-    
+
 
     private async void ApplyAllBClick(object sender, RoutedEventArgs e)
     {
         MergeAll();
         var nameFile = new Dictionary<string, FileModel>();
         foreach (var fileModel in App.IdFile.Values)
-            nameFile[fileModel.FullName] = fileModel; 
+            nameFile[fileModel.FullName] = fileModel;
         var deleteList = new List<FileChanged>();
         var invalidExceptions = new List<FileChanged>();
         var notExistExceptions = new List<FileChanged>();
@@ -137,7 +137,7 @@ public sealed partial class FilesObserverPage : Page
                     deleteList.Add(fileChanged);
                 }
                 else if (nameFile.ContainsKey(fileChanged.OldFullName))
-                { 
+                {
                     Apply(fileChanged, nameFile[fileChanged.OldFullName]);
                     deleteList.Add(fileChanged);
                 }

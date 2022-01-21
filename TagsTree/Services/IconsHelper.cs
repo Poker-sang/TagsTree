@@ -37,6 +37,7 @@ public static class IconsHelper
     /// </summary>
     public static void LoadFilesIcons()
     {
+        //TODO 图标预加载
         //InnerLoadFilesIcons();
         //static async void InnerLoadFilesIcons()
         //{
