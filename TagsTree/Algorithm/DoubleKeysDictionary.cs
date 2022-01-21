@@ -1,10 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace TagsTree.Algorithm;
 
 public class DoubleKeysDictionary<TKey1, TKey2, TValue> where TKey1 : notnull where TKey2 : notnull where TValue : notnull
 {
+    public DoubleKeysDictionary()
+    {
+        if (typeof(TKey1) == typeof(TKey2))
+            throw new ArgumentException($"DoubleKeysDictionary的两个键类型不能相同，此处类型都为{typeof(TKey1).Name}");
+    }
     private readonly Dictionary<TKey1, TKey2> _dict1 = new();
     private readonly Dictionary<TKey2, TValue> _dict2 = new();
     public int Count => _dict1.Count;
