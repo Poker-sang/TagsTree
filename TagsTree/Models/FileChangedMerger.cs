@@ -13,28 +13,28 @@ public class FileChangedMerger
     private bool IsExisted { get; set; } = true;
 
     public string CurrentName =>
-        Rename.Count is not 0 ? Rename.Last().Name : //Rename在第一个，其他随意
-        Move.Count is not 0 ? Move.Last().Name :
-        Create.Count is not 0 ? Create.Last().Name :
-        Delete.Last().Name;
+        Rename.Count is not 0 ? Rename[^1].Name : //Rename在第一个，其他随意
+        Move.Count is not 0 ? Move[^1].Name :
+        Create.Count is not 0 ? Create[^1].Name :
+        Delete[^1].Name;
 
     public string OriginalName =>
-        Rename.Count is not 0 ? Rename.First().Remark : //Rename在第一个，其他随意
-        Move.Count is not 0 ? Move.First().Name :
-        Create.Count is not 0 ? Create.First().Name :
-        Delete.First().Name;
+        Rename.Count is not 0 ? Rename[0].Remark : //Rename在第一个，其他随意
+        Move.Count is not 0 ? Move[0].Name :
+        Create.Count is not 0 ? Create[0].Name :
+        Delete[0].Name;
 
     public string CurrentPath =>
-        Move.Count is not 0 ? Move.Last().Path : //Move在第一个，其他随意
-        Rename.Count is not 0 ? Rename.Last().Path :
-        Create.Count is not 0 ? Create.Last().Path :
-        Delete.Last().Path;
+        Move.Count is not 0 ? Move[^1].Path : //Move在第一个，其他随意
+        Rename.Count is not 0 ? Rename[^1].Path :
+        Create.Count is not 0 ? Create[^1].Path :
+        Delete[^1].Path;
 
     public string OriginalPath =>
-        Move.Count is not 0 ? Move.First().Remark : //Move在第一个，其他随意
-        Rename.Count is not 0 ? Rename.First().Path :
-        Create.Count is not 0 ? Create.First().Path :
-        Delete.First().Path;
+        Move.Count is not 0 ? Move[0].Remark : //Move在第一个，其他随意
+        Rename.Count is not 0 ? Rename[0].Path :
+        Create.Count is not 0 ? Create[0].Path :
+        Delete[0].Path;
 
     public string CurrentFullName => $"{CurrentPath}\\{CurrentName}";
     public string OriginalFullName => $"{OriginalPath}\\{OriginalName}";
