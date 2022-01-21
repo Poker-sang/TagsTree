@@ -65,11 +65,13 @@
                     x:Name="BDelete"
                     Click="{x:Bind DeleteBClick}"
                     Icon="{ui:FontIcon Glyph=&#xE74D;}"
+                    IsEnabled="False"
                     ToolTipService.ToolTip="清空" />
                 <AppBarButton
                     x:Name="BSave"
                     Click="{x:Bind SaveBClick}"
                     Icon="{ui:FontIcon Glyph=&#xE74E;}"
+                    IsEnabled="False"
                     Tag="{x:Bind FileImporterGrid}"
                     ToolTipService.ToolTip="保存" />
             </CommandBar>
