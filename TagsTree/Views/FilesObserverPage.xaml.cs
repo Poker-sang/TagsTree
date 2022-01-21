@@ -65,7 +65,7 @@ public sealed partial class FilesObserverPage : Page
 
     private void DeleteAboveCmClick(object sender, RoutedEventArgs e)
     {
-        if ((FileChanged)((MenuFlyoutItem)sender).DataContext == Vm.FilesChangedList.Last())
+        if ((FileChanged)((MenuFlyoutItem)sender).DataContext == Vm.FilesChangedList[^1])
         {
             Vm.FilesChangedList.Clear();
             return;
@@ -85,8 +85,8 @@ public sealed partial class FilesObserverPage : Page
             return;
         }
         var id = ((FileChanged)((MenuFlyoutItem)sender).DataContext).Id;
-        while (Vm.FilesChangedList.Last().Id >= id)
-            _ = Vm.FilesChangedList.Remove(Vm.FilesChangedList.Last());
+        while (Vm.FilesChangedList[^1].Id >= id)
+            _ = Vm.FilesChangedList.Remove(Vm.FilesChangedList[^1]);
         InfoBar.Message = $"已删除序号{id}及之后项";
         InfoBar.IsOpen = true;
     }

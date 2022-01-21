@@ -18,7 +18,7 @@ public static class TagViewModelHelper
     {
         range ??= App.Tags;
         var temp = name.Split('\\', StringSplitOptions.RemoveEmptyEntries);
-        return temp.Length is 0 ? range.TagsDictionaryRoot : range.TagsDictionary.GetValueOrDefault(temp.Last());
+        return temp.Length is 0 ? range.TagsDictionaryRoot : range.TagsDictionary.GetValueOrDefault(temp[^1]);
     }
     public static IEnumerable<TagViewModel> GetTagViewModels(this string name)
     {

@@ -85,7 +85,7 @@ public class FileModel : IFullName
     }
     public IEnumerable<TagViewModel> GetRelativeTags(TagViewModel parentTag) => Tags.GetTagViewModels().Where(parentTag.HasChildTag);
 
-    [JsonIgnore] public string Extension => IsFolder ? "文件夹" : Name.Split('.', StringSplitOptions.RemoveEmptyEntries).Last().ToUpper(CultureInfo.CurrentCulture);
+    [JsonIgnore] public string Extension => IsFolder ? "文件夹" : Name.Split('.', StringSplitOptions.RemoveEmptyEntries)[^1].ToUpper(CultureInfo.CurrentCulture);
     [JsonIgnore] protected string PartialPath => this.GetPartialPath(); //Path必然包含文件路径
     [JsonIgnore] public string FullName => Path + '\\' + Name; //Path必然包含文件路径
     [JsonIgnore] public string UniqueName => IsFolder + FullName;
