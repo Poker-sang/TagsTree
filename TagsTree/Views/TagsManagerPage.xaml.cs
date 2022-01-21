@@ -41,6 +41,7 @@ public partial class TagsManagerPage : Page
 
     #region 事件处理
 
+    //TODO 条目拖拽
     //private void TvTags_OnDragItemsCompleted(TreeView sender, TreeViewDragItemsCompletedEventArgs e)
     //{
     //    if (e.DropResult is DataPackageOperation.Move)
@@ -183,6 +184,11 @@ public partial class TagsManagerPage : Page
         if (!await InputName.ShowAsync())
             RenameTag(InputName.Text, (TagViewModel)((MenuFlyoutItem)sender).Tag!);
     }
+    private void PasteCmClick(object sender, RoutedEventArgs e)
+    {
+        MoveTag(ClipBoard!, (TagViewModel)((MenuFlyoutItem)sender).Tag!);
+        ClipBoard = null;
+    }
     private void PasteXCmClick(object sender, RoutedEventArgs e)
     {
         MoveTag(ClipBoard!, _vm.TagsSource.TagsTree);
@@ -190,16 +196,6 @@ public partial class TagsManagerPage : Page
     }
 
     private void DeleteCmClick(object sender, RoutedEventArgs e) => DeleteTag((TagViewModel)((MenuFlyoutItem)sender).Tag!);
-
-    #endregion
-
-    #region 命令
-
-    private void PasteCmClick(object sender, RoutedEventArgs e)
-    {
-        MoveTag(ClipBoard!, (TagViewModel)((MenuFlyoutItem)sender).Tag!);
-        ClipBoard = null;
-    }
 
     #endregion
 

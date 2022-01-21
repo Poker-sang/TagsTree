@@ -37,6 +37,8 @@ public partial class FileImporterPage : Page
         }
     }
 
+    #region 事件处理
+
     private async void Import(object sender, RoutedEventArgs e)
     {
         Importing = true;
@@ -115,6 +117,7 @@ public partial class FileImporterPage : Page
 
     private async void SaveBClick(object sender, RoutedEventArgs e)
     {
+        //TODO 文件引入进度条
         var progressBar = new ProcessBarHelper((Grid)((FrameworkElement)sender).Tag);
         var duplicated = 0;
         await Task.Yield();
@@ -144,4 +147,6 @@ public partial class FileImporterPage : Page
         foreach (var fileViewModel in FileImporterDataGird.SelectedItems.Cast<FileViewModel>().ToList())
             _ = _vm.FileViewModels.Remove(fileViewModel);
     }
+
+    #endregion
 }
