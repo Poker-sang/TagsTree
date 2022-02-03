@@ -15,7 +15,6 @@ internal class DependencyPropertyGenerator : GetAttributeGenerator
 
     protected override void ExecuteForEach(GeneratorExecutionContext context, INamedTypeSymbol attributeType, TypeDeclarationSyntax typeDeclaration, INamedTypeSymbol specificClass)
     {
-
         var members = new List<MemberDeclarationSyntax>();
         var namespaces = new HashSet<string> { "Microsoft.UI.Xaml" };
         var usedTypes = new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);

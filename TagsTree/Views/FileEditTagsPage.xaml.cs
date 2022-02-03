@@ -19,7 +19,11 @@ public partial class FileEditTagsPage : Page
 
     private readonly FileEditTagsViewModel _vm;
 
-    protected override void OnNavigatedTo(NavigationEventArgs e) => _vm.Load((FileViewModel)e.Parameter);
+    protected override void OnNavigatedTo(NavigationEventArgs e)
+    {
+        BSave.IsEnabled = false;
+        _vm.Load((FileViewModel)e.Parameter);
+    }
 
     #region 事件处理
 
