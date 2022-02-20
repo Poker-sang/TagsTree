@@ -22,7 +22,11 @@ public sealed partial class FilesObserverPage : Page, ITypeName
         Vm.FilesChangedList.CollectionChanged += (_, _) => CollectionChanged();
         CollectionChanged();
 
-        void CollectionChanged() => BDeleteRange.IsEnabled = BMergeAll.IsEnabled = BDeleteAll.IsEnabled = BApplyAll.IsEnabled = BSaveAll.IsEnabled = Vm.FilesChangedList.Count is not 0;
+        void CollectionChanged()
+        {
+            BMergeAll.IsEnabled = BDeleteAll.IsEnabled = BApplyAll.IsEnabled = BSaveAll.IsEnabled = Vm.FilesChangedList.Count is not 0;
+            BDeleteRange.IsEnabled = Vm.FilesChangedList.Count > 1;
+        }
     }
     public static string TypeName => nameof(FilesObserverPage);
 
@@ -96,29 +100,22 @@ public sealed partial class FilesObserverPage : Page, ITypeName
     private async void DeleteRangeBClick(object sender, RoutedEventArgs e)
     {
         var count = 0;
-        CdInfoBar.IsOpen = false;
-        CdDeleteRange.PrimaryButtonClick += (_, args) =>
+        CdDeleteRange.PrimaryButtonClick += (_, _) =>
         {
-            if (0 < NbLower.Value && NbLower.Value <= NbUpper.Value)
-                for (var i = 0; i < Vm.FilesChangedList.Count;)
-                    if (NbLower.Value > Vm.FilesChangedList[i].Id)
-                        ++i;
-                    else if (Vm.FilesChangedList[i].Id > NbUpper.Value)
-                        break;
-                    else
-                    {
-                        Vm.FilesChangedList.RemoveAt(i);
-                        ++count;
-                    }
-            else
-            {
-                args.Cancel = true;
-                CdInfoBar.IsOpen = true;
-            }
+            for (var i = 0; i < Vm.FilesChangedList.Count;)
+                if (Rs.RangeStart > Vm.FilesChangedList[i].Id)
+                    ++i;
+                else if (Vm.FilesChangedList[i].Id > Rs.RangeEnd)
+                    break;
+                else
+                {
+                    Vm.FilesChangedList.RemoveAt(i);
+                    ++count;
+                }
+            InfoBar.Message = $"已删除{count}项";
+            InfoBar.IsOpen = true;
         };
         _ = await CdDeleteRange.ShowAsync();
-        InfoBar.Message = $"已删除{count}项";
-        InfoBar.IsOpen = true;
     }
 
 
