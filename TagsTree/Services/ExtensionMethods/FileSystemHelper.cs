@@ -37,7 +37,7 @@ public static class FileSystemHelper
         }
         catch (System.ComponentModel.Win32Exception)
         {
-            await ShowMessageDialog.Information(true, $"打开路径「{AppContext.AppLocalFolder}」时出现错误");
+            await ShowMessageDialog.Information(true, $"打开路径「{fullName}」时出现错误");
         }
     }
     public static async void OpenDirectory(this FileViewModel fileViewModel)

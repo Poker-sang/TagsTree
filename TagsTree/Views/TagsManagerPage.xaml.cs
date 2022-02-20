@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using TagsTree.Interfaces;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
 
@@ -12,7 +13,7 @@ namespace TagsTree.Views;
 /// TagsManagerPage.xaml 的交互逻辑
 /// </summary>
 [INotifyPropertyChanged]
-public partial class TagsManagerPage : Page
+public partial class TagsManagerPage : Page, ITypeName
 {
     public TagsManagerPage()
     {
@@ -20,6 +21,7 @@ public partial class TagsManagerPage : Page
         _vm = new TagsManagerViewModel();
         InitializeComponent();
     }
+    public static string TypeName => nameof(TagsManagerPage);
 
     public static TagsManagerPage Current = null!;
 

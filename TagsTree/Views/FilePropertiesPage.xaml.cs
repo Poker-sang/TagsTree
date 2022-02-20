@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.VisualBasic.FileIO;
+using TagsTree.Interfaces;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
@@ -14,9 +15,10 @@ namespace TagsTree.Views;
 /// FilePropertiesPage.xaml 的交互逻辑
 /// </summary>
 [INotifyPropertyChanged]
-public partial class FilePropertiesPage : Page
+public partial class FilePropertiesPage : Page, ITypeName
 {
     public FilePropertiesPage() => InitializeComponent();
+    public static string TypeName => nameof(FilePropertiesPage);
 
     private static readonly FileViewModel ConstFileViewModel = new(App.IdFile[0]);
 

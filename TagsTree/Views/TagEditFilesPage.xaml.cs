@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using System.Collections.Generic;
 using System.Linq;
+using TagsTree.Interfaces;
 using TagsTree.Models;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
@@ -15,13 +16,14 @@ namespace TagsTree.Views;
 /// <summary>
 /// TagEditFilesPage.xaml 的交互逻辑
 /// </summary>
-public sealed partial class TagEditFilesPage : Page
+public sealed partial class TagEditFilesPage : Page, ITypeName
 {
     public TagEditFilesPage()
     {
         _vm = new TagEditFilesViewModel();
         InitializeComponent();
     }
+    public static string TypeName => nameof(TagEditFilesPage);
 
     private readonly TagEditFilesViewModel _vm;
 

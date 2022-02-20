@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using TagsTree.Interfaces;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
@@ -13,7 +14,7 @@ namespace TagsTree.Views;
 /// <summary>
 /// FileImporterPage.xaml 的交互逻辑
 /// </summary>
-public partial class FileImporterPage : Page
+public partial class FileImporterPage : Page, ITypeName
 {
     public FileImporterPage()
     {
@@ -21,6 +22,7 @@ public partial class FileImporterPage : Page
         _vm.FileViewModels.CollectionChanged += (_, _) => BDelete.IsEnabled = BSave.IsEnabled = !Importing && _vm.FileViewModels.Count is not 0;
         InitializeComponent();
     }
+    public static string TypeName => nameof(FileImporterPage);
 
     private readonly FileImporterViewModel _vm;
 
