@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.WinUI.UI.Controls;
+﻿using System;
+using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -16,14 +17,14 @@ namespace TagsTree.Views;
 /// <summary>
 /// TagEditFilesPage.xaml 的交互逻辑
 /// </summary>
-public sealed partial class TagEditFilesPage : Page, ITypeName
+public sealed partial class TagEditFilesPage : Page, ITypeGetter
 {
     public TagEditFilesPage()
     {
         _vm = new TagEditFilesViewModel();
         InitializeComponent();
     }
-    public static string TypeName => nameof(TagEditFilesPage);
+    public static Type TypeGetter => typeof(TagEditFilesPage);
 
     private readonly TagEditFilesViewModel _vm;
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml;
+﻿using System;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.Collections.ObjectModel;
 using TagsTree.Interfaces;
@@ -11,10 +12,10 @@ namespace TagsTree.Views;
 /// <summary>
 /// SelectTagToEditPage.xaml 的交互逻辑
 /// </summary>
-public partial class SelectTagToEditPage : Page, ITypeName
+public partial class SelectTagToEditPage : Page, ITypeGetter
 {
     public SelectTagToEditPage() => InitializeComponent();
-    public static string TypeName => nameof(SelectTagToEditPage);
+    public static Type TypeGetter => typeof(SelectTagToEditPage);
 
     /// <summary>
     /// 不为static方便绑定

@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml;
+﻿using System;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.Text.RegularExpressions;
 using TagsTree.Interfaces;
@@ -9,7 +10,7 @@ namespace TagsTree.Views;
 /// <summary>
 /// SettingsPage.xaml 的交互逻辑
 /// </summary>
-public partial class SettingsPage : Page, ITypeName
+public partial class SettingsPage : Page, ITypeGetter
 {
     public SettingsPage()
     {
@@ -19,7 +20,7 @@ public partial class SettingsPage : Page, ITypeName
         TsFilesObserver.IsOn = App.AppConfiguration.FilesObserverEnabled;
         CbRootFoldersExist.IsOn = App.AppConfiguration.PathTagsEnabled;
     }
-    public static string TypeName => nameof(SettingsPage);
+    public static Type TypeGetter => typeof(SettingsPage);
 
     private async void BLibraryPath_Click(object sender, RoutedEventArgs e)
     {

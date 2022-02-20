@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml;
+﻿using System;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
@@ -10,7 +11,7 @@ namespace TagsTree.Views;
 /// <summary>
 /// FileEditTagsPage.xaml 的交互逻辑
 /// </summary>
-public partial class FileEditTagsPage : Page, ITypeName
+public partial class FileEditTagsPage : Page, ITypeGetter
 {
     public FileEditTagsPage()
     {
@@ -18,7 +19,7 @@ public partial class FileEditTagsPage : Page, ITypeName
         InitializeComponent();
     }
 
-    public static string TypeName => nameof(FileEditTagsPage);
+    public static Type TypeGetter => typeof(FileEditTagsPage);
 
     private readonly FileEditTagsViewModel _vm;
 
