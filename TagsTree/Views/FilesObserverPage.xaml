@@ -8,41 +8,22 @@
     xmlns:models="using:TagsTree.Models"
     xmlns:ui="using:CommunityToolkit.WinUI.UI"
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:viewModels="using:TagsTree.ViewModels"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
     <uiControls:DockPanel>
         <ContentDialog
             x:Name="CdDeleteRange"
-            Title="删除序号"
+            Title="删除序号范围"
             CloseButtonText="取消"
             DefaultButton="Close"
             PrimaryButtonText="确认">
-            <uiControls:DockPanel>
-                <Grid uiControls:DockPanel.Dock="Top">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <NumberBox
-                        x:Name="NbLower"
-                        Grid.Column="0"
-                        Minimum="1"
-                        SpinButtonPlacementMode="Inline"
-                        Value="1" />
-                    <NumberBox
-                        x:Name="NbUpper"
-                        Grid.Column="1"
-                        Minimum="{x:Bind NbLower.Value, Mode=OneWay}"
-                        SpinButtonPlacementMode="Inline"
-                        Value="1" />
-                </Grid>
-                <InfoBar
-                    x:Name="CdInfoBar"
-                    Title="错误"
-                    Message="必须保证 0&lt;左值&lt;=右值"
-                    Severity="Error" />
-            </uiControls:DockPanel>
+            <uiControls:RangeSelector
+                x:Name="Rs"
+                Maximum="{x:Bind local:FilesObserverPage.Vm.LastId, Mode=OneWay}"
+                Minimum="{x:Bind local:FilesObserverPage.Vm.FirstId, Mode=OneWay}"
+                StepFrequency="1" />
         </ContentDialog>
         <uiControls:DockPanel uiControls:DockPanel.Dock="Top">
             <CommandBar
