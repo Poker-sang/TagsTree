@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Navigation;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using TagsTree.Interfaces;
 using TagsTree.Models;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
@@ -15,7 +16,7 @@ namespace TagsTree.Views;
 /// <summary>
 /// TagSearchFilesPage.xaml 的交互逻辑
 /// </summary>
-public partial class TagSearchFilesPage : Page
+public partial class TagSearchFilesPage : Page, ITypeName
 {
     public TagSearchFilesPage()
     {
@@ -24,6 +25,7 @@ public partial class TagSearchFilesPage : Page
         InitializeComponent();
         TbSearch.InvokeQuerySubmitted();
     }
+    public static string TypeName => nameof(TagSearchFilesPage);
     protected override void OnNavigatedTo(NavigationEventArgs e) => TbSearch.Text = (string)e.Parameter;
 
 

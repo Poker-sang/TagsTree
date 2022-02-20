@@ -1,12 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
 using System;
 using System.Threading.Tasks;
 using TagsTree.Services;
 using TagsTree.Views;
-using Windows.UI;
 
 namespace TagsTree;
 
@@ -90,21 +88,12 @@ public sealed partial class MainWindow : Window
 
     private void ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs e)
     {
-        if (e.InvokedItem is string item)
-            if (Equals(((NavigationViewItem)sender.SelectedItem).Content, NavigateFrame.Content.GetType().Name))
-                return;
-            else _ = NavigateFrame.Navigate(0 switch
-            {
-                0 when Equals(item, ((NavigationViewItem)sender.MenuItems[0]).Content) => typeof(IndexPage),
-                0 when Equals(item, ((NavigationViewItem)sender.MenuItems[1]).Content) => typeof(TagsManagerPage),
-                0 when Equals(item, ((NavigationViewItem)sender.MenuItems[2]).Content) => typeof(FileImporterPage),
-                0 when Equals(item, ((NavigationViewItem)sender.MenuItems[3]).Content) => typeof(SelectTagToEditPage),
-                0 when Equals(item, ((NavigationViewItem)sender.FooterMenuItems[0]).Content) => typeof(FilesObserverPage),
-                0 when Equals(item, ((NavigationViewItem)sender.FooterMenuItems[1]).Content) => typeof(SettingsPage),
-                _ => throw new ArgumentOutOfRangeException()
-            });
-        sender.IsBackEnabled = true;
-        GC.Collect();
+        if (e.InvokedItemContainer.Tag is string item && !Equals(item, NavigateFrame.Content.GetType().Name))
+        {
+            _ = NavigateFrame.Navigate(Type.GetType($"{nameof(TagsTree)}.{nameof(Views)}.{item}"));
+            sender.IsBackEnabled = true;
+            GC.Collect();
+        }
     }
 
     private void CloseButtonClick(object sender, RoutedEventArgs e) => Close();
