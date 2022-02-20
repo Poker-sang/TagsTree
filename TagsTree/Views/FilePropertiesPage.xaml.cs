@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -15,10 +16,10 @@ namespace TagsTree.Views;
 /// FilePropertiesPage.xaml 的交互逻辑
 /// </summary>
 [INotifyPropertyChanged]
-public partial class FilePropertiesPage : Page, ITypeName
+public partial class FilePropertiesPage : Page, ITypeGetter
 {
     public FilePropertiesPage() => InitializeComponent();
-    public static string TypeName => nameof(FilePropertiesPage);
+    public static Type TypeGetter => typeof(FilePropertiesPage);
 
     private static readonly FileViewModel ConstFileViewModel = new(App.IdFile[0]);
 

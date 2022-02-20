@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace TagsTree.Views;
 /// TagsManagerPage.xaml 的交互逻辑
 /// </summary>
 [INotifyPropertyChanged]
-public partial class TagsManagerPage : Page, ITypeName
+public partial class TagsManagerPage : Page, ITypeGetter
 {
     public TagsManagerPage()
     {
@@ -21,7 +22,7 @@ public partial class TagsManagerPage : Page, ITypeName
         _vm = new TagsManagerViewModel();
         InitializeComponent();
     }
-    public static string TypeName => nameof(TagsManagerPage);
+    public static Type TypeGetter => typeof(TagsManagerPage);
 
     public static TagsManagerPage Current = null!;
 

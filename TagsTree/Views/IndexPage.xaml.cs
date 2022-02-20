@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml.Controls;
+﻿using System;
+using Microsoft.UI.Xaml.Controls;
 using TagsTree.Interfaces;
 
 namespace TagsTree.Views;
@@ -6,7 +7,7 @@ namespace TagsTree.Views;
 /// <summary>
 /// IndexPage.xaml 的交互逻辑
 /// </summary>
-public sealed partial class IndexPage : Page, ITypeName
+public sealed partial class IndexPage : Page, ITypeGetter
 {
     public IndexPage()
     {
@@ -14,7 +15,7 @@ public sealed partial class IndexPage : Page, ITypeName
         TagSearchBox.ResetQuerySubmitted(QuerySubmitted);
     }
 
-    public static string TypeName => nameof(IndexPage);
+    public static Type TypeGetter => typeof(IndexPage);
 
     #region 事件处理
 

@@ -88,9 +88,9 @@ public sealed partial class MainWindow : Window
 
     private void ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs e)
     {
-        if (e.InvokedItemContainer.Tag is string item && !Equals(item, NavigateFrame.Content.GetType().Name))
+        if (e.InvokedItemContainer.Tag is Type item && !Equals(item, NavigateFrame.Content))
         {
-            _ = NavigateFrame.Navigate(Type.GetType($"{nameof(TagsTree)}.{nameof(Views)}.{item}"));
+            _ = NavigateFrame.Navigate(item);
             sender.IsBackEnabled = true;
             GC.Collect();
         }

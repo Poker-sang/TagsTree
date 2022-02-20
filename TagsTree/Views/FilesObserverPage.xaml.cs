@@ -14,7 +14,7 @@ namespace TagsTree.Views;
 /// <summary>
 /// FilesObserverPage.xaml 的交互逻辑
 /// </summary>
-public sealed partial class FilesObserverPage : Page, ITypeName
+public sealed partial class FilesObserverPage : Page, ITypeGetter
 {
     public FilesObserverPage()
     {
@@ -28,7 +28,7 @@ public sealed partial class FilesObserverPage : Page, ITypeName
             BDeleteRange.IsEnabled = Vm.FilesChangedList.Count > 1;
         }
     }
-    public static string TypeName => nameof(FilesObserverPage);
+    public static Type TypeGetter => typeof(FilesObserverPage);
 
 
     public static FilesObserverViewModel Vm { get; set; } = null!;

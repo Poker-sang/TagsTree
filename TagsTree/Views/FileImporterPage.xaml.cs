@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml;
+﻿using System;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
 using System.IO;
@@ -14,7 +15,7 @@ namespace TagsTree.Views;
 /// <summary>
 /// FileImporterPage.xaml 的交互逻辑
 /// </summary>
-public partial class FileImporterPage : Page, ITypeName
+public partial class FileImporterPage : Page, ITypeGetter
 {
     public FileImporterPage()
     {
@@ -22,7 +23,7 @@ public partial class FileImporterPage : Page, ITypeName
         _vm.FileViewModels.CollectionChanged += (_, _) => BDelete.IsEnabled = BSave.IsEnabled = !Importing && _vm.FileViewModels.Count is not 0;
         InitializeComponent();
     }
-    public static string TypeName => nameof(FileImporterPage);
+    public static Type TypeGetter => typeof(FileImporterPage);
 
     private readonly FileImporterViewModel _vm;
 

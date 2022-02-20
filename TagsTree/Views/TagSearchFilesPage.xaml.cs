@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.WinUI.UI.Controls;
+﻿using System;
+using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -16,7 +17,7 @@ namespace TagsTree.Views;
 /// <summary>
 /// TagSearchFilesPage.xaml 的交互逻辑
 /// </summary>
-public partial class TagSearchFilesPage : Page, ITypeName
+public partial class TagSearchFilesPage : Page, ITypeGetter
 {
     public TagSearchFilesPage()
     {
@@ -25,7 +26,7 @@ public partial class TagSearchFilesPage : Page, ITypeName
         InitializeComponent();
         TbSearch.InvokeQuerySubmitted();
     }
-    public static string TypeName => nameof(TagSearchFilesPage);
+    public static Type TypeGetter => typeof(TagSearchFilesPage);
     protected override void OnNavigatedTo(NavigationEventArgs e) => TbSearch.Text = (string)e.Parameter;
 
 
