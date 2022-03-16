@@ -6,7 +6,6 @@
     xmlns:local="using:TagsTree.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:TagsTree.ViewModels"
-    LostFocus="OnLostFocus"
     mc:Ignorable="d">
     <Grid>
         <BreadcrumbBar
@@ -21,8 +20,9 @@
             LostFocus="PathComplement"
             PlaceholderText="标签路径（不包含/:*?&quot;&lt;&gt;|,和空白字符且不为空）"
             SuggestionChosen="SuggestionChosen"
-            Text="{x:Bind Path, Mode=TwoWay}"
+            Text="{x:Bind PathPrivate, Mode=TwoWay}"
             TextChanged="PathChanged"
+            QuerySubmitted="TappedEnter"
             UpdateTextOnSelect="False">
             <AutoSuggestBox.ItemTemplate>
                 <DataTemplate x:DataType="viewModels:TagViewModel">

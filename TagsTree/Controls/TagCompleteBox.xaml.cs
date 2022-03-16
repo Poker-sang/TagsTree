@@ -17,7 +17,7 @@ public partial class TagCompleteBox : UserControl
     public TagCompleteBox()
     {
         InitializeComponent();
-        Switch();
+        Switch(true);
     }
 
     private string _path = "";
@@ -27,16 +27,25 @@ public partial class TagCompleteBox : UserControl
         get => _path;
         set
         {
+            PathPrivate = value;
+            Switch(false);
+        }
+    }
+
+    private string PathPrivate
+    {
+        get => _path;
+        set
+        {
             if (!Equals(_path, value))
             {
                 _path = value;
-                OnPropertyChanged(nameof(Path));
+                OnPropertyChanged(nameof(PathPrivate));
                 Tags.Clear();
-                foreach (var s in Path.Split('\\'))
+                foreach (var s in PathPrivate.Split('\\'))
                     Tags.Add(s);
                 Tags.Add(""); //BreadcrumbBar中最后一个item无法点击，需要多加个空元素
             }
-            Switch();
         }
     }
 
@@ -44,29 +53,39 @@ public partial class TagCompleteBox : UserControl
 
     #region 事件处理
 
-    private void PathComplement(object sender, RoutedEventArgs routedEventArgs) => Path = Path.GetTagViewModel()?.FullName ?? Path;
+    private void PathComplement(object sender, RoutedEventArgs routedEventArgs)
+    {
+        PathPrivate = PathPrivate.GetTagViewModel()?.FullName ?? PathPrivate;
+        Switch(false);
+    }
+
     private void PathChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
     {
-        Path = Regex.Replace(Path, $@"[{FileSystemHelper.GetInvalidPathChars}]+", "");
+        PathPrivate = Regex.Replace(PathPrivate, $@"[{FileSystemHelper.GetInvalidPathChars}]+", "");
         sender.ItemsSource = sender.Text.TagSuggest('\\');
     }
     private void SuggestionChosen(AutoSuggestBox autoSuggestBox, AutoSuggestBoxSuggestionChosenEventArgs e)
     {
-        Path = ((TagViewModel)e.SelectedItem).FullName;
-        Switch();
+        PathPrivate = ((TagViewModel)e.SelectedItem).FullName;
+        Switch(false);
     }
 
-    private void OnLostFocus(object sender, RoutedEventArgs e) => Switch();
+    private void TappedEnter(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e) => Switch(false);
+
+    private void OnItemClicked(BreadcrumbBar sender, BreadcrumbBarItemClickedEventArgs e) => Switch(true);
 
     #endregion
 
-    private void OnItemClicked(BreadcrumbBar sender, BreadcrumbBarItemClickedEventArgs args) => Switch(true);
-
     #region 操作
 
-    private void Switch(bool force = false)
+    /// <summary>
+    /// 转换模式
+    /// </summary>
+    /// <param name="state"> true为输入模式（显示AutoSuggestBox），false为显示模式（显示BreadcrumbBar）</param>
+    /// <
+    private void Switch(bool state)
     {
-        var isFocused = FocusState is not FocusState.Unfocused || Path is "" || force;
+        var isFocused = Path is "" || state;
         AutoSuggestBox.IsHitTestVisible = isFocused;
         AutoSuggestBox.IsEnabled = isFocused;
         AutoSuggestBox.Opacity = isFocused ? 1 : 0;
