@@ -32,7 +32,7 @@ public class FilesObserver : FileSystemWatcher
 
     private new static void Created(object sender, FileSystemEventArgs e)
     {
-        _ = App.Window.DispatcherQueue.TryEnqueue(() =>
+        _ = WindowHelper.Window.DispatcherQueue.TryEnqueue(() =>
         {
             if (App.FilesChangedList.LastOrDefault() is { Type: FileChanged.ChangedType.Delete } item && item.Name == e.FullPath.GetName() && item.FullName != e.FullPath)
             {
@@ -45,7 +45,7 @@ public class FilesObserver : FileSystemWatcher
 
     private new static void Renamed(object sender, RenamedEventArgs e)
     {
-        _ = App.Window.DispatcherQueue.TryEnqueue
+        _ = WindowHelper.Window.DispatcherQueue.TryEnqueue
         (
             () => App.FilesChangedList.Add(new FileChanged(e.FullPath, FileChanged.ChangedType.Rename, e.OldFullPath.GetName()))
         );
@@ -53,7 +53,7 @@ public class FilesObserver : FileSystemWatcher
 
     private new static void Deleted(object sender, FileSystemEventArgs e)
     {
-        _ = App.Window.DispatcherQueue.TryEnqueue
+        _ = WindowHelper.Window.DispatcherQueue.TryEnqueue
         (
             () => App.FilesChangedList.Add(new FileChanged(e.FullPath, FileChanged.ChangedType.Delete))
         );

@@ -1,6 +1,7 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Threading.Tasks;
+using TagsTree.Services.ExtensionMethods;
 
 namespace TagsTree.Services;
 
@@ -43,7 +44,7 @@ public static class ShowMessageDialog
             PrimaryButtonText = "确定",
             CloseButtonText = "取消",
             DefaultButton = ContentDialogButton.Close,
-            XamlRoot = App.Window.Content.XamlRoot
+            XamlRoot = WindowHelper.Window.Content.XamlRoot
         };
         messageDialog.PrimaryButtonClick += (_, _) => result = true;
         messageDialog.CloseButtonClick += (_, _) => result = false;
@@ -72,7 +73,7 @@ public static class ShowMessageDialog
             SecondaryButtonText = "否",
             CloseButtonText = "取消",
             DefaultButton = ContentDialogButton.Close,
-            XamlRoot = App.Window.Content.XamlRoot
+            XamlRoot = WindowHelper.Window.Content.XamlRoot
         };
         messageDialog.PrimaryButtonClick += (_, _) => result = true;
         messageDialog.SecondaryButtonClick += (_, _) => result = false;
