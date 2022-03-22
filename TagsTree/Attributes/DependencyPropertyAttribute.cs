@@ -25,7 +25,7 @@ public sealed class DependencyPropertyAttribute : Attribute
 
     public string PropertyChanged { get; }
 
-    public bool IsSetterPublic { get; init; } = true;
+    public bool IsSetterpublic { get; init; } = true;
 
     public bool IsNullable { get; init; } = true;
 

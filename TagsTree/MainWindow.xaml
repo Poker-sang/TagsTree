@@ -2,93 +2,94 @@
     x:Class="TagsTree.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:TagsTree.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:service="using:TagsTree.Services"
     xmlns:ui="using:CommunityToolkit.WinUI.UI"
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
     mc:Ignorable="d">
-    <NavigationView
-        x:Name="NavigationView"
-        BackRequested="BackRequested"
-        IsSettingsVisible="False"
-        ItemInvoked="ItemInvoked"
-        Loaded="Loaded"
-        OpenPaneLength="{x:Bind PaneWidth, Mode=OneWay}"
-        PaneDisplayMode="Left"
-        PaneTitle="TagsTree"
-        SizeChanged="OnSizeChanged">
-        <NavigationView.MenuItems>
-            <NavigationViewItem
-                Content="主页"
-                Icon="{ui:FontIcon Glyph=&#xE80F;}"
-                IsEnabled="False"
-                Tag="{x:Bind local:IndexPage.TypeGetter}" />
-            <NavigationViewItem
-                Content="标签管理"
-                Icon="{ui:FontIcon Glyph=&#xE8EC;}"
-                IsEnabled="False"
-                Tag="{x:Bind local:TagsManagerPage.TypeGetter}" />
-            <NavigationViewItem
-                Content="文件引入"
-                Icon="{ui:FontIcon Glyph=&#xEC50;}"
-                IsEnabled="False"
-                Tag="{x:Bind local:FileImporterPage.TypeGetter}" />
-            <NavigationViewItem
-                Content="为标签添加文件"
-                Icon="{ui:FontIcon Glyph=&#xECC8;}"
-                IsEnabled="False"
-                Tag="{x:Bind local:SelectTagToEditPage.TypeGetter}" />
-        </NavigationView.MenuItems>
-        <NavigationView.FooterMenuItems>
-            <NavigationViewItem
-                Content="监控文件"
-                Icon="{ui:FontIcon Glyph=&#xE7B3;}"
-                IsEnabled="False"
-                Tag="{x:Bind local:FilesObserverPage.TypeGetter}" />
-            <NavigationViewItem
-                Content="设置"
-                Icon="{ui:FontIcon Glyph=&#xE713;}"
-                Tag="{x:Bind local:SettingsPage.TypeGetter}" />
-        </NavigationView.FooterMenuItems>
-        <uiControls:DockPanel>
-            <Grid
-                x:Name="TitleBar"
-                Height="28"
-                uiControls:DockPanel.Dock="Top"
-                Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-                <Grid.Resources>
-                    <ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
-                </Grid.Resources>
-                <CommandBar OverflowButtonVisibility="Collapsed">
-                    <AppBarButton Width="40">
-                        <AppBarButton.Content>
-                            <TextBlock
-                                FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                FontSize="1"
-                                Text="&#xE921;"
-                                TextAlignment="Center" />
-                        </AppBarButton.Content>
-                    </AppBarButton>
-                    <AppBarButton Width="40">
-                        <AppBarButton.Content>
-                            <TextBlock
-                                FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                FontSize="1"
-                                Text="&#xE922;"
-                                TextAlignment="Center" />
-                        </AppBarButton.Content>
-                    </AppBarButton>
-                    <AppBarButton Width="40" Click="CloseButtonClick">
-                        <TextBlock
-                            FontFamily="{StaticResource SymbolThemeFontFamily}"
-                            FontSize="1"
-                            Text="&#xE8BB;"
-                            TextAlignment="Center" />
-                    </AppBarButton>
-                </CommandBar>
-            </Grid>
-            <Frame x:Name="NavigateFrame" />
+    <uiControls:DockPanel>
+        <uiControls:DockPanel uiControls:DockPanel.Dock="Top" Background="White">
+            <CommandBar
+                uiControls:DockPanel.Dock="Left"
+                Background="Transparent"
+                DefaultLabelPosition="Collapsed"
+                OverflowButtonVisibility="Collapsed">
+                <AppBarButton
+                    x:Name="BBackRequest"
+                    Width="30"
+                    Click="BackRequested"
+                    IsEnabled="False">
+                    <Image Scale="{x:Bind Vector3}" Source="{x:Bind service:IconsHelper.Back}" />
+                </AppBarButton>
+            </CommandBar>
+            <CommandBar x:Name="TitleBar" OverflowButtonVisibility="Collapsed">
+                <AppBarButton Width="40" Click="MinimizeClick">
+                    <Image Scale="{x:Bind Vector3}" Source="{x:Bind service:IconsHelper.Minimize}" />
+                </AppBarButton>
+                <AppBarButton
+                    Width="40"
+                    Click="MaximizeClick"
+                    PointerEntered="EnteredSnap"
+                    PointerExited="ExitedSnap">
+                    <Image
+                        x:Name="IMaximize"
+                        Scale="{x:Bind Vector3}"
+                        Source="{x:Bind service:IconsHelper.Maximize}" />
+                </AppBarButton>
+                <AppBarButton Width="40" Click="CloseButtonClick">
+                    <AppBarButton.Icon>
+                        <ImageIcon Scale="{x:Bind Vector3}" Source="{x:Bind service:IconsHelper.Close}" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+            </CommandBar>
         </uiControls:DockPanel>
-    </NavigationView>
+        <NavigationView
+            x:Name="NavigationView"
+            IsBackButtonVisible="Collapsed"
+            IsSettingsVisible="False"
+            ItemInvoked="ItemInvoked"
+            Loaded="Loaded"
+            OpenPaneLength="{x:Bind PaneWidth, Mode=OneWay}"
+            PaneDisplayMode="Left"
+            PaneTitle="TagsTree"
+            SizeChanged="OnSizeChanged">
+            <NavigationView.MenuItems>
+                <NavigationViewItem
+                    Content="主页"
+                    Icon="{ui:FontIcon Glyph=&#xE80F;}"
+                    IsEnabled="False"
+                    Tag="{x:Bind local:IndexPage.TypeGetter}" />
+                <NavigationViewItem
+                    Content="标签管理"
+                    Icon="{ui:FontIcon Glyph=&#xE8EC;}"
+                    IsEnabled="False"
+                    Tag="{x:Bind local:TagsManagerPage.TypeGetter}" />
+                <NavigationViewItem
+                    Content="文件引入"
+                    Icon="{ui:FontIcon Glyph=&#xEC50;}"
+                    IsEnabled="False"
+                    Tag="{x:Bind local:FileImporterPage.TypeGetter}" />
+                <NavigationViewItem
+                    Content="为标签添加文件"
+                    Icon="{ui:FontIcon Glyph=&#xECC8;}"
+                    IsEnabled="False"
+                    Tag="{x:Bind local:SelectTagToEditPage.TypeGetter}" />
+            </NavigationView.MenuItems>
+            <NavigationView.FooterMenuItems>
+                <NavigationViewItem
+                    Content="监控文件"
+                    Icon="{ui:FontIcon Glyph=&#xE7B3;}"
+                    IsEnabled="False"
+                    Tag="{x:Bind local:FilesObserverPage.TypeGetter}" />
+                <NavigationViewItem
+                    Content="设置"
+                    Icon="{ui:FontIcon Glyph=&#xE713;}"
+                    Tag="{x:Bind local:SettingsPage.TypeGetter}" />
+            </NavigationView.FooterMenuItems>
+            <Frame x:Name="NavigateFrame" />
+        </NavigationView>
+    </uiControls:DockPanel>
 </Window>

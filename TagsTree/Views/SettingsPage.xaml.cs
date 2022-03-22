@@ -1,6 +1,6 @@
-﻿using System;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System;
 using System.Text.RegularExpressions;
 using TagsTree.Interfaces;
 using TagsTree.Services.ExtensionMethods;
@@ -71,7 +71,7 @@ public partial class SettingsPage : Page, ITypeGetter
             if (!App.ConfigSet)
             {
                 App.ConfigSet = true;
-                await App.Window.ConfigIsSet();
+                await WindowHelper.Window.ConfigIsSet();
             }
             else ((NavigationViewItem)App.RootNavigationView.FooterMenuItems[0]).IsEnabled = await App.ChangeFilesObserver();
         }
