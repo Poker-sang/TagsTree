@@ -112,10 +112,10 @@ public partial class App : Application
     }
 
 
-    public static string FilesChangedPath { get; } = AppContext.AppLocalFolder + @"\FileChanged.json";
-    public static string TagsPath { get; } = AppContext.AppLocalFolder + @"\TagsTree.json";
-    private static string FilesPath { get; } = AppContext.AppLocalFolder + @"\Files.json";
-    private static string RelationsPath { get; } = AppContext.AppLocalFolder + @"\Relations.csv";
+    public static string FilesChangedPath => AppContext.AppLocalFolder + @"\FileChanged.json";
+    public static string TagsPath => AppContext.AppLocalFolder + @"\TagsTree.json";
+    private static string FilesPath => AppContext.AppLocalFolder + @"\Files.json";
+    private static string RelationsPath => AppContext.AppLocalFolder + @"\Relations.csv";
 
     /// <summary>
     /// 保存标签
