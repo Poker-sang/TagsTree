@@ -6,12 +6,10 @@ namespace TagsTree;
 [LoadSaveConfiguration(typeof(AppConfiguration), nameof(_configurationContainer), CastMethod = "TagsTree.Services.ExtensionMethods.Misc.CastThrow")]
 public static partial class AppContext
 {
-
     private static ApplicationDataContainer _configurationContainer = null!;
 
     private const string ConfigurationContainerKey = "Config";
     public static string AppLocalFolder { get; private set; } = null!;
-
 
     public static void Initialize()
     {
