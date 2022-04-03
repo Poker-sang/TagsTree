@@ -95,7 +95,6 @@ partial class {name}
                 // saveConfigurationContent 后已有空行
                 .Append(saveConfigurationContent)
                 .AppendLine(saveConfigurationEndAndClassEnd);
-            Debugger.Launch();
             return stringBuilder.ToString();
         }
 
