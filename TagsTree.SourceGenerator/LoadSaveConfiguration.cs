@@ -2,7 +2,6 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -95,7 +94,6 @@ partial class {name}
                 // saveConfigurationContent 后已有空行
                 .Append(saveConfigurationContent)
                 .AppendLine(saveConfigurationEndAndClassEnd);
-            Debugger.Launch();
             return stringBuilder.ToString();
         }
 

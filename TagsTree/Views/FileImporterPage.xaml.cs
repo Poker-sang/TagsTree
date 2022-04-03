@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using TagsTree.Interfaces;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
@@ -15,7 +14,7 @@ namespace TagsTree.Views;
 /// <summary>
 /// FileImporterPage.xaml 的交互逻辑
 /// </summary>
-public partial class FileImporterPage : Page, ITypeGetter
+public partial class FileImporterPage : Page
 {
     public FileImporterPage()
     {

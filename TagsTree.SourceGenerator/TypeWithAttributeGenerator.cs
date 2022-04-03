@@ -1,6 +1,6 @@
-﻿using System;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using static TagsTree.SourceGenerator.Utilities;
@@ -93,8 +93,14 @@ public class TypeWithAttributeGenerator : IIncrementalGenerator
             if (semanticModel.GetDeclaredSymbol(typeDeclarationSyntax) is not INamedTypeSymbol typeSymbol)
                 continue;
 
+            // 同种attribute只判断一遍
+            var usedAttributes = new HashSet<string>();
+
             // 遍历class上每个Attribute
+            //[...,...]
+            //[...,...]
             foreach (var attributeListSyntax in typeDeclarationSyntax.AttributeLists)
+                //[...,...]
                 foreach (var attributeSyntax in attributeListSyntax.Attributes)
                 {
                     if (semanticModel.GetSymbolInfo(attributeSyntax).Symbol is not IMethodSymbol attributeCtorSymbol)
@@ -102,9 +108,15 @@ public class TypeWithAttributeGenerator : IIncrementalGenerator
                     var attributeName = attributeCtorSymbol.ContainingType.ToDisplayString();
                     if (!Attributes.ContainsKey(attributeName))
                         continue;
+                    if (usedAttributes.Contains(attributeName))
+                        continue;
+                    usedAttributes.Add(attributeName);
+
                     if (Attributes[attributeName](typeDeclarationSyntax, typeSymbol, attribute => SymbolEqualityComparer.Default.Equals(attribute.AttributeClass, attributeCtorSymbol.ContainingType)) is { } source)
-                        context.AddSource(typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat
-                            .WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted)) + ".g.cs", source);
+                        context.AddSource(
+                            // 不能重名
+                            $"{typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat.WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted))}_{attributeName}.g.cs",
+                            source);
                 }
         }
     }

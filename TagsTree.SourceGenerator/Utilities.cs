@@ -12,7 +12,6 @@ internal static class Utilities
 {
     internal static INamedTypeSymbol ObjectSymbol { get; set; } = null!;
 
-
     #region Abstract Syntax Tree Generate
 
     /// <summary>

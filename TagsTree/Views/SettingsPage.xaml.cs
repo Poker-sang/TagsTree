@@ -2,7 +2,6 @@
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Text.RegularExpressions;
-using TagsTree.Interfaces;
 using TagsTree.Services.ExtensionMethods;
 
 namespace TagsTree.Views;
@@ -10,7 +9,7 @@ namespace TagsTree.Views;
 /// <summary>
 /// SettingsPage.xaml 的交互逻辑
 /// </summary>
-public partial class SettingsPage : Page, ITypeGetter
+public partial class SettingsPage : Page
 {
     public SettingsPage()
     {
