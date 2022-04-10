@@ -4,7 +4,6 @@ using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using TagsTree.Interfaces;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
 
@@ -14,7 +13,7 @@ namespace TagsTree.Views;
 /// TagsManagerPage.xaml 的交互逻辑
 /// </summary>
 [INotifyPropertyChanged]
-public partial class TagsManagerPage : Page, ITypeGetter
+public partial class TagsManagerPage : Page
 {
     public TagsManagerPage()
     {

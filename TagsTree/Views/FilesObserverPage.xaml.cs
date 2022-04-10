@@ -3,7 +3,6 @@ using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TagsTree.Interfaces;
 using TagsTree.Models;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
@@ -14,7 +13,7 @@ namespace TagsTree.Views;
 /// <summary>
 /// FilesObserverPage.xaml 的交互逻辑
 /// </summary>
-public sealed partial class FilesObserverPage : Page, ITypeGetter
+public sealed partial class FilesObserverPage : Page
 {
     public FilesObserverPage()
     {

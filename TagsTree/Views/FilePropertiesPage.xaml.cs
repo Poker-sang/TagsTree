@@ -5,7 +5,6 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.VisualBasic.FileIO;
 using System;
-using TagsTree.Interfaces;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
@@ -16,7 +15,7 @@ namespace TagsTree.Views;
 /// FilePropertiesPage.xaml 的交互逻辑
 /// </summary>
 [INotifyPropertyChanged]
-public partial class FilePropertiesPage : Page, ITypeGetter
+public partial class FilePropertiesPage : Page
 {
     public FilePropertiesPage() => InitializeComponent();
     public static Type TypeGetter => typeof(FilePropertiesPage);

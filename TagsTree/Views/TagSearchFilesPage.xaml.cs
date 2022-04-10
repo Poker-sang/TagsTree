@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using TagsTree.Interfaces;
 using TagsTree.Models;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
@@ -17,7 +16,7 @@ namespace TagsTree.Views;
 /// <summary>
 /// TagSearchFilesPage.xaml 的交互逻辑
 /// </summary>
-public partial class TagSearchFilesPage : Page, ITypeGetter
+public partial class TagSearchFilesPage : Page
 {
     public TagSearchFilesPage()
     {
