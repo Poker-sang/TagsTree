@@ -1,8 +1,6 @@
-﻿using System;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static TagsTree.SourceGenerator.Utilities;
@@ -11,13 +9,13 @@ namespace TagsTree.SourceGenerator;
 
 internal static partial class TypeWithAttributeDelegates
 {
-    public static string? DependencyProperty(TypeDeclarationSyntax typeDeclaration, INamedTypeSymbol typeSymbol, Func<AttributeData, bool> attributeEqualityComparer)
+    public static string? DependencyProperty(TypeDeclarationSyntax typeDeclaration, INamedTypeSymbol typeSymbol, List<AttributeData> attributeList)
     {
         var members = new List<MemberDeclarationSyntax>();
         var namespaces = new HashSet<string> { "Microsoft.UI.Xaml" };
         var usedTypes = new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
 
-        foreach (var attribute in typeSymbol.GetAttributes().Where(attributeEqualityComparer))
+        foreach (var attribute in attributeList)
         {
             if (attribute.ConstructorArguments[0].Value is not string propertyName || attribute.ConstructorArguments[1].Value is not INamedTypeSymbol type)
                 continue;
