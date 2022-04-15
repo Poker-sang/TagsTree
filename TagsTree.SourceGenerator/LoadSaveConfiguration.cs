@@ -11,50 +11,49 @@ namespace TagsTree.SourceGenerator;
 
 internal static partial class TypeWithAttributeDelegates
 {
-    public static string? LoadSaveConfiguration(TypeDeclarationSyntax typeDeclaration, INamedTypeSymbol typeSymbol, Func<AttributeData, bool> attributeEqualityComparer)
+    public static string? LoadSaveConfiguration(TypeDeclarationSyntax typeDeclaration, INamedTypeSymbol typeSymbol, List<AttributeData> attributeList)
     {
-        foreach (var attribute in typeSymbol.GetAttributes().Where(attributeEqualityComparer))
+        var attribute = attributeList[0];
+        if (attribute.ConstructorArguments[0].Value is not INamedTypeSymbol type)
+            return null;
+        if (attribute.ConstructorArguments[1].Value is not string containerName)
+            return null;
+
+        string? staticClassName = null;
+        string? methodName = null;
+
+        if (attribute.NamedArguments[0].Key is "CastMethod" && attribute.NamedArguments[0].Value.Value is { } value)
         {
-            if (attribute.ConstructorArguments[0].Value is not INamedTypeSymbol type)
-                continue;
-            if (attribute.ConstructorArguments[1].Value is not string containerName)
-                continue;
+            var castMethodFullName = (string)value;
+            var dotPosition = castMethodFullName.LastIndexOf('.');
+            if (dotPosition is -1)
+                throw new InvalidDataException("\"CastMethod\" must contain the full name.");
+            staticClassName = "static " + castMethodFullName.Substring(0, dotPosition);
+            methodName = castMethodFullName.Substring(dotPosition + 1);
+        }
 
-            string? staticClassName = null;
-            string? methodName = null;
-
-            if (attribute.NamedArguments[0].Key is "CastMethod" && attribute.NamedArguments[0].Value.Value is { } value)
-            {
-                var castMethodFullName = (string)value;
-                var dotPosition = castMethodFullName.LastIndexOf('.');
-                if (dotPosition is -1)
-                    throw new InvalidDataException("\"CastMethod\" must contain the full name.");
-                staticClassName = "static " + castMethodFullName.Substring(0, dotPosition);
-                methodName = castMethodFullName.Substring(dotPosition + 1);
-            }
-
-            var name = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-            var namespaces = new HashSet<string>();
-            if (staticClassName is not null)
-                namespaces.Add(staticClassName);//methodName方法所用namespace
-            var usedTypes = new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
-            /*-----Body Begin-----*/
-            var stringBuilder = new StringBuilder().AppendLine("#nullable enable\n");
-            /*-----Splitter-----*/
-            var classBegin = @$"
+        var name = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+        var namespaces = new HashSet<string>();
+        if (staticClassName is not null)
+            namespaces.Add(staticClassName); //methodName方法所用namespace
+        var usedTypes = new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
+        /*-----Body Begin-----*/
+        var stringBuilder = new StringBuilder().AppendLine("#nullable enable\n");
+        /*-----Splitter-----*/
+        var classBegin = @$"
 namespace {typeSymbol.ContainingNamespace.ToDisplayString()};
 
 partial class {name}
 {{";
-            var loadConfigurationBegin = $@"    public static {type.Name}? LoadConfiguration()
+        var loadConfigurationBegin = $@"    public static {type.Name}? LoadConfiguration()
     {{
         try
         {{
             return new {type.Name}(";
-            /*-----Splitter-----*/
-            var loadConfigurationContent = new StringBuilder();
-            /*-----Splitter-----*/
-            var loadConfigurationEndAndSaveConfigurationBegin = $@"           );
+        /*-----Splitter-----*/
+        var loadConfigurationContent = new StringBuilder();
+        /*-----Splitter-----*/
+        var loadConfigurationEndAndSaveConfigurationBegin = $@"           );
         }}
         catch
         {{
@@ -66,38 +65,37 @@ partial class {name}
     {{
         if (configuration is {{ }} appConfiguration)
         {{";
-            /*-----Splitter-----*/
-            var saveConfigurationContent = new StringBuilder();
-            /*-----Splitter-----*/
-            const string saveConfigurationEndAndClassEnd = $@"      }}
+        /*-----Splitter-----*/
+        var saveConfigurationContent = new StringBuilder();
+        /*-----Splitter-----*/
+        const string saveConfigurationEndAndClassEnd = $@"      }}
     }}
 }}";
-            /*-----Body End-----*/
-            foreach (var member in type.GetMembers().Where(member =>
-                             member is { Kind: SymbolKind.Property } and not { Name: "EqualityContract" })
-                         .Cast<IPropertySymbol>())
-            {
-                loadConfigurationContent.AppendLine(LoadRecord(member.Name, member.Type.Name, type.Name, containerName, methodName));
-                saveConfigurationContent.AppendLine(SaveRecord(member.Name, member.Type, type.Name, containerName, methodName));
-                namespaces.UseNamespace(usedTypes, typeSymbol, member.Type);
-            }
-
-            // 去除" \r\n"
-            loadConfigurationContent = loadConfigurationContent.Remove(loadConfigurationContent.Length - 3, 3);
-
-            foreach (var s in namespaces)
-                _ = stringBuilder.AppendLine($"using {s};");
-            stringBuilder.AppendLine(classBegin)
-                .AppendLine(loadConfigurationBegin)
-                .AppendLine(loadConfigurationContent.ToString())
-                .AppendLine(loadConfigurationEndAndSaveConfigurationBegin)
-                // saveConfigurationContent 后已有空行
-                .Append(saveConfigurationContent)
-                .AppendLine(saveConfigurationEndAndClassEnd);
-            return stringBuilder.ToString();
+        /*-----Body End-----*/
+        foreach (var member in type.GetMembers().Where(member =>
+                         member is { Kind: SymbolKind.Property } and not { Name: "EqualityContract" })
+                     .Cast<IPropertySymbol>())
+        {
+            loadConfigurationContent.AppendLine(LoadRecord(member.Name, member.Type.Name, type.Name, containerName,
+                methodName));
+            saveConfigurationContent.AppendLine(SaveRecord(member.Name, member.Type, type.Name, containerName,
+                methodName));
+            namespaces.UseNamespace(usedTypes, typeSymbol, member.Type);
         }
 
-        return null;
+        // 去除" \r\n"
+        loadConfigurationContent = loadConfigurationContent.Remove(loadConfigurationContent.Length - 3, 3);
+
+        foreach (var s in namespaces)
+            _ = stringBuilder.AppendLine($"using {s};");
+        stringBuilder.AppendLine(classBegin)
+            .AppendLine(loadConfigurationBegin)
+            .AppendLine(loadConfigurationContent.ToString())
+            .AppendLine(loadConfigurationEndAndSaveConfigurationBegin)
+            // saveConfigurationContent 后已有空行
+            .Append(saveConfigurationContent)
+            .AppendLine(saveConfigurationEndAndClassEnd);
+        return stringBuilder.ToString();
     }
 
 
