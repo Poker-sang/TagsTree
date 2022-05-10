@@ -11,9 +11,6 @@ using TagsTree.ViewModels;
 
 namespace TagsTree.Views;
 
-/// <summary>
-/// FileImporterPage.xaml 的交互逻辑
-/// </summary>
 public partial class FileImporterPage : Page
 {
     public FileImporterPage()

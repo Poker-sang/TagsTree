@@ -8,9 +8,6 @@ using TagsTree.ViewModels;
 
 namespace TagsTree.Controls;
 
-/// <summary>
-/// TagCompleteBox.xaml 的交互逻辑
-/// </summary>
 [INotifyPropertyChanged]
 public partial class TagCompleteBox : UserControl
 {

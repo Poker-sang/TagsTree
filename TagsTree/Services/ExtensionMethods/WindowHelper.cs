@@ -2,6 +2,7 @@
 using Microsoft.UI.Windowing;
 using PInvoke;
 using System;
+using System.Runtime.InteropServices;
 using WinRT;
 using WinRT.Interop;
 
@@ -11,14 +12,13 @@ public static class WindowHelper
 {
     public static MainWindow Window { get; private set; } = null!;
     public static IntPtr HWnd { get; private set; } = IntPtr.Zero;
-    public static AppWindow AppWindow { get; private set; } = null!;
 
-    public static MainWindow Initialize()
+    public static MainWindow Initialize(bool darkThemeEnabled)
     {
         Window = new MainWindow();
         //等效于 HWnd = PInvoke.User32.GetActiveWindow();
         HWnd = WindowNative.GetWindowHandle(Window);
-        AppWindow = AppWindow.GetFromWindowId(Win32Interop.GetWindowIdFromWindow(HWnd));
+        EnableMica(HWnd, darkThemeEnabled);
         return Window;
     }
 
@@ -33,17 +33,21 @@ public static class WindowHelper
         return mainWindow;
     }
 
-    public static void Activate(this MainWindow mainWindow) => mainWindow.Activate();
-
-    public static void Maximize() => User32.ShowWindow(HWnd, User32.WindowShowStyle.SW_MAXIMIZE);
-    public static void Minimize() => User32.ShowWindow(HWnd, User32.WindowShowStyle.SW_MINIMIZE);
-    public static void Restore() => User32.ShowWindow(HWnd, User32.WindowShowStyle.SW_RESTORE);
-
     public static T InitializeWithWindow<T>(this T obj)
     {
         // When running on win32, FileOpenPicker needs to know the top-level hWnd via IInitializeWithWindow::Initialize.
         if (Microsoft.UI.Xaml.Window.Current is null)
             obj.As<Imports.IInitializeWithWindow>()?.Initialize(HWnd); //HWnd 或者 User32.GetActiveWindow()
         return obj;
+    }
+
+    private static void EnableMica(IntPtr hWnd, bool darkThemeEnabled)
+    {
+        var trueValue = 1;
+        var falseValue = 0;
+        _ = darkThemeEnabled
+            ? Imports.DwmSetWindowAttribute(hWnd, Imports.DwmWindowAttribute.DwmwaUseImmersiveDarkMode, ref trueValue, Marshal.SizeOf<int>())
+            : Imports.DwmSetWindowAttribute(hWnd, Imports.DwmWindowAttribute.DwmwaUseImmersiveDarkMode, ref falseValue, Marshal.SizeOf<int>());
+        _ = Imports.DwmSetWindowAttribute(hWnd, Imports.DwmWindowAttribute.DwmwaMicaEffect, ref trueValue, Marshal.SizeOf<int>());
     }
 }

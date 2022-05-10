@@ -8,9 +8,6 @@ using TagsTree.ViewModels;
 
 namespace TagsTree.Views;
 
-/// <summary>
-/// SelectTagToEditPage.xaml 的交互逻辑
-/// </summary>
 public partial class SelectTagToEditPage : Page
 {
     public SelectTagToEditPage() => InitializeComponent();

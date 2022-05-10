@@ -9,9 +9,6 @@ using TagsTree.ViewModels;
 
 namespace TagsTree.Views;
 
-/// <summary>
-/// TagsManagerPage.xaml 的交互逻辑
-/// </summary>
 [INotifyPropertyChanged]
 public partial class TagsManagerPage : Page
 {

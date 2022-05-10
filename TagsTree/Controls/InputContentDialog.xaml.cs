@@ -7,9 +7,6 @@ using TagsTree.Services.ExtensionMethods;
 
 namespace TagsTree.Controls;
 
-/// <summary>
-/// InputContentDialog.xaml 的交互逻辑
-/// </summary>
 [INotifyPropertyChanged]
 public partial class InputContentDialog : ContentDialog
 {

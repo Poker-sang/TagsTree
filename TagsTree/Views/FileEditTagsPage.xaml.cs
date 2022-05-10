@@ -7,9 +7,6 @@ using TagsTree.ViewModels;
 
 namespace TagsTree.Views;
 
-/// <summary>
-/// FileEditTagsPage.xaml 的交互逻辑
-/// </summary>
 public partial class FileEditTagsPage : Page
 {
     public FileEditTagsPage()

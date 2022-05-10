@@ -8,9 +8,6 @@ using Windows.Foundation;
 
 namespace TagsTree.Controls;
 
-/// <summary>
-/// TagSearchBox.xaml 的交互逻辑
-/// </summary>
 public partial class TagSearchBox : UserControl
 {
 

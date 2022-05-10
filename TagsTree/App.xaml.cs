@@ -5,12 +5,10 @@ using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using PInvoke;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using TagsTree.Algorithm;
 using TagsTree.Models;
@@ -19,14 +17,8 @@ using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
 using TagsTree.Views;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
 namespace TagsTree;
 
-/// <summary>
-/// Provides application-specific behavior to supplement the default Application class.
-/// </summary>
 public partial class App : Application
 {
     public static AppConfiguration AppConfiguration { get; private set; } = null!;
@@ -37,10 +29,6 @@ public partial class App : Application
     public static bool ConfigSet { get; set; }
 
 
-    /// <summary>
-    /// Initializes the singleton application object.  This is the first line of authored code
-    /// executed, and as such is the logical equivalent of main() or WinMain().
-    /// </summary>
     public App()
     {
         InitializeComponent();
@@ -71,26 +59,13 @@ public partial class App : Application
         };
     }
 
-    /// <summary>
-    /// Invoked when the application is launched normally by the end user.  Other entry points
-    /// will be used such as when the application is launched to open a specific file.
-    /// </summary>
     /// <param name="args">Details about the launch request and process.</param>
-    protected override async void OnLaunched(LaunchActivatedEventArgs args)
+    protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
-        await IconsHelper.Initialize2();
         //TODO 标题栏
-        WindowHelper.Initialize().SetWindowSize(800, 450);
-
-        // We could probably do this a little earlier, but we need to wait
-        // for the CoreWindow to be ready so can get its HWND, and this is
-        // Good Enough(tm).
-        unsafe
-        {
-            //_oldWndProc = SetWndProc(WindowProcess);
-        }
-
-        WindowHelper.Window.Activate();
+        WindowHelper.Initialize(RequestedTheme is ApplicationTheme.Dark)
+            .SetWindowSize(800, 450)
+            .Activate();
     }
 
 
@@ -230,91 +205,6 @@ public partial class App : Application
         Current.Exit();
     }
     public record ApplicationExitingMessage;
-
-    #endregion
-
-    #region test
-
-    private static IntPtr GetCoreWindowHwnd()
-    {
-        dynamic coreWindow = Windows.UI.Core.CoreWindow.GetForCurrentThread();
-        var interop = (Imports.ICoreWindowInterop)coreWindow;
-        return interop.WindowHandle;
-    }
-
-    public static IntPtr SetWndProc(User32.WndProc newProc)
-    {
-        var hwnd = WindowHelper.HWnd;
-
-        IntPtr functionPointer = Marshal.GetFunctionPointerForDelegate(newProc);
-
-        if (IntPtr.Size is 8)
-        {
-            return User32.SetWindowLongPtr(hwnd, User32.WindowLongIndexFlags.GWLP_WNDPROC, functionPointer);
-        }
-        else
-        {
-            //return User32.SetWindowLong(hwnd, User32.WindowLongIndexFlags.GWLP_WNDPROC,setwin);
-        }
-        return IntPtr.Zero;
-    }
-
-    private const int HTMAXBUTTON = 9;
-
-
-
-    private IntPtr _oldWndProc;
-
-
-    private unsafe IntPtr WindowProcess(IntPtr hWnd, User32.WindowMessage message, void* wParam, void* lParam)
-    {
-        switch (message)
-        {
-            case User32.WindowMessage.WM_NCHITTEST:
-                try
-                {
-                    int x = (int)lParam & 0xffff;
-                    int y = (int)lParam >> 16;
-                    if (WindowHelper.Window.SnapEnabled)
-                        return new IntPtr(HTMAXBUTTON);
-                }
-                catch (OverflowException)
-                {
-                }
-                break;
-            case User32.WindowMessage.WM_CLOSE:
-                Exit();
-                break;
-        }
-        return IntPtr.Zero;
-        // Any custom WndProc handling code goes here...
-        return (IntPtr)(9);
-        if (WindowHelper.Window.SnapEnabled)
-        {
-            Debug.WriteLine("fuck");
-            return User32.HBMMENU_MBAR_MINIMIZE;
-        }
-        //switch (message)
-        //{
-        //    case User32.WindowMessage.WM_NCHITTEST:
-        //    {
-        //        return (IntPtr)9;
-        //            //    // Get the point in screen coordinates.
-        //            //    // GET_X_LPARAM and GET_Y_LPARAM are defined in windowsx.h
-        //            //    POINT point = { (lParam), GET_Y_LPARAM(lParam) };
-        //            //// Map the point to client coordinates.
-        //            //::MapWindowPoints(nullptr, window, &point, 1);
-        //            //// If the point is in your maximize button then return HTMAXBUTTON
-        //            //if (::PtInRect(&m_maximizeButtonRect, point))
-        //            //{
-        //            //    return User32.HTMAXBUTTON;
-        //            //}
-        //    }
-        //        break;
-        //}
-        // Call the "base" WndProc
-        return Imports.CallWindowProc(_oldWndProc, hWnd, message, wParam, lParam);
-    }
 
     #endregion
 }

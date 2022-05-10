@@ -10,11 +10,12 @@ namespace TagsTree.Models;
 
 /// <summary>
 /// Column标签，Row是文件，键分别是文件和标签的Id
-/// 数字记录节省文件空间
 /// </summary>
+/// <remarks>
+/// Id记录节省文件空间
+/// </remarks>
 public class RelationsDataTable : TableDictionary<int, int>
 {
-
     public RelationsDataTable() : base(int.Parse, int.Parse) { }
 
     public bool this[TagViewModel tag, FileModel fileModel]

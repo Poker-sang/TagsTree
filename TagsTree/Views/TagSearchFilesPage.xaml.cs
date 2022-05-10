@@ -13,9 +13,6 @@ using TagsTree.ViewModels;
 
 namespace TagsTree.Views;
 
-/// <summary>
-/// TagSearchFilesPage.xaml 的交互逻辑
-/// </summary>
 public partial class TagSearchFilesPage : Page
 {
     public TagSearchFilesPage()

@@ -36,7 +36,6 @@ public class TypeWithAttributeGenerator : IIncrementalGenerator
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        Debugger.Launch();
         IncrementalValuesProvider<TypeDeclarationSyntax> typeDeclarations = context.SyntaxProvider
             .CreateSyntaxProvider(
                 static (s, _) => IsSyntaxTargetForGeneration(s),
