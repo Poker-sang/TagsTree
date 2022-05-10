@@ -6,12 +6,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:service="using:TagsTree.Services"
     xmlns:ui="using:CommunityToolkit.WinUI.UI"
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
     mc:Ignorable="d">
     <uiControls:DockPanel>
-        <uiControls:DockPanel uiControls:DockPanel.Dock="Top" Background="White">
+        <uiControls:DockPanel uiControls:DockPanel.Dock="Top">
             <CommandBar
                 uiControls:DockPanel.Dock="Left"
                 Background="Transparent"
@@ -19,32 +18,12 @@
                 OverflowButtonVisibility="Collapsed">
                 <AppBarButton
                     x:Name="BBackRequest"
-                    Width="30"
+                    Width="48"
                     Click="BackRequested"
-                    IsEnabled="False">
-                    <Image Scale="{x:Bind Vector3}" Source="{x:Bind service:IconsHelper.Back}" />
-                </AppBarButton>
+                    Icon="{ui:FontIcon Glyph=&#xE72B;}"
+                    IsEnabled="False" />
             </CommandBar>
-            <CommandBar x:Name="TitleBar" OverflowButtonVisibility="Collapsed">
-                <AppBarButton Width="40" Click="MinimizeClick">
-                    <Image Scale="{x:Bind Vector3}" Source="{x:Bind service:IconsHelper.Minimize}" />
-                </AppBarButton>
-                <AppBarButton
-                    Width="40"
-                    Click="MaximizeClick"
-                    PointerEntered="EnteredSnap"
-                    PointerExited="ExitedSnap">
-                    <Image
-                        x:Name="IMaximize"
-                        Scale="{x:Bind Vector3}"
-                        Source="{x:Bind service:IconsHelper.Maximize}" />
-                </AppBarButton>
-                <AppBarButton Width="40" Click="CloseButtonClick">
-                    <AppBarButton.Icon>
-                        <ImageIcon Scale="{x:Bind Vector3}" Source="{x:Bind service:IconsHelper.Close}" />
-                    </AppBarButton.Icon>
-                </AppBarButton>
-            </CommandBar>
+            <Rectangle x:Name="TitleBar" Fill="Transparent" />
         </uiControls:DockPanel>
         <NavigationView
             x:Name="NavigationView"

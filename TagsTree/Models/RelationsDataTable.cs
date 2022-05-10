@@ -4,17 +4,19 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using TagsTree.Algorithm;
+using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
 
 namespace TagsTree.Models;
 
 /// <summary>
 /// Column标签，Row是文件，键分别是文件和标签的Id
-/// 数字记录节省文件空间
 /// </summary>
+/// <remarks>
+/// <see cref="FileModel.Id"/>记录节省文件空间
+/// </remarks>
 public class RelationsDataTable : TableDictionary<int, int>
 {
-
     public RelationsDataTable() : base(int.Parse, int.Parse) { }
 
     public bool this[TagViewModel tag, FileModel fileModel]
@@ -32,9 +34,12 @@ public class RelationsDataTable : TableDictionary<int, int>
 
     public static ObservableCollection<FileViewModel> FuzzySearchName(string input, IEnumerable<FileViewModel> range)
     {   //大小写不敏感
-        var precise = new List<FileViewModel>(); //完整包含搜索内容
-        var fuzzy = new List<FileViewModel>(); //有序并全部包含所有字符
-        var part = new List<KeyValuePair<int, FileViewModel>>(); //包含任意一个字符，并按包含数排序
+        //完整包含搜索内容
+        var precise = new List<FileViewModel>();
+        //有序并全部包含所有字符
+        var fuzzy = new List<FileViewModel>();
+        //包含任意一个字符，并按包含数排序
+        var part = new List<(int Count, FileViewModel FileViewModel)>();
         var fuzzyRegex = new Regex(Regex.Replace(input, "(.)", ".+$1", RegexOptions.IgnoreCase));
         var partRegex = new Regex($"[{input}]", RegexOptions.IgnoreCase);
         foreach (var fileViewModel in range)
@@ -43,20 +48,13 @@ public class RelationsDataTable : TableDictionary<int, int>
                 precise.Add(fileViewModel);
             else if (fuzzyRegex.IsMatch(fileViewModel.Name))
                 fuzzy.Add(fileViewModel);
-            else
-            {
-                var matches = partRegex.Matches(fileViewModel.Name);
-                if (matches.Count is not 0)
-                    part.Add(new KeyValuePair<int, FileViewModel>(matches.Count, fileViewModel));
-            }
+            else if (partRegex.Matches(fileViewModel.Name) is { Count: not 0 } matches)
+                part.Add((matches.Count, fileViewModel));
         }
         precise.AddRange(fuzzy);
-        part.Sort((x, y) => x.Key.CompareTo(y.Key));
-        precise.AddRange(part.Select(item => item.Value));
-        var temp = new ObservableCollection<FileViewModel>();
-        foreach (var fileModel in precise)
-            temp.Add(fileModel);
-        return temp;
+        part.Sort((x, y) => x.Count.CompareTo(y.Count));
+        precise.AddRange(part.Select(item => item.FileViewModel));
+        return precise.ToObservableCollection();
     }
     public IEnumerable<FileModel> GetFileModels(List<PathTagModel>? tags = null)
     {

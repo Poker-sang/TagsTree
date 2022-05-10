@@ -32,27 +32,6 @@ public static class IconsHelper
         IconList["LNK"] = IconList["URL"] = await GetBitmapImage(ms4.AsRandomAccessStream());
     }
 
-
-    public static async Task Initialize2()
-    {
-        await using var ms1 = new MemoryStream(Resources.e921);
-        Minimize = await GetBitmapImage(ms1.AsRandomAccessStream());
-        await using var ms2 = new MemoryStream(Resources.e922);
-        Maximize = await GetBitmapImage(ms2.AsRandomAccessStream());
-        await using var ms3 = new MemoryStream(Resources.e923);
-        Restore = await GetBitmapImage(ms3.AsRandomAccessStream());
-        await using var ms4 = new MemoryStream(Resources.e8bb);
-        Close = await GetBitmapImage(ms4.AsRandomAccessStream());
-        await using var ms5 = new MemoryStream(Resources.e830);
-        Back = await GetBitmapImage(ms5.AsRandomAccessStream());
-    }
-
-    public static BitmapImage Minimize { get; private set; } = null!;
-    public static BitmapImage Maximize { get; private set; } = null!;
-    public static BitmapImage Restore { get; private set; } = null!;
-    public static BitmapImage Close { get; private set; } = null!;
-    public static BitmapImage Back { get; private set; } = null!;
-
     /// <summary>
     /// 将已有文件列表里所有文件图标预加载
     /// </summary>

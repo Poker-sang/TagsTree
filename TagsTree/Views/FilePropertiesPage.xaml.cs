@@ -11,9 +11,6 @@ using TagsTree.ViewModels;
 
 namespace TagsTree.Views;
 
-/// <summary>
-/// FilePropertiesPage.xaml 的交互逻辑
-/// </summary>
 [INotifyPropertyChanged]
 public partial class FilePropertiesPage : Page
 {

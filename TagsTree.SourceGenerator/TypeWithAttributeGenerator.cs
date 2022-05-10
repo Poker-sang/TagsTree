@@ -2,7 +2,6 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using static TagsTree.SourceGenerator.Utilities;
 
 namespace TagsTree.SourceGenerator;
@@ -36,7 +35,6 @@ public class TypeWithAttributeGenerator : IIncrementalGenerator
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        Debugger.Launch();
         IncrementalValuesProvider<TypeDeclarationSyntax> typeDeclarations = context.SyntaxProvider
             .CreateSyntaxProvider(
                 static (s, _) => IsSyntaxTargetForGeneration(s),

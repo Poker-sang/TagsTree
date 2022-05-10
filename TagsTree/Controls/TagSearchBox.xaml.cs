@@ -8,9 +8,6 @@ using Windows.Foundation;
 
 namespace TagsTree.Controls;
 
-/// <summary>
-/// TagSearchBox.xaml 的交互逻辑
-/// </summary>
 public partial class TagSearchBox : UserControl
 {
 
@@ -28,6 +25,7 @@ public partial class TagSearchBox : UserControl
 
     private void SuggestionChosen(AutoSuggestBox autoSuggestBox, AutoSuggestBoxSuggestionChosenEventArgs e)
     {
+        // TODO: SuggestionChosen
         //    var index = autoSuggestBox.Text.LastIndexOf(' ') + 1;
         //    if (index is 0)
         //        autoSuggestBox.Text = e.SelectedItem.ToString();

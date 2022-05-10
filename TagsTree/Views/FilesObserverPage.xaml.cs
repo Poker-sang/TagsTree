@@ -10,9 +10,6 @@ using TagsTree.ViewModels;
 
 namespace TagsTree.Views;
 
-/// <summary>
-/// FilesObserverPage.xaml 的交互逻辑
-/// </summary>
 public sealed partial class FilesObserverPage : Page
 {
     public FilesObserverPage()

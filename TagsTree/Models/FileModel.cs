@@ -19,7 +19,7 @@ public class FileModel : IFullName
     public string Path { get; private set; }
 
     /// <summary>
-    /// FileViewModel用的复制构造
+    /// <see cref="FileViewModel"/>用的复制构造
     /// </summary>
     /// <param name="fileModel"></param>
     protected FileModel(FileModel fileModel)
@@ -29,7 +29,7 @@ public class FileModel : IFullName
         Path = fileModel.Path;
     }
     /// <summary>
-    /// FileViewModel用的虚拟构造
+    /// <see cref="FileViewModel"/>用的虚拟构造
     /// </summary>
     /// <param name="fullName"></param>
     protected FileModel(string fullName)
@@ -50,7 +50,7 @@ public class FileModel : IFullName
         Path = path;
     }
     /// <summary>
-    /// 由虚拟构造的FileViewModel复制而成
+    /// 由虚拟构造的<see cref="FileViewModel"/>复制而成
     /// </summary>
     /// <param name="fileViewModel"></param>
     public FileModel(FileViewModel fileViewModel)
@@ -70,7 +70,7 @@ public class FileModel : IFullName
     protected static bool IsValidPath(string path) => path.Contains(App.AppConfiguration.LibraryPath);
 
     /// <summary>
-    /// null表示拥有标签的上级标签存在本标签
+    /// <see langword="null"/>表示拥有标签的上级标签存在本标签
     /// </summary>
     /// <param name="tag"></param>
     /// <returns></returns>

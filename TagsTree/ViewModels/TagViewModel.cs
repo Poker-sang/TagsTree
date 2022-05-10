@@ -27,7 +27,7 @@ public partial class TagViewModel : TagModel
     [JsonConstructor]
     public TagViewModel(int id, string name, ObservableCollection<TagViewModel>? subTags = null) : base(id, name) => SubTags = subTags ?? new ObservableCollection<TagViewModel>();
     /// <summary>
-    /// 创建新的TagViewModel
+    /// 创建新的<see cref="TagViewModel"/>
     /// </summary>
     /// <param name="name">标签名</param>
     /// <param name="path">标签路径</param>

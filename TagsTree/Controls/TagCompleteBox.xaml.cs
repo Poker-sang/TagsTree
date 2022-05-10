@@ -8,9 +8,6 @@ using TagsTree.ViewModels;
 
 namespace TagsTree.Controls;
 
-/// <summary>
-/// TagCompleteBox.xaml 的交互逻辑
-/// </summary>
 [INotifyPropertyChanged]
 public partial class TagCompleteBox : UserControl
 {
@@ -81,8 +78,7 @@ public partial class TagCompleteBox : UserControl
     /// <summary>
     /// 转换模式
     /// </summary>
-    /// <param name="state"> true为输入模式（显示AutoSuggestBox），false为显示模式（显示BreadcrumbBar）</param>
-    /// <
+    /// <param name="state"> <see langword="true"/>为输入模式（显示<see cref="AutoSuggestBox"/>），<see langword="false"/>为显示模式（显示<see cref="BreadcrumbBar"/>）</param>
     private void Switch(bool state)
     {
         var isFocused = Path is "" || state;

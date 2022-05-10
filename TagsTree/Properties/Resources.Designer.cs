@@ -63,49 +63,9 @@ namespace TagsTree.Properties {
         /// <summary>
         ///   查找 System.Byte[] 类型的本地化资源。
         /// </summary>
-        internal static byte[] e830 {
-            get {
-                object obj = ResourceManager.GetObject("e830", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Byte[] 类型的本地化资源。
-        /// </summary>
         internal static byte[] e8bb {
             get {
                 object obj = ResourceManager.GetObject("e8bb", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Byte[] 类型的本地化资源。
-        /// </summary>
-        internal static byte[] e921 {
-            get {
-                object obj = ResourceManager.GetObject("e921", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Byte[] 类型的本地化资源。
-        /// </summary>
-        internal static byte[] e922 {
-            get {
-                object obj = ResourceManager.GetObject("e922", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Byte[] 类型的本地化资源。
-        /// </summary>
-        internal static byte[] e923 {
-            get {
-                object obj = ResourceManager.GetObject("e923", resourceCulture);
                 return ((byte[])(obj));
             }
         }

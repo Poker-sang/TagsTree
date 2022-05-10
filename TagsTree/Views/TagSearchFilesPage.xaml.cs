@@ -13,9 +13,6 @@ using TagsTree.ViewModels;
 
 namespace TagsTree.Views;
 
-/// <summary>
-/// TagSearchFilesPage.xaml 的交互逻辑
-/// </summary>
 public partial class TagSearchFilesPage : Page
 {
     public TagSearchFilesPage()
@@ -53,7 +50,7 @@ public partial class TagSearchFilesPage : Page
     private void PropertiesCmDoubleClick(object sender, RoutedEventArgs e)
     {
         if ((FileViewModel)((DataGrid)sender).SelectedItem is { } fileViewModel)
-            App.RootFrame.Navigate(typeof(FilePropertiesPage), fileViewModel);
+            _ = App.RootFrame.Navigate(typeof(FilePropertiesPage), fileViewModel);
     }
 
     #endregion

@@ -1,19 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using System;
-using System.Numerics;
 using System.Threading.Tasks;
 using TagsTree.Services;
-using TagsTree.Services.ExtensionMethods;
 using TagsTree.Views;
 
 namespace TagsTree;
 
-/// <summary>
-/// Interaction logic for MainWindow.xaml
-/// </summary>
 [INotifyPropertyChanged]
 public sealed partial class MainWindow : Window
 {
@@ -25,10 +19,7 @@ public sealed partial class MainWindow : Window
         App.RootFrame = NavigateFrame;
         //TODO 标题栏
         SetTitleBar(TitleBar);
-        //titleBar.SetDragRectangles(new[] { new RectInt32(0, 28, 500, 48) });
     }
-
-    private Vector3 Vector3 { get; } = new(0.7f);
 
     private double PaneWidth => Math.Max(NavigationView.ActualWidth, NavigationView.CompactModeThresholdWidth) / 4;
     private void OnSizeChanged(object sender, SizeChangedEventArgs sizeChangedEventArgs)
@@ -102,30 +93,4 @@ public sealed partial class MainWindow : Window
             GC.Collect();
         }
     }
-
-    private void CloseButtonClick(object sender, RoutedEventArgs e) => Close();
-
-    public bool SnapEnabled { get; set; }
-
-    private void EnteredSnap(object sender, PointerRoutedEventArgs e) => SnapEnabled = true;
-
-    private void ExitedSnap(object sender, PointerRoutedEventArgs e) => SnapEnabled = false;
-
-    private bool _isMaximized;
-    private void MaximizeClick(object sender, RoutedEventArgs e)
-    {
-        if (_isMaximized)
-        {
-            WindowHelper.Restore();
-            IMaximize.Source = IconsHelper.Maximize;
-        }
-        else
-        {
-            WindowHelper.Maximize();
-            IMaximize.Source = IconsHelper.Restore;
-        }
-        _isMaximized = !_isMaximized;
-    }
-
-    private void MinimizeClick(object sender, RoutedEventArgs e) => WindowHelper.Minimize();
 }

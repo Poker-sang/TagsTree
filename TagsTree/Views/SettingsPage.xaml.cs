@@ -6,9 +6,6 @@ using TagsTree.Services.ExtensionMethods;
 
 namespace TagsTree.Views;
 
-/// <summary>
-/// SettingsPage.xaml 的交互逻辑
-/// </summary>
 public partial class SettingsPage : Page
 {
     public SettingsPage()

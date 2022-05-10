@@ -99,7 +99,6 @@
                     <TextBlock FontSize="20" Text="{x:Bind FileViewModel.Size, Mode=OneWay}" />
                 </StackPanel>
             </StackPanel>
-
         </Grid>
     </uiControls:DockPanel>
 </Page>

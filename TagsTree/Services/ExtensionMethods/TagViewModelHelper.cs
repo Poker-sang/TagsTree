@@ -13,7 +13,7 @@ public static class TagViewModelHelper
     /// </summary>
     /// <param name="name">需要找的单个标签</param>
     /// <param name="range">搜索范围</param>
-    /// <returns>找到的标签，若返回null即没找到路径</returns>
+    /// <returns>找到的标签，若返回<see langword="null"/>即没找到路径</returns>
     public static TagViewModel? GetTagViewModel(this string name, TagsTreeDictionary? range = null)
     {
         range ??= App.Tags;
