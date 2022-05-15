@@ -200,7 +200,7 @@ public partial class TagsManagerPage : Page
 
     /// <summary>
     /// 暂存关系表的变化
-    /// true表示添加，false表示删除
+    /// <see langword="true"/>表示添加，<see langword="false"/>表示删除
     /// </summary>
     private readonly List<(bool, TagViewModel)> _buffer = new();
 

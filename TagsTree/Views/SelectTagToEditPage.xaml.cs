@@ -14,10 +14,9 @@ public partial class SelectTagToEditPage : Page
     public static Type TypeGetter => typeof(SelectTagToEditPage);
 
     /// <summary>
-    /// 不为static方便绑定
+    /// 不为<see langword="static"/>方便绑定
     /// </summary>
     private ObservableCollection<TagViewModel> Vm => App.Tags.TagsTree.SubTags;
-
 
     #region 事件处理
 

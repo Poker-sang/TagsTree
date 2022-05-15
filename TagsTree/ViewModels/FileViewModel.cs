@@ -12,7 +12,7 @@ namespace TagsTree.ViewModels;
 public partial class FileViewModel : FileModel
 {
     /// <summary>
-    /// 复制构造，可从后端FileModel创建的对象
+    /// 复制构造，可从后端<see cref="FileModel"/>创建的对象
     /// </summary>
     /// <param name="fileModel">后端FileModel</param>
     /// <param name="tag">如果指定tag，则判断有无tag</param>
@@ -24,7 +24,7 @@ public partial class FileViewModel : FileModel
     }
 
     /// <summary>
-    /// 虚拟构造，无后端FileModel的对象（不存在于IdFile）
+    /// 虚拟构造，无后端<see cref="FileModel"/>的对象（不存在于<see cref="App.IdFile"/>）
     /// </summary>
     /// <param name="fullName">文件路径</param>
     public FileViewModel(string fullName) : base(fullName)
@@ -33,7 +33,7 @@ public partial class FileViewModel : FileModel
     }
 
     /// <summary>
-    /// 从IdFile中获取FileModel
+    /// 从<see cref="App.IdFile"/>中获取<see cref="FileModel"/>
     /// </summary>
     public FileModel GetFileModel() => App.IdFile[Id];
     public FileModel NewFileModel() => new(this);

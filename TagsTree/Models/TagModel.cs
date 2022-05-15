@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using TagsTree.Interfaces;
+using Microsoft.UI.Xaml.Controls;
 
 namespace TagsTree.Models;
 
@@ -8,7 +9,7 @@ public class PathTagModel
     public string Name { get; protected set; }
     public PathTagModel(string name) => Name = name;
     /// <summary>
-    /// AutoSuggestBox选择建议时会用到
+    /// <see cref="AutoSuggestBox"/>选择建议时会用到
     /// </summary>
     public override string ToString() => Name;
 }
@@ -28,7 +29,7 @@ public class TagModel : PathTagModel, IFullName
     {
         Id = Num;
         Num++;
-        Path = path;
+        Path = path; 
     }
     /// <summary>
     /// 不包含自己

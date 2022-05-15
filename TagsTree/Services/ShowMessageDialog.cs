@@ -10,7 +10,7 @@ public static class ShowMessageDialog
     /// <summary>
     /// 显示一条错误信息
     /// </summary>
-    /// <param name="mode">true：错误，false：提示</param>
+    /// <param name="mode"><see langword="true"/>：错误，<see langword="false"/>：提示</param>
     /// <param name="message">错误信息</param>
     public static async Task Information(bool mode, string message)
     {
@@ -31,7 +31,7 @@ public static class ShowMessageDialog
     /// <param name="message">警告（错误）信息</param>
     /// <param name="okHint">选择确认结果（可选）</param>
     /// <param name="cancelHint">选择取消结果（可选）</param>
-    /// <returns>选择确定则返回true</returns>
+    /// <returns>选择确定则返回<see langword="true"/></returns>
     public static async Task<bool> Warning(string message, string okHint = "", string cancelHint = "")
     {
         var ok = okHint is "" ? "" : $"\n按“确认”{okHint}";

@@ -12,7 +12,7 @@ namespace TagsTree.Models;
 /// Column标签，Row是文件，键分别是文件和标签的Id
 /// </summary>
 /// <remarks>
-/// Id记录节省文件空间
+/// <see cref="FileModel.Id"/>记录节省文件空间
 /// </remarks>
 public class RelationsDataTable : TableDictionary<int, int>
 {
