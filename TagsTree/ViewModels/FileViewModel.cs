@@ -61,7 +61,7 @@ public partial class FileViewModel : FileModel
     public string Size => Exists && !IsFolder ? FileSystemHelper.CountSize((FileInfo)_fileSystemInfo) : "";
     public bool Exists => _fileSystemInfo.Exists;
 
-    public new static bool IsValidPath(string path) => FileModel.IsValidPath(path);
+    public static new bool IsValidPath(string path) => FileModel.IsValidPath(path);
     public void TagsUpdated() => OnPropertyChanged(nameof(Tags));
 
     public bool? Selected { get; private set; }

@@ -30,7 +30,7 @@ public class FilesObserver : FileSystemWatcher
         return App.FilesObserver.EnableRaisingEvents = App.AppConfiguration.FilesObserverEnabled;
     }
 
-    private new static void Created(object sender, FileSystemEventArgs e)
+    private static new void Created(object sender, FileSystemEventArgs e)
     {
         _ = WindowHelper.Window.DispatcherQueue.TryEnqueue(() =>
         {
@@ -43,7 +43,7 @@ public class FilesObserver : FileSystemWatcher
         });
     }
 
-    private new static void Renamed(object sender, RenamedEventArgs e)
+    private static new void Renamed(object sender, RenamedEventArgs e)
     {
         _ = WindowHelper.Window.DispatcherQueue.TryEnqueue
         (
@@ -51,7 +51,7 @@ public class FilesObserver : FileSystemWatcher
         );
     }
 
-    private new static void Deleted(object sender, FileSystemEventArgs e)
+    private static new void Deleted(object sender, FileSystemEventArgs e)
     {
         _ = WindowHelper.Window.DispatcherQueue.TryEnqueue
         (
