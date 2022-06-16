@@ -60,13 +60,10 @@ public partial class App : Application
     }
 
     /// <param name="args">Details about the launch request and process.</param>
-    protected override void OnLaunched(LaunchActivatedEventArgs args)
-    {
-        //TODO 标题栏
+    protected override void OnLaunched(LaunchActivatedEventArgs args) =>
         WindowHelper.Initialize(RequestedTheme is ApplicationTheme.Dark)
             .SetWindowSize(800, 450)
             .Activate();
-    }
 
 
     public static async Task<bool> ChangeFilesObserver() => await FilesObserver.Change(AppConfiguration.LibraryPath);

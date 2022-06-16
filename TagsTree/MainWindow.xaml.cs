@@ -1,10 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Threading.Tasks;
 using TagsTree.Services;
 using TagsTree.Views;
+using Windows.Foundation.Metadata;
 
 namespace TagsTree;
 
@@ -13,26 +15,36 @@ public sealed partial class MainWindow : Window
 {
     public MainWindow()
     {
-        ExtendsContentIntoTitleBar = true;
         InitializeComponent();
+        // 加载窗口后设置标题，拖拽区域才能达到原定效果
+        ExtendsContentIntoTitleBar = true;
+        SetTitleBar(AppTitleBar);
+        UpdateTitleBarColor();
+        Title = "TagsTree";
+
         App.RootNavigationView = NavigationView;
         App.RootFrame = NavigateFrame;
-        //TODO 标题栏
-        SetTitleBar(TitleBar);
     }
 
-    private double PaneWidth => Math.Max(NavigationView.ActualWidth, NavigationView.CompactModeThresholdWidth) / 4;
-    private void OnSizeChanged(object sender, SizeChangedEventArgs sizeChangedEventArgs)
+    private void UpdateTitleBarColor()
     {
-        NavigationView.PaneDisplayMode = NavigationView.ActualWidth < NavigationView.CompactModeThresholdWidth ? NavigationViewPaneDisplayMode.LeftCompact : NavigationViewPaneDisplayMode.Left;
-        OnPropertyChanged(nameof(PaneWidth));
+        var res = Application.Current.Resources;
+        res["WindowCaptionBackground"] = _currentBgColor;
+        //res["WindowCaptionBackgroundDisabled"] = currentBgColor;
+        res["WindowCaptionForeground"] = _currentFgColor;
+        //res["WindowCaptionForegroundDisabled"] = currentFgColor;
+
+        TitleBarHelper.TriggerTitleBarRepaint();
     }
+    private readonly Windows.UI.Color _currentBgColor = Colors.Transparent;
+    private readonly Windows.UI.Color _currentFgColor = Colors.Black;
 
     private async void Loaded(object sender, RoutedEventArgs e)
     {
         if (App.ConfigSet)
             await ConfigIsSet();
-        else DisplaySettings();
+        else
+            DisplaySettings();
     }
 
     public async Task ConfigIsSet()
@@ -46,9 +58,8 @@ public sealed partial class MainWindow : Window
         {
             _ = NavigateFrame.Navigate(typeof(IndexPage));
             NavigationView.SelectedItem = NavigationView.MenuItems[0];
-            NavigationView.PaneDisplayMode = NavigationViewPaneDisplayMode.Left; //不加就不会显示PaneTitle
-            OnPropertyChanged(nameof(PaneWidth));
         }
+
         IconsHelper.LoadFilesIcons();
 
         foreach (NavigationViewItem menuItem in NavigationView.MenuItems)
@@ -60,11 +71,9 @@ public sealed partial class MainWindow : Window
     {
         _ = NavigateFrame.Navigate(typeof(SettingsPage));
         NavigationView.SelectedItem = NavigationView.FooterMenuItems[1];
-        NavigationView.PaneDisplayMode = NavigationViewPaneDisplayMode.Left; //不加就不会显示PaneTitle
-        OnPropertyChanged(nameof(PaneWidth));
     }
 
-    private void BackRequested(object sender, RoutedEventArgs e)
+    private void BackRequested(NavigationView navigationView, NavigationViewBackRequestedEventArgs e)
     {
         NavigateFrame.GoBack();
         NavigationView.SelectedItem = NavigateFrame.Content switch
@@ -81,7 +90,7 @@ public sealed partial class MainWindow : Window
             SettingsPage => NavigationView.FooterMenuItems[1],
             _ => NavigationView.SelectedItem
         };
-        BBackRequest.IsEnabled = NavigateFrame.CanGoBack;
+        NavigationView.IsBackEnabled = NavigateFrame.CanGoBack;
     }
 
     private void ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs e)
@@ -89,8 +98,45 @@ public sealed partial class MainWindow : Window
         if (e.InvokedItemContainer.Tag is Type item && item != NavigateFrame.Content.GetType())
         {
             _ = NavigateFrame.Navigate(item);
-            BBackRequest.IsEnabled = true;
+            NavigationView.IsBackEnabled = true;
             GC.Collect();
+        }
+    }
+    private void PaneClosing(NavigationView sender, NavigationViewPaneClosingEventArgs e) => UpdateAppTitleMargin(sender);
+
+    private void PaneOpening(NavigationView sender, object e) => UpdateAppTitleMargin(sender);
+
+    private void DisplayModeChanged(NavigationView sender, NavigationViewDisplayModeChangedEventArgs e)
+    {
+        var currentMargin = AppTitleBar.Margin;
+        AppTitleBar.Margin = sender.DisplayMode is NavigationViewDisplayMode.Minimal
+            ? new Thickness { Left = sender.CompactPaneLength * 2, Top = currentMargin.Top, Right = currentMargin.Right, Bottom = currentMargin.Bottom }
+            : new Thickness { Left = sender.CompactPaneLength, Top = currentMargin.Top, Right = currentMargin.Right, Bottom = currentMargin.Bottom };
+
+        UpdateAppTitleMargin(sender);
+    }
+
+    private void UpdateAppTitleMargin(NavigationView sender)
+    {
+        const int smallLeftIndent = 4, largeLeftIndent = 24;
+
+        if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 7))
+        {
+            AppTitle.TranslationTransition = new Vector3Transition();
+
+            AppTitle.Translation = (sender.DisplayMode is NavigationViewDisplayMode.Expanded && sender.IsPaneOpen) ||
+                     sender.DisplayMode is NavigationViewDisplayMode.Minimal
+                ? new System.Numerics.Vector3(smallLeftIndent, 0, 0)
+                : new System.Numerics.Vector3(largeLeftIndent, 0, 0);
+        }
+        else
+        {
+            var currentMargin = AppTitle.Margin;
+
+            AppTitle.Margin = (sender.DisplayMode is NavigationViewDisplayMode.Expanded && sender.IsPaneOpen) ||
+                     sender.DisplayMode is NavigationViewDisplayMode.Minimal
+                ? new Thickness { Left = smallLeftIndent, Top = currentMargin.Top, Right = currentMargin.Right, Bottom = currentMargin.Bottom }
+                : new Thickness { Left = largeLeftIndent, Top = currentMargin.Top, Right = currentMargin.Right, Bottom = currentMargin.Bottom };
         }
     }
 }
