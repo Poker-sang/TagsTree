@@ -122,6 +122,9 @@
     <Page Update="Controls\Items\DataGridNameColumn.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Update="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

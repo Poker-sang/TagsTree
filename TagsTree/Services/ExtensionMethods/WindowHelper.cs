@@ -16,7 +16,7 @@ public static class WindowHelper
         Window = new MainWindow();
         //等效于 HWnd = PInvoke.User32.GetActiveWindow();
         HWnd = WindowNative.GetWindowHandle(Window);
-        EnableMica(HWnd, darkThemeEnabled);
+        //EnableMica(HWnd, darkThemeEnabled);
         return Window;
     }
 
