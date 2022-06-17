@@ -110,7 +110,6 @@ public static class FileSystemHelper
         _ => ((double)file.Length / (1 << 30)).ToString("F2") + "GB"
     };
 
-
     public static async Task<StorageFolder> GetStorageFolder() => await new FolderPicker { FileTypeFilter = { "*" } /*不加会崩溃*/ }.InitializeWithWindow().PickSingleFolderAsync();
     public static async Task<StorageFile> GetStorageFile() => await new FileOpenPicker { FileTypeFilter = { "*" } }.InitializeWithWindow().PickSingleFileAsync();
     public static async Task<IReadOnlyList<StorageFile>> GetStorageFiles() => await new FileOpenPicker { FileTypeFilter = { "*" } }.InitializeWithWindow().PickMultipleFilesAsync();

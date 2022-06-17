@@ -32,8 +32,5 @@ public static class FileModelHelper
         _ = App.IdFile.Remove(fileModel);
         App.Relations.DeleteFile(fileModel);
     }
-    public static void MoveOrRename(this FileModel fileModel, string newFullName)
-    {
-        fileModel.Reload(newFullName);
-    }
+    public static void MoveOrRename(this FileModel fileModel, string newFullName) => fileModel.Reload(newFullName);
 }

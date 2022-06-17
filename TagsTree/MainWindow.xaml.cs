@@ -19,7 +19,7 @@ public sealed partial class MainWindow : Window
         // 加载窗口后设置标题，拖拽区域才能达到原定效果
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
-        UpdateTitleBarColor();
+        //UpdateTitleBarColor();
         Title = "TagsTree";
 
         App.RootNavigationView = NavigationView;
@@ -37,7 +37,7 @@ public sealed partial class MainWindow : Window
         TitleBarHelper.TriggerTitleBarRepaint();
     }
     private readonly Windows.UI.Color _currentBgColor = Colors.Transparent;
-    private readonly Windows.UI.Color _currentFgColor = Colors.Black;
+    private readonly Windows.UI.Color _currentFgColor = Colors.Transparent;
 
     private async void Loaded(object sender, RoutedEventArgs e)
     {

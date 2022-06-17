@@ -19,9 +19,7 @@ public class FilesObserverViewModel : ObservableObject
         FilesChangedList.CollectionChanged += (_, e) =>
         {
             if (e.Action is NotifyCollectionChangedAction.Remove)
-                if (FilesChangedList.LastOrDefault() is { } fileChanged)
-                    FileChanged.Num = fileChanged.Id + 1;
-                else FileChanged.Num = 1;
+                FileChanged.Num = FilesChangedList.LastOrDefault() is { } fileChanged ? fileChanged.Id + 1 : 1;
             OnPropertyChanged(nameof(FirstId));
             OnPropertyChanged(nameof(LastId));
         };

@@ -35,7 +35,7 @@ public class TypeWithAttributeGenerator : IIncrementalGenerator
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        IncrementalValuesProvider<TypeDeclarationSyntax> typeDeclarations = context.SyntaxProvider
+        var typeDeclarations = context.SyntaxProvider
             .CreateSyntaxProvider(
                 static (s, _) => IsSyntaxTargetForGeneration(s),
                 static (ctx, _) => GetSemanticTargetForGeneration(ctx))
@@ -103,7 +103,8 @@ public class TypeWithAttributeGenerator : IIncrementalGenerator
                     continue;
                 if (usedAttributes.ContainsKey(attributeName))
                     usedAttributes[attributeName].Add(attribute);
-                else usedAttributes[attributeName] = new List<AttributeData> { attribute };
+                else
+                    usedAttributes[attributeName] = new List<AttributeData> { attribute };
             }
 
             foreach (var usedAttribute in usedAttributes)

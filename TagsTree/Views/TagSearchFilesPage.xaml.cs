@@ -25,9 +25,7 @@ public partial class TagSearchFilesPage : Page
     public static Type TypeGetter => typeof(TagSearchFilesPage);
     protected override void OnNavigatedTo(NavigationEventArgs e) => TbSearch.Text = (string)e.Parameter;
 
-
     private readonly TagSearchFilesViewModel _vm;
-
 
     #region 事件处理
 
@@ -41,7 +39,8 @@ public partial class TagSearchFilesPage : Page
     private void OpenExplorerCmClick(object sender, RoutedEventArgs e) => ((FileViewModel)((MenuFlyoutItem)sender).DataContext).OpenDirectory();
     private async void RemoveCmClick(object sender, RoutedEventArgs e)
     {
-        if (!await ShowMessageDialog.Warning("是否从软件移除该文件？")) return;
+        if (!await ShowMessageDialog.Warning("是否从软件移除该文件？"))
+            return;
         ((FileViewModel)((FrameworkElement)sender).DataContext).RemoveAndSave();
         _ = _vm.FileViewModels.Remove((FileViewModel)((FrameworkElement)sender).DataContext);
     }

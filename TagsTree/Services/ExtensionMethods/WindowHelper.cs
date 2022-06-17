@@ -1,4 +1,5 @@
-﻿using PInvoke;
+﻿using Microsoft.UI.Xaml;
+using PInvoke;
 using System;
 using System.Runtime.InteropServices;
 using WinRT;
@@ -9,14 +10,23 @@ namespace TagsTree.Services.ExtensionMethods;
 public static class WindowHelper
 {
     public static MainWindow Window { get; private set; } = null!;
-    public static IntPtr HWnd { get; private set; } = IntPtr.Zero;
+    public static nint HWnd { get; private set; } = IntPtr.Zero;
 
-    public static MainWindow Initialize(bool darkThemeEnabled)
+    public static MainWindow Initialize()
     {
         Window = new MainWindow();
+
+        if (Window.Content is FrameworkElement frameworkElement)
+            frameworkElement.RequestedTheme = App.AppConfiguration.Theme switch
+            {
+                1 => ElementTheme.Light,
+                2 => ElementTheme.Dark,
+                _ => frameworkElement.RequestedTheme
+            };
+
         //等效于 HWnd = PInvoke.User32.GetActiveWindow();
         HWnd = WindowNative.GetWindowHandle(Window);
-        //EnableMica(HWnd, darkThemeEnabled);
+        // EnableMica(HWnd, darkThemeEnabled);
         return Window;
     }
 
@@ -39,7 +49,7 @@ public static class WindowHelper
         return obj;
     }
 
-    private static void EnableMica(IntPtr hWnd, bool darkThemeEnabled)
+    private static void EnableMica(nint hWnd, bool darkThemeEnabled)
     {
         var trueValue = 1;
         var falseValue = 0;

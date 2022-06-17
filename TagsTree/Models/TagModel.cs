@@ -1,6 +1,6 @@
-﻿using System.Text.Json.Serialization;
+﻿using Microsoft.UI.Xaml.Controls;
+using System.Text.Json.Serialization;
 using TagsTree.Interfaces;
-using Microsoft.UI.Xaml.Controls;
 
 namespace TagsTree.Models;
 
@@ -29,7 +29,7 @@ public class TagModel : PathTagModel, IFullName
     {
         Id = Num;
         Num++;
-        Path = path; 
+        Path = path;
     }
     /// <summary>
     /// 不包含自己

@@ -29,12 +29,14 @@ public partial class SelectTagToEditPage : Page
             await ShowMessageDialog.Information(true, "「标签路径」不存在！");
             return;
         }
+
         if (pathTagModel == App.Tags.TagsDictionaryRoot)
         {
             await ShowMessageDialog.Information(true, "「标签路径」不能为空！");
             return;
         }
-        App.RootFrame.Navigate(typeof(TagEditFilesPage), pathTagModel);
+
+        _ = App.RootFrame.Navigate(typeof(TagEditFilesPage), pathTagModel);
     }
 
     #endregion

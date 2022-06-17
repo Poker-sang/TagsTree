@@ -18,7 +18,8 @@ public class BidirectionalDictionary<TKey, TValue> where TKey : notnull where TV
         get => _dict1[key];
         set
         {
-            if (_dict1.ContainsKey(key)) return;
+            if (_dict1.ContainsKey(key))
+                return;
             _dict1[key] = value;
             _dict2[value] = key;
         }
@@ -28,7 +29,8 @@ public class BidirectionalDictionary<TKey, TValue> where TKey : notnull where TV
         get => _dict2[key];
         set
         {
-            if (_dict2.ContainsKey(key)) return;
+            if (_dict2.ContainsKey(key))
+                return;
             _dict1[value] = key;
             _dict2[key] = value;
         }
@@ -37,14 +39,16 @@ public class BidirectionalDictionary<TKey, TValue> where TKey : notnull where TV
     public bool Contains(TValue key) => _dict2.ContainsKey(key);
     public bool Remove(TKey key)
     {
-        if (!_dict1.ContainsKey(key)) return false;
+        if (!_dict1.ContainsKey(key))
+            return false;
         _ = _dict2.Remove(_dict1[key]);
         _ = _dict1.Remove(key);
         return true;
     }
     public bool Remove(TValue key)
     {
-        if (!_dict2.ContainsKey(key)) return false;
+        if (!_dict2.ContainsKey(key))
+            return false;
         _ = _dict1.Remove(_dict2[key]);
         _ = _dict2.Remove(key);
         return true;

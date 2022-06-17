@@ -36,6 +36,7 @@ public partial class InputContentDialog : ContentDialog
                 break;
             default: throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
         }
+
         Text = text;
     }
     /// <summary>
@@ -63,6 +64,7 @@ public partial class InputContentDialog : ContentDialog
             InfoBar.IsOpen = true;
             return;
         }
+
         var result = _judge();
         if (result is not null)
         {
@@ -70,6 +72,7 @@ public partial class InputContentDialog : ContentDialog
             InfoBar.IsOpen = true;
             return;
         }
+
         e.Cancel = false;
         _canceled = false;
     }

@@ -68,11 +68,8 @@ internal static class Utilities
     /// </code>
     /// </summary>
     /// <returns>ObjectCreationExpression</returns>
-    internal static ObjectCreationExpressionSyntax GetObjectCreationExpression(ExpressionSyntax defaultValueExpression)
-    {
-        return ObjectCreationExpression(IdentifierName("PropertyMetadata"))
+    internal static ObjectCreationExpressionSyntax GetObjectCreationExpression(ExpressionSyntax defaultValueExpression) => ObjectCreationExpression(IdentifierName("PropertyMetadata"))
             .AddArgumentListArguments(Argument(defaultValueExpression));
-    }
 
     /// <summary>
     /// Generate the following code
@@ -81,10 +78,7 @@ internal static class Utilities
     /// </code>
     /// </summary>
     /// <returns>MetadataCreation</returns>
-    internal static ObjectCreationExpressionSyntax GetMetadataCreation(ObjectCreationExpressionSyntax metadataCreation, string partialMethodName)
-    {
-        return metadataCreation.AddArgumentListArguments(Argument(IdentifierName(partialMethodName)));
-    }
+    internal static ObjectCreationExpressionSyntax GetMetadataCreation(ObjectCreationExpressionSyntax metadataCreation, string partialMethodName) => metadataCreation.AddArgumentListArguments(Argument(IdentifierName(partialMethodName)));
 
     /// <summary>
     /// Generate the following code
@@ -93,12 +87,9 @@ internal static class Utilities
     /// </code>
     /// </summary>
     /// <returns>Registration</returns>
-    internal static InvocationExpressionSyntax GetRegistration(string propertyName, ITypeSymbol type, ITypeSymbol specificClass, ExpressionSyntax metadataCreation)
-    {
-        return InvocationExpression(MemberAccessExpression(
+    internal static InvocationExpressionSyntax GetRegistration(string propertyName, ITypeSymbol type, ITypeSymbol specificClass, ExpressionSyntax metadataCreation) => InvocationExpression(MemberAccessExpression(
                 SyntaxKind.SimpleMemberAccessExpression, IdentifierName("DependencyProperty"), IdentifierName("Register")))
             .AddArgumentListArguments(Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(propertyName))), Argument(TypeOfExpression(type.GetTypeSyntax(false))), Argument(TypeOfExpression(specificClass.GetTypeSyntax(false))), Argument(metadataCreation));
-    }
 
     /// <summary>
     /// Generate the following code
@@ -107,12 +98,9 @@ internal static class Utilities
     /// </code>
     /// </summary>
     /// <returns>StaticFieldDeclaration</returns>
-    internal static FieldDeclarationSyntax GetStaticFieldDeclaration(string fieldName, ExpressionSyntax registration)
-    {
-        return FieldDeclaration(VariableDeclaration(IdentifierName("DependencyProperty")))
+    internal static FieldDeclarationSyntax GetStaticFieldDeclaration(string fieldName, ExpressionSyntax registration) => FieldDeclaration(VariableDeclaration(IdentifierName("DependencyProperty")))
             .AddModifiers(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword), Token(SyntaxKind.ReadOnlyKeyword))
             .AddDeclarationVariables(VariableDeclarator(fieldName).WithInitializer(EqualsValueClause(registration)));
-    }
 
     /// <summary>
     /// Generate the following code
@@ -159,12 +147,9 @@ internal static class Utilities
     /// </code>
     /// </summary>
     /// <returns>PropertyDeclaration</returns>
-    internal static PropertyDeclarationSyntax GetPropertyDeclaration(string propertyName, bool isNullable, ITypeSymbol type, AccessorDeclarationSyntax getter, AccessorDeclarationSyntax setter)
-    {
-        return PropertyDeclaration(type.GetTypeSyntax(isNullable), propertyName)
+    internal static PropertyDeclarationSyntax GetPropertyDeclaration(string propertyName, bool isNullable, ITypeSymbol type, AccessorDeclarationSyntax getter, AccessorDeclarationSyntax setter) => PropertyDeclaration(type.GetTypeSyntax(isNullable), propertyName)
             .AddModifiers(Token(SyntaxKind.PublicKeyword))
             .AddAccessorListAccessors(getter, setter);
-    }
 
     /// <summary>
     /// Generate the following code
@@ -176,12 +161,9 @@ internal static class Utilities
     /// </code>
     /// </summary>
     /// <returns>ClassDeclaration</returns>
-    internal static ClassDeclarationSyntax GetClassDeclaration(ISymbol specificClass, IEnumerable<MemberDeclarationSyntax> members)
-    {
-        return ClassDeclaration(specificClass.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat))
+    internal static ClassDeclarationSyntax GetClassDeclaration(ISymbol specificClass, IEnumerable<MemberDeclarationSyntax> members) => ClassDeclaration(specificClass.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat))
             .AddModifiers(Token(SyntaxKind.PartialKeyword))
             .AddMembers(members.ToArray());
-    }
 
     /// <summary>
     /// Generate the following code
@@ -193,13 +175,10 @@ internal static class Utilities
     /// </code>
     /// </summary>
     /// <returns>NamespaceDeclaration</returns>
-    internal static NamespaceDeclarationSyntax GetNamespaceDeclaration(ISymbol specificClass, MemberDeclarationSyntax generatedClass)
-    {
-        return NamespaceDeclaration(ParseName(specificClass.ContainingNamespace.ToDisplayString()))
+    internal static NamespaceDeclarationSyntax GetNamespaceDeclaration(ISymbol specificClass, MemberDeclarationSyntax generatedClass) => NamespaceDeclaration(ParseName(specificClass.ContainingNamespace.ToDisplayString()))
             .AddMembers(generatedClass)
             .WithNamespaceKeyword(Token(SyntaxKind.NamespaceKeyword)
                 .WithLeadingTrivia(Trivia(NullableDirectiveTrivia(Token(SyntaxKind.EnableKeyword), true))));
-    }
 
     /// <summary>
     /// Generate the following code
@@ -210,13 +189,10 @@ internal static class Utilities
     /// </code>
     /// </summary>
     /// <returns>CompilationUnit</returns>
-    internal static CompilationUnitSyntax GetCompilationUnit(MemberDeclarationSyntax generatedNamespace, IEnumerable<string> namespaces)
-    {
-        return CompilationUnit()
+    internal static CompilationUnitSyntax GetCompilationUnit(MemberDeclarationSyntax generatedNamespace, IEnumerable<string> namespaces) => CompilationUnit()
             .AddMembers(generatedNamespace)
             .AddUsings(namespaces.Select(ns => UsingDirective(ParseName(ns))).ToArray())
             .NormalizeWhitespace();
-    }
 
     /// <summary>
     /// Generate the following code
@@ -258,11 +234,11 @@ internal static class Utilities
         if (usedTypes.Contains(symbol))
             return;
 
-        usedTypes.Add(symbol);
+        _ = usedTypes.Add(symbol);
 
         var ns = symbol.ContainingNamespace;
         if (!SymbolEqualityComparer.Default.Equals(ns, contextType.ContainingNamespace))
-            namespaces.Add(ns.ToDisplayString());
+            _ = namespaces.Add(ns.ToDisplayString());
 
         if (symbol is INamedTypeSymbol { IsGenericType: true } genericSymbol)
             foreach (var a in genericSymbol.TypeArguments)

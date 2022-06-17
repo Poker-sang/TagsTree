@@ -29,7 +29,8 @@ public partial class FileImporterPage : Page
         get => _importing;
         set
         {
-            if (Equals(value, _importing)) return;
+            if (Equals(value, _importing))
+                return;
             _importing = value;
             BPath.IsEnabled = BSelect.IsEnabled = !value; //虽然写上更安全，但一般看不到这些选项：SelectFiles.IsEnabled = SelectFolders.IsEnabled = PathFiles.IsEnabled = PathFolders.IsEnabled = PathBoth.IsEnabled = All.IsEnabled
             BDelete.IsEnabled = BSave.IsEnabled = !value && _vm.FileViewModels.Count is not 0;
@@ -85,15 +86,16 @@ public partial class FileImporterPage : Page
                                     .Select(directoryInfo => new FileViewModel(directoryInfo.FullName)));
                                 break;
                             case nameof(PathBoth):
-                                {
-                                    temp.AddRange(new DirectoryInfo(folder.Path).GetFiles()
-                                        .Where(fileInfo => !dictionary.ContainsKey(false + fileInfo.FullName))
-                                        .Select(fileInfo => new FileViewModel(fileInfo.FullName)));
-                                    temp.AddRange(new DirectoryInfo(folder.Path).GetDirectories()
-                                        .Where(directoryInfo => !dictionary.ContainsKey(true + directoryInfo.FullName))
-                                        .Select(directoryInfo => new FileViewModel(directoryInfo.FullName)));
-                                }
-                                break;
+                            {
+                                temp.AddRange(new DirectoryInfo(folder.Path).GetFiles()
+                                    .Where(fileInfo => !dictionary.ContainsKey(false + fileInfo.FullName))
+                                    .Select(fileInfo => new FileViewModel(fileInfo.FullName)));
+                                temp.AddRange(new DirectoryInfo(folder.Path).GetDirectories()
+                                    .Where(directoryInfo => !dictionary.ContainsKey(true + directoryInfo.FullName))
+                                    .Select(directoryInfo => new FileViewModel(directoryInfo.FullName)));
+                            }
+
+                            break;
                             case nameof(All):
                                 void RecursiveReadFiles(string folderName)
                                 {
@@ -103,6 +105,7 @@ public partial class FileImporterPage : Page
                                     foreach (var directoryInfo in new DirectoryInfo(folderName).GetDirectories())
                                         RecursiveReadFiles(directoryInfo.FullName);
                                 }
+
                                 RecursiveReadFiles(folder.Path);
                                 break;
                         }
@@ -129,9 +132,11 @@ public partial class FileImporterPage : Page
         {
             if (!dictionary.ContainsKey(fileViewModel.UniqueName))
                 fileViewModel.AddNew();
-            else duplicated++;
+            else
+                duplicated++;
             progressBar.ProcessValue += unit;
         }
+
         App.SaveFiles();
         App.SaveRelations();
         progressBar.ProcessValue = 100;

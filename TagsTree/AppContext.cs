@@ -20,5 +20,10 @@ public static partial class AppContext
         _configurationContainer = ApplicationData.Current.RoamingSettings.Containers[ConfigurationContainerKey];
     }
 
+    public static int ChangeTheme
+    {
+        set => _configurationContainer.Values[nameof(AppConfiguration.Theme)] = value;
+    }
+
     public static AppConfiguration GetDefault() => new(0, "", true, false);
 }

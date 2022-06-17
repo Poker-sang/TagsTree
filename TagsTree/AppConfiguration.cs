@@ -9,4 +9,4 @@ public partial record AppConfiguration
     public string LibraryPath { get; set; }
     public bool PathTagsEnabled { get; set; }
     public bool FilesObserverEnabled { get; set; }
-};
+}

@@ -13,6 +13,8 @@
             <Thickness x:Key="NavigationViewContentGridBorderThickness">1,1,0,0</Thickness>
             <CornerRadius x:Key="NavigationViewContentGridCornerRadius">8,0,0,0</CornerRadius>
             <!--<Thickness x:Key="NavigationViewHeaderMargin">56,34,0,0</Thickness>-->
+            <SolidColorBrush x:Key="WindowCaptionBackground">Transparent</SolidColorBrush>
+            <SolidColorBrush x:Key="WindowCaptionBackgroundDisabled">Transparent</SolidColorBrush>
             <!--  Gap between different entries  -->
         </ResourceDictionary>
     </Application.Resources>
