@@ -70,5 +70,4 @@ internal static partial class TypeWithAttributeDelegates
 
         return null;
     }
-
 }

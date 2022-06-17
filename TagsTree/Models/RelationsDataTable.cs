@@ -51,6 +51,7 @@ public class RelationsDataTable : TableDictionary<int, int>
             else if (partRegex.Matches(fileViewModel.Name) is { Count: not 0 } matches)
                 part.Add((matches.Count, fileViewModel));
         }
+
         precise.AddRange(fuzzy);
         part.Sort((x, y) => x.Count.CompareTo(y.Count));
         precise.AddRange(part.Select(item => item.FileViewModel));

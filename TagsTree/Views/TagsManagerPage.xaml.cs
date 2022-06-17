@@ -32,7 +32,8 @@ public partial class TagsManagerPage : Page
         get => _clipBoard;
         set
         {
-            if (Equals(value, _clipBoard)) return;
+            if (Equals(value, _clipBoard))
+                return;
             _clipBoard = value;
             CanPaste = CmPPasteX.IsEnabled = value is not null;
         }
@@ -61,6 +62,7 @@ public partial class TagsManagerPage : Page
             InfoBar.IsOpen = true;
             return;
         }
+
         var result = NewTagCheck(_vm.Name);
         if (result is not null)
         {
@@ -70,6 +72,7 @@ public partial class TagsManagerPage : Page
             InfoBar.IsOpen = true;
             return;
         }
+
         NewTag(_vm.Name, pathTagModel);
         _vm.Name = "";
     }
@@ -83,6 +86,7 @@ public partial class TagsManagerPage : Page
             InfoBar.IsOpen = true;
             return;
         }
+
         if (_vm.Name.GetTagViewModel(_vm.TagsSource) is not { } nameTagModel)
         {
             InfoBar.Title = "错误";
@@ -91,6 +95,7 @@ public partial class TagsManagerPage : Page
             InfoBar.IsOpen = true;
             return;
         }
+
         MoveTag(nameTagModel, pathTagModel);
         _vm.Name = "";
     }
@@ -104,6 +109,7 @@ public partial class TagsManagerPage : Page
             InfoBar.IsOpen = true;
             return;
         }
+
         if (TbPath.Path.GetTagViewModel(_vm.TagsSource) is not { } pathTagModel)
         {
             InfoBar.Title = "错误";
@@ -122,6 +128,7 @@ public partial class TagsManagerPage : Page
             InfoBar.IsOpen = true;
             return;
         }
+
         RenameTag(_vm.Name, pathTagModel);
         _vm.Name = "";
         TbPath.Path = "";
@@ -136,6 +143,7 @@ public partial class TagsManagerPage : Page
             InfoBar.IsOpen = true;
             return;
         }
+
         if (TbPath.Path.GetTagViewModel(_vm.TagsSource) is not { } pathTagModel)
         {
             InfoBar.Title = "错误";
@@ -144,6 +152,7 @@ public partial class TagsManagerPage : Page
             InfoBar.IsOpen = true;
             return;
         }
+
         DeleteTag(pathTagModel);
         _vm.Name = "";
     }
@@ -154,7 +163,8 @@ public partial class TagsManagerPage : Page
         foreach (var (mode, tagViewModel) in _buffer)
             if (mode)
                 App.Relations.NewTag(tagViewModel);
-            else App.Relations.DeleteTag(tagViewModel);
+            else
+                App.Relations.DeleteTag(tagViewModel);
         _buffer.Clear();
         App.SaveRelations();
         BSave.IsEnabled = false;
@@ -226,6 +236,7 @@ public partial class TagsManagerPage : Page
             InfoBar.IsOpen = true;
             return;
         }
+
         _vm.TagsSource.MoveTag(name, path);
         BSave.IsEnabled = true;
         InfoBar.Title = "成功";

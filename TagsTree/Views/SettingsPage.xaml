@@ -11,34 +11,30 @@
     mc:Ignorable="d">
     <ScrollViewer>
         <StackPanel Margin="40,30" Spacing="50">
-            <StackPanel Spacing="10">
-                <TextBlock
-                    ui:DockPanel.Dock="Top"
-                    FontSize="20"
-                    Text="主题色（保存后重启才能完全生效）" />
-                <ComboBox x:Name="CbTheme">
-                    <ComboBoxItem Content="跟随系统" />
-                    <ComboBoxItem Content="浅色" />
-                    <ComboBoxItem Content="深色" />
-                </ComboBox>
-            </StackPanel>
-            <StackPanel Spacing="10">
-                <TextBlock
-                    ui:DockPanel.Dock="Top"
-                    FontSize="20"
-                    Text="文件路径" />
-                <ui:DockPanel>
-                    <Button
-                        Margin="20,0,0,0"
-                        ui:DockPanel.Dock="Right"
-                        Click="BLibraryPath_Click"
-                        Content="设置文件夹" />
-                    <AutoSuggestBox
-                        x:Name="TbLibraryPath"
-                        VerticalAlignment="Center"
-                        PlaceholderText="被归类文件的根目录文件夹" />
-                </ui:DockPanel>
-            </StackPanel>
+            <RadioButtons x:Name="RbTheme" Header="主题色">
+                <RadioButton Checked="OnThemeRadioButtonChecked" Content="跟随系统">
+                    <RadioButton.Tag>
+                        <x:Int32>0</x:Int32>
+                    </RadioButton.Tag>
+                </RadioButton>
+                <RadioButton Checked="OnThemeRadioButtonChecked" Content="浅色">
+                    <RadioButton.Tag>
+                        <x:Int32>1</x:Int32>
+                    </RadioButton.Tag>
+                </RadioButton>
+                <RadioButton Checked="OnThemeRadioButtonChecked" Content="深色">
+                    <RadioButton.Tag>
+                        <x:Int32>2</x:Int32>
+                    </RadioButton.Tag>
+                </RadioButton>
+            </RadioButtons>
+            <AutoSuggestBox
+                x:Name="TbLibraryPath"
+                VerticalAlignment="Center"
+                Header="文件路径"
+                PlaceholderText="被归类文件的根目录文件夹"
+                QueryIcon="More"
+                QuerySubmitted="BLibraryPath_Click" />
             <ToggleSwitch
                 x:Name="CbRootFoldersExist"
                 VerticalAlignment="Center"

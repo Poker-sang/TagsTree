@@ -30,7 +30,8 @@ public partial class FilePropertiesPage : Page
     private void EditTagsBClick(object sender, RoutedEventArgs e) => App.RootFrame.Navigate(typeof(FileEditTagsPage), FileViewModel);
     private async void RemoveBClick(object sender, RoutedEventArgs e)
     {
-        if (!await ShowMessageDialog.Warning("是否从软件移除该文件？")) return;
+        if (!await ShowMessageDialog.Warning("是否从软件移除该文件？"))
+            return;
         Remove(FileViewModel);
     }
     private async void RenameBClick(object sender, RoutedEventArgs e)
@@ -41,15 +42,18 @@ public partial class FilePropertiesPage : Page
             {
                 return "新文件名与原文件名一致！";
             }
+
             var newFullName = FileViewModel.Path + @"\" + InputName.Text;
             if (FileViewModel.IsFolder ? FileSystem.DirectoryExists(newFullName) : FileSystem.FileExists(newFullName))
             {
                 var isFolder = FileViewModel.IsFolder ? "夹" : "";
                 return $"新文件{isFolder}名与目录中其他文件{isFolder}同名！";
             }
+
             return null;
         }, FileSystemHelper.InvalidMode.Name, FileViewModel.Name);
-        if (await InputName.ShowAsync()) return;
+        if (await InputName.ShowAsync())
+            return;
         var newFullName = FileViewModel.Path + @"\" + InputName.Text;
         FileViewModel.Rename(newFullName);
         FileViewModel.MoveOrRenameAndSave(newFullName);
@@ -57,30 +61,35 @@ public partial class FilePropertiesPage : Page
     }
     private async void MoveBClick(object sender, RoutedEventArgs e)
     {
-        if (await FileSystemHelper.GetStorageFolder() is not { } folder) return;
+        if (await FileSystemHelper.GetStorageFolder() is not { } folder)
+            return;
         if (FileViewModel.Path == folder.Path)
         {
             await ShowMessageDialog.Information(true, "新目录与原目录一致！");
             return;
         }
+
         if (folder.Path.Contains(FileViewModel.Path))
         {
             await ShowMessageDialog.Information(true, "不能将其移动到原目录下！");
             return;
         }
+
         var newFullName = folder.Path + @"\" + FileViewModel.Name;
         if (newFullName.Exists())
         {
             await ShowMessageDialog.Information(true, "新名称与目录下其他文件（夹）同名！");
             return;
         }
+
         FileViewModel.Move(newFullName);
         FileViewModel.MoveOrRenameAndSave(newFullName);
         Load(FileViewModel);
     }
     private async void DeleteBClick(object sender, RoutedEventArgs e)
     {
-        if (!await ShowMessageDialog.Warning("是否删除该文件？")) return;
+        if (!await ShowMessageDialog.Warning("是否删除该文件？"))
+            return;
         FileViewModel.Delete();
         Remove(FileViewModel);
     }

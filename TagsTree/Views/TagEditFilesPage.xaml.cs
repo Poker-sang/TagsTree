@@ -36,7 +36,8 @@ public sealed partial class TagEditFilesPage : Page
 
     private void Selected(object sender, SelectionChangedEventArgs e)
     {
-        if ((FileViewModel)((DataGrid)sender).SelectedItem is null) return;
+        if ((FileViewModel)((DataGrid)sender).SelectedItem is null)
+            return;
         ((FileViewModel)((DataGrid)sender).SelectedItem).SelectedFlip();
         ((DataGrid)sender).SelectedIndex = -1;
     }
@@ -47,6 +48,7 @@ public sealed partial class TagEditFilesPage : Page
             await ShowMessageDialog.Information(true, "「标签路径」不存在！"); //理论上不会到达此代码
             return;
         }
+
         foreach (var fileViewModel in _vm.FileViewModels)
             if (fileViewModel.Selected != fileViewModel.SelectedOriginal)
             {
@@ -62,6 +64,7 @@ public sealed partial class TagEditFilesPage : Page
                                 App.Relations[tagViewModel, fileViewModel] = false;
                                 break;
                             }
+
                         break;
                     //如果原本是null，则删除fileViewModel拥有的相应子标签
                     case null:
@@ -69,8 +72,10 @@ public sealed partial class TagEditFilesPage : Page
                             App.Relations[tag, fileViewModel] = false;
                         break;
                 }
+
                 fileViewModel.TagsUpdated();
             }
+
         App.SaveRelations();
         await ShowMessageDialog.Information(false, "已保存更改");
         App.RootFrame.GoBack(new SlideNavigationTransitionInfo());

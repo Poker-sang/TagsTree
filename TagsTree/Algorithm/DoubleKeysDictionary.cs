@@ -21,14 +21,16 @@ public class DoubleKeysDictionary<TKey1, TKey2, TValue> where TKey1 : notnull wh
     {
         set
         {
-            if (_dict1.ContainsKey(key1) || _dict2.ContainsKey(key2)) return;
+            if (_dict1.ContainsKey(key1) || _dict2.ContainsKey(key2))
+                return;
             _dict1[key1] = key2;
             _dict2[key2] = value;
         }
     }
     public void ChangeKey2(TKey2 oldKey2, TKey2 newKey2)
     {
-        if (!_dict2.ContainsKey(oldKey2)) return;
+        if (!_dict2.ContainsKey(oldKey2))
+            return;
         foreach (var pair in _dict1.Where(pair => Equals(pair.Value, oldKey2)))
             _dict1[pair.Key] = newKey2;
         _ = _dict2.Remove(oldKey2, out var value);
@@ -44,7 +46,8 @@ public class DoubleKeysDictionary<TKey1, TKey2, TValue> where TKey1 : notnull wh
     public bool ContainsValue(TValue value) => _dict2.ContainsValue(value);
     public bool Remove(TKey1 key1)
     {
-        if (!_dict1.ContainsKey(key1)) return false;
+        if (!_dict1.ContainsKey(key1))
+            return false;
         _ = _dict2.Remove(_dict1[key1]);
         _ = _dict1.Remove(key1);
         return true;

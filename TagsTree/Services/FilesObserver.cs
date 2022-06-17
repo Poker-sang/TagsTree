@@ -30,32 +30,24 @@ public class FilesObserver : FileSystemWatcher
         return App.FilesObserver.EnableRaisingEvents = App.AppConfiguration.FilesObserverEnabled;
     }
 
-    private static new void Created(object sender, FileSystemEventArgs e)
-    {
-        _ = WindowHelper.Window.DispatcherQueue.TryEnqueue(() =>
-        {
-            if (App.FilesChangedList.LastOrDefault() is { Type: FileChanged.ChangedType.Delete } item && item.Name == e.FullPath.GetName() && item.FullName != e.FullPath)
-            {
-                _ = App.FilesChangedList.Remove(item);
-                App.FilesChangedList.Add(new FileChanged(e.FullPath, FileChanged.ChangedType.Move, item.Path));
-            }
-            else App.FilesChangedList.Add(new FileChanged(e.FullPath, FileChanged.ChangedType.Create));
-        });
-    }
+    private static new void Created(object sender, FileSystemEventArgs e) => _ = WindowHelper.Window.DispatcherQueue.TryEnqueue(() =>
+                                                                                  {
+                                                                                      if (App.FilesChangedList.LastOrDefault() is { Type: FileChanged.ChangedType.Delete } item && item.Name == e.FullPath.GetName() && item.FullName != e.FullPath)
+                                                                                      {
+                                                                                          _ = App.FilesChangedList.Remove(item);
+                                                                                          App.FilesChangedList.Add(new FileChanged(e.FullPath, FileChanged.ChangedType.Move, item.Path));
+                                                                                      }
+                                                                                      else
+                                                                                          App.FilesChangedList.Add(new FileChanged(e.FullPath, FileChanged.ChangedType.Create));
+                                                                                  });
 
-    private static new void Renamed(object sender, RenamedEventArgs e)
-    {
-        _ = WindowHelper.Window.DispatcherQueue.TryEnqueue
+    private static new void Renamed(object sender, RenamedEventArgs e) => _ = WindowHelper.Window.DispatcherQueue.TryEnqueue
         (
             () => App.FilesChangedList.Add(new FileChanged(e.FullPath, FileChanged.ChangedType.Rename, e.OldFullPath.GetName()))
         );
-    }
 
-    private static new void Deleted(object sender, FileSystemEventArgs e)
-    {
-        _ = WindowHelper.Window.DispatcherQueue.TryEnqueue
+    private static new void Deleted(object sender, FileSystemEventArgs e) => _ = WindowHelper.Window.DispatcherQueue.TryEnqueue
         (
             () => App.FilesChangedList.Add(new FileChanged(e.FullPath, FileChanged.ChangedType.Delete))
         );
-    }
 }

@@ -88,16 +88,15 @@ public class FileChangedMerger
     public MergeResult GetMergeResult()
     {
         if (IsExisted)
-            if (Create.Count == Delete.Count)
-                if (OriginalFullName == CurrentFullName)
-                    return MergeResult.Nothing;
-                else if (OriginalName == CurrentName && OriginalPath != CurrentPath)
-                    return MergeResult.Move;
-                else if (OriginalName != CurrentName && OriginalPath == CurrentPath)
-                    return MergeResult.Rename;
-                else return MergeResult.MoveRename;
-            else return MergeResult.Create;
-        else return Create.Count == Delete.Count ? MergeResult.Nothing : MergeResult.Delete;
+            return Create.Count == Delete.Count
+                ? OriginalFullName == CurrentFullName
+                    ? MergeResult.Nothing
+                    : OriginalName == CurrentName && OriginalPath != CurrentPath
+                    ? MergeResult.Move
+                    : OriginalName != CurrentName && OriginalPath == CurrentPath ? MergeResult.Rename : MergeResult.MoveRename
+                : MergeResult.Create;
+        else
+            return Create.Count == Delete.Count ? MergeResult.Nothing : MergeResult.Delete;
     }
 
     public enum MergeResult

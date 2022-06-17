@@ -14,7 +14,8 @@ public partial class TagSearchFilesViewModel : ObservableObject
         get => _resultCallBack;
         set
         {
-            if (Equals(_resultCallBack, value)) return;
+            if (Equals(_resultCallBack, value))
+                return;
             _resultCallBack = value;
             FileViewModels = value;
         }

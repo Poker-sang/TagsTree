@@ -27,10 +27,7 @@ public partial class FileViewModel : FileModel
     /// 虚拟构造，无后端<see cref="FileModel"/>的对象（不存在于<see cref="App.IdFile"/>）
     /// </summary>
     /// <param name="fullName">文件路径</param>
-    public FileViewModel(string fullName) : base(fullName)
-    {
-        _fileSystemInfo = IsFolder ? new DirectoryInfo(FullName) : new FileInfo(FullName);
-    }
+    public FileViewModel(string fullName) : base(fullName) => _fileSystemInfo = IsFolder ? new DirectoryInfo(FullName) : new FileInfo(FullName);
 
     /// <summary>
     /// 从<see cref="App.IdFile"/>中获取<see cref="FileModel"/>

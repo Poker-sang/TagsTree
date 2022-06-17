@@ -14,7 +14,8 @@ public partial class TagViewModel : TagModel
         get => base.Name;
         set
         {
-            if (base.Name == value) return;
+            if (base.Name == value)
+                return;
             base.Name = value;
             OnPropertyChanged(nameof(Name));
         }

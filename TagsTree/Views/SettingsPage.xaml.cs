@@ -1,7 +1,9 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Microsoft.UI;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Text.RegularExpressions;
+using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
 
 namespace TagsTree.Views;
@@ -12,16 +14,34 @@ public partial class SettingsPage : Page
     {
         InitializeComponent();
         TbLibraryPath.Text = App.AppConfiguration.LibraryPath;
-        CbTheme.SelectedIndex = App.AppConfiguration.Theme;
+        RbTheme.SelectedIndex = App.AppConfiguration.Theme;
         TsFilesObserver.IsOn = App.AppConfiguration.FilesObserverEnabled;
         CbRootFoldersExist.IsOn = App.AppConfiguration.PathTagsEnabled;
     }
     public static Type TypeGetter => typeof(SettingsPage);
 
-    private async void BLibraryPath_Click(object sender, RoutedEventArgs e)
+    private void OnThemeRadioButtonChecked(object sender, RoutedEventArgs e)
     {
-        TbLibraryPath.Text = (await FileSystemHelper.GetStorageFolder())?.Path ?? TbLibraryPath.Text;
+        var selectedTheme = (int)((FrameworkElement)sender).Tag switch
+        {
+            1 => ElementTheme.Light,
+            2 => ElementTheme.Dark,
+            _ => ElementTheme.Default
+        };
+
+        ThemeHelper.RootTheme = selectedTheme;
+        Application.Current.Resources["WindowCaptionForeground"] = selectedTheme switch
+        {
+            ElementTheme.Dark => Colors.White,
+            ElementTheme.Light => Colors.Black,
+            _ => Application.Current.RequestedTheme is ApplicationTheme.Dark ? Colors.White : Colors.Black
+        };
+
+        TitleBarHelper.TriggerTitleBarRepaint();
     }
+
+    private async void BLibraryPath_Click(AutoSuggestBox autoSuggestBox, AutoSuggestBoxQuerySubmittedEventArgs e)
+        => TbLibraryPath.Text = (await FileSystemHelper.GetStorageFolder())?.Path ?? TbLibraryPath.Text;
 
     private async void BExport_Click(object sender, RoutedEventArgs e)
     {
@@ -34,10 +54,7 @@ public partial class SettingsPage : Page
         if (await FileSystemHelper.GetStorageFolder() is { } folder)
             folder.Path.Copy(AppContext.AppLocalFolder);
     }
-    private void BOpenDirectory_Click(object sender, RoutedEventArgs e)
-    {
-        AppContext.AppLocalFolder.Open();
-    }
+    private void BOpenDirectory_Click(object sender, RoutedEventArgs e) => AppContext.AppLocalFolder.Open();
 
     private async void BSave_Click(object sender, RoutedEventArgs e)
     {
@@ -52,13 +69,6 @@ public partial class SettingsPage : Page
         {
             App.AppConfiguration.LibraryPath = TbLibraryPath.Text;
             App.AppConfiguration.PathTagsEnabled = CbRootFoldersExist.IsOn;
-            App.AppConfiguration.Theme = CbTheme.SelectedIndex;
-            App.RootNavigationView.RequestedTheme = CbTheme.SelectedIndex switch
-            {
-                1 => ElementTheme.Light,
-                2 => ElementTheme.Dark,
-                _ => ElementTheme.Default
-            };
             App.AppConfiguration.FilesObserverEnabled = TsFilesObserver.IsOn;
             AppContext.SaveConfiguration(App.AppConfiguration);
             InfoBar.Severity = InfoBarSeverity.Success;
@@ -69,8 +79,10 @@ public partial class SettingsPage : Page
                 App.ConfigSet = true;
                 await WindowHelper.Window.ConfigIsSet();
             }
-            else ((NavigationViewItem)App.RootNavigationView.FooterMenuItems[0]).IsEnabled = await App.ChangeFilesObserver();
+            else
+                ((NavigationViewItem)App.RootNavigationView.FooterMenuItems[0]).IsEnabled = await App.ChangeFilesObserver();
         }
+
         InfoBar.IsOpen = true;
     }
 }

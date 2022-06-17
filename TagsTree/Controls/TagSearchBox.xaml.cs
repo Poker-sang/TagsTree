@@ -44,11 +44,13 @@ public partial class TagSearchBox : UserControl
             ResultChanged.Invoke(App.IdFile.Values);
             return;
         }
+
         var temp = new List<PathTagModel>();
         foreach (var item in sender.Text.Split(' '))
             if (App.Tags.TagsDictionary.GetValueOrDefault(item) is { } tagModel)
                 temp.Add(tagModel);
-            else temp.Add(new PathTagModel(item));
+            else
+                temp.Add(new PathTagModel(item));
         ResultChanged.Invoke(App.Relations.GetFileModels(temp));
     }
 

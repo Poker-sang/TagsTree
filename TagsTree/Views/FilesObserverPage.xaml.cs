@@ -26,7 +26,6 @@ public sealed partial class FilesObserverPage : Page
     }
     public static Type TypeGetter => typeof(FilesObserverPage);
 
-
     public static FilesObserverViewModel Vm { get; set; } = null!;
 
     #region 事件处理
@@ -49,6 +48,7 @@ public sealed partial class FilesObserverPage : Page
             await ShowMessageDialog.Information(true, $"不在指定文件路径下：{fileChanged.FullName}");
             return;
         }
+
         _ = Vm.FilesChangedList.Remove(fileChanged);
         App.SaveFiles();
         if (fileChanged.Type is FileChanged.ChangedType.Create or FileChanged.ChangedType.Delete)
@@ -72,6 +72,7 @@ public sealed partial class FilesObserverPage : Page
             Vm.FilesChangedList.Clear();
             return;
         }
+
         var id = ((FileChanged)((MenuFlyoutItem)sender).DataContext).Id;
         while (Vm.FilesChangedList[0].Id <= id)
             Vm.FilesChangedList.RemoveAt(0);
@@ -86,6 +87,7 @@ public sealed partial class FilesObserverPage : Page
             Vm.FilesChangedList.Clear();
             return;
         }
+
         var id = ((FileChanged)((MenuFlyoutItem)sender).DataContext).Id;
         while (Vm.FilesChangedList[^1].Id >= id)
             _ = Vm.FilesChangedList.Remove(Vm.FilesChangedList[^1]);
@@ -108,12 +110,12 @@ public sealed partial class FilesObserverPage : Page
                     Vm.FilesChangedList.RemoveAt(i);
                     ++count;
                 }
+
             InfoBar.Message = $"已删除{count}项";
             InfoBar.IsOpen = true;
         };
         _ = await CdDeleteRange.ShowAsync();
     }
-
 
     private async void ApplyAllBClick(object sender, RoutedEventArgs e)
     {
@@ -136,21 +138,25 @@ public sealed partial class FilesObserverPage : Page
                     Apply(fileChanged, nameFile[fileChanged.OldFullName]);
                     deleteList.Add(fileChanged);
                 }
-                else notExistExceptions.Add(fileChanged);
-            else invalidExceptions.Add(fileChanged);
+                else
+                    notExistExceptions.Add(fileChanged);
+            else
+                invalidExceptions.Add(fileChanged);
         foreach (var deleteItem in deleteList)
             _ = Vm.FilesChangedList.Remove(deleteItem);
         var exception = "";
         if (invalidExceptions.Count is not 0)
         {
             exception += "*以下文件（夹）不在指定文件路径下：\n";
-            exception = invalidExceptions.Aggregate(exception, (current, invalidException) => current + (invalidException.FullName + "\n"));
+            exception = invalidExceptions.Aggregate(exception, (current, invalidException) => current + invalidException.FullName + "\n");
         }
+
         if (notExistExceptions.Count is not 0)
         {
             exception += "*以下文件（夹）不存在于文件列表中：\n";
-            exception = notExistExceptions.Aggregate(exception, (current, notExistException) => current + (notExistException.OldFullName + "\n"));
+            exception = notExistExceptions.Aggregate(exception, (current, notExistException) => current + notExistException.OldFullName + "\n");
         }
+
         if (exception is not "")
             await ShowMessageDialog.Information(true, exception);
         App.SaveFiles();

@@ -34,7 +34,7 @@ internal static partial class TypeWithAttributeDelegates
         var name = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
         var namespaces = new HashSet<string>();
         if (staticClassName is not null)
-            namespaces.Add(staticClassName); //methodName方法所用namespace
+            _ = namespaces.Add(staticClassName); //methodName方法所用namespace
         var usedTypes = new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
         /*-----Body Begin-----*/
         var stringBuilder = new StringBuilder().AppendLine("#nullable enable\n");
@@ -75,9 +75,9 @@ partial class {name}
                          member is { Kind: SymbolKind.Property } and not { Name: "EqualityContract" })
                      .Cast<IPropertySymbol>())
         {
-            loadConfigurationContent.AppendLine(LoadRecord(member.Name, member.Type.Name, type.Name, containerName,
+            _ = loadConfigurationContent.AppendLine(LoadRecord(member.Name, member.Type.Name, type.Name, containerName,
                 methodName));
-            saveConfigurationContent.AppendLine(SaveRecord(member.Name, member.Type, type.Name, containerName,
+            _ = saveConfigurationContent.AppendLine(SaveRecord(member.Name, member.Type, type.Name, containerName,
                 methodName));
             namespaces.UseNamespace(usedTypes, typeSymbol, member.Type);
         }
@@ -87,7 +87,7 @@ partial class {name}
 
         foreach (var s in namespaces)
             _ = stringBuilder.AppendLine($"using {s};");
-        stringBuilder.AppendLine(classBegin)
+        _ = stringBuilder.AppendLine(classBegin)
             .AppendLine(loadConfigurationBegin)
             .AppendLine(loadConfigurationContent.ToString())
             .AppendLine(loadConfigurationEndAndSaveConfigurationBegin)
@@ -97,13 +97,9 @@ partial class {name}
         return stringBuilder.ToString();
     }
 
-
-    private static string LoadRecord(string name, string type, string typeName, string containerName, string? methodName)
-    {
-        return methodName is null
+    private static string LoadRecord(string name, string type, string typeName, string containerName, string? methodName) => methodName is null
             ? $"{Spacing(4)}({type}){containerName}.Values[nameof({typeName}.{name})],"
             : $"{Spacing(4)}{containerName}.Values[nameof({typeName}.{name})].{methodName}<{type}>(),";
-    }
 
     private static readonly HashSet<string> PrimitiveTypes = new()
     {
@@ -128,17 +124,15 @@ partial class {name}
     private static string SaveRecord(string name, ITypeSymbol type, string typeName, string containerName, string? methodName)
     {
         var body = $"{containerName}.Values[nameof({typeName}.{name})] = appConfiguration.{name}";
-        if (!PrimitiveTypes.Contains(type.Name))
-        {
-            return type switch
+        return !PrimitiveTypes.Contains(type.Name)
+            ? type switch
             {
                 { Name: nameof(String) } => $"{Spacing(3)}{body} ?? string.Empty;",
                 { TypeKind: TypeKind.Enum } => methodName is null
                     ? $"{Spacing(3)}(int)({body});"
                     : $"{Spacing(3)}{body}.{methodName}<int>();",
                 _ => throw new InvalidCastException("Only primitive and Enum types are supported.")
-            };
-        }
-        return $"{Spacing(3)}{body};";
+            }
+            : $"{Spacing(3)}{body};";
     }
 }

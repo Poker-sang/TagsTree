@@ -28,7 +28,6 @@ public partial class App : Application
     public static ObservableCollection<FileChanged> FilesChangedList => FilesObserverPage.Vm.FilesChangedList;
     public static bool ConfigSet { get; set; }
 
-
     public App()
     {
         InitializeComponent();
@@ -50,21 +49,11 @@ public partial class App : Application
             AppConfiguration = AppContext.GetDefault();
             ConfigSet = false;
         }
-
-        RequestedTheme = AppConfiguration.Theme switch
-        {
-            1 => ApplicationTheme.Light,
-            2 => ApplicationTheme.Dark,
-            _ => RequestedTheme
-        };
     }
 
     /// <param name="args">Details about the launch request and process.</param>
     protected override void OnLaunched(LaunchActivatedEventArgs args) =>
-        WindowHelper.Initialize(RequestedTheme is ApplicationTheme.Dark)
-            .SetWindowSize(800, 450)
-            .Activate();
-
+        WindowHelper.Initialize().SetWindowSize(800, 450).Activate();
 
     public static async Task<bool> ChangeFilesObserver() => await FilesObserver.Change(AppConfiguration.LibraryPath);
 
@@ -82,7 +71,6 @@ public partial class App : Application
                 break;
         }
     }
-
 
     public static string FilesChangedPath => AppContext.AppLocalFolder + @"\FileChanged.json";
     public static string TagsPath => AppContext.AppLocalFolder + @"\TagsTree.json";
@@ -103,7 +91,6 @@ public partial class App : Application
     /// 保存关系
     /// </summary>
     public static void SaveRelations() => Relations.Serialize(RelationsPath);
-
 
     /// <summary>
     /// 所有标签
@@ -173,13 +160,11 @@ public partial class App : Application
         {
             if (args.ExceptionObject is Exception e)
                 await WindowHelper.Window.DispatcherQueue.EnqueueAsync(async () => await UncaughtExceptionHandler(e));
-            else ExitWithPushedNotification();
+            else
+                ExitWithPushedNotification();
         };
 
-        DebugSettings.BindingFailed += (sender, args) =>
-        {
-            Debug.WriteLine(args.Message);
-        };
+        DebugSettings.BindingFailed += (sender, args) => Debug.WriteLine(args.Message);
 
 #if DEBUG
         static Task UncaughtExceptionHandler(Exception e)

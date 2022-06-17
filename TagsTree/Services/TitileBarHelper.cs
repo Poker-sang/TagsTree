@@ -11,7 +11,7 @@ internal class TitleBarHelper
         // to trigger repaint tracking task id 38044406
         if (WindowHelper.HWnd == User32.GetActiveWindow())
         {
-            _ = User32.SendMessage(WindowHelper.HWnd, User32.WindowMessage.WM_ACTIVATE, WA_ACTIVE, IntPtr.Zero);
+            _ = User32.SendMessage(WindowHelper.HWnd, User32.WindowMessage.WM_ACTIVATE, WA_INACTIVE, IntPtr.Zero);
             _ = User32.SendMessage(WindowHelper.HWnd, User32.WindowMessage.WM_ACTIVATE, WA_ACTIVE, IntPtr.Zero);
         }
         else
@@ -20,6 +20,6 @@ internal class TitleBarHelper
             _ = User32.SendMessage(WindowHelper.HWnd, User32.WindowMessage.WM_ACTIVATE, WA_INACTIVE, IntPtr.Zero);
         }
     }
-    public static readonly nint WA_ACTIVE = IntPtr.Add(IntPtr.Zero, 0x01);
-    public static readonly nint WA_INACTIVE = IntPtr.Zero;
+    public static readonly nint WA_ACTIVE = 0x01;
+    public static readonly nint WA_INACTIVE = 0x00;
 }

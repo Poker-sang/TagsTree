@@ -64,6 +64,7 @@ public partial class FileEditTagsPage : Page
                 InfoBar.IsOpen = true;
                 return;
             }
+
         _vm.VirtualTags.Add(newTag);
         BSave.IsEnabled = true;
     }
