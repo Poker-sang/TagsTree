@@ -33,7 +33,11 @@ public partial class FileViewModel : FileModel
     /// 从<see cref="App.IdFile"/>中获取<see cref="FileModel"/>
     /// </summary>
     public FileModel GetFileModel() => App.IdFile[Id];
-    public FileModel NewFileModel() => new(this);
+    public new FileViewModel GenerateAndUseId()
+    {
+        _ = base.GenerateAndUseId();
+        return this;
+    }
 
     public new void Reload(string fullName)
     {

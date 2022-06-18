@@ -39,13 +39,12 @@ public class TypeWithAttributeGenerator : IIncrementalGenerator
             .CreateSyntaxProvider(
                 static (s, _) => IsSyntaxTargetForGeneration(s),
                 static (ctx, _) => GetSemanticTargetForGeneration(ctx))
-            .Where(static m => m is not null)!;
+            .Where(static m => m is not null);
 
-        IncrementalValueProvider<(Compilation Compilation, ImmutableArray<TypeDeclarationSyntax> TypeDeclarationSyntaxes)> compilationAndTypes =
-            context.CompilationProvider.Combine(typeDeclarations.Collect());
+        var compilationAndTypes = context.CompilationProvider.Combine(typeDeclarations.Collect());
 
         context.RegisterSourceOutput(compilationAndTypes, static (spc, source) =>
-            Execute(source.Compilation, source.TypeDeclarationSyntaxes, spc));
+            Execute(source.Left, source.Right!, spc));
     }
 
     /// <summary>

@@ -11,11 +11,12 @@
     Background="Transparent"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
-    <Grid x:Name="FileImporterGrid">
-        <uiControls:DockPanel>
+    <uiControls:DockPanel>
+        <uiControls:DockPanel uiControls:DockPanel.Dock="Top">
             <CommandBar
-                uiControls:DockPanel.Dock="Top"
+                uiControls:DockPanel.Dock="Right"
                 Background="Transparent"
+                DefaultLabelPosition="Collapsed"
                 OverflowButtonVisibility="Collapsed">
                 <AppBarButton
                     x:Name="BSelect"
@@ -72,32 +73,42 @@
                     Click="{x:Bind SaveBClick}"
                     Icon="{ui:FontIcon Glyph=&#xE74E;}"
                     IsEnabled="False"
-                    Tag="{x:Bind FileImporterGrid}"
                     ToolTipService.ToolTip="保存" />
             </CommandBar>
-            <uiControls:DataGrid
-                x:Name="FileImporterDataGird"
-                AlternatingRowBackground="LightGray"
-                AutoGenerateColumns="False"
-                CanUserReorderColumns="False"
-                ItemsSource="{x:Bind _vm.FileViewModels, Mode=OneWay}">
-                <uiControls:DataGrid.RowStyle>
-                    <Style TargetType="uiControls:DataGridRow">
-                        <Setter Property="ContextFlyout">
-                            <Setter.Value>
-                                <MenuFlyout>
-                                    <MenuFlyoutItem Click="DeleteCmClick" Text="删除" />
-                                </MenuFlyout>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </uiControls:DataGrid.RowStyle>
-                <uiControls:DataGrid.Columns>
-                    <items:DataGridIconColumn />
-                    <items:DataGridNameColumn />
-                    <items:DataGridPartialPathColumn />
-                </uiControls:DataGrid.Columns>
-            </uiControls:DataGrid>
+            <Grid>
+                <InfoBar
+                    x:Name="IbSave"
+                    Title="成功"
+                    Severity="Success" />
+                <ProgressBar
+                    x:Name="PbSave"
+                    Width="200"
+                    IsIndeterminate="True"
+                    Opacity="0" />
+            </Grid>
         </uiControls:DockPanel>
-    </Grid>
+        <uiControls:DataGrid
+            x:Name="FileImporterDataGird"
+            AlternatingRowBackground="LightGray"
+            AutoGenerateColumns="False"
+            CanUserReorderColumns="False"
+            ItemsSource="{x:Bind _vm.FileViewModels, Mode=OneWay}">
+            <uiControls:DataGrid.RowStyle>
+                <Style TargetType="uiControls:DataGridRow">
+                    <Setter Property="ContextFlyout">
+                        <Setter.Value>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Click="DeleteCmClick" Text="删除" />
+                            </MenuFlyout>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </uiControls:DataGrid.RowStyle>
+            <uiControls:DataGrid.Columns>
+                <items:DataGridIconColumn />
+                <items:DataGridNameColumn />
+                <items:DataGridPartialPathColumn />
+            </uiControls:DataGrid.Columns>
+        </uiControls:DataGrid>
+    </uiControls:DockPanel>
 </Page>
