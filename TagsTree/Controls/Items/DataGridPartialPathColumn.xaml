@@ -16,7 +16,8 @@
             <TextBlock
                 Margin="10,0"
                 VerticalAlignment="Center"
-                Text="{x:Bind PartialPath}" />
+                Text="{x:Bind PartialPath}"
+                ToolTipService.ToolTip="{x:Bind PartialPath}" />
         </DataTemplate>
     </uicontrols:DataGridTemplateColumn.CellTemplate>
 </uicontrols:DataGridTemplateColumn>
