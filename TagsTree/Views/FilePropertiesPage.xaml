@@ -17,10 +17,14 @@
             <CommandBar
                 uiControls:DockPanel.Dock="Left"
                 Background="Transparent"
+                DefaultLabelPosition="Collapsed"
                 OverflowButtonVisibility="Collapsed">
                 <controls:BackRequestAppBarButton />
             </CommandBar>
-            <CommandBar Background="Transparent" OverflowButtonVisibility="Collapsed">
+            <CommandBar
+                Background="Transparent"
+                DefaultLabelPosition="Collapsed"
+                OverflowButtonVisibility="Collapsed">
                 <AppBarButton
                     x:Name="BOpen"
                     Click="OpenBClick"

@@ -20,10 +20,10 @@ public static class IconsHelper
     public static async void Initialize()
     {
         await using var ms1 = new MemoryStream(Resources.NotFound);
-        _notFoundIcon = await GetBitmapImage(ms1.AsRandomAccessStream());
+        NotFoundIcon = await GetBitmapImage(ms1.AsRandomAccessStream());
 
         await using var ms2 = new MemoryStream(Resources.Loading);
-        _loadingIcon = await GetBitmapImage(ms2.AsRandomAccessStream());
+        LoadingIcon = await GetBitmapImage(ms2.AsRandomAccessStream());
 
         await using var ms3 = new MemoryStream(Resources.Folder);
         IconList["文件夹"] = await GetBitmapImage(ms3.AsRandomAccessStream());
@@ -54,7 +54,7 @@ public static class IconsHelper
     public static BitmapImage GetIcon(this FileViewModel fileViewModel)
     {
         if (!fileViewModel.Exists)
-            return _notFoundIcon;
+            return NotFoundIcon;
         //如果图标列表已经有该扩展名项
         if (IconList.ContainsKey(fileViewModel.Extension))
         {
@@ -63,7 +63,7 @@ public static class IconsHelper
             {
                 //在加载完成后通知UI
                 iconGetter.CallBack += fileViewModel.IconChange;
-                return _loadingIcon;
+                return LoadingIcon;
             }
             //否则说明已经加载完成，直接返回图标对象
             return IconList[fileViewModel.Extension];
@@ -73,13 +73,13 @@ public static class IconsHelper
         {
             //在加载完成后通知UI
             iconGetter.CallBack += fileViewModel.IconChange;
-            return _loadingIcon;
+            return LoadingIcon;
         }
 
         IconRequest.Add(new IconGetter(fileViewModel.Extension, fileViewModel.IconChange));
         if (IconRequest.Count <= 1)
             _ = StartAsync();
-        return _loadingIcon;
+        return LoadingIcon;
     }
 
     /// <summary>
@@ -142,11 +142,11 @@ public static class IconsHelper
     /// <summary>
     /// 文件不存在的图标
     /// </summary>
-    private static BitmapImage _notFoundIcon = null!;
+    private static BitmapImage NotFoundIcon = null!;
     /// <summary>
     /// 加载中的图标
     /// </summary>
-    private static BitmapImage _loadingIcon = null!;
+    private static BitmapImage LoadingIcon = null!;
 
     /// <summary>
     /// 请求加载图标的列表

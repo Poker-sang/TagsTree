@@ -18,7 +18,6 @@ public partial class SettingsPage : Page
         TsFilesObserver.IsOn = App.AppConfiguration.FilesObserverEnabled;
         CbRootFoldersExist.IsOn = App.AppConfiguration.PathTagsEnabled;
     }
-    public static Type TypeGetter => typeof(SettingsPage);
 
     private void OnThemeRadioButtonChecked(object sender, RoutedEventArgs e)
     {

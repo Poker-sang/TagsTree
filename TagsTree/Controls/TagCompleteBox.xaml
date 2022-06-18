@@ -18,11 +18,12 @@
             x:Name="AutoSuggestBox"
             VerticalAlignment="Center"
             LostFocus="PathComplement"
-            PlaceholderText="标签路径（不包含/:*?&quot;&lt;&gt;|,和空白字符且不为空）"
+            PlaceholderText="标签路径"
+            QuerySubmitted="TappedEnter"
             SuggestionChosen="SuggestionChosen"
             Text="{x:Bind PathPrivate, Mode=TwoWay}"
             TextChanged="PathChanged"
-            QuerySubmitted="TappedEnter"
+            ToolTipService.ToolTip="不包含/:*?&quot;&lt;&gt;|,和空白字符且不为空"
             UpdateTextOnSelect="False">
             <AutoSuggestBox.ItemTemplate>
                 <DataTemplate x:DataType="viewModels:TagViewModel">

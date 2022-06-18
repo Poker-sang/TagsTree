@@ -41,6 +41,8 @@ public sealed partial class MainWindow : Window
 
     private async void Loaded(object sender, RoutedEventArgs e)
     {
+        ((NavigationViewItem)NavigationView.SettingsItem).Tag = typeof(SettingsPage);
+
         if (App.ConfigSet)
             await ConfigIsSet();
         else
@@ -70,7 +72,7 @@ public sealed partial class MainWindow : Window
     private void DisplaySettings()
     {
         _ = NavigateFrame.Navigate(typeof(SettingsPage));
-        NavigationView.SelectedItem = NavigationView.FooterMenuItems[1];
+        NavigationView.SelectedItem = NavigationView.SettingsItem;
     }
 
     private void BackRequested(NavigationView navigationView, NavigationViewBackRequestedEventArgs e)
@@ -87,7 +89,7 @@ public sealed partial class MainWindow : Window
             SelectTagToEditPage => NavigationView.MenuItems[3],
             TagEditFilesPage => NavigationView.MenuItems[3],
             FilesObserverPage => NavigationView.FooterMenuItems[0],
-            SettingsPage => NavigationView.FooterMenuItems[1],
+            SettingsPage => NavigationView.SettingsItem,
             _ => NavigationView.SelectedItem
         };
         NavigationView.IsBackEnabled = NavigateFrame.CanGoBack;

@@ -18,31 +18,27 @@
             <CommandBar
                 uiControls:DockPanel.Dock="Right"
                 Background="Transparent"
+                DefaultLabelPosition="Collapsed"
                 OverflowButtonVisibility="Collapsed">
                 <AppBarButton
-                    Width="50"
                     Click="NewBClick"
                     Icon="{ui:FontIcon Glyph=&#xECC8;}"
                     ToolTipService.ToolTip="添加" />
                 <AppBarButton
-                    Width="50"
                     Click="MoveBClick"
                     Icon="{ui:FontIcon Glyph=&#xE8DE;}"
                     ToolTipService.ToolTip="移动" />
                 <AppBarButton
-                    Width="50"
                     Click="RenameBClick"
                     Icon="{ui:FontIcon Glyph=&#xE8AC;}"
                     ToolTipService.ToolTip="重命名" />
                 <AppBarButton
-                    Width="50"
                     Click="DeleteBClick"
                     Icon="{ui:FontIcon Glyph=&#xECC9;}"
                     ToolTipService.ToolTip="删除" />
                 <AppBarSeparator />
                 <AppBarButton
                     x:Name="BSave"
-                    Width="50"
                     Click="SaveBClick"
                     Icon="{ui:FontIcon Glyph=&#xE74E;}"
                     IsEnabled="False"
@@ -52,9 +48,10 @@
         </uiControls:DockPanel>
         <AutoSuggestBox
             uiControls:DockPanel.Dock="Top"
-            PlaceholderText="标签名称（不包含\/:*?&quot;&lt;&gt;|,和空白字符且不为空）"
+            PlaceholderText="标签名称"
             Text="{x:Bind _vm.Name, Mode=TwoWay}"
-            TextChanged="NameChanged" />
+            TextChanged="NameChanged"
+            ToolTipService.ToolTip="不包含\/:*?&quot;&lt;&gt;|,和空白字符且不为空" />
         <controls:TagCompleteBox x:Name="TbPath" uiControls:DockPanel.Dock="Top" />
         <!--  DragItemsCompleted="TvTags_OnDragItemsCompleted"  -->
         <TreeView

@@ -17,6 +17,7 @@
             <CommandBar
                 uiControls:DockPanel.Dock="Right"
                 Background="Transparent"
+                DefaultLabelPosition="Collapsed"
                 OverflowButtonVisibility="Collapsed">
                 <AppBarButton
                     Click="ConfirmBClick"

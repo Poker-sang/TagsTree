@@ -28,7 +28,6 @@
             Canvas.ZIndex="0"
             DisplayModeChanged="DisplayModeChanged"
             IsBackButtonVisible="Visible"
-            IsSettingsVisible="False"
             IsTabStop="False"
             IsTitleBarAutoPaddingEnabled="False"
             ItemInvoked="ItemInvoked"
@@ -63,10 +62,6 @@
                     Icon="{ui:FontIcon Glyph=&#xE7B3;}"
                     IsEnabled="False"
                     Tag="{x:Bind local:FilesObserverPage.TypeGetter}" />
-                <NavigationViewItem
-                    Content="设置"
-                    Icon="{ui:FontIcon Glyph=&#xE713;}"
-                    Tag="{x:Bind local:SettingsPage.TypeGetter}" />
             </NavigationView.FooterMenuItems>
             <Frame x:Name="NavigateFrame" />
         </NavigationView>

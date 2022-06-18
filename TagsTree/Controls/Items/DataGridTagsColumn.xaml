@@ -16,7 +16,8 @@
             <TextBlock
                 Margin="10,0"
                 VerticalAlignment="Center"
-                Text="{x:Bind Tags}" />
+                Text="{x:Bind Tags}"
+                ToolTipService.ToolTip="{x:Bind Tags}" />
         </DataTemplate>
     </uicontrols:DataGridTemplateColumn.CellTemplate>
 </uicontrols:DataGridTemplateColumn>

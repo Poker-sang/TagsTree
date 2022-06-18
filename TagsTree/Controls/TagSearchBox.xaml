@@ -10,11 +10,12 @@
     mc:Ignorable="d">
     <AutoSuggestBox
         x:Name="AutoSuggestBox"
-        PlaceholderText="搜索标签（不包含/:*?&quot;&lt;&gt;|,和空白字符，留空显示全部）"
+        PlaceholderText="搜索标签"
         QueryIcon="Find"
         QuerySubmitted="QuerySubmitted"
         SuggestionChosen="SuggestionChosen"
-        TextChanged="TextChanged">
+        TextChanged="TextChanged"
+        ToolTipService.ToolTip="不包含/:*?&quot;&lt;&gt;|,和空白字符，留空显示全部">
         <AutoSuggestBox.ItemTemplate>
             <DataTemplate x:DataType="viewModels:TagViewModel">
                 <TextBlock Text="{x:Bind FullName}" />
