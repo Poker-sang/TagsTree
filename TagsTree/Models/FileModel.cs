@@ -14,7 +14,7 @@ public class FileModel : IFullName
 {
     private static int Num { get; set; }
 
-    public int Id { get; }
+    public int Id { get; private set; }
     public string Name { get; private set; }
     public string Path { get; private set; }
 
@@ -28,6 +28,7 @@ public class FileModel : IFullName
         Name = fileModel.Name;
         Path = fileModel.Path;
     }
+
     /// <summary>
     /// <see cref="FileViewModel"/>用的虚拟构造
     /// </summary>
@@ -38,6 +39,7 @@ public class FileModel : IFullName
         Name = fullName.GetName();
         Path = fullName.GetPath();
     }
+
     /// <summary>
     /// 反序列化专用，不要调用该构造器
     /// </summary>
@@ -49,17 +51,17 @@ public class FileModel : IFullName
         Name = name;
         Path = path;
     }
+
     /// <summary>
-    /// 由虚拟构造的<see cref="FileViewModel"/>复制而成
+    /// 由虚拟构造的<see cref="FileViewModel"/>构成的<see cref="FileModel"/>，并生成Id
     /// </summary>
-    /// <param name="fileViewModel"></param>
-    public FileModel(FileViewModel fileViewModel)
+    public FileModel GenerateAndUseId()
     {
         Id = Num;
         Num++;
-        Name = fileViewModel.Name;
-        Path = fileViewModel.Path;
+        return this;
     }
+
     public void Reload(string fullName)
     {
         FileSystemInfo info = IsFolder ? new DirectoryInfo(fullName) : new FileInfo(fullName);
@@ -83,12 +85,18 @@ public class FileModel : IFullName
                 return null;
         return false;
     }
+
     public IEnumerable<TagViewModel> GetRelativeTags(TagViewModel parentTag) => Tags.GetTagViewModels().Where(parentTag.HasChildTag);
 
     [JsonIgnore] public string Extension => IsFolder ? "文件夹" : Name.Split('.', StringSplitOptions.RemoveEmptyEntries)[^1].ToUpper(CultureInfo.CurrentCulture);
-    [JsonIgnore] protected string PartialPath => this.GetPartialPath(); //Path必然包含文件路径
-    [JsonIgnore] public string FullName => Path + '\\' + Name; //Path必然包含文件路径
-    [JsonIgnore] public string UniqueName => IsFolder + FullName;
+    /// <remarks>
+    /// Path必然包含文件路径
+    /// </remarks>
+    [JsonIgnore] protected string PartialPath => this.GetPartialPath();
+    /// <remarks>
+    /// Path必然包含文件路径
+    /// </remarks>
+    [JsonIgnore] public string FullName => Path + '\\' + Name;
     [JsonIgnore] public bool IsFolder => Directory.Exists(FullName);
     [JsonIgnore]
     protected string Tags

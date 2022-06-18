@@ -1,9 +1,9 @@
-﻿using System.Collections.ObjectModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.ObjectModel;
 
 namespace TagsTree.ViewModels;
 
-public class FileImporterViewModel
+public partial class FileImporterViewModel : ObservableObject
 {
-    public ObservableCollection<FileViewModel> FileViewModels { get; } = new();
-
+    [ObservableProperty] private ObservableCollection<FileViewModel> _fileViewModels = new();
 }

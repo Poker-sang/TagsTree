@@ -197,7 +197,7 @@ public sealed partial class FilesObserverPage : Page
     {
         switch (fileChanged.Type)
         {
-            case FileChanged.ChangedType.Create: new FileViewModel(fileChanged.OldFullName).NewFileModel().AddNew(); break;
+            case FileChanged.ChangedType.Create: new FileViewModel(fileChanged.OldFullName).GenerateAndUseId().AddNew(); break;
             case FileChanged.ChangedType.Move: fileModel!.MoveOrRename(fileChanged.FullName); break;
             case FileChanged.ChangedType.Rename: fileModel!.MoveOrRename(fileChanged.FullName); break;
             case FileChanged.ChangedType.Delete: fileModel!.Remove(); break;
