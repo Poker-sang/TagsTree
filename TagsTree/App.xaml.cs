@@ -32,7 +32,6 @@ public partial class App : Application
     {
         InitializeComponent();
         RegisterUnhandledExceptionHandler();
-        IconsHelper.Initialize();
         FilesObserver = new FilesObserver();
         AppContext.Initialize();
         if (AppContext.LoadConfiguration() is { } appConfigurations

@@ -1,5 +1,6 @@
 ﻿using Microsoft.UI.Xaml.Media.Imaging;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,36 +15,35 @@ namespace TagsTree.Services;
 
 public static class IconsHelper
 {
-    /// <summary>
-    /// 加载四个常用图标
-    /// </summary>
-    public static async void Initialize()
-    {
-        await using var ms1 = new MemoryStream(Resources.NotFound);
-        NotFoundIcon = await GetBitmapImage(ms1.AsRandomAccessStream());
-
-        await using var ms2 = new MemoryStream(Resources.Loading);
-        LoadingIcon = await GetBitmapImage(ms2.AsRandomAccessStream());
-
-        await using var ms3 = new MemoryStream(Resources.Folder);
-        IconList["文件夹"] = await GetBitmapImage(ms3.AsRandomAccessStream());
-
-        await using var ms4 = new MemoryStream(Resources.Link);
-        IconList["LNK"] = IconList["URL"] = await GetBitmapImage(ms4.AsRandomAccessStream());
-    }
 
     /// <summary>
     /// 将已有文件列表里所有文件图标预加载
     /// </summary>
-    public static void LoadFilesIcons()
+    public static async void LoadFilesIcons()
     {
-        //TODO 图标预加载
-        //InnerLoadFilesIcons();
-        //static async void InnerLoadFilesIcons()
-        //{
-        //    foreach (var (extension, _) in IconList) []
-        //        IconList[extension] = await CreateIcon(extension);
-        //}
+        using var ms1 = new MemoryStream(Resources.NotFound);
+        NotFoundIcon = GetBitmapImage(ms1.AsRandomAccessStream());
+
+        using var ms2 = new MemoryStream(Resources.Loading);
+        LoadingIcon = GetBitmapImage(ms2.AsRandomAccessStream());
+
+        using var ms3 = new MemoryStream(Resources.Folder);
+        IconList["文件夹"] = GetBitmapImage(ms3.AsRandomAccessStream());
+
+        using var ms4 = new MemoryStream(Resources.Link);
+        IconList["LNK"] = IconList["URL"] = GetBitmapImage(ms4.AsRandomAccessStream());
+
+        foreach (var file in Directory.GetFiles(ApplicationData.Current.TemporaryFolder.Path, "Temp.*"))
+            File.Delete(file);
+
+        await Task.Yield();
+        foreach (var extension in App.IdFile.Values.Select(file => file.Extension).Where(extension => !IconList.ContainsKey(extension)).Distinct())
+        {
+            IconRequest.Enqueue(new IconGetter(extension));
+            IconList[extension] = null;
+        }
+
+        _ = StartAsync();
     }
 
     /// <summary>
@@ -56,27 +56,19 @@ public static class IconsHelper
         if (!fileViewModel.Exists)
             return NotFoundIcon;
         //如果图标列表已经有该扩展名项
-        if (IconList.ContainsKey(fileViewModel.Extension))
-        {
-            //若请求列表已有该扩展名项
-            foreach (var iconGetter in IconRequest.Where(iconGetter => iconGetter.Extension == fileViewModel.Extension))
+        if (IconList.TryGetValue(fileViewModel.Extension, out var icon))
+            //且加载完成
+            if (icon is not null)
+                return icon;
+            else
             {
-                //在加载完成后通知UI
-                iconGetter.CallBack += fileViewModel.IconChange;
+                IconRequest.First(iconGetter => iconGetter.Extension == fileViewModel.Extension).CallBack +=
+                    fileViewModel.IconChange;
                 return LoadingIcon;
             }
-            //否则说明已经加载完成，直接返回图标对象
-            return IconList[fileViewModel.Extension];
-        }
-        //若图标列表没有，且请求列表已有该扩展名项
-        foreach (var iconGetter in IconRequest.Where(iconGetter => iconGetter.Extension == fileViewModel.Extension))
-        {
-            //在加载完成后通知UI
-            iconGetter.CallBack += fileViewModel.IconChange;
-            return LoadingIcon;
-        }
 
-        IconRequest.Add(new IconGetter(fileViewModel.Extension, fileViewModel.IconChange));
+        IconRequest.Enqueue(new IconGetter(fileViewModel.Extension, fileViewModel.IconChange));
+        IconList[fileViewModel.Extension] = null;
         if (IconRequest.Count <= 1)
             _ = StartAsync();
         return LoadingIcon;
@@ -87,11 +79,10 @@ public static class IconsHelper
     /// </summary>
     private static async Task StartAsync()
     {
-        while (IconRequest.Count is not 0)
+        while (IconRequest.TryDequeue(out var item))
         {
-            IconList[IconRequest[0].Extension] = await CreateIcon(IconRequest[0].Extension);
-            IconRequest[0].CallBack();
-            IconRequest.RemoveAt(0);
+            IconList[item.Extension] = await CreateIcon(item.Extension);
+            item.CallBack();
         }
     }
 
@@ -100,10 +91,22 @@ public static class IconsHelper
     /// </summary>
     /// <param name="iRandomAccessStream">流</param>
     /// <returns>图标</returns>
-    private static async Task<BitmapImage> GetBitmapImage(IRandomAccessStream iRandomAccessStream)
+    private static async Task<BitmapImage> GetBitmapImageAsync(IRandomAccessStream iRandomAccessStream)
     {
         var bitmapImage = new BitmapImage();
         await bitmapImage.SetSourceAsync(iRandomAccessStream);
+        return bitmapImage;
+    }
+
+    /// <summary>
+    /// 从流中获取图标
+    /// </summary>
+    /// <param name="iRandomAccessStream">流</param>
+    /// <returns>图标</returns>
+    private static BitmapImage GetBitmapImage(IRandomAccessStream iRandomAccessStream)
+    {
+        var bitmapImage = new BitmapImage();
+        bitmapImage.SetSource(iRandomAccessStream);
         return bitmapImage;
     }
 
@@ -114,10 +117,10 @@ public static class IconsHelper
     /// <returns>图标</returns>
     private static async Task<BitmapImage> CreateIcon(string extension)
     {
-        var tempFile = await ApplicationData.Current.TemporaryFolder.CreateFileAsync("Temp." + extension, CreationCollisionOption.OpenIfExists);
+        var tempFile = await ApplicationData.Current.TemporaryFolder.CreateFileAsync("Temp." + extension, CreationCollisionOption.FailIfExists);
         using var storageItemThumbnail = await tempFile.GetThumbnailAsync(ThumbnailMode.SingleItem, Size);
         await tempFile.DeleteAsync();
-        return await GetBitmapImage(storageItemThumbnail);
+        return await GetBitmapImageAsync(storageItemThumbnail);
     }
 
     /// <summary>
@@ -125,6 +128,11 @@ public static class IconsHelper
     /// </summary>
     private class IconGetter
     {
+        public IconGetter(string extension)
+        {
+            Extension = extension;
+            CallBack = () => { };
+        }
         public IconGetter(string extension, Action callBack)
         {
             Extension = extension;
@@ -151,9 +159,9 @@ public static class IconsHelper
     /// <summary>
     /// 请求加载图标的列表
     /// </summary>
-    private static readonly List<IconGetter> IconRequest = new();
+    private static readonly ConcurrentQueue<IconGetter> IconRequest = new();
     /// <summary>
     /// 图标字典，键是扩展名，值是图标
     /// </summary>
-    private static readonly Dictionary<string, BitmapImage> IconList = new();
+    private static readonly Dictionary<string, BitmapImage?> IconList = new();
 }
