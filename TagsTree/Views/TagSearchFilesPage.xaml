@@ -22,7 +22,8 @@
             ResultChanged="ResultChanged" />
         <AutoSuggestBox
             uiControls:DockPanel.Dock="Top"
-            PlaceholderText="文件名（模糊搜索，不包含\/:*?&quot;&lt;&gt;|,和空白字符，留空显示全部）"
+            ToolTipService.ToolTip="模糊搜索，不包含\/:*?&quot;&lt;&gt;|,和空白字符，留空显示全部"
+            PlaceholderText="文件名"
             QueryIcon="Find"
             QuerySubmitted="QuerySubmitted"
             TextChanged="TextChanged" />

@@ -15,7 +15,6 @@ namespace TagsTree.Services;
 
 public static class IconsHelper
 {
-
     /// <summary>
     /// 将已有文件列表里所有文件图标预加载
     /// </summary>
@@ -151,6 +150,7 @@ public static class IconsHelper
     /// 文件不存在的图标
     /// </summary>
     private static BitmapImage NotFoundIcon = null!;
+
     /// <summary>
     /// 加载中的图标
     /// </summary>
@@ -160,6 +160,7 @@ public static class IconsHelper
     /// 请求加载图标的列表
     /// </summary>
     private static readonly ConcurrentQueue<IconGetter> IconRequest = new();
+
     /// <summary>
     /// 图标字典，键是扩展名，值是图标
     /// </summary>

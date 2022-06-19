@@ -57,9 +57,9 @@
                     <uiControls:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="viewModels:FileViewModel">
                             <CheckBox
-                                Margin="10,0"
+                                Margin="12.5,0"
                                 IsChecked="{x:Bind Selected, Mode=OneWay}"
-                                IsEnabled="False"
+                                IsHitTestVisible="False"
                                 IsThreeState="True" />
                         </DataTemplate>
                     </uiControls:DataGridTemplateColumn.CellTemplate>

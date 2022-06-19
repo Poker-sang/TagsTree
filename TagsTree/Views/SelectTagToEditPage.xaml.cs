@@ -20,7 +20,7 @@ public partial class SelectTagToEditPage : Page
 
     #region 事件处理
 
-    private void Tags_OnItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs e) => TbPath.Path = ((TagViewModel?)e.InvokedItem)?.FullName ?? TbPath.Path;
+    private void Tags_OnItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs e) => TbPath.Path = (e.InvokedItem as TagViewModel)?.FullName ?? TbPath.Path;
 
     private async void ConfirmBClick(object sender, RoutedEventArgs e)
     {

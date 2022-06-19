@@ -10,7 +10,6 @@ namespace TagsTree.Controls;
 
 public partial class TagSearchBox : UserControl
 {
-
     public TagSearchBox() => InitializeComponent();
 
     public string Text

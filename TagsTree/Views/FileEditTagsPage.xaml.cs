@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using System;
+using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
 
 namespace TagsTree.Views;
@@ -14,8 +15,6 @@ public partial class FileEditTagsPage : Page
         _vm = new FileEditTagsViewModel();
         InitializeComponent();
     }
-
-    public static Type TypeGetter => typeof(FileEditTagsPage);
 
     private readonly FileEditTagsViewModel _vm;
 
@@ -29,7 +28,7 @@ public partial class FileEditTagsPage : Page
 
     private void AddTag(object sender, DoubleTappedRoutedEventArgs e)
     {
-        var newTag = (TagViewModel)((TreeViewItem)sender).Tag;
+        var newTag = sender.GetTag<TagViewModel>();
         foreach (var tagExisted in _vm.VirtualTags)
             if (tagExisted.Name == newTag.Name)
             {
@@ -71,7 +70,7 @@ public partial class FileEditTagsPage : Page
 
     private void DeleteTag(object sender, RoutedEventArgs e)
     {
-        _ = _vm.VirtualTags.Remove((TagViewModel)((ListViewItem)sender).Tag);
+        _ = _vm.VirtualTags.Remove(sender.GetTag<TagViewModel>());
         BSave.IsEnabled = true;
     }
 
