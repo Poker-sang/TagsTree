@@ -53,10 +53,11 @@
             TextChanged="NameChanged"
             ToolTipService.ToolTip="不包含\/:*?&quot;&lt;&gt;|,和空白字符且不为空" />
         <controls:TagCompleteBox x:Name="TbPath" uiControls:DockPanel.Dock="Top" />
-        <!--  DragItemsCompleted="TvTags_OnDragItemsCompleted"  -->
         <TreeView
-            AllowDrop="False"
-            CanDragItems="False"
+            AllowDrop="True"
+            CanDragItems="True"
+            DragItemsCompleted="OnDragItemsCompleted"
+            DragItemsStarting="OnDragItemsStarting"
             ItemInvoked="Tags_OnItemInvoked"
             ItemsSource="{x:Bind _vm.TagsSource.TagsTree.SubTags, Mode=OneWay}">
             <TreeView.ItemTemplate>
@@ -64,42 +65,50 @@
                     <TreeViewItem ItemsSource="{x:Bind SubTags, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind FullName}">
                         <TextBlock Text="{x:Bind Name, Mode=OneWay}" />
                         <TreeViewItem.ContextFlyout>
-                            <MenuFlyout>
-                                <MenuFlyoutItem
-                                    Click="NewCmClick"
+                            <CommandBarFlyout Placement="TopEdgeAlignedLeft">
+                                <AppBarButton
+                                    Icon="Add"
                                     Tag="{x:Bind}"
-                                    Text="新建" />
-                                <MenuFlyoutItem
-                                    Click="CutCmClick"
+                                    Tapped="NewCmClick"
+                                    ToolTipService.ToolTip="新建" />
+                                <AppBarButton
+                                    Icon="Cut"
                                     Tag="{x:Bind}"
-                                    Text="剪切" />
-                                <MenuFlyoutItem
-                                    Click="PasteCmClick"
+                                    Tapped="CutCmClick"
+                                    ToolTipService.ToolTip="剪切" />
+                                <AppBarButton
+                                    Icon="Paste"
                                     IsEnabled="{x:Bind local:TagsManagerPage.Current.CanPaste, Mode=OneWay}"
                                     Tag="{x:Bind}"
-                                    Text="粘贴" />
-                                <MenuFlyoutItem
-                                    Click="RenameCmClick"
+                                    Tapped="PasteCmClick"
+                                    ToolTipService.ToolTip="粘贴" />
+                                <AppBarButton
+                                    Icon="Rename"
                                     Tag="{x:Bind}"
-                                    Text="重命名" />
-                                <MenuFlyoutItem
-                                    Click="DeleteCmClick"
+                                    Tapped="RenameCmClick"
+                                    ToolTipService.ToolTip="重命名" />
+                                <AppBarButton
+                                    Icon="Delete"
                                     Tag="{x:Bind}"
-                                    Text="删除" />
-                            </MenuFlyout>
+                                    Tapped="DeleteCmClick"
+                                    ToolTipService.ToolTip="删除" />
+                            </CommandBarFlyout>
                         </TreeViewItem.ContextFlyout>
                     </TreeViewItem>
                 </DataTemplate>
             </TreeView.ItemTemplate>
             <TreeView.ContextFlyout>
-                <MenuFlyout>
-                    <MenuFlyoutItem Click="NewXCmClick" Text="新建" />
-                    <MenuFlyoutItem
-                        x:Name="CmPPasteX"
-                        Click="PasteXCmClick"
-                        IsEnabled="False"
-                        Text="粘贴" />
-                </MenuFlyout>
+                <CommandBarFlyout Placement="TopEdgeAlignedLeft">
+                    <AppBarButton
+                        Icon="Add"
+                        Tapped="NewXCmClick"
+                        ToolTipService.ToolTip="新建" />
+                    <AppBarButton
+                        Icon="Paste"
+                        IsEnabled="{x:Bind CanPaste, Mode=OneWay}"
+                        Tapped="PasteXCmClick"
+                        ToolTipService.ToolTip="粘贴" />
+                </CommandBarFlyout>
             </TreeView.ContextFlyout>
         </TreeView>
     </uiControls:DockPanel>

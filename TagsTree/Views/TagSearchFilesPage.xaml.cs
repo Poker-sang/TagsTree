@@ -22,7 +22,7 @@ public partial class TagSearchFilesPage : Page
         InitializeComponent();
         TbSearch.InvokeQuerySubmitted();
     }
-    public static Type TypeGetter => typeof(TagSearchFilesPage);
+
     protected override void OnNavigatedTo(NavigationEventArgs e) => TbSearch.Text = (string)e.Parameter;
 
     private readonly TagSearchFilesViewModel _vm;

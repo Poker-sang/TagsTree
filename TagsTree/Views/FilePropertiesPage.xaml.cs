@@ -4,7 +4,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.VisualBasic.FileIO;
-using System;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
@@ -15,7 +14,6 @@ namespace TagsTree.Views;
 public partial class FilePropertiesPage : Page
 {
     public FilePropertiesPage() => InitializeComponent();
-    public static Type TypeGetter => typeof(FilePropertiesPage);
 
     private static readonly FileViewModel ConstFileViewModel = new(App.IdFile[0]);
 
@@ -36,14 +34,14 @@ public partial class FilePropertiesPage : Page
     }
     private async void RenameBClick(object sender, RoutedEventArgs e)
     {
-        InputName.Load($"文件重命名 {FileViewModel.Name}", () =>
+        InputName.Load($"文件重命名 {FileViewModel.Name}", cd =>
         {
-            if (FileViewModel.Name == InputName.Text)
+            if (FileViewModel.Name == cd.Text)
             {
                 return "新文件名与原文件名一致！";
             }
 
-            var newFullName = FileViewModel.Path + @"\" + InputName.Text;
+            var newFullName = FileViewModel.Path + @"\" + cd.Text;
             if (FileViewModel.IsFolder ? FileSystem.DirectoryExists(newFullName) : FileSystem.FileExists(newFullName))
             {
                 var isFolder = FileViewModel.IsFolder ? "夹" : "";

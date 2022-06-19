@@ -19,7 +19,7 @@ public partial class InputContentDialog : ContentDialog
     /// 输入的格式
     /// </summary>
     [ObservableProperty] private string _warningText = "";
-    public void Load(string title, Func<string?> judge, FileSystemHelper.InvalidMode mode, string text = "")
+    public void Load(string title, Func<InputContentDialog, string?> judge, FileSystemHelper.InvalidMode mode, string text = "")
     {
         Title = title;
         _judge = judge;
@@ -43,7 +43,7 @@ public partial class InputContentDialog : ContentDialog
     /// 是否取消这次输入
     /// </summary>
     private bool _canceled;
-    private Func<string?> _judge = null!;
+    private Func<InputContentDialog, string?> _judge = null!;
     private string _invalidRegex = "";
 
     #region 事件处理
@@ -65,7 +65,7 @@ public partial class InputContentDialog : ContentDialog
             return;
         }
 
-        var result = _judge();
+        var result = _judge(this);
         if (result is not null)
         {
             InfoBar.Message = result;

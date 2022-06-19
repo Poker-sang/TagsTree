@@ -20,7 +20,6 @@ public sealed partial class TagEditFilesPage : Page
         _vm = new TagEditFilesViewModel();
         InitializeComponent();
     }
-    public static Type TypeGetter => typeof(TagEditFilesPage);
 
     private readonly TagEditFilesViewModel _vm;
 

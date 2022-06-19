@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
@@ -19,25 +18,11 @@ public sealed partial class MainWindow : Window
         // 加载窗口后设置标题，拖拽区域才能达到原定效果
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
-        //UpdateTitleBarColor();
         Title = "TagsTree";
 
         App.RootNavigationView = NavigationView;
         App.RootFrame = NavigateFrame;
     }
-
-    private void UpdateTitleBarColor()
-    {
-        var res = Application.Current.Resources;
-        res["WindowCaptionBackground"] = _currentBgColor;
-        //res["WindowCaptionBackgroundDisabled"] = currentBgColor;
-        res["WindowCaptionForeground"] = _currentFgColor;
-        //res["WindowCaptionForegroundDisabled"] = currentFgColor;
-
-        TitleBarHelper.TriggerTitleBarRepaint();
-    }
-    private readonly Windows.UI.Color _currentBgColor = Colors.Transparent;
-    private readonly Windows.UI.Color _currentFgColor = Colors.Transparent;
 
     private async void Loaded(object sender, RoutedEventArgs e)
     {
@@ -104,6 +89,9 @@ public sealed partial class MainWindow : Window
             GC.Collect();
         }
     }
+
+    #region AppTitle相关
+
     private void PaneClosing(NavigationView sender, NavigationViewPaneClosingEventArgs e) => UpdateAppTitleMargin(sender);
 
     private void PaneOpening(NavigationView sender, object e) => UpdateAppTitleMargin(sender);
@@ -141,4 +129,6 @@ public sealed partial class MainWindow : Window
                 : new Thickness { Left = largeLeftIndent, Top = currentMargin.Top, Right = currentMargin.Right, Bottom = currentMargin.Bottom };
         }
     }
+
+    #endregion
 }
