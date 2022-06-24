@@ -105,7 +105,7 @@
                         ToolTipService.ToolTip="新建" />
                     <AppBarButton
                         Icon="Paste"
-                        IsEnabled="{x:Bind local:TagsManagerPage.Current.CanPaste, Mode=OneWay}"
+                        IsEnabled="{x:Bind CanPaste, Mode=OneWay}"
                         Tapped="PasteXCmClick"
                         ToolTipService.ToolTip="粘贴" />
                 </CommandBarFlyout>

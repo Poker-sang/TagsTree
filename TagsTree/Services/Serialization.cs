@@ -17,7 +17,7 @@ public static class Serialization
     {
         try
         {
-            return JsonSerializer.Deserialize<T>(File.ReadAllText(path)) ?? new T();
+            return JsonSerializer.Deserialize<T>(File.OpenRead(path)) ?? new T();
         }
         catch (Exception)
         {
@@ -35,8 +35,7 @@ public static class Serialization
     {
         try
         {
-            await using var fileStream = File.OpenRead(path);
-            return await JsonSerializer.DeserializeAsync<T>(fileStream) ?? new T();
+            return await JsonSerializer.DeserializeAsync<T>(File.OpenRead(path)) ?? new T();
         }
         catch (Exception)
         {
@@ -49,16 +48,16 @@ public static class Serialization
     /// </summary>
     /// <typeparam name="T">泛型类</typeparam>
     /// <param name="path">Json文件路径</param>
-    /// <param name="objectItem">需要转化的对象</param>
+    /// <param name="obj">需要转化的对象</param>
     /// <returns></returns>
-    public static void Serialize<T>(string path, T objectItem) => File.WriteAllText(path, JsonSerializer.Serialize(objectItem));
+    public static void Serialize<T>(string path, T obj) => JsonSerializer.Serialize(File.Create(path), obj);
 
     /// <summary>
     /// 异步将某个类序列化为Json文件
     /// </summary>
     /// <typeparam name="T">泛型类</typeparam>
     /// <param name="path">Json文件路径</param>
-    /// <param name="objectItem">需要转化的对象</param>
+    /// <param name="obj">需要转化的对象</param>
     /// <returns></returns>
-    public static async void SerializeAsync<T>(string path, T objectItem) => await JsonSerializer.SerializeAsync(File.Create(path), objectItem);
+    public static async ValueTask SerializeAsync<T>(string path, T obj) => await JsonSerializer.SerializeAsync(File.Create(path), obj);
 }

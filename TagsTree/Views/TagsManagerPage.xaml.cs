@@ -7,7 +7,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
-using Windows.ApplicationModel.DataTransfer;
 
 namespace TagsTree.Views;
 
@@ -22,7 +21,7 @@ public partial class TagsManagerPage : Page
     }
     public static Type TypeGetter => typeof(TagsManagerPage);
 
-    public static TagsManagerPage Current = null!;
+    public static TagsManagerPage Current { get; private set; } = null!;
 
     private readonly TagsManagerViewModel _vm;
 
