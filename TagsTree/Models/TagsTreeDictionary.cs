@@ -11,14 +11,20 @@ public class TagsTreeDictionary
 {
     public DoubleKeysDictionary<int, string, TagViewModel> TagsDictionary { get; } = new();
 
-    public TagViewModel TagsTree { get; } = new(0, ""); //属于反序列化一部分
+    /// <remarks>
+    /// 属于反序列化一部分
+    /// </remarks>
+    public TagViewModel TagsTree { get; } = new(0, "");
 
     public IEnumerable<TagViewModel> TagsDictionaryValues => TagsDictionary.Values.Skip(1);
-    public TagViewModel TagsDictionaryRoot => TagsDictionary[0]; //或TagsDictionary[""]
+    /// <remarks>
+    /// 或TagsDictionary[""]
+    /// </remarks>
+    public TagViewModel TagsDictionaryRoot => TagsDictionary[0];
 
     public TagViewModel AddTag(TagViewModel path, string name)
     {
-        var temp = new TagViewModel(name, path.FullName);
+        var temp = new TagViewModel(name, path);
         path.SubTags.Add(temp);
 
         TagsDictionary[temp.Id, name] = temp;
@@ -26,10 +32,8 @@ public class TagsTreeDictionary
     }
     public void MoveTag(TagViewModel tag, TagViewModel newPath)
     {
-        _ = TagsDictionary[tag.Id].GetParentTag(this).SubTags.Remove(tag);
+        _ = TagsDictionary[tag.Id].Parent!.SubTags.Remove(tag);
         newPath.SubTags.Add(tag);
-
-        TagsDictionary[tag.Id].Path = TagsDictionary[newPath.Id].FullName;
     }
     public void RenameTag(TagViewModel tag, string newName)
     {
@@ -39,22 +43,20 @@ public class TagsTreeDictionary
     }
     public void DeleteTag(TagViewModel tag)
     {
-        _ = TagsDictionary[tag.Id].GetParentTag(this).SubTags.Remove(tag);
+        _ = TagsDictionary[tag.Id].Parent!.SubTags.Remove(tag);
 
         _ = TagsDictionary.Remove(tag.Id);
     }
 
     /// <summary>
-    /// 递归读取标签
+    /// 递归读取标签到<see cref="TagsDictionary"/>
     /// </summary>
-    /// <param name="path">标签所在路径</param>
     /// <param name="tag">标签所在路径的标签</param>
-    private void RecursiveLoadTags(string path, TagViewModel tag)
+    private void RecursiveLoadTags(TagViewModel tag)
     {
-        tag.Path = path;
         TagsDictionary[tag.Id, tag.Name] = tag;
         foreach (var subTag in tag.SubTags)
-            RecursiveLoadTags((path is "" ? "" : path + '\\') + tag.Name, subTag);
+            RecursiveLoadTags(subTag);
     }
 
     public void DeserializeTree(string path) => TagsTree.SubTags = Serialization.Deserialize<ObservableCollection<TagViewModel>>(path);
@@ -62,7 +64,7 @@ public class TagsTreeDictionary
     public void LoadDictionary()
     {
         TagsDictionary.Clear();
-        RecursiveLoadTags("", TagsTree);
+        RecursiveLoadTags(TagsTree);
     }
 
     public void Serialize(string path) => Serialization.Serialize(path, TagsTree.SubTags);

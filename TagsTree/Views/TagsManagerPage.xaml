@@ -52,7 +52,10 @@
             Text="{x:Bind _vm.Name, Mode=TwoWay}"
             TextChanged="NameChanged"
             ToolTipService.ToolTip="不包含\/:*?&quot;&lt;&gt;|,和空白字符且不为空" />
-        <controls:TagCompleteBox x:Name="TbPath" uiControls:DockPanel.Dock="Top" />
+        <controls:TagCompleteBox
+            x:Name="TbPath"
+            uiControls:DockPanel.Dock="Top"
+            TagsSource="{x:Bind _vm.TagsSource}" />
         <TreeView
             AllowDrop="True"
             CanDragItems="True"

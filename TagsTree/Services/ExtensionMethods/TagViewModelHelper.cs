@@ -20,10 +20,18 @@ public static class TagViewModelHelper
         var temp = name.Split('\\', StringSplitOptions.RemoveEmptyEntries);
         return temp.Length is 0 ? range.TagsDictionaryRoot : range.TagsDictionary.GetValueOrDefault(temp[^1]);
     }
-    public static IEnumerable<TagViewModel> GetTagViewModels(this string name)
+
+    /// <summary>
+    /// 分隔并获取标签
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="range"></param>
+    /// <returns></returns>
+    public static IEnumerable<TagViewModel> GetTagViewModels(this string name, TagsTreeDictionary? range = null)
     {
+        range ??= App.Tags;
         foreach (var tagName in name.Split(' ', StringSplitOptions.RemoveEmptyEntries))
-            if (App.Tags.TagsDictionary.GetValueOrDefault(tagName) is { } tagModel)
+            if (range.TagsDictionary.GetValueOrDefault(tagName) is { } tagModel)
                 yield return tagModel;
     }
 
@@ -32,15 +40,17 @@ public static class TagViewModelHelper
     /// </summary>
     /// <param name="name">目前输入的最后一个标签</param>
     /// <param name="separator">标签间分隔符</param>
-    /// <returns>建议列表</returns>
-    public static IEnumerable<TagViewModel> TagSuggest(this string name, char separator)
+    /// <param name="range">搜索范围</param>
+    /// <returns>标签建议列表</returns>
+    public static IEnumerable<TagViewModel> TagSuggest(this string name, char separator, TagsTreeDictionary? range = null)
     {
+        range ??= App.Tags;
         var tempName = name.Split(separator, StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
         if (tempName is "" or null)
             yield break;
-        foreach (var tag in App.Tags.TagsDictionaryValues.Where(tag => tag.Name.Contains(tempName)))
+        foreach (var tag in range.TagsDictionaryValues.Where(tag => tag.Name.Contains(tempName)))
             yield return tag;
-        foreach (var tag in App.Tags.TagsDictionaryValues.Where(tag => tag.Path.Contains(tempName) && !tag.Name.Contains(tempName)))
+        foreach (var tag in range.TagsDictionaryValues.Where(tag => tag.Path.Contains(tempName) && !tag.Name.Contains(tempName)))
             yield return tag;
     }
 }

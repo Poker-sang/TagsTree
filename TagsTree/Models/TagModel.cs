@@ -18,23 +18,27 @@ public class TagModel : PathTagModel, IFullName
 {
     [JsonIgnore] private static int Num { get; set; } = 1;
     public int Id { get; }
-    [JsonIgnore] public string Path { get; set; } = "";
+    [JsonIgnore] protected TagModel? BaseParent { get; set; }
+    [JsonIgnore] public string Path => BaseParent is null ? "" : BaseParent.FullName;
     [JsonIgnore] public string FullName => (Path is "" ? "" : Path + '\\') + Name;
+
     protected TagModel(int id, string name) : base(name)
     {
         Num = System.Math.Max(Num, id + 1);
         Id = id;
     }
-    protected TagModel(string name, string path) : base(name)
+
+    protected TagModel(string name, TagModel? parent) : base(name)
     {
         Id = Num;
         Num++;
-        Path = path;
+        BaseParent = parent;
     }
+
     /// <summary>
-    /// 不包含自己
+    /// 判断提供的<paramref name="child"/>是否是自己的子标签（不包含自己）
     /// </summary>
     /// <param name="child"></param>
     /// <returns></returns>
-    public bool HasChildTag(TagModel child) => $"\\\\{child.Path}\\".Contains($"\\{Name}\\");
+    public bool HasChildTag(TagModel child) => $"\\\\{child.Path}\\".Contains($"\\{FullName}\\");
 }
