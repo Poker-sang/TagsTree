@@ -31,43 +31,39 @@ public sealed partial class TagEditFilesPage : Page
         _vm.FileViewModels = App.Relations.GetFileModels().Select(fileModel => new FileViewModel(fileModel, _vm.TagViewModel)).ToObservableCollection();
     }
 
-    private void ResultChanged(IEnumerable<FileModel> newResult) => _vm.FileViewModels = newResult.Select(fileModel => new FileViewModel(fileModel, _vm.TagViewModel.Path.GetTagViewModel()!)).ToObservableCollection();
+    private void ResultChanged(IEnumerable<FileModel> newResult) => _vm.FileViewModels = newResult.Select(fileModel => new FileViewModel(fileModel, _vm.TagViewModel.Parent)).ToObservableCollection();
 
     private void Selected(object sender, SelectionChangedEventArgs e)
     {
-        if ((FileViewModel)((DataGrid)sender).SelectedItem is null)
+        if ((FileViewModel)((DataGrid)sender).SelectedItem is not { } item)
             return;
-        ((FileViewModel)((DataGrid)sender).SelectedItem).SelectedFlip();
+        item.SelectedFlip();
         ((DataGrid)sender).SelectedIndex = -1;
     }
     private async void SaveBClick(object sender, RoutedEventArgs e)
     {
-        if (_vm.TagViewModel.FullName.GetTagViewModel() is not { } pathTagModel)
-        {
-            await ShowMessageDialog.Information(true, "「标签路径」不存在！"); //理论上不会到达此代码
-            return;
-        }
 
         foreach (var fileViewModel in _vm.FileViewModels)
             if (fileViewModel.Selected != fileViewModel.SelectedOriginal)
             {
                 switch (fileViewModel.SelectedOriginal)
                 {
-                    case true: App.Relations[pathTagModel, fileViewModel] = false; break;
-                    //如果原本有上级标签，则覆盖相应上级标签
+                    case true:
+                        App.Relations[_vm.TagViewModel, fileViewModel] = false;
+                        break;
+                    // 如果原本有上级标签，则覆盖相应上级标签
                     case false:
-                        App.Relations[pathTagModel, fileViewModel] = true;
+                        App.Relations[_vm.TagViewModel, fileViewModel] = true;
                         foreach (var tagViewModel in fileViewModel.Tags.GetTagViewModels())
-                            if (tagViewModel.HasChildTag(pathTagModel))
+                            if (tagViewModel.HasChildTag(_vm.TagViewModel))
                             {
                                 App.Relations[tagViewModel, fileViewModel] = false;
                                 break;
                             }
-
                         break;
-                    //如果原本是null，则删除fileViewModel拥有的相应子标签
+                    // 如果原本是null，则删除fileViewModel拥有的相应子标签
                     case null:
-                        foreach (var tag in fileViewModel.GetRelativeTags(pathTagModel))
+                        foreach (var tag in fileViewModel.GetAncestorTags(_vm.TagViewModel))
                             App.Relations[tag, fileViewModel] = false;
                         break;
                 }

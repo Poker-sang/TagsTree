@@ -60,14 +60,29 @@ public partial class FileViewModel : FileModel
     public string DateOfModification => Exists ? _fileSystemInfo.LastWriteTime.ToString(CultureInfo.CurrentCulture) : "";
 
     public string Size => Exists && !IsFolder ? FileSystemHelper.CountSize((FileInfo)_fileSystemInfo) : "";
+
     public bool Exists => _fileSystemInfo.Exists;
 
     public static new bool IsValidPath(string path) => FileModel.IsValidPath(path);
+
     public void TagsUpdated() => OnPropertyChanged(nameof(Tags));
 
+    /// <summary>
+    /// <see langword="true"/>表示拥有提供的标签<br/>
+    /// <see langword="null"/>表示拥有的标签是提供的标签的子标签<br/>
+    /// <see langword="false"/>表示既不拥有提供的标签，拥有的标签也不是提供标签的子标签
+    /// </summary>
     public bool? Selected { get; private set; }
+
+    /// <summary>
+    /// <see langword="true"/>表示拥有提供的标签<br/>
+    /// <see langword="null"/>表示拥有的标签是提供的标签的子标签<br/>
+    /// <see langword="false"/>表示既不拥有提供的标签，拥有的标签也不是提供标签的子标签
+    /// </summary>
     public bool? SelectedOriginal { get; }
+
     public new string Tags => base.Tags;
+
     public new string PartialPath => base.PartialPath;
 
     public void SelectedFlip()

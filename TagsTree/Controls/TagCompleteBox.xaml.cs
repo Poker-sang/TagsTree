@@ -3,12 +3,15 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
+using TagsTree.Attributes;
+using TagsTree.Models;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
 
 namespace TagsTree.Controls;
 
 [INotifyPropertyChanged]
+[DependencyProperty("TagsSource", typeof(TagsTreeDictionary), IsNullable = true, DefaultValue = "null")]
 public partial class TagCompleteBox : UserControl
 {
     public TagCompleteBox()
@@ -41,7 +44,8 @@ public partial class TagCompleteBox : UserControl
                 Tags.Clear();
                 foreach (var s in PathPrivate.Split('\\'))
                     Tags.Add(s);
-                Tags.Add(""); //BreadcrumbBar中最后一个item无法点击，需要多加个空元素
+                //BreadcrumbBar中最后一个item无法点击，需要多加个空元素
+                Tags.Add("");
             }
         }
     }
@@ -52,15 +56,16 @@ public partial class TagCompleteBox : UserControl
 
     private void PathComplement(object sender, RoutedEventArgs routedEventArgs)
     {
-        PathPrivate = PathPrivate.GetTagViewModel()?.FullName ?? PathPrivate;
+        PathPrivate = PathPrivate.GetTagViewModel(TagsSource)?.FullName ?? PathPrivate;
         Switch(false);
     }
 
     private void PathChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
     {
         PathPrivate = Regex.Replace(PathPrivate, $@"[{FileSystemHelper.GetInvalidPathChars}]+", "");
-        sender.ItemsSource = sender.Text.TagSuggest('\\');
+        sender.ItemsSource = sender.Text.TagSuggest('\\', TagsSource);
     }
+
     private void SuggestionChosen(AutoSuggestBox autoSuggestBox, AutoSuggestBoxSuggestionChosenEventArgs e)
     {
         PathPrivate = ((TagViewModel)e.SelectedItem).FullName;

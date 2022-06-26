@@ -72,7 +72,7 @@ public class FileModel : IFullName
     protected static bool IsValidPath(string path) => path.Contains(App.AppConfiguration.LibraryPath);
 
     /// <summary>
-    /// <see langword="null"/>表示拥有标签的上级标签存在本标签
+    /// <see langword="null"/>表示拥有的标签是<paramref name="tag"/>的子标签
     /// </summary>
     /// <param name="tag"></param>
     /// <returns></returns>
@@ -86,7 +86,12 @@ public class FileModel : IFullName
         return false;
     }
 
-    public IEnumerable<TagViewModel> GetRelativeTags(TagViewModel parentTag) => Tags.GetTagViewModels().Where(parentTag.HasChildTag);
+    /// <summary>
+    /// 获取
+    /// </summary>
+    /// <param name="parentTag"></param>
+    /// <returns></returns>
+    public IEnumerable<TagViewModel> GetAncestorTags(TagViewModel parentTag) => Tags.GetTagViewModels().Where(parentTag.HasChildTag);
 
     [JsonIgnore] public string Extension => IsFolder ? "文件夹" : Name.Split('.', StringSplitOptions.RemoveEmptyEntries)[^1].ToUpper(CultureInfo.CurrentCulture);
     /// <remarks>
