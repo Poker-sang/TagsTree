@@ -20,6 +20,8 @@ internal class TitleBarHelper
             _ = User32.SendMessage(WindowHelper.HWnd, User32.WindowMessage.WM_ACTIVATE, WA_INACTIVE, IntPtr.Zero);
         }
     }
+    // ReSharper disable InconsistentNaming
     public static readonly nint WA_ACTIVE = 0x01;
     public static readonly nint WA_INACTIVE = 0x00;
+    // ReSharper restore InconsistentNaming
 }

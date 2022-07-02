@@ -32,7 +32,7 @@ public partial class FileImporterPage : Page
                 return;
             _importing = value;
             PbSave.Opacity = value ? 1 : 0;
-            //虽然写上更安全，但一般看不到这些选项：SelectFiles.IsEnabled = SelectFolders.IsEnabled = PathFiles.IsEnabled = PathFolders.IsEnabled = PathBoth.IsEnabled = All.IsEnabled
+            // 虽然写上更安全，但一般看不到这些选项：SelectFiles.IsEnabled = SelectFolders.IsEnabled = PathFiles.IsEnabled = PathFolders.IsEnabled = PathBoth.IsEnabled = All.IsEnabled
             BPath.IsEnabled = BSelect.IsEnabled = !value;
             BDelete.IsEnabled = BSave.IsEnabled = !value && _vm.FileViewModels.Count is not 0;
         }

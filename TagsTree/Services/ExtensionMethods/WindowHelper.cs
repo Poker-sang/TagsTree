@@ -1,6 +1,5 @@
 ﻿using Microsoft.UI.Xaml;
 using PInvoke;
-using System;
 using System.Runtime.InteropServices;
 using WinRT;
 using WinRT.Interop;
@@ -10,7 +9,7 @@ namespace TagsTree.Services.ExtensionMethods;
 public static class WindowHelper
 {
     public static MainWindow Window { get; private set; } = null!;
-    public static nint HWnd { get; private set; } = IntPtr.Zero;
+    public static nint HWnd { get; private set; } = 0;
 
     public static MainWindow Initialize()
     {
@@ -24,7 +23,7 @@ public static class WindowHelper
                 _ => frameworkElement.RequestedTheme
             };
 
-        //等效于 HWnd = PInvoke.User32.GetActiveWindow();
+        // 等效于 HWnd = PInvoke.User32.GetActiveWindow();
         HWnd = WindowNative.GetWindowHandle(Window);
         // EnableMica(HWnd, darkThemeEnabled);
         return Window;
@@ -45,7 +44,8 @@ public static class WindowHelper
     {
         // When running on win32, FileOpenPicker needs to know the top-level hWnd via IInitializeWithWindow::Initialize.
         if (Microsoft.UI.Xaml.Window.Current is null)
-            obj.As<Imports.IInitializeWithWindow>()?.Initialize(HWnd); //HWnd 或者 User32.GetActiveWindow()
+            //HWnd 或者 User32.GetActiveWindow()
+            obj.As<Imports.IInitializeWithWindow>()?.Initialize(HWnd);
         return obj;
     }
 

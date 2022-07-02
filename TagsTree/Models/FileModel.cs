@@ -22,22 +22,16 @@ public class FileModel : IFullName
     /// <see cref="FileViewModel"/>用的复制构造
     /// </summary>
     /// <param name="fileModel"></param>
-    protected FileModel(FileModel fileModel)
+    protected FileModel(FileModel fileModel) : this(fileModel.Id, fileModel.Name, fileModel.Path)
     {
-        Id = fileModel.Id;
-        Name = fileModel.Name;
-        Path = fileModel.Path;
     }
 
     /// <summary>
     /// <see cref="FileViewModel"/>用的虚拟构造
     /// </summary>
     /// <param name="fullName"></param>
-    protected FileModel(string fullName)
+    protected FileModel(string fullName) : this(-1, fullName.GetName(), fullName.GetPath())
     {
-        Id = -1;
-        Name = fullName.GetName();
-        Path = fullName.GetPath();
     }
 
     /// <summary>

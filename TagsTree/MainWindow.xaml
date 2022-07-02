@@ -37,12 +37,12 @@
             <NavigationView.MenuItems>
                 <NavigationViewItem
                     Content="主页"
-                    Icon="{ui:FontIcon Glyph=&#xE80F;}"
+                    Icon="Home"
                     IsEnabled="False"
                     Tag="{x:Bind local:IndexPage.TypeGetter}" />
                 <NavigationViewItem
                     Content="标签管理"
-                    Icon="{ui:FontIcon Glyph=&#xE8EC;}"
+                    Icon="Tag"
                     IsEnabled="False"
                     Tag="{x:Bind local:TagsManagerPage.TypeGetter}" />
                 <NavigationViewItem
@@ -52,7 +52,7 @@
                     Tag="{x:Bind local:FileImporterPage.TypeGetter}" />
                 <NavigationViewItem
                     Content="为标签添加文件"
-                    Icon="{ui:FontIcon Glyph=&#xECC8;}"
+                    Icon="Add"
                     IsEnabled="False"
                     Tag="{x:Bind local:SelectTagToEditPage.TypeGetter}" />
             </NavigationView.MenuItems>

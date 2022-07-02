@@ -34,7 +34,6 @@
     <NoWarn>1701;1702;CA1416</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Controls\BackRequestAppBarButton.xaml" />
     <None Remove="Controls\DataGridNameColumn.xaml" />
     <None Remove="Controls\Items\DataGridIconColumn.xaml" />
     <None Remove="Controls\Items\DataGridPartialPathColumn.xaml" />
@@ -92,12 +91,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="Controls\BackRequestAppBarButton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
 
   <ItemGroup>

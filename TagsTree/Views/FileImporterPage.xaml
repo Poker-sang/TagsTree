@@ -15,64 +15,68 @@
         <uiControls:DockPanel uiControls:DockPanel.Dock="Top">
             <CommandBar
                 uiControls:DockPanel.Dock="Right"
-                Background="Transparent"
                 DefaultLabelPosition="Collapsed"
                 OverflowButtonVisibility="Collapsed">
                 <AppBarButton
                     x:Name="BSelect"
-                    Icon="{ui:FontIcon Glyph=&#xE7C3;}"
+                    Icon="{ui:FontIcon Glyph=&#xE762;}"
                     ToolTipService.ToolTip="选择引入：引入选择的文件或文件夹">
                     <AppBarButton.Flyout>
                         <MenuFlyout Placement="BottomEdgeAlignedLeft">
                             <MenuFlyoutItem
                                 x:Name="SelectFiles"
-                                Click="Import"
+                                Icon="{ui:FontIcon Glyph=&#xE7C3;}"
+                                Tapped="Import"
                                 Text="文件" />
                             <MenuFlyoutItem
                                 x:Name="SelectFolders"
-                                Click="Import"
+                                Icon="{ui:FontIcon Glyph=&#xF12B;}"
+                                Tapped="Import"
                                 Text="文件夹" />
                         </MenuFlyout>
                     </AppBarButton.Flyout>
                 </AppBarButton>
                 <AppBarButton
                     x:Name="BPath"
-                    Icon="{ui:FontIcon Glyph=&#xE8F4;}"
+                    Icon="{ui:FontIcon Glyph=&#xF89A;}"
                     ToolTipService.ToolTip="目录引入：引入选择的目录下一级所有文件或文件夹或全部">
                     <AppBarButton.Flyout>
                         <MenuFlyout Placement="BottomEdgeAlignedLeft">
                             <MenuFlyoutItem
                                 x:Name="PathFiles"
-                                Click="Import"
+                                Icon="{ui:FontIcon Glyph=&#xE7C3;}"
+                                Tapped="Import"
                                 Text="文件" />
                             <MenuFlyoutItem
                                 x:Name="PathFolders"
-                                Click="Import"
+                                Icon="{ui:FontIcon Glyph=&#xF12B;}"
+                                Tapped="Import"
                                 Text="文件夹" />
                             <MenuFlyoutItem
                                 x:Name="PathBoth"
-                                Click="Import"
+                                Icon="{ui:FontIcon Glyph=&#xED25;}"
+                                Tapped="Import"
                                 Text="全部" />
                         </MenuFlyout>
                     </AppBarButton.Flyout>
                 </AppBarButton>
                 <AppBarButton
                     x:Name="All"
-                    Click="Import"
-                    Icon="{ui:FontIcon Glyph=&#xE82E;}"
+                    Icon="{ui:FontIcon Glyph=&#xE8B3;}"
+                    Tapped="Import"
                     ToolTipService.ToolTip="全部引入：引入选择的目录下所有深度所有文件" />
                 <AppBarSeparator />
                 <AppBarButton
                     x:Name="BDelete"
-                    Click="{x:Bind DeleteBClick}"
-                    Icon="{ui:FontIcon Glyph=&#xE74D;}"
+                    Icon="Delete"
                     IsEnabled="False"
+                    Tapped="{x:Bind DeleteBClick}"
                     ToolTipService.ToolTip="清空" />
                 <AppBarButton
                     x:Name="BSave"
-                    Click="{x:Bind SaveBClick}"
-                    Icon="{ui:FontIcon Glyph=&#xE74E;}"
+                    Icon="Save"
                     IsEnabled="False"
+                    Tapped="{x:Bind SaveBClick}"
                     ToolTipService.ToolTip="保存" />
             </CommandBar>
             <Grid>
@@ -98,7 +102,7 @@
                     <Setter Property="ContextFlyout">
                         <Setter.Value>
                             <MenuFlyout>
-                                <MenuFlyoutItem Click="DeleteCmClick" Text="删除" />
+                                <MenuFlyoutItem Tapped="DeleteCmClick" Text="删除" />
                             </MenuFlyout>
                         </Setter.Value>
                     </Setter>

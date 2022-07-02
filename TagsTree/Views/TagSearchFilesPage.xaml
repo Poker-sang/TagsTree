@@ -7,7 +7,6 @@
     xmlns:items="using:TagsTree.Controls.Items"
     xmlns:local="using:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="using:CommunityToolkit.WinUI.UI"
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
     Background="Transparent"
     NavigationCacheMode="Required"
@@ -22,11 +21,11 @@
             ResultChanged="ResultChanged" />
         <AutoSuggestBox
             uiControls:DockPanel.Dock="Top"
-            ToolTipService.ToolTip="模糊搜索，不包含\/:*?&quot;&lt;&gt;|,和空白字符，留空显示全部"
             PlaceholderText="文件名"
             QueryIcon="Find"
             QuerySubmitted="QuerySubmitted"
-            TextChanged="TextChanged" />
+            TextChanged="TextChanged"
+            ToolTipService.ToolTip="模糊搜索，不包含\/:*?&quot;&lt;&gt;|,和空白字符，留空显示全部" />
         <uiControls:DataGrid
             AlternatingRowBackground="LightGray"
             AutoGenerateColumns="False"
@@ -39,10 +38,10 @@
                     <Setter Property="ContextFlyout">
                         <Setter.Value>
                             <MenuFlyout>
-                                <MenuFlyoutItem Click="OpenCmClick" Text="打开" />
-                                <MenuFlyoutItem Click="OpenExplorerCmClick" Text="打开文件夹" />
-                                <MenuFlyoutItem Click="RemoveCmClick" Text="移除" />
-                                <MenuFlyoutItem Click="PropertiesCmClick" Text="属性" />
+                                <MenuFlyoutItem Tapped="OpenCmClick" Text="打开" />
+                                <MenuFlyoutItem Tapped="OpenExplorerCmClick" Text="打开文件夹" />
+                                <MenuFlyoutItem Tapped="RemoveCmClick" Text="移除" />
+                                <MenuFlyoutItem Tapped="PropertiesCmClick" Text="属性" />
                             </MenuFlyout>
                         </Setter.Value>
                     </Setter>

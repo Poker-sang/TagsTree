@@ -21,25 +21,25 @@ public static class IconsHelper
     public static async void LoadFilesIcons()
     {
         using var ms1 = new MemoryStream(Resources.NotFound);
-        NotFoundIcon = GetBitmapImage(ms1.AsRandomAccessStream());
+        _notFoundIcon = GetBitmapImage(ms1.AsRandomAccessStream());
 
         using var ms2 = new MemoryStream(Resources.Loading);
-        LoadingIcon = GetBitmapImage(ms2.AsRandomAccessStream());
+        _loadingIcon = GetBitmapImage(ms2.AsRandomAccessStream());
 
         using var ms3 = new MemoryStream(Resources.Folder);
-        IconList["文件夹"] = GetBitmapImage(ms3.AsRandomAccessStream());
+        _iconList["文件夹"] = GetBitmapImage(ms3.AsRandomAccessStream());
 
         using var ms4 = new MemoryStream(Resources.Link);
-        IconList["LNK"] = IconList["URL"] = GetBitmapImage(ms4.AsRandomAccessStream());
+        _iconList["LNK"] = _iconList["URL"] = GetBitmapImage(ms4.AsRandomAccessStream());
 
         foreach (var file in Directory.GetFiles(ApplicationData.Current.TemporaryFolder.Path, "Temp.*"))
             File.Delete(file);
 
         await Task.Yield();
-        foreach (var extension in App.IdFile.Values.Select(file => file.Extension).Where(extension => !IconList.ContainsKey(extension)).Distinct())
+        foreach (var extension in App.IdFile.Values.Select(file => file.Extension).Where(extension => !_iconList.ContainsKey(extension)).Distinct())
         {
-            IconRequest.Enqueue(new IconGetter(extension));
-            IconList[extension] = null;
+            _iconRequest.Enqueue(new IconGetter(extension));
+            _iconList[extension] = null;
         }
 
         _ = StartAsync();
@@ -53,24 +53,24 @@ public static class IconsHelper
     public static BitmapImage GetIcon(this FileViewModel fileViewModel)
     {
         if (!fileViewModel.Exists)
-            return NotFoundIcon;
-        //如果图标列表已经有该扩展名项
-        if (IconList.TryGetValue(fileViewModel.Extension, out var icon))
-            //且加载完成
+            return _notFoundIcon;
+        // 如果图标列表已经有该扩展名项
+        if (_iconList.TryGetValue(fileViewModel.Extension, out var icon))
+            // 且加载完成
             if (icon is not null)
                 return icon;
             else
             {
-                IconRequest.First(iconGetter => iconGetter.Extension == fileViewModel.Extension).CallBack +=
+                _iconRequest.First(iconGetter => iconGetter.Extension == fileViewModel.Extension).CallBack +=
                     fileViewModel.IconChange;
-                return LoadingIcon;
+                return _loadingIcon;
             }
 
-        IconRequest.Enqueue(new IconGetter(fileViewModel.Extension, fileViewModel.IconChange));
-        IconList[fileViewModel.Extension] = null;
-        if (IconRequest.Count <= 1)
+        _iconRequest.Enqueue(new IconGetter(fileViewModel.Extension, fileViewModel.IconChange));
+        _iconList[fileViewModel.Extension] = null;
+        if (_iconRequest.Count <= 1)
             _ = StartAsync();
-        return LoadingIcon;
+        return _loadingIcon;
     }
 
     /// <summary>
@@ -78,9 +78,9 @@ public static class IconsHelper
     /// </summary>
     private static async Task StartAsync()
     {
-        while (IconRequest.TryDequeue(out var item))
+        while (_iconRequest.TryDequeue(out var item))
         {
-            IconList[item.Extension] = await CreateIcon(item.Extension);
+            _iconList[item.Extension] = await CreateIcon(item.Extension);
             item.CallBack();
         }
     }
@@ -149,20 +149,20 @@ public static class IconsHelper
     /// <summary>
     /// 文件不存在的图标
     /// </summary>
-    private static BitmapImage NotFoundIcon = null!;
+    private static BitmapImage _notFoundIcon = null!;
 
     /// <summary>
     /// 加载中的图标
     /// </summary>
-    private static BitmapImage LoadingIcon = null!;
+    private static BitmapImage _loadingIcon = null!;
 
     /// <summary>
     /// 请求加载图标的列表
     /// </summary>
-    private static readonly ConcurrentQueue<IconGetter> IconRequest = new();
+    private static readonly ConcurrentQueue<IconGetter> _iconRequest = new();
 
     /// <summary>
     /// 图标字典，键是扩展名，值是图标
     /// </summary>
-    private static readonly Dictionary<string, BitmapImage?> IconList = new();
+    private static readonly Dictionary<string, BitmapImage?> _iconList = new();
 }

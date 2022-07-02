@@ -54,15 +54,13 @@ public sealed partial class FilesObserverPage : Page
         if (fileChanged.Type is FileChanged.ChangedType.Create or FileChanged.ChangedType.Delete)
             App.SaveRelations();
         Save();
-        InfoBar.Message = "已应用一项并保存";
-        InfoBar.IsOpen = true;
+        ShowInfoBar("已应用一项并保存");
     }
 
     private void DeleteCmClick(object sender, RoutedEventArgs e)
     {
         _ = Vm.FilesChangedList.Remove((FileChanged)((MenuFlyoutItem)sender).DataContext);
-        InfoBar.Message = "已删除一项";
-        InfoBar.IsOpen = true;
+        ShowInfoBar("已删除一项");
     }
 
     private void DeleteAboveCmClick(object sender, RoutedEventArgs e)
@@ -76,8 +74,7 @@ public sealed partial class FilesObserverPage : Page
         var id = ((FileChanged)((MenuFlyoutItem)sender).DataContext).Id;
         while (Vm.FilesChangedList[0].Id <= id)
             Vm.FilesChangedList.RemoveAt(0);
-        InfoBar.Message = $"已删除序号{id}及之前项";
-        InfoBar.IsOpen = true;
+        ShowInfoBar($"已删除序号{id}及之前项");
     }
 
     private void DeleteFollowCmClick(object sender, RoutedEventArgs e)
@@ -91,8 +88,7 @@ public sealed partial class FilesObserverPage : Page
         var id = ((FileChanged)((MenuFlyoutItem)sender).DataContext).Id;
         while (Vm.FilesChangedList[^1].Id >= id)
             _ = Vm.FilesChangedList.Remove(Vm.FilesChangedList[^1]);
-        InfoBar.Message = $"已删除序号{id}及之后项";
-        InfoBar.IsOpen = true;
+        ShowInfoBar($"已删除序号{id}及之后项");
     }
 
     private async void DeleteRangeBClick(object sender, RoutedEventArgs e)
@@ -111,8 +107,7 @@ public sealed partial class FilesObserverPage : Page
                     ++count;
                 }
 
-            InfoBar.Message = $"已删除{count}项";
-            InfoBar.IsOpen = true;
+            ShowInfoBar($"已删除{count}项");
         };
         _ = await CdDeleteRange.ShowAsync();
     }
@@ -162,31 +157,27 @@ public sealed partial class FilesObserverPage : Page
         App.SaveFiles();
         App.SaveRelations();
         Save();
-        InfoBar.Message = "已全部应用并保存";
-        InfoBar.IsOpen = true;
+        ShowInfoBar("已全部应用并保存");
     }
 
     private void MergeAllBClick(object sender, RoutedEventArgs e)
     {
         MergeAll();
         Save();
-        InfoBar.Message = "已全部合并并保存";
-        InfoBar.IsOpen = true;
+        ShowInfoBar("已全部合并并保存");
     }
 
     private void DeleteAllBClick(object sender, RoutedEventArgs e)
     {
         ClearAll();
         Save();
-        InfoBar.Message = "已全部清除并保存";
-        InfoBar.IsOpen = true;
+        ShowInfoBar("已全部清除并保存");
     }
 
     private void BSaveAllBClick(object sender, RoutedEventArgs e)
     {
         Save();
-        InfoBar.Message = "已保存";
-        InfoBar.IsOpen = true;
+        ShowInfoBar("已保存");
     }
 
     #endregion
@@ -201,6 +192,7 @@ public sealed partial class FilesObserverPage : Page
             case FileChanged.ChangedType.Move: fileModel!.MoveOrRename(fileChanged.FullName); break;
             case FileChanged.ChangedType.Rename: fileModel!.MoveOrRename(fileChanged.FullName); break;
             case FileChanged.ChangedType.Delete: fileModel!.Remove(); break;
+            default: throw new ArgumentOutOfRangeException(nameof(fileChanged));
         }
     }
 
@@ -231,8 +223,9 @@ public sealed partial class FilesObserverPage : Page
                 case FileChangedMerger.MergeResult.Delete:
                     Vm.FilesChangedList.Add(new FileChanged(fileChangedMerger.OriginalFullName, FileChanged.ChangedType.Delete));
                     break;
+                // MergeResult.Nothing或者不合法数据都不进行操作
                 case FileChangedMerger.MergeResult.Nothing:
-                default: break; //MergeResult.Nothing或者不合法数据都不进行操作
+                default: break;
             }
     }
 
@@ -242,7 +235,15 @@ public sealed partial class FilesObserverPage : Page
         FileChanged.Num = 1;
     }
 
-    private static void Save() => FileChanged.Serialize(App.FilesChangedPath, Vm.FilesChangedList); //或App.FilesChangedList
+    private static void Save()
+        // 或App.FilesChangedList
+        => FileChanged.Serialize(App.FilesChangedPath, Vm.FilesChangedList);
+
+    private void ShowInfoBar(string message)
+    {
+        InfoBar.Message = message;
+        InfoBar.IsOpen = true;
+    }
 
     #endregion
 }
