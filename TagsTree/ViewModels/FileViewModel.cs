@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media.Imaging;
+using System;
 using System.Globalization;
 using System.IO;
 using TagsTree.Models;
@@ -18,7 +19,6 @@ public partial class FileViewModel : FileModel
     /// <param name="tag">如果指定tag，则判断有无tag</param>
     public FileViewModel(FileModel fileModel, TagViewModel? tag = null) : base(fileModel)
     {
-        _fileSystemInfo = IsFolder ? new DirectoryInfo(FullName) : new FileInfo(FullName);
         if (tag is not null)
             Selected = SelectedOriginal = HasTag(tag);
     }
@@ -27,18 +27,22 @@ public partial class FileViewModel : FileModel
     /// 虚拟构造，无后端<see cref="FileModel"/>的对象（不存在于<see cref="App.IdFile"/>）
     /// </summary>
     /// <param name="fullName">文件路径</param>
-    public FileViewModel(string fullName) : base(fullName) => _fileSystemInfo = IsFolder ? new DirectoryInfo(FullName) : new FileInfo(FullName);
+    public FileViewModel(string fullName) : base(fullName)
+    {
+    }
 
     /// <summary>
     /// 从<see cref="App.IdFile"/>中获取<see cref="FileModel"/>
     /// </summary>
     public FileModel GetFileModel() => App.IdFile[Id];
+
     public new FileViewModel GenerateAndUseId()
     {
         _ = base.GenerateAndUseId();
         return this;
     }
 
+    /*
     public new void Reload(string fullName)
     {
         base.Reload(fullName);
@@ -52,17 +56,18 @@ public partial class FileViewModel : FileModel
         OnPropertyChanged(nameof(DateOfModification));
         OnPropertyChanged(nameof(Size));
     }
+    */
 
-    private readonly FileSystemInfo _fileSystemInfo;
+    private readonly WeakReference<FileSystemInfo?> _fileSystemInfo = new(null);
+
+    private FileSystemInfo FileSystemInfo => _fileSystemInfo.Get(() => IsFolder ? new DirectoryInfo(FullName) : new FileInfo(FullName));
 
     public void IconChange() => OnPropertyChanged(nameof(Icon));
     public BitmapImage Icon => this.GetIcon();
 
-    public string DateOfModification => Exists ? _fileSystemInfo.LastWriteTime.ToString(CultureInfo.CurrentCulture) : "";
+    public string DateOfModification => Exists ? FileSystemInfo.LastWriteTime.ToString(CultureInfo.CurrentCulture) : "";
 
-    public string Size => Exists && !IsFolder ? FileSystemHelper.CountSize((FileInfo)_fileSystemInfo) : "";
-
-    public bool Exists => _fileSystemInfo.Exists;
+    public string Size => Exists && !IsFolder ? FileSystemHelper.CountSize((FileInfo)FileSystemInfo) : "";
 
     public static new bool IsValidPath(string path) => FileModel.IsValidPath(path);
 

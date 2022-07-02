@@ -97,6 +97,7 @@ public class FileModel : IFullName
     /// </remarks>
     [JsonIgnore] public string FullName => Path + '\\' + Name;
     [JsonIgnore] public bool IsFolder => Directory.Exists(FullName);
+    [JsonIgnore] public bool Exists => Directory.Exists(FullName) || File.Exists(FullName);
     [JsonIgnore]
     protected string Tags
     {
