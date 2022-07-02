@@ -16,12 +16,11 @@
         <uiControls:DockPanel uiControls:DockPanel.Dock="Top">
             <CommandBar
                 uiControls:DockPanel.Dock="Right"
-                Background="Transparent"
                 DefaultLabelPosition="Collapsed"
                 OverflowButtonVisibility="Collapsed">
                 <AppBarButton
-                    Click="ConfirmBClick"
                     Icon="{ui:FontIcon Glyph=&#xF271;}"
+                    Tapped="ConfirmBClick"
                     ToolTipService.ToolTip="确定" />
             </CommandBar>
             <controls:TagCompleteBox x:Name="TbPath" />

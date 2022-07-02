@@ -6,7 +6,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="using:CommunityToolkit.WinUI.UI"
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:viewModels="using:TagsTree.ViewModels"
     Background="Transparent"
@@ -16,21 +15,17 @@
         <uiControls:DockPanel uiControls:DockPanel.Dock="Top">
             <CommandBar
                 uiControls:DockPanel.Dock="Left"
-                Background="Transparent"
                 DefaultLabelPosition="Collapsed"
                 OverflowButtonVisibility="Collapsed">
-                <controls:BackRequestAppBarButton />
+                <AppBarButton Icon="Back" Tapped="{x:Bind local:Utility.BackBClick}" />
             </CommandBar>
             <InfoBar x:Name="InfoBar" />
-            <CommandBar
-                Background="Transparent"
-                DefaultLabelPosition="Collapsed"
-                OverflowButtonVisibility="Collapsed">
+            <CommandBar DefaultLabelPosition="Collapsed" OverflowButtonVisibility="Collapsed">
                 <AppBarButton
                     x:Name="BSave"
-                    Click="SaveBClick"
-                    Icon="{ui:FontIcon Glyph=&#xE74E;}"
+                    Icon="Save"
                     IsEnabled="False"
+                    Tapped="SaveBClick"
                     ToolTipService.ToolTip="保存" />
             </CommandBar>
         </uiControls:DockPanel>

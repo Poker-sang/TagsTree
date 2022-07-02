@@ -43,17 +43,17 @@
             <DropDownButton Content="文件和标签记录">
                 <DropDownButton.Flyout>
                     <MenuFlyout Placement="BottomEdgeAlignedRight">
-                        <MenuFlyoutItem Click="BImport_Click" Text="导入" />
-                        <MenuFlyoutItem Click="BExport_Click" Text="导出" />
-                        <MenuFlyoutItem Click="BOpenDirectory_Click" Text="打开目录" />
+                        <MenuFlyoutItem Tapped="BImport_Click" Text="导入" />
+                        <MenuFlyoutItem Tapped="BExport_Click" Text="导出" />
+                        <MenuFlyoutItem Tapped="BOpenDirectory_Click" Text="打开目录" />
                     </MenuFlyout>
                 </DropDownButton.Flyout>
             </DropDownButton>
             <ui:DockPanel>
                 <Button
                     ui:DockPanel.Dock="Left"
-                    Click="BSave_Click"
-                    Content="保存" />
+                    Content="保存"
+                    Tapped="BSave_Click" />
                 <InfoBar x:Name="InfoBar" />
             </ui:DockPanel>
         </StackPanel>

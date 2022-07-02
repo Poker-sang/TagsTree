@@ -1,10 +1,11 @@
-﻿//#define DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION
-//#define DISABLE_XAML_GENERATED_BINDING_DEBUG_OUTPUT
-//#define FIRST_TIME
+﻿// #define DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION
+// #define DISABLE_XAML_GENERATED_BINDING_DEBUG_OUTPUT
+// #define FIRST_TIME
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media.Animation;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -111,26 +112,27 @@ public partial class App : Application
     /// </summary>
     public static string? LoadConfig()
     {
-        //文件监视
+        // 文件监视
         FilesObserverPage.Vm = new FilesObserverViewModel(FileChanged.Deserialize(FilesChangedPath));
 
-        //标签
+        // 标签
         Tags.DeserializeTree(TagsPath);
         Tags.LoadDictionary();
 
-        //文件
+        // 文件
         IdFile.Deserialize(FilesPath);
 
-        //关系
+        // 关系
         Relations.Deserialize(RelationsPath);
 
-        //如果本来是空，则按照标签和文件生成关系
+        // 如果本来是空，则按照标签和文件生成关系
         if (Relations.TagsCount is 0 && Relations.FilesCount is 0)
             Relations.Reload();
         else
         {
-            //检查
-            if (Tags.TagsDictionary.Count != Relations.TagsCount + 1)//第一个是空标签减去
+            // 检查
+            // 第一个是空标签减去
+            if (Tags.TagsDictionary.Count != Relations.TagsCount + 1)
                 return "TagsTree.json";
             if (IdFile.Count != Relations.FilesCount)
                 return "Files.json";

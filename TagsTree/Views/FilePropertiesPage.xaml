@@ -16,47 +16,43 @@
         <uiControls:DockPanel uiControls:DockPanel.Dock="Top">
             <CommandBar
                 uiControls:DockPanel.Dock="Left"
-                Background="Transparent"
                 DefaultLabelPosition="Collapsed"
                 OverflowButtonVisibility="Collapsed">
-                <controls:BackRequestAppBarButton />
+                <AppBarButton Icon="Back" Tapped="{x:Bind local:Utility.BackBClick}" />
             </CommandBar>
-            <CommandBar
-                Background="Transparent"
-                DefaultLabelPosition="Collapsed"
-                OverflowButtonVisibility="Collapsed">
+            <CommandBar DefaultLabelPosition="Collapsed" OverflowButtonVisibility="Collapsed">
                 <AppBarButton
                     x:Name="BOpen"
-                    Click="OpenBClick"
                     Icon="{ui:FontIcon Glyph=&#xE8E5;}"
+                    Tapped="OpenBClick"
                     ToolTipService.ToolTip="打开" />
                 <AppBarButton
-                    Click="OpenExplorerBClick"
                     Icon="{ui:FontIcon Glyph=&#xE8DA;}"
+                    Tapped="OpenExplorerBClick"
                     ToolTipService.ToolTip="打开文件夹" />
                 <AppBarButton
-                    Click="RemoveBClick"
-                    Icon="{ui:FontIcon Glyph=&#xECC9;}"
+                    Icon="Remove"
+                    Tapped="RemoveBClick"
                     ToolTipService.ToolTip="移除" />
                 <AppBarButton
-                    Click="EditTagsBClick"
-                    Icon="{ui:FontIcon Glyph=&#xE8EC;}"
+                    Icon="Tag"
+                    Tapped="EditTagsBClick"
                     ToolTipService.ToolTip="更改标签" />
                 <AppBarSeparator />
                 <AppBarButton
                     x:Name="BRename"
-                    Click="RenameBClick"
-                    Icon="{ui:FontIcon Glyph=&#xE8AC;}"
+                    Icon="Rename"
+                    Tapped="RenameBClick"
                     ToolTipService.ToolTip="重命名" />
                 <AppBarButton
                     x:Name="BMove"
-                    Click="MoveBClick"
                     Icon="{ui:FontIcon Glyph=&#xE8DE;}"
+                    Tapped="MoveBClick"
                     ToolTipService.ToolTip="移动" />
                 <AppBarButton
                     x:Name="BDelete"
-                    Click="DeleteBClick"
-                    Icon="{ui:FontIcon Glyph=&#xE74D;}"
+                    Icon="Delete"
+                    Tapped="DeleteBClick"
                     ToolTipService.ToolTip="删除" />
             </CommandBar>
         </uiControls:DockPanel>

@@ -17,31 +17,30 @@
         <uiControls:DockPanel uiControls:DockPanel.Dock="Top">
             <CommandBar
                 uiControls:DockPanel.Dock="Right"
-                Background="Transparent"
                 DefaultLabelPosition="Collapsed"
                 OverflowButtonVisibility="Collapsed">
                 <AppBarButton
-                    Click="NewBClick"
-                    Icon="{ui:FontIcon Glyph=&#xECC8;}"
+                    Icon="Add"
+                    Tapped="NewBClick"
                     ToolTipService.ToolTip="添加" />
                 <AppBarButton
-                    Click="MoveBClick"
                     Icon="{ui:FontIcon Glyph=&#xE8DE;}"
+                    Tapped="MoveBClick"
                     ToolTipService.ToolTip="移动" />
                 <AppBarButton
-                    Click="RenameBClick"
-                    Icon="{ui:FontIcon Glyph=&#xE8AC;}"
+                    Icon="Rename"
+                    Tapped="RenameBClick"
                     ToolTipService.ToolTip="重命名" />
                 <AppBarButton
-                    Click="DeleteBClick"
-                    Icon="{ui:FontIcon Glyph=&#xECC9;}"
+                    Icon="Remove"
+                    Tapped="DeleteBClick"
                     ToolTipService.ToolTip="删除" />
                 <AppBarSeparator />
                 <AppBarButton
                     x:Name="BSave"
-                    Click="SaveBClick"
-                    Icon="{ui:FontIcon Glyph=&#xE74E;}"
+                    Icon="Save"
                     IsEnabled="False"
+                    Tapped="SaveBClick"
                     ToolTipService.ToolTip="保存" />
             </CommandBar>
             <InfoBar x:Name="InfoBar" />

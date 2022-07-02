@@ -35,13 +35,7 @@ public partial class TagViewModel : TagModel
     /// 反序列化专用，不要调用该构造器
     /// </summary>
     [JsonConstructor]
-    public TagViewModel(int id, string name, ObservableCollection<TagViewModel>? subTags = null) : base(id, name)
-    {
-        SubTags.CollectionChanged += OnSubTagsOnCollectionChanged;
-        if (subTags is not null)
-            foreach (var subTag in subTags)
-                SubTags.Add(subTag);
-    }
+    public TagViewModel(int id, string name, ObservableCollection<TagViewModel>? subTags = null) : base(id, name) => InitializeSubTags(subTags);
 
     /// <summary>
     /// 创建新的<see cref="TagViewModel"/>
@@ -49,7 +43,9 @@ public partial class TagViewModel : TagModel
     /// <param name="name">标签名</param>
     /// <param name="parent">标签路径</param>
     /// <param name="subTags">子标签</param>
-    public TagViewModel(string name, TagViewModel? parent, ObservableCollection<TagViewModel>? subTags = null) : base(name, parent)
+    public TagViewModel(string name, TagViewModel? parent, ObservableCollection<TagViewModel>? subTags = null) : base(name, parent) => InitializeSubTags(subTags);
+
+    private void InitializeSubTags(ObservableCollection<TagViewModel>? subTags = null)
     {
         SubTags.CollectionChanged += OnSubTagsOnCollectionChanged;
         if (subTags is not null)

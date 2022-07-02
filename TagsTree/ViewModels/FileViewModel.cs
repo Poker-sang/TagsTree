@@ -42,7 +42,8 @@ public partial class FileViewModel : FileModel
     public new void Reload(string fullName)
     {
         base.Reload(fullName);
-        GetFileModel().Reload(fullName); //更新UI
+        // 更新UI
+        GetFileModel().Reload(fullName);
         OnPropertyChanged(nameof(Name));
         OnPropertyChanged(nameof(Extension));
         OnPropertyChanged(nameof(Path));

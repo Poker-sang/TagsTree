@@ -8,6 +8,7 @@ public class PathTagModel
 {
     public string Name { get; protected set; }
     public PathTagModel(string name) => Name = name;
+
     /// <summary>
     /// <see cref="AutoSuggestBox"/>选择建议时会用到
     /// </summary>
@@ -31,7 +32,7 @@ public class TagModel : PathTagModel, IFullName
     protected TagModel(string name, TagModel? parent) : base(name)
     {
         Id = Num;
-        Num++;
+        ++Num;
         BaseParent = parent;
     }
 

@@ -8,7 +8,6 @@
     xmlns:models="using:TagsTree.Models"
     xmlns:ui="using:CommunityToolkit.WinUI.UI"
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
-    xmlns:viewModels="using:TagsTree.ViewModels"
     Background="Transparent"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
@@ -28,44 +27,38 @@
         <uiControls:DockPanel uiControls:DockPanel.Dock="Top">
             <CommandBar
                 uiControls:DockPanel.Dock="Right"
-                Background="Transparent"
                 DefaultLabelPosition="Collapsed"
                 OverflowButtonVisibility="Collapsed">
                 <AppBarButton
                     x:Name="BDeleteRange"
-                    Width="50"
-                    Click="DeleteRangeBClick"
-                    Icon="{ui:FontIcon Glyph=&#xECC9;}"
+                    Icon="Remove"
                     IsEnabled="False"
+                    Tapped="DeleteRangeBClick"
                     ToolTipService.ToolTip="删除范围" />
                 <AppBarButton
                     x:Name="BMergeAll"
-                    Width="50"
-                    Click="MergeAllBClick"
                     Icon="{ui:FontIcon Glyph=&#xEA3C;}"
                     IsEnabled="False"
+                    Tapped="MergeAllBClick"
                     ToolTipService.ToolTip="合并全部" />
                 <AppBarButton
                     x:Name="BApplyAll"
-                    Width="50"
-                    Click="ApplyAllBClick"
                     Icon="{ui:FontIcon Glyph=&#xE73E;}"
                     IsEnabled="False"
+                    Tapped="ApplyAllBClick"
                     ToolTipService.ToolTip="应用全部更改" />
                 <AppBarButton
                     x:Name="BDeleteAll"
-                    Width="50"
-                    Click="DeleteAllBClick"
-                    Icon="{ui:FontIcon Glyph=&#xE74D;}"
+                    Icon="Delete"
                     IsEnabled="False"
+                    Tapped="DeleteAllBClick"
                     ToolTipService.ToolTip="清除全部" />
                 <AppBarSeparator />
                 <AppBarButton
                     x:Name="BSaveAll"
-                    Width="50"
-                    Click="BSaveAllBClick"
-                    Icon="{ui:FontIcon Glyph=&#xE74E;}"
+                    Icon="Save"
                     IsEnabled="False"
+                    Tapped="BSaveAllBClick"
                     ToolTipService.ToolTip="暂存更改" />
             </CommandBar>
             <InfoBar
@@ -82,10 +75,10 @@
                     <Setter Property="ContextFlyout">
                         <Setter.Value>
                             <MenuFlyout>
-                                <MenuFlyoutItem Click="ApplyCmClick" Text="应用更改" />
-                                <MenuFlyoutItem Click="DeleteCmClick" Text="删除本条" />
-                                <MenuFlyoutItem Click="DeleteAboveCmClick" Text="删除本条及更小序号项" />
-                                <MenuFlyoutItem Click="DeleteFollowCmClick" Text="删除本条及更大序号项" />
+                                <MenuFlyoutItem Tapped="ApplyCmClick" Text="应用更改" />
+                                <MenuFlyoutItem Tapped="DeleteCmClick" Text="删除本条" />
+                                <MenuFlyoutItem Tapped="DeleteAboveCmClick" Text="删除本条及更小序号项" />
+                                <MenuFlyoutItem Tapped="DeleteFollowCmClick" Text="删除本条及更大序号项" />
                             </MenuFlyout>
                         </Setter.Value>
                     </Setter>
