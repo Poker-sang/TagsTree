@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace TagsTree.SourceGenerator;
@@ -243,5 +244,21 @@ internal static class Utilities
         if (symbol is INamedTypeSymbol { IsGenericType: true } genericSymbol)
             foreach (var a in genericSymbol.TypeArguments)
                 UseNamespace(namespaces, usedTypes, contextType, a);
+    }
+
+    /// <summary>
+    /// 生成nullable预处理语句和引用命名空间
+    /// <br/>#nullable enable
+    /// <br/>using ...;
+    /// <br/>using ...;
+    /// <br/>...
+    /// </summary>
+    /// <param name="namespaces">namespaces集合</param>
+    internal static StringBuilder GenerateFileHeader(this HashSet<string> namespaces)
+    {
+        var stringBuilder = new StringBuilder().AppendLine("#nullable enable\n");
+        foreach (var s in namespaces)
+            _ = stringBuilder.AppendLine($"using {s};");
+        return stringBuilder;
     }
 }

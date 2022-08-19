@@ -103,7 +103,7 @@ public class TypeWithAttributeGenerator : IIncrementalGenerator
                 if (usedAttributes.ContainsKey(attributeName))
                     usedAttributes[attributeName].Add(attribute);
                 else
-                    usedAttributes[attributeName] = new List<AttributeData> { attribute };
+                    usedAttributes[attributeName] = new() { attribute };
             }
 
             foreach (var usedAttribute in usedAttributes)
