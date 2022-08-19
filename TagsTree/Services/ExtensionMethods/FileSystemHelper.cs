@@ -18,7 +18,7 @@ public static class FileSystemHelper
     {
         try
         {
-            var process = new Process { StartInfo = new ProcessStartInfo(fileViewModel.FullName) };
+            var process = new Process { StartInfo = new(fileViewModel.FullName) };
             process.StartInfo.UseShellExecute = true;
             _ = process.Start();
         }
@@ -31,7 +31,7 @@ public static class FileSystemHelper
     {
         try
         {
-            var process = new Process { StartInfo = new ProcessStartInfo(fullName) };
+            var process = new Process { StartInfo = new(fullName) };
             process.StartInfo.UseShellExecute = true;
             _ = process.Start();
         }
@@ -44,7 +44,7 @@ public static class FileSystemHelper
     {
         try
         {
-            var process = new Process { StartInfo = new ProcessStartInfo(fileViewModel.Path) };
+            var process = new Process { StartInfo = new(fileViewModel.Path) };
             process.StartInfo.UseShellExecute = true;
             _ = process.Start();
         }

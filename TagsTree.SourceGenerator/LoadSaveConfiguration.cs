@@ -37,8 +37,6 @@ internal static partial class TypeWithAttributeDelegates
             _ = namespaces.Add(staticClassName); //methodName方法所用namespace
         var usedTypes = new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
         /*-----Body Begin-----*/
-        var stringBuilder = new StringBuilder().AppendLine("#nullable enable\n");
-        /*-----Splitter-----*/
         var classBegin = @$"
 namespace {typeSymbol.ContainingNamespace.ToDisplayString()};
 
@@ -85,16 +83,15 @@ partial class {name}
         // 去除" \r\n"
         loadConfigurationContent = loadConfigurationContent.Remove(loadConfigurationContent.Length - 3, 3);
 
-        foreach (var s in namespaces)
-            _ = stringBuilder.AppendLine($"using {s};");
-        _ = stringBuilder.AppendLine(classBegin)
+        return namespaces.GenerateFileHeader()
+            .AppendLine(classBegin)
             .AppendLine(loadConfigurationBegin)
             .AppendLine(loadConfigurationContent.ToString())
             .AppendLine(loadConfigurationEndAndSaveConfigurationBegin)
             // saveConfigurationContent 后已有空行
             .Append(saveConfigurationContent)
-            .AppendLine(saveConfigurationEndAndClassEnd);
-        return stringBuilder.ToString();
+            .AppendLine(saveConfigurationEndAndClassEnd)
+            .ToString();
     }
 
     private static string LoadRecord(string name, string type, string typeName, string containerName, string? methodName) => methodName is null
