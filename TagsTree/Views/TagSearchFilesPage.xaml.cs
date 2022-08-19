@@ -2,7 +2,6 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -17,7 +16,7 @@ public partial class TagSearchFilesPage : Page
 {
     public TagSearchFilesPage()
     {
-        _vm = new TagSearchFilesViewModel();
+        _vm = new();
         _current = this;
         InitializeComponent();
         TbSearch.InvokeQuerySubmitted();

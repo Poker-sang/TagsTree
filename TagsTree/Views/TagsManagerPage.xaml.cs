@@ -5,18 +5,19 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using TagsTree.Interfaces;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
 
 namespace TagsTree.Views;
 
 [INotifyPropertyChanged]
-public partial class TagsManagerPage : Page
+public partial class TagsManagerPage : Page, ITypeGetter
 {
     public TagsManagerPage()
     {
         Current = this;
-        _vm = new TagsManagerViewModel();
+        _vm = new();
         InitializeComponent();
     }
     public static Type TypeGetter => typeof(TagsManagerPage);
@@ -46,7 +47,7 @@ public partial class TagsManagerPage : Page
 
     private void OnDragItemsCompleted(TreeView sender, TreeViewDragItemsCompletedEventArgs e)
     {
-        if (e.NewParentItem as TagViewModel == _tempPath)
+        if ((e.NewParentItem as TagViewModel) == _tempPath)
             InfoBarShow($"移动标签 {((TagViewModel)e.Items[0]).Name} 到原位置", InfoBarSeverity.Informational);
         else
         {

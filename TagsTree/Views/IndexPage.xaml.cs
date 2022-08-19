@@ -1,9 +1,10 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 using System;
+using TagsTree.Interfaces;
 
 namespace TagsTree.Views;
 
-public sealed partial class IndexPage : Page
+public sealed partial class IndexPage : Page, ITypeGetter
 {
     public IndexPage()
     {

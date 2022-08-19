@@ -3,7 +3,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using TagsTree.Models;
@@ -17,7 +16,7 @@ public sealed partial class TagEditFilesPage : Page
 {
     public TagEditFilesPage()
     {
-        _vm = new TagEditFilesViewModel();
+        _vm = new();
         InitializeComponent();
     }
 
@@ -60,6 +59,7 @@ public sealed partial class TagEditFilesPage : Page
                                 App.Relations[tagViewModel, fileViewModel] = false;
                                 break;
                             }
+
                         break;
                     // 如果原本是null，则删除fileViewModel拥有的相应子标签
                     case null:

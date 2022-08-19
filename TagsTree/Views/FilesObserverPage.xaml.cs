@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TagsTree.Interfaces;
 using TagsTree.Models;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
@@ -10,7 +11,7 @@ using TagsTree.ViewModels;
 
 namespace TagsTree.Views;
 
-public sealed partial class FilesObserverPage : Page
+public sealed partial class FilesObserverPage : Page, ITypeGetter
 {
     public FilesObserverPage()
     {

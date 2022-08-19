@@ -17,8 +17,6 @@ namespace TagsTree.Models;
 /// </remarks>
 public class RelationsDataTable : TableDictionary<int, int>
 {
-    public RelationsDataTable() : base(int.Parse, int.Parse) { }
-
     public bool this[TagViewModel tag, FileModel fileModel]
     {
         get => base[tag.Id, fileModel.Id];

@@ -5,7 +5,6 @@ using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media.Animation;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -113,7 +112,7 @@ public partial class App : Application
     public static string? LoadConfig()
     {
         // 文件监视
-        FilesObserverPage.Vm = new FilesObserverViewModel(FileChanged.Deserialize(FilesChangedPath));
+        FilesObserverPage.Vm = new(FileChanged.Deserialize(FilesChangedPath));
 
         // 标签
         Tags.DeserializeTree(TagsPath);

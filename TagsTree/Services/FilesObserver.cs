@@ -26,7 +26,7 @@ public class FilesObserver : FileSystemWatcher
             return App.FilesObserver.EnableRaisingEvents = false;
         }
         // 不能是错误路径
-        Path = path; 
+        Path = path;
         return App.FilesObserver.EnableRaisingEvents = App.AppConfiguration.FilesObserverEnabled;
     }
 

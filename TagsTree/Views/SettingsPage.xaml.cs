@@ -1,7 +1,6 @@
 ﻿using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System;
 using System.Text.RegularExpressions;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
