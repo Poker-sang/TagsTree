@@ -5,16 +5,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using TagsTree.Interfaces;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
 
 namespace TagsTree.Views;
 
-public partial class FileImporterPage : Page
+public partial class FileImporterPage : Page, ITypeGetter
 {
     public FileImporterPage()
     {
-        _vm = new FileImporterViewModel();
+        _vm = new();
         _vm.FileViewModels.CollectionChanged += (_, _) => BDelete.IsEnabled = BSave.IsEnabled = !Importing && _vm.FileViewModels.Count is not 0;
         InitializeComponent();
     }

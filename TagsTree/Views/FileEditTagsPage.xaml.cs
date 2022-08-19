@@ -2,7 +2,6 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
-using System;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
 
@@ -12,7 +11,7 @@ public partial class FileEditTagsPage : Page
 {
     public FileEditTagsPage()
     {
-        _vm = new FileEditTagsViewModel();
+        _vm = new();
         InitializeComponent();
     }
 

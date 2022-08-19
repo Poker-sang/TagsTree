@@ -17,8 +17,9 @@ public class TagsTreeDictionary
     public TagViewModel TagsTree { get; } = new(0, "");
 
     public IEnumerable<TagViewModel> TagsDictionaryValues => TagsDictionary.Values.Skip(1);
+
     /// <remarks>
-    /// 或TagsDictionary[""]
+    /// 或<see cref="TagsDictionary"/>[""]
     /// </remarks>
     public TagViewModel TagsDictionaryRoot => TagsDictionary[0];
 
@@ -30,17 +31,20 @@ public class TagsTreeDictionary
         TagsDictionary[temp.Id, name] = temp;
         return temp;
     }
+
     public void MoveTag(TagViewModel tag, TagViewModel newPath)
     {
         _ = TagsDictionary[tag.Id].Parent!.SubTags.Remove(tag);
         newPath.SubTags.Add(tag);
     }
+
     public void RenameTag(TagViewModel tag, string newName)
     {
         TagsDictionary.ChangeKey2(tag.Name, newName);
 
         tag.Name = newName;
     }
+
     public void DeleteTag(TagViewModel tag)
     {
         _ = TagsDictionary[tag.Id].Parent!.SubTags.Remove(tag);
