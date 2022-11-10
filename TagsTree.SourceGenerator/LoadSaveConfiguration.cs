@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -14,9 +15,11 @@ internal static partial class TypeWithAttributeDelegates
     public static string? LoadSaveConfiguration(TypeDeclarationSyntax typeDeclaration, INamedTypeSymbol typeSymbol, List<AttributeData> attributeList)
     {
         var attribute = attributeList[0];
-        if (attribute.ConstructorArguments[0].Value is not INamedTypeSymbol type)
+
+        if (attribute.AttributeClass is not ({ IsGenericType: true } and { TypeArguments.IsDefaultOrEmpty: false }))
             return null;
-        if (attribute.ConstructorArguments[1].Value is not string containerName)
+        var type = attribute.AttributeClass.TypeArguments[0];
+        if (attribute.ConstructorArguments[0].Value is not string containerName)
             return null;
 
         string? staticClassName = null;

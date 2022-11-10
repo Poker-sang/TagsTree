@@ -13,7 +13,7 @@ public static class WindowHelper
 
     public static MainWindow Initialize()
     {
-        Window = new MainWindow();
+        Window = new();
 
         if (Window.Content is FrameworkElement frameworkElement)
             frameworkElement.RequestedTheme = App.AppConfiguration.Theme switch

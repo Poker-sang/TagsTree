@@ -17,7 +17,10 @@ internal static partial class TypeWithAttributeDelegates
 
         foreach (var attribute in attributeList)
         {
-            if (attribute.ConstructorArguments[0].Value is not string propertyName || attribute.ConstructorArguments[1].Value is not INamedTypeSymbol type)
+            if (attribute.AttributeClass is not ({ IsGenericType: true } and { TypeArguments.IsDefaultOrEmpty: false }))
+                return null;
+            var type = attribute.AttributeClass.TypeArguments[0];
+            if (attribute.ConstructorArguments[0].Value is not string propertyName)
                 continue;
 
             if (attribute.ConstructorArguments.Length < 3 || attribute.ConstructorArguments[2].Value is not string propertyChanged)
