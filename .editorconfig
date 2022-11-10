@@ -19,12 +19,12 @@ insert_final_newline = true
 
 # 组织 Using
 dotnet_separate_import_directive_groups = false
-dotnet_sort_system_directives_first = false
+dotnet_sort_system_directives_first = true
 file_header_template = unset
 
 # this. 和 Me. 首选项
 dotnet_style_qualification_for_event = false:suggestion
-dotnet_style_qualification_for_field = false
+dotnet_style_qualification_for_field = false:suggestion
 dotnet_style_qualification_for_method = false:suggestion
 dotnet_style_qualification_for_property = false:suggestion
 
@@ -42,22 +42,22 @@ dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity
 dotnet_style_require_accessibility_modifiers = for_non_interface_members
 
 # 表达式级首选项
-dotnet_style_coalesce_expression = true
-dotnet_style_collection_initializer = true
-dotnet_style_explicit_tuple_names = true
-dotnet_style_namespace_match_folder = true
-dotnet_style_null_propagation = true
-dotnet_style_object_initializer = true
+dotnet_style_object_initializer = true:suggestion
+dotnet_style_collection_initializer = true:suggestion
+dotnet_style_explicit_tuple_names = true:suggestion
+dotnet_style_null_propagation = true:suggestion
+dotnet_style_coalesce_expression = true:suggestion
+dotnet_style_prefer_inferred_tuple_names = true:suggestion
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
 dotnet_style_prefer_auto_properties = true:suggestion
-dotnet_style_prefer_compound_assignment = true
+dotnet_style_prefer_compound_assignment = true:suggestion
 dotnet_style_prefer_conditional_expression_over_assignment = true:suggestion
 dotnet_style_prefer_conditional_expression_over_return = true:suggestion
-dotnet_style_prefer_inferred_anonymous_type_member_names = true
-dotnet_style_prefer_inferred_tuple_names = true
-dotnet_style_prefer_is_null_check_over_reference_equality_method = true
-dotnet_style_prefer_simplified_boolean_expressions = true
-dotnet_style_prefer_simplified_interpolation = true
+dotnet_style_prefer_inferred_anonymous_type_member_names = true:suggestion
+dotnet_style_prefer_is_null_check_over_reference_equality_method = true:suggestion
+dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
+dotnet_style_prefer_simplified_interpolation = true:suggestion
+dotnet_style_namespace_match_folder = true
 
 # 字段首选项
 dotnet_style_readonly_field = true
@@ -124,6 +124,7 @@ csharp_style_prefer_tuple_swap = true:suggestion
 csharp_style_throw_expression = true:suggestion
 csharp_style_unused_value_assignment_preference = discard_variable:suggestion
 csharp_style_unused_value_expression_statement_preference = discard_variable:suggestion
+csharp_style_pattern_local_over_anonymous_function = true:suggestion
 
 # "using" 指令首选项
 csharp_using_directive_placement = outside_namespace:suggestion
@@ -212,15 +213,12 @@ dotnet_naming_rule.private_field_should_be_camel_begin_with__.style = camel_begi
 
 dotnet_naming_symbols.interface.applicable_kinds = interface
 dotnet_naming_symbols.interface.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
-dotnet_naming_symbols.interface.required_modifiers = 
 
 dotnet_naming_symbols.types.applicable_kinds = class, struct, interface, enum
 dotnet_naming_symbols.types.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
-dotnet_naming_symbols.types.required_modifiers = 
 
 dotnet_naming_symbols.non_field_members.applicable_kinds = property, event, method
 dotnet_naming_symbols.non_field_members.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
-dotnet_naming_symbols.non_field_members.required_modifiers = 
 
 dotnet_naming_symbols.const_field.applicable_kinds = field
 dotnet_naming_symbols.const_field.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
@@ -228,25 +226,52 @@ dotnet_naming_symbols.const_field.required_modifiers = const
 
 dotnet_naming_symbols.visible_field.applicable_kinds = field
 dotnet_naming_symbols.visible_field.applicable_accessibilities = public, internal, protected_internal
-dotnet_naming_symbols.visible_field.required_modifiers = 
 
 dotnet_naming_symbols.private_field.applicable_kinds = field
 dotnet_naming_symbols.private_field.applicable_accessibilities = private
-dotnet_naming_symbols.private_field.required_modifiers = 
 
 # 命名样式
 
-dotnet_naming_style.pascal_case.required_prefix = 
-dotnet_naming_style.pascal_case.required_suffix = 
-dotnet_naming_style.pascal_case.word_separator = 
 dotnet_naming_style.pascal_case.capitalization = pascal_case
 
 dotnet_naming_style.begins_with_i.required_prefix = I
-dotnet_naming_style.begins_with_i.required_suffix = 
-dotnet_naming_style.begins_with_i.word_separator = 
 dotnet_naming_style.begins_with_i.capitalization = pascal_case
 
 dotnet_naming_style.camel_begin_with__.required_prefix = _
-dotnet_naming_style.camel_begin_with__.required_suffix = 
-dotnet_naming_style.camel_begin_with__.word_separator = 
 dotnet_naming_style.camel_begin_with__.capitalization = camel_case
+
+csharp_style_prefer_top_level_statements = true:suggestion
+csharp_style_prefer_utf8_string_literals = true:suggestion
+
+[*.{cs,vb}]
+end_of_line = crlf
+dotnet_style_qualification_for_field = false:suggestion
+dotnet_style_qualification_for_property = false:suggestion
+dotnet_style_qualification_for_method = false:suggestion
+dotnet_style_qualification_for_event = false:suggestion
+dotnet_style_prefer_conditional_expression_over_assignment = true:suggestion
+dotnet_style_prefer_conditional_expression_over_return = true:silent
+dotnet_style_require_accessibility_modifiers = for_non_interface_members:silent
+dotnet_code_quality_unused_parameters = all:suggestion
+dotnet_style_readonly_field = true:suggestion
+dotnet_style_parentheses_in_arithmetic_binary_operators = always_for_clarity:silent
+dotnet_style_parentheses_in_other_binary_operators = always_for_clarity:silent
+dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity:silent
+dotnet_style_parentheses_in_other_operators = never_if_unnecessary:silent
+dotnet_style_allow_multiple_blank_lines_experimental = false:suggestion
+dotnet_style_allow_statement_immediately_after_block_experimental = false:silent
+dotnet_style_coalesce_expression = true:suggestion
+dotnet_style_null_propagation = true:suggestion
+dotnet_style_prefer_is_null_check_over_reference_equality_method = true:suggestion
+dotnet_style_prefer_auto_properties = true:suggestion
+dotnet_style_object_initializer = true:suggestion
+dotnet_style_collection_initializer = true:suggestion
+dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
+dotnet_style_explicit_tuple_names = true:suggestion
+dotnet_style_prefer_inferred_tuple_names = true:suggestion
+dotnet_style_prefer_inferred_anonymous_type_member_names = true:suggestion
+dotnet_style_prefer_compound_assignment = true:suggestion
+dotnet_style_prefer_simplified_interpolation = true:suggestion
+dotnet_style_namespace_match_folder = true:suggestion
+dotnet_style_predefined_type_for_locals_parameters_members = true:suggestion
+dotnet_style_predefined_type_for_member_access = true:suggestion

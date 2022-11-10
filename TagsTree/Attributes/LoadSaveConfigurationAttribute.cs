@@ -3,14 +3,9 @@
 namespace TagsTree.Attributes;
 
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]
-public class LoadSaveConfigurationAttribute : Attribute
+public class LoadSaveConfigurationAttribute<T> : Attribute
 {
-    public LoadSaveConfigurationAttribute(Type targetType, string containerName)
-    {
-        TargetType = targetType;
-        ContainerName = containerName;
-    }
-    public Type TargetType { get; }
+    public LoadSaveConfigurationAttribute(string containerName) => ContainerName = containerName;
     public string ContainerName { get; }
     public string CastMethod { get; set; } = "null!";
 }

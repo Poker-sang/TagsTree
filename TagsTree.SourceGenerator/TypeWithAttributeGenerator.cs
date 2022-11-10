@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using static TagsTree.SourceGenerator.Utilities;
 
 namespace TagsTree.SourceGenerator;
@@ -29,7 +30,7 @@ public class TypeWithAttributeGenerator : IIncrementalGenerator
     private static readonly Dictionary<string, TypeWithAttribute> Attributes = new()
     {
         { "TagsTree.Attributes.GenerateConstructorAttribute", TypeWithAttributeDelegates.GenerateConstructor },
-        { "TagsTree.Attributes.LoadSaveConfigurationAttribute", TypeWithAttributeDelegates.LoadSaveConfiguration },
+        { "TagsTree.Attributes.LoadSaveConfigurationAttribute<T>", TypeWithAttributeDelegates.LoadSaveConfiguration },
         { "TagsTree.Attributes.DependencyPropertyAttribute", TypeWithAttributeDelegates.DependencyProperty }
     };
 
@@ -67,7 +68,7 @@ public class TypeWithAttributeGenerator : IIncrementalGenerator
                 if (context.SemanticModel.GetSymbolInfo(attributeSyntax).Symbol is not IMethodSymbol attributeSymbol)
                     continue;
 
-                if (Attributes.ContainsKey(attributeSymbol.ContainingType.ToDisplayString()))
+                if (Attributes.ContainsKey(attributeSymbol.ContainingType.OriginalDefinition.ToDisplayString()))
                     return typeDeclarationSyntax;
             }
 
@@ -97,7 +98,7 @@ public class TypeWithAttributeGenerator : IIncrementalGenerator
             // 遍历class上每个Attribute
             foreach (var attribute in typeSymbol.GetAttributes())
             {
-                var attributeName = attribute.AttributeClass!.ToDisplayString();
+                var attributeName = attribute.AttributeClass!.OriginalDefinition.ToDisplayString();
                 if (!Attributes.ContainsKey(attributeName))
                     continue;
                 if (usedAttributes.ContainsKey(attributeName))
@@ -110,7 +111,7 @@ public class TypeWithAttributeGenerator : IIncrementalGenerator
                 if (Attributes[usedAttribute.Key](typeDeclarationSyntax, typeSymbol, usedAttribute.Value) is { } source)
                     context.AddSource(
                         // 不能重名
-                        $"{typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat.WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted))}_{usedAttribute.Key}.g.cs",
+                        $"{typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat.WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted))}_{usedAttribute.Key.Replace('<', '[').Replace('>', ']')}.g.cs",
                         source);
         }
     }

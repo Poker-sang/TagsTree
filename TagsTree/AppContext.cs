@@ -3,7 +3,7 @@ using Windows.Storage;
 
 namespace TagsTree;
 
-[LoadSaveConfiguration(typeof(AppConfiguration), nameof(_configurationContainer), CastMethod = "TagsTree.Services.ExtensionMethods.Misc.CastThrow")]
+[LoadSaveConfiguration<AppConfiguration>(nameof(_configurationContainer), CastMethod = "TagsTree.Services.ExtensionMethods.Misc.CastThrow")]
 public static partial class AppContext
 {
     private static ApplicationDataContainer _configurationContainer = null!;

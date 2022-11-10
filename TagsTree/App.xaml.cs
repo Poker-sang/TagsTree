@@ -32,7 +32,7 @@ public partial class App : Application
     {
         InitializeComponent();
         RegisterUnhandledExceptionHandler();
-        FilesObserver = new FilesObserver();
+        FilesObserver = new();
         AppContext.Initialize();
         if (AppContext.LoadConfiguration() is { } appConfigurations
 #if FIRST_TIME
