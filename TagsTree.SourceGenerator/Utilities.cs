@@ -47,14 +47,14 @@ internal static class Utilities
     /// </code>
     /// </summary>
     /// <returns>TypeDeclaration</returns>
-    internal static TypeDeclarationSyntax GetDeclaration(string name, TypeDeclarationSyntax typeDeclaration, MemberDeclarationSyntax member)
+    internal static TypeDeclarationSyntax GetDeclaration(string name, INamedTypeSymbol symbol, MemberDeclarationSyntax member)
     {
-        TypeDeclarationSyntax typeDeclarationTemp = typeDeclaration switch
+        TypeDeclarationSyntax typeDeclarationTemp = symbol.TypeKind switch
         {
-            ClassDeclarationSyntax => ClassDeclaration(name),
-            StructDeclarationSyntax => StructDeclaration(name),
-            RecordDeclarationSyntax => RecordDeclaration(Token(SyntaxKind.RecordKeyword), name),
-            _ => throw new ArgumentOutOfRangeException(nameof(typeDeclaration))
+            TypeKind.Class when !symbol.IsRecord => ClassDeclaration(name),
+            TypeKind.Struct when !symbol.IsRecord => StructDeclaration(name),
+            TypeKind.Class or TypeKind.Struct when symbol.IsRecord => RecordDeclaration(Token(SyntaxKind.RecordKeyword), name),
+            _ => throw new ArgumentOutOfRangeException(nameof(symbol.TypeKind))
         };
         return typeDeclarationTemp.AddModifiers(Token(SyntaxKind.PartialKeyword))
             .WithOpenBraceToken(Token(SyntaxKind.OpenBraceToken))
@@ -148,7 +148,8 @@ internal static class Utilities
     /// </code>
     /// </summary>
     /// <returns>PropertyDeclaration</returns>
-    internal static PropertyDeclarationSyntax GetPropertyDeclaration(string propertyName, bool isNullable, ITypeSymbol type, AccessorDeclarationSyntax getter, AccessorDeclarationSyntax setter) => PropertyDeclaration(type.GetTypeSyntax(isNullable), propertyName)
+    internal static PropertyDeclarationSyntax GetPropertyDeclaration(string propertyName, bool isNullable, ITypeSymbol type, AccessorDeclarationSyntax getter, AccessorDeclarationSyntax setter)
+        => PropertyDeclaration(type.GetTypeSyntax(isNullable), propertyName)
             .AddModifiers(Token(SyntaxKind.PublicKeyword))
             .AddAccessorListAccessors(getter, setter);
 
@@ -162,7 +163,8 @@ internal static class Utilities
     /// </code>
     /// </summary>
     /// <returns>ClassDeclaration</returns>
-    internal static ClassDeclarationSyntax GetClassDeclaration(ISymbol specificClass, IEnumerable<MemberDeclarationSyntax> members) => ClassDeclaration(specificClass.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat))
+    internal static ClassDeclarationSyntax GetClassDeclaration(ISymbol specificClass, IEnumerable<MemberDeclarationSyntax> members)
+        => ClassDeclaration(specificClass.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat))
             .AddModifiers(Token(SyntaxKind.PartialKeyword))
             .AddMembers(members.ToArray());
 
@@ -190,7 +192,8 @@ internal static class Utilities
     /// </code>
     /// </summary>
     /// <returns>CompilationUnit</returns>
-    internal static CompilationUnitSyntax GetCompilationUnit(MemberDeclarationSyntax generatedNamespace, IEnumerable<string> namespaces) => CompilationUnit()
+    internal static CompilationUnitSyntax GetCompilationUnit(MemberDeclarationSyntax generatedNamespace, IEnumerable<string> namespaces)
+        => CompilationUnit()
             .AddMembers(generatedNamespace)
             .AddUsings(namespaces.Select(ns => UsingDirective(ParseName(ns))).ToArray())
             .NormalizeWhitespace();

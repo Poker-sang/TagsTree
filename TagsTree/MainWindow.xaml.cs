@@ -100,7 +100,7 @@ public sealed partial class MainWindow : Window
     {
         var currentMargin = AppTitleBar.Margin;
         AppTitleBar.Margin = sender.DisplayMode is NavigationViewDisplayMode.Minimal
-            ? new Thickness { Left = sender.CompactPaneLength * 2, Top = currentMargin.Top, Right = currentMargin.Right, Bottom = currentMargin.Bottom }
+            ? new() { Left = sender.CompactPaneLength * 2, Top = currentMargin.Top, Right = currentMargin.Right, Bottom = currentMargin.Bottom }
             : new Thickness { Left = sender.CompactPaneLength, Top = currentMargin.Top, Right = currentMargin.Right, Bottom = currentMargin.Bottom };
 
         UpdateAppTitleMargin(sender);
@@ -116,7 +116,7 @@ public sealed partial class MainWindow : Window
 
             AppTitle.Translation = (sender.DisplayMode is NavigationViewDisplayMode.Expanded && sender.IsPaneOpen) ||
                      sender.DisplayMode is NavigationViewDisplayMode.Minimal
-                ? new System.Numerics.Vector3(smallLeftIndent, 0, 0)
+                ? new(smallLeftIndent, 0, 0)
                 : new System.Numerics.Vector3(largeLeftIndent, 0, 0);
         }
         else
@@ -125,7 +125,7 @@ public sealed partial class MainWindow : Window
 
             AppTitle.Margin = (sender.DisplayMode is NavigationViewDisplayMode.Expanded && sender.IsPaneOpen) ||
                      sender.DisplayMode is NavigationViewDisplayMode.Minimal
-                ? new Thickness { Left = smallLeftIndent, Top = currentMargin.Top, Right = currentMargin.Right, Bottom = currentMargin.Bottom }
+                ? new() { Left = smallLeftIndent, Top = currentMargin.Top, Right = currentMargin.Right, Bottom = currentMargin.Bottom }
                 : new Thickness { Left = largeLeftIndent, Top = currentMargin.Top, Right = currentMargin.Right, Bottom = currentMargin.Bottom };
         }
     }

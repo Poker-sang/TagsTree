@@ -11,7 +11,7 @@ using TagsTree.ViewModels;
 namespace TagsTree.Controls;
 
 [INotifyPropertyChanged]
-[DependencyProperty("TagsSource", typeof(TagsTreeDictionary), IsNullable = true, DefaultValue = "null")]
+[DependencyProperty<TagsTreeDictionary>("TagsSource", IsNullable = true, DefaultValue = "null")]
 public partial class TagCompleteBox : UserControl
 {
     public TagCompleteBox()

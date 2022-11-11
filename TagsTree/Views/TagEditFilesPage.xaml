@@ -39,7 +39,6 @@
         </uiControls:DockPanel>
         <controls:TagSearchBox uiControls:DockPanel.Dock="Top" ResultChanged="ResultChanged" />
         <uiControls:DataGrid
-            AlternatingRowBackground="LightGray"
             AutoGenerateColumns="False"
             CanUserReorderColumns="False"
             ItemsSource="{x:Bind _vm.FileViewModels, Mode=OneWay}"

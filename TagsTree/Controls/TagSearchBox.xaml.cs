@@ -49,7 +49,7 @@ public partial class TagSearchBox : UserControl
             if (App.Tags.TagsDictionary.GetValueOrDefault(item) is { } tagModel)
                 temp.Add(tagModel);
             else
-                temp.Add(new PathTagModel(item));
+                temp.Add(new(item));
         ResultChanged.Invoke(App.Relations.GetFileModels(temp));
     }
 

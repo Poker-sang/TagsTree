@@ -17,52 +17,67 @@
                 uiControls:DockPanel.Dock="Right"
                 DefaultLabelPosition="Collapsed"
                 OverflowButtonVisibility="Collapsed">
-                <AppBarButton
-                    x:Name="BSelect"
-                    Icon="{ui:FontIcon Glyph=&#xE762;}"
-                    ToolTipService.ToolTip="选择引入：引入选择的文件或文件夹">
+                <AppBarButton x:Name="BSelect" ToolTipService.ToolTip="选择引入：引入选择的文件或文件夹">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE762;" />
+                    </AppBarButton.Icon>
                     <AppBarButton.Flyout>
                         <MenuFlyout Placement="BottomEdgeAlignedLeft">
                             <MenuFlyoutItem
                                 x:Name="SelectFiles"
-                                Icon="{ui:FontIcon Glyph=&#xE7C3;}"
                                 Tapped="Import"
-                                Text="文件" />
+                                Text="文件">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE7C3;" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
                             <MenuFlyoutItem
                                 x:Name="SelectFolders"
-                                Icon="{ui:FontIcon Glyph=&#xF12B;}"
                                 Tapped="Import"
-                                Text="文件夹" />
+                                Text="文件夹">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8B7;" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
                         </MenuFlyout>
                     </AppBarButton.Flyout>
                 </AppBarButton>
-                <AppBarButton
-                    x:Name="BPath"
-                    Icon="{ui:FontIcon Glyph=&#xF89A;}"
-                    ToolTipService.ToolTip="目录引入：引入选择的目录下一级所有文件或文件夹或全部">
+                <AppBarButton x:Name="BPath" ToolTipService.ToolTip="目录引入：引入选择的目录下一级所有文件或文件夹或全部">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xF89A;" />
+                    </AppBarButton.Icon>
                     <AppBarButton.Flyout>
                         <MenuFlyout Placement="BottomEdgeAlignedLeft">
                             <MenuFlyoutItem
                                 x:Name="PathFiles"
-                                Icon="{ui:FontIcon Glyph=&#xE7C3;}"
                                 Tapped="Import"
-                                Text="文件" />
+                                Text="文件">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE7C3;" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
                             <MenuFlyoutItem
                                 x:Name="PathFolders"
-                                Icon="{ui:FontIcon Glyph=&#xF12B;}"
                                 Tapped="Import"
-                                Text="文件夹" />
+                                Text="文件夹">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8B7;" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
                             <MenuFlyoutItem
                                 x:Name="PathBoth"
-                                Icon="{ui:FontIcon Glyph=&#xED25;}"
                                 Tapped="Import"
-                                Text="全部" />
+                                Text="全部">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8A9;" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
                         </MenuFlyout>
                     </AppBarButton.Flyout>
                 </AppBarButton>
                 <AppBarButton
-                    x:Name="All"
-                    Icon="{ui:FontIcon Glyph=&#xE8B3;}"
+                    x:Name="BAll"
+                    Icon="SelectAll"
                     Tapped="Import"
                     ToolTipService.ToolTip="全部引入：引入选择的目录下所有深度所有文件" />
                 <AppBarSeparator />
@@ -93,7 +108,6 @@
         </uiControls:DockPanel>
         <uiControls:DataGrid
             x:Name="FileImporterDataGird"
-            AlternatingRowBackground="LightGray"
             AutoGenerateColumns="False"
             CanUserReorderColumns="False"
             ItemsSource="{x:Bind _vm.FileViewModels, Mode=OneWay}">

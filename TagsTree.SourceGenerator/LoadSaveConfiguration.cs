@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,7 +12,7 @@ namespace TagsTree.SourceGenerator;
 
 internal static partial class TypeWithAttributeDelegates
 {
-    public static string? LoadSaveConfiguration(TypeDeclarationSyntax typeDeclaration, INamedTypeSymbol typeSymbol, List<AttributeData> attributeList)
+    public static string? LoadSaveConfiguration(INamedTypeSymbol typeSymbol, ImmutableArray<AttributeData> attributeList)
     {
         var attribute = attributeList[0];
 

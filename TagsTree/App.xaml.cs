@@ -14,7 +14,6 @@ using TagsTree.Algorithm;
 using TagsTree.Models;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
-using TagsTree.ViewModels;
 using TagsTree.Views;
 
 namespace TagsTree;
@@ -34,19 +33,17 @@ public partial class App : Application
         RegisterUnhandledExceptionHandler();
         FilesObserver = new();
         AppContext.Initialize();
-        if (AppContext.LoadConfiguration() is { } appConfigurations
-#if FIRST_TIME
-                && false
-#endif 
-           )
-        {
-            AppConfiguration = appConfigurations;
-            ConfigSet = true;
-        }
-        else
+#if !FIRST_TIME
+        if (AppContext.LoadConfiguration() is not { } appConfigurations)
         {
             AppConfiguration = AppContext.GetDefault();
             ConfigSet = false;
+        }
+        else
+#endif
+        {
+            AppConfiguration = appConfigurations;
+            ConfigSet = true;
         }
     }
 
@@ -177,7 +174,7 @@ public partial class App : Application
         static async Task UncaughtExceptionHandler(Exception e)
         {
             await ShowMessageDialog.Information(true, e.ToString());
-            //ExitWithPushedNotification();
+            // ExitWithPushedNotification();
         }
 #endif
     }

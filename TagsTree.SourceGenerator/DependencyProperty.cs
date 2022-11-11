@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Text;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static TagsTree.SourceGenerator.Utilities;
@@ -9,7 +10,7 @@ namespace TagsTree.SourceGenerator;
 
 internal static partial class TypeWithAttributeDelegates
 {
-    public static string? DependencyProperty(TypeDeclarationSyntax typeDeclaration, INamedTypeSymbol typeSymbol, List<AttributeData> attributeList)
+    public static string? DependencyProperty(INamedTypeSymbol typeSymbol, ImmutableArray<AttributeData> attributeList)
     {
         var members = new List<MemberDeclarationSyntax>();
         var namespaces = new HashSet<string> { "Microsoft.UI.Xaml" };
@@ -23,7 +24,7 @@ internal static partial class TypeWithAttributeDelegates
             if (attribute.ConstructorArguments[0].Value is not string propertyName)
                 continue;
 
-            if (attribute.ConstructorArguments.Length < 3 || attribute.ConstructorArguments[2].Value is not string propertyChanged)
+            if (attribute.ConstructorArguments.Length < 2 || attribute.ConstructorArguments[1].Value is not string propertyChanged)
                 continue;
 
             var isSetterPublic = true;

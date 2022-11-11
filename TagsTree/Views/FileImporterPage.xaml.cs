@@ -33,8 +33,8 @@ public partial class FileImporterPage : Page, ITypeGetter
                 return;
             _importing = value;
             PbSave.Opacity = value ? 1 : 0;
-            // 虽然写上更安全，但一般看不到这些选项：SelectFiles.IsEnabled = SelectFolders.IsEnabled = PathFiles.IsEnabled = PathFolders.IsEnabled = PathBoth.IsEnabled = All.IsEnabled
-            BPath.IsEnabled = BSelect.IsEnabled = !value;
+            // 虽然写上更安全，但一般看不到这些选项：SelectFiles.IsEnabled = SelectFolders.IsEnabled = PathFiles.IsEnabled = PathFolders.IsEnabled = PathBoth.IsEnabled
+            BPath.IsEnabled = BSelect.IsEnabled = BAll.IsEnabled = !value;
             BDelete.IsEnabled = BSave.IsEnabled = !value && _vm.FileViewModels.Count is not 0;
         }
     }
@@ -69,7 +69,7 @@ public partial class FileImporterPage : Page, ITypeGetter
                 {
                     if (FileViewModel.IsValidPath(folder.Path.GetPath()))
                         if (!dictionary.ContainsKey(true + folder.Path))
-                            temp.Add(new FileViewModel(folder.Path));
+                            temp.Add(new(folder.Path));
                 }
                 else if (FileViewModel.IsValidPath(folder.Path))
                     switch (mode)
@@ -95,7 +95,7 @@ public partial class FileImporterPage : Page, ITypeGetter
                         }
 
                         break;
-                        case nameof(All):
+                        case nameof(BAll):
                             void RecursiveReadFiles(string folderName)
                             {
                                 temp.AddRange(new DirectoryInfo(folderName).GetFiles()
