@@ -38,7 +38,7 @@ public partial class SettingsPage : Page
         TitleBarHelper.TriggerTitleBarRepaint();
     }
 
-    private async void BLibraryPath_Click(AutoSuggestBox autoSuggestBox, AutoSuggestBoxQuerySubmittedEventArgs e)
+    private async void BLibraryPath_Click(object sender, RoutedEventArgs e)
         => TbLibraryPath.Text = (await FileSystemHelper.GetStorageFolder())?.Path ?? TbLibraryPath.Text;
 
     private async void BExport_Click(object sender, RoutedEventArgs e)

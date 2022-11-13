@@ -19,7 +19,7 @@
                 OverflowButtonVisibility="Collapsed">
                 <AppBarButton x:Name="BSelect" ToolTipService.ToolTip="选择引入：引入选择的文件或文件夹">
                     <AppBarButton.Icon>
-                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE762;" />
+                        <FontIcon Glyph="&#xE762;" />
                     </AppBarButton.Icon>
                     <AppBarButton.Flyout>
                         <MenuFlyout Placement="BottomEdgeAlignedLeft">
@@ -28,7 +28,7 @@
                                 Tapped="Import"
                                 Text="文件">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE7C3;" />
+                                    <FontIcon Glyph="&#xE7C3;" />
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutItem
@@ -36,7 +36,7 @@
                                 Tapped="Import"
                                 Text="文件夹">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8B7;" />
+                                    <FontIcon Glyph="&#xE8B7;" />
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                         </MenuFlyout>
@@ -44,7 +44,7 @@
                 </AppBarButton>
                 <AppBarButton x:Name="BPath" ToolTipService.ToolTip="目录引入：引入选择的目录下一级所有文件或文件夹或全部">
                     <AppBarButton.Icon>
-                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xF89A;" />
+                        <FontIcon Glyph="&#xF89A;" />
                     </AppBarButton.Icon>
                     <AppBarButton.Flyout>
                         <MenuFlyout Placement="BottomEdgeAlignedLeft">
@@ -53,7 +53,7 @@
                                 Tapped="Import"
                                 Text="文件">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE7C3;" />
+                                    <FontIcon Glyph="&#xE7C3;" />
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutItem
@@ -61,7 +61,7 @@
                                 Tapped="Import"
                                 Text="文件夹">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8B7;" />
+                                    <FontIcon Glyph="&#xE8B7;" />
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutItem
@@ -69,7 +69,7 @@
                                 Tapped="Import"
                                 Text="全部">
                                 <MenuFlyoutItem.Icon>
-                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8A9;" />
+                                    <FontIcon Glyph="&#xE8A9;" />
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                         </MenuFlyout>

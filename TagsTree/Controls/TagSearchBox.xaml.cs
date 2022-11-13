@@ -1,5 +1,6 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using TagsTree.Delegates;
 using TagsTree.Models;
@@ -44,12 +45,7 @@ public partial class TagSearchBox : UserControl
             return;
         }
 
-        var temp = new List<PathTagModel>();
-        foreach (var item in sender.Text.Split(' '))
-            if (App.Tags.TagsDictionary.GetValueOrDefault(item) is { } tagModel)
-                temp.Add(tagModel);
-            else
-                temp.Add(new(item));
+        var temp = sender.Text.Split(' ').Select(item => App.Tags.TagsDictionary.GetValueOrDefault(item) ?? new PathTagModel(item)).ToArray();
         ResultChanged.Invoke(App.Relations.GetFileModels(temp));
     }
 

@@ -41,7 +41,7 @@
                     Tapped="MergeAllBClick"
                     ToolTipService.ToolTip="合并全部">
                     <AppBarButton.Icon>
-                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEA3C;" />
+                        <FontIcon Glyph="&#xEA3C;" />
                     </AppBarButton.Icon>
                 </AppBarButton>
                 <AppBarButton
