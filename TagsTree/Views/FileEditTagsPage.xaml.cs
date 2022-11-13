@@ -33,7 +33,7 @@ public partial class FileEditTagsPage : Page
             {
                 InfoBar.Severity = InfoBarSeverity.Error;
                 InfoBar.Title = "错误";
-                InfoBar.Message = "已拥有该标签";
+                InfoBar.Message = $"已拥有该标签「{newTag.Name}」";
                 InfoBar.IsOpen = true;
                 return;
             }
@@ -41,7 +41,7 @@ public partial class FileEditTagsPage : Page
             {
                 InfoBar.Severity = InfoBarSeverity.Error;
                 InfoBar.Title = "错误";
-                InfoBar.Message = $"已拥有下级标签「{tagExisted.Name}」或更多";
+                InfoBar.Message = $"已拥有「{newTag.Name}」的下级标签「{tagExisted.Name}」或更多";
                 InfoBar.IsOpen = true;
                 return;
             }
@@ -49,7 +49,7 @@ public partial class FileEditTagsPage : Page
             {
                 InfoBar.Severity = InfoBarSeverity.Warning;
                 InfoBar.Title = "警告";
-                InfoBar.Message = $"将会覆盖上级标签「{tagExisted.Name}」，是否继续？";
+                InfoBar.Message = $"「{newTag.Name}」将会覆盖上级标签「{tagExisted.Name}」，是否继续？";
                 InfoBar.ActionButton = new Button { Content = "确认" };
                 InfoBar.ActionButton.Click += (_, _) =>
                 {

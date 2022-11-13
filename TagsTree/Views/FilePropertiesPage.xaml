@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:TagsTree.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:local="using:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI.UI"
@@ -56,49 +57,50 @@
                     ToolTipService.ToolTip="删除" />
             </CommandBar>
         </uiControls:DockPanel>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="9*" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1*" />
-                <RowDefinition Height="7*" />
-            </Grid.RowDefinitions>
-            <Image
-                Grid.Row="0"
-                Grid.Column="0"
-                Source="{x:Bind FileViewModel.Icon, Mode=OneWay}" />
-            <StackPanel
-                Grid.Row="0"
-                Grid.RowSpan="2"
-                Grid.Column="1"
-                Orientation="Vertical">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock FontSize="20" Text="名称：" />
-                    <TextBlock FontSize="20" Text="{x:Bind FileViewModel.Name, Mode=OneWay}" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock FontSize="20" Text="路径：" />
-                    <TextBlock FontSize="20" Text="{x:Bind FileViewModel.PartialPath, Mode=OneWay}" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock FontSize="20" Text="类型：" />
-                    <TextBlock FontSize="20" Text="{x:Bind FileViewModel.Extension, Mode=OneWay}" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock FontSize="20" Text="标签：" />
-                    <TextBlock FontSize="20" Text="{x:Bind FileViewModel.Tags, Mode=OneWay}" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock FontSize="20" Text="修改日期：" />
-                    <TextBlock FontSize="20" Text="{x:Bind FileViewModel.DateOfModification, Mode=OneWay}" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock FontSize="20" Text="大小：" />
-                    <TextBlock FontSize="20" Text="{x:Bind FileViewModel.Size, Mode=OneWay}" />
-                </StackPanel>
-            </StackPanel>
-        </Grid>
+        <StackPanel Orientation="Vertical">
+            <Image Width="64" Source="{x:Bind FileViewModel.Icon, Mode=OneWay}" />
+            <labs:SettingsCard
+                ActionIcon="Copy"
+                ActionIconToolTip="复制到剪切板"
+                Description="名称"
+                Header="{x:Bind FileViewModel.Name, Mode=OneWay}"
+                IsClickEnabled="True"
+                Tapped="CopyClick" />
+            <labs:SettingsCard
+                ActionIcon="Copy"
+                ActionIconToolTip="复制到剪切板"
+                Description="路径"
+                Header="{x:Bind FileViewModel.PartialPath, Mode=OneWay}"
+                IsClickEnabled="True"
+                Tapped="CopyClick" />
+            <labs:SettingsCard
+                ActionIcon="Copy"
+                ActionIconToolTip="复制到剪切板"
+                Description="类型"
+                Header="{x:Bind FileViewModel.Extension, Mode=OneWay}"
+                IsClickEnabled="True"
+                Tapped="CopyClick" />
+            <labs:SettingsCard
+                ActionIcon="Copy"
+                ActionIconToolTip="复制到剪切板"
+                Description="标签"
+                Header="{x:Bind FileViewModel.Tags, Mode=OneWay}"
+                IsClickEnabled="True"
+                Tapped="CopyClick" />
+            <labs:SettingsCard
+                ActionIcon="Copy"
+                ActionIconToolTip="复制到剪切板"
+                Description="修改日期"
+                Header="{x:Bind FileViewModel.DateOfModification, Mode=OneWay}"
+                IsClickEnabled="True"
+                Tapped="CopyClick" />
+            <labs:SettingsCard
+                ActionIcon="Copy"
+                ActionIconToolTip="复制到剪切板"
+                Description="大小"
+                Header="{x:Bind FileViewModel.Size, Mode=OneWay}"
+                IsClickEnabled="True"
+                Tapped="CopyClick" />
+        </StackPanel>
     </uiControls:DockPanel>
 </Page>

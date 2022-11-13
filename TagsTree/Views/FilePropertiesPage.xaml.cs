@@ -1,6 +1,9 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using Windows.ApplicationModel.DataTransfer;
+using CommunityToolkit.Labs.WinUI;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.VisualBasic.FileIO;
@@ -90,6 +93,12 @@ public partial class FilePropertiesPage : Page
             return;
         FileViewModel.Delete();
         Remove(FileViewModel);
+    }
+    private void CopyClick(object sender, TappedRoutedEventArgs e)
+    {
+        var dataPackage = new DataPackage();
+        dataPackage.SetText((string)((SettingsCard)sender).Header);
+        Clipboard.SetContent(dataPackage);
     }
 
     #endregion
