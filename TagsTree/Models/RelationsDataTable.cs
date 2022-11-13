@@ -15,7 +15,7 @@ namespace TagsTree.Models;
 /// <remarks>
 /// <see cref="FileModel.Id"/>记录节省文件空间
 /// </remarks>
-public class RelationsDataTable : TableDictionary<int, int>
+public partial class RelationsDataTable : TableDictionary<int, int>
 {
     public bool this[TagViewModel tag, FileModel fileModel]
     {
@@ -30,6 +30,10 @@ public class RelationsDataTable : TableDictionary<int, int>
 
     public IEnumerable<TagViewModel> GetTags(FileModel fileModel) => Tags.Where(pair => base[pair.Key, fileModel.Id]).Select(pair => App.Tags.TagsDictionary[pair.Key]);
 
+
+    [GeneratedRegex("(.)", RegexOptions.IgnoreCase, "zh-CN")]
+    private static partial Regex MyRegex();
+
     public static ObservableCollection<FileViewModel> FuzzySearchName(string input, IEnumerable<FileViewModel> range)
     {   // 大小写不敏感
         // 完整包含搜索内容
@@ -38,24 +42,22 @@ public class RelationsDataTable : TableDictionary<int, int>
         var fuzzy = new List<FileViewModel>();
         // 包含任意一个字符，并按包含数排序
         var part = new List<(int Count, FileViewModel FileViewModel)>();
-        var fuzzyRegex = new Regex(Regex.Replace(input, "(.)", ".+$1", RegexOptions.IgnoreCase));
+        var fuzzyRegex = new Regex(MyRegex().Replace(input, ".+$1"));
         var partRegex = new Regex($"[{input}]", RegexOptions.IgnoreCase);
         foreach (var fileViewModel in range)
-        {
             if (fileViewModel.Name.Contains(input, StringComparison.OrdinalIgnoreCase))
                 precise.Add(fileViewModel);
             else if (fuzzyRegex.IsMatch(fileViewModel.Name))
                 fuzzy.Add(fileViewModel);
             else if (partRegex.Matches(fileViewModel.Name) is { Count: not 0 } matches)
                 part.Add((matches.Count, fileViewModel));
-        }
 
         precise.AddRange(fuzzy);
         part.Sort((x, y) => x.Count.CompareTo(y.Count));
         precise.AddRange(part.Select(item => item.FileViewModel));
         return precise.ToObservableCollection();
     }
-    public IEnumerable<FileModel> GetFileModels(List<PathTagModel>? tags = null)
+    public IEnumerable<FileModel> GetFileModels(ICollection<PathTagModel>? tags = null)
     {
         IEnumerable<FileModel> filesRange = App.IdFile.Values;
         if (tags is null or { Count: 0 })
