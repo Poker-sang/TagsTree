@@ -75,7 +75,7 @@ public class FileChangedMerger
             return false;
         // 同或逻辑
         if (fileChanged is { Type: FileChanged.ChangedType.Create } == IsExisted)
-            throw new Exception("逻辑出错，可能是遗漏监听文件所致");
+            throw new("逻辑出错，可能是遗漏监听文件所致");
         switch (fileChanged.Type)
         {
             case FileChanged.ChangedType.Create:

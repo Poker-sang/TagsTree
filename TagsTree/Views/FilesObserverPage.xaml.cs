@@ -202,27 +202,27 @@ public sealed partial class FilesObserverPage : Page, ITypeGetter
         var fileChangedMergers = new List<FileChangedMerger>();
         foreach (var fileChanged in Vm.FilesChangedList)
             if (!fileChangedMergers.Any(fileChangedMerger => fileChangedMerger.CanMerge(fileChanged)))
-                fileChangedMergers.Add(new FileChangedMerger(fileChanged));
+                fileChangedMergers.Add(new(fileChanged));
 
         ClearAll();
         foreach (var fileChangedMerger in fileChangedMergers)
             switch (fileChangedMerger.GetMergeResult())
             {
                 case FileChangedMerger.MergeResult.Move:
-                    Vm.FilesChangedList.Add(new FileChanged(fileChangedMerger.CurrentFullName, FileChanged.ChangedType.Move, fileChangedMerger.OriginalPath));
+                    Vm.FilesChangedList.Add(new(fileChangedMerger.CurrentFullName, FileChanged.ChangedType.Move, fileChangedMerger.OriginalPath));
                     break;
                 case FileChangedMerger.MergeResult.Rename:
-                    Vm.FilesChangedList.Add(new FileChanged(fileChangedMerger.CurrentFullName, FileChanged.ChangedType.Rename, fileChangedMerger.OriginalName));
+                    Vm.FilesChangedList.Add(new(fileChangedMerger.CurrentFullName, FileChanged.ChangedType.Rename, fileChangedMerger.OriginalName));
                     break;
                 case FileChangedMerger.MergeResult.MoveRename:
-                    Vm.FilesChangedList.Add(new FileChanged($"{fileChangedMerger.CurrentPath}\\{fileChangedMerger.OriginalName}", FileChanged.ChangedType.Move, fileChangedMerger.OriginalPath));
-                    Vm.FilesChangedList.Add(new FileChanged(fileChangedMerger.CurrentFullName, FileChanged.ChangedType.Rename, fileChangedMerger.OriginalName));
+                    Vm.FilesChangedList.Add(new($"{fileChangedMerger.CurrentPath}\\{fileChangedMerger.OriginalName}", FileChanged.ChangedType.Move, fileChangedMerger.OriginalPath));
+                    Vm.FilesChangedList.Add(new(fileChangedMerger.CurrentFullName, FileChanged.ChangedType.Rename, fileChangedMerger.OriginalName));
                     break;
                 case FileChangedMerger.MergeResult.Create:
-                    Vm.FilesChangedList.Add(new FileChanged(fileChangedMerger.CurrentFullName, FileChanged.ChangedType.Create));
+                    Vm.FilesChangedList.Add(new(fileChangedMerger.CurrentFullName, FileChanged.ChangedType.Create));
                     break;
                 case FileChangedMerger.MergeResult.Delete:
-                    Vm.FilesChangedList.Add(new FileChanged(fileChangedMerger.OriginalFullName, FileChanged.ChangedType.Delete));
+                    Vm.FilesChangedList.Add(new(fileChangedMerger.OriginalFullName, FileChanged.ChangedType.Delete));
                     break;
                 // MergeResult.Nothing或者不合法数据都不进行操作
                 case FileChangedMerger.MergeResult.Nothing:

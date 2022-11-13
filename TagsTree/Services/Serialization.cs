@@ -21,7 +21,7 @@ public static class Serialization
         }
         catch (Exception)
         {
-            return new T();
+            return new();
         }
     }
 
@@ -39,7 +39,7 @@ public static class Serialization
         }
         catch (Exception)
         {
-            return new T();
+            return new();
         }
     }
 

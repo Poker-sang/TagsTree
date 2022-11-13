@@ -37,13 +37,16 @@
                     ToolTipService.ToolTip="删除范围" />
                 <AppBarButton
                     x:Name="BMergeAll"
-                    Icon="{ui:FontIcon Glyph=&#xEA3C;}"
                     IsEnabled="False"
                     Tapped="MergeAllBClick"
-                    ToolTipService.ToolTip="合并全部" />
+                    ToolTipService.ToolTip="合并全部">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEA3C;" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
                 <AppBarButton
                     x:Name="BApplyAll"
-                    Icon="{ui:FontIcon Glyph=&#xE73E;}"
+                    Icon="Accept"
                     IsEnabled="False"
                     Tapped="ApplyAllBClick"
                     ToolTipService.ToolTip="应用全部更改" />
@@ -66,10 +69,7 @@
                 Title="成功"
                 Severity="Success" />
         </uiControls:DockPanel>
-        <uiControls:DataGrid
-            AlternatingRowBackground="LightGray"
-            AutoGenerateColumns="False"
-            ItemsSource="{x:Bind local:FilesObserverPage.Vm.FilesChangedList}">
+        <uiControls:DataGrid AutoGenerateColumns="False" ItemsSource="{x:Bind local:FilesObserverPage.Vm.FilesChangedList}">
             <uiControls:DataGrid.RowStyle>
                 <Style TargetType="uiControls:DataGridRow">
                     <Setter Property="ContextFlyout">

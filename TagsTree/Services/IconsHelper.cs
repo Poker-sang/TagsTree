@@ -38,7 +38,7 @@ public static class IconsHelper
         await Task.Yield();
         foreach (var extension in App.IdFile.Values.Select(file => file.Extension).Where(extension => !_iconList.ContainsKey(extension)).Distinct())
         {
-            _iconRequest.Enqueue(new IconGetter(extension));
+            _iconRequest.Enqueue(new(extension));
             _iconList[extension] = null;
         }
 
@@ -66,7 +66,7 @@ public static class IconsHelper
                 return _loadingIcon;
             }
 
-        _iconRequest.Enqueue(new IconGetter(fileViewModel.Extension, fileViewModel.IconChange));
+        _iconRequest.Enqueue(new(fileViewModel.Extension, fileViewModel.IconChange));
         _iconList[fileViewModel.Extension] = null;
         if (_iconRequest.Count <= 1)
             _ = StartAsync();

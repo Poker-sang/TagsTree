@@ -19,7 +19,7 @@
                 DefaultLabelPosition="Collapsed"
                 OverflowButtonVisibility="Collapsed">
                 <AppBarButton
-                    Icon="{ui:FontIcon Glyph=&#xF271;}"
+                    Icon="Accept"
                     Tapped="ConfirmBClick"
                     ToolTipService.ToolTip="确定" />
             </CommandBar>

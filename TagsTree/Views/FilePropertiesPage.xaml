@@ -23,11 +23,11 @@
             <CommandBar DefaultLabelPosition="Collapsed" OverflowButtonVisibility="Collapsed">
                 <AppBarButton
                     x:Name="BOpen"
-                    Icon="{ui:FontIcon Glyph=&#xE8E5;}"
+                    Icon="OpenFile"
                     Tapped="OpenBClick"
                     ToolTipService.ToolTip="打开" />
                 <AppBarButton
-                    Icon="{ui:FontIcon Glyph=&#xE8DA;}"
+                    Icon="OpenLocal"
                     Tapped="OpenExplorerBClick"
                     ToolTipService.ToolTip="打开文件夹" />
                 <AppBarButton
@@ -35,7 +35,7 @@
                     Tapped="RemoveBClick"
                     ToolTipService.ToolTip="移除" />
                 <AppBarButton
-                    Icon="Tag"
+                    Icon="Edit"
                     Tapped="EditTagsBClick"
                     ToolTipService.ToolTip="更改标签" />
                 <AppBarSeparator />
@@ -46,7 +46,7 @@
                     ToolTipService.ToolTip="重命名" />
                 <AppBarButton
                     x:Name="BMove"
-                    Icon="{ui:FontIcon Glyph=&#xE8DE;}"
+                    Icon="MoveToFolder"
                     Tapped="MoveBClick"
                     ToolTipService.ToolTip="移动" />
                 <AppBarButton

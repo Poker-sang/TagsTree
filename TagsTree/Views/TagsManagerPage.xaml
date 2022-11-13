@@ -24,7 +24,7 @@
                     Tapped="NewBClick"
                     ToolTipService.ToolTip="添加" />
                 <AppBarButton
-                    Icon="{ui:FontIcon Glyph=&#xE8DE;}"
+                    Icon="MoveToFolder"
                     Tapped="MoveBClick"
                     ToolTipService.ToolTip="移动" />
                 <AppBarButton

@@ -27,7 +27,6 @@
             TextChanged="TextChanged"
             ToolTipService.ToolTip="模糊搜索，不包含\/:*?&quot;&lt;&gt;|,和空白字符，留空显示全部" />
         <uiControls:DataGrid
-            AlternatingRowBackground="LightGray"
             AutoGenerateColumns="False"
             CanUserReorderColumns="False"
             DoubleTapped="PropertiesCmDoubleClick"
