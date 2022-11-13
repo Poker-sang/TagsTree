@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using TagsTree.ViewModels;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using TagsTree.Interfaces;
+using TagsTree.Models;
 
 namespace TagsTree.Services.ExtensionMethods;
 
@@ -14,11 +15,11 @@ public static class FileSystemHelper
 {
     public static bool Exists(this string fullName) => File.Exists(fullName) || Directory.Exists(fullName);
 
-    public static async void Open(this FileViewModel fileViewModel)
+    public static async void Open(this IFullName fileBase)
     {
         try
         {
-            var process = new Process { StartInfo = new(fileViewModel.FullName) };
+            var process = new Process { StartInfo = new(fileBase.FullName) };
             process.StartInfo.UseShellExecute = true;
             _ = process.Start();
         }
@@ -40,11 +41,11 @@ public static class FileSystemHelper
             await ShowMessageDialog.Information(true, $"打开路径「{fullName}」时出现错误");
         }
     }
-    public static async void OpenDirectory(this FileViewModel fileViewModel)
+    public static async void OpenDirectory(this IFullName fileBase)
     {
         try
         {
-            var process = new Process { StartInfo = new(fileViewModel.Path) };
+            var process = new Process { StartInfo = new(fileBase.Path) };
             process.StartInfo.UseShellExecute = true;
             _ = process.Start();
         }
@@ -54,29 +55,28 @@ public static class FileSystemHelper
         }
     }
 
-    public static void Move(this FileViewModel fileViewModel, string newFullName)
+    public static void Move(this FileBase fileBase, string newFullName)
     {
-        var fileModel = fileViewModel.GetFileModel();
-        if (fileModel.IsFolder)
-            FileSystem.MoveDirectory(fileModel.FullName, newFullName.GetPath(), UIOption.OnlyErrorDialogs);
-        FileSystem.MoveFile(fileModel.FullName, newFullName.GetPath(), UIOption.OnlyErrorDialogs);
+        if (fileBase.IsFolder)
+            FileSystem.MoveDirectory(fileBase.FullName, newFullName.GetPath(), UIOption.OnlyErrorDialogs);
+        else
+            FileSystem.MoveFile(fileBase.FullName, newFullName.GetPath(), UIOption.OnlyErrorDialogs);
     }
     public static void Copy(this string sourceDirectory, string destinationDirectory) => FileSystem.CopyDirectory(sourceDirectory, destinationDirectory);
 
-    public static void Rename(this FileViewModel fileViewModel, string newFullName)
+    public static void Rename(this FileBase fileBase, string newFullName)
     {
-        var fileModel = fileViewModel.GetFileModel();
-        if (fileModel.IsFolder)
-            FileSystem.RenameDirectory(fileModel.FullName, newFullName.GetName());
-        FileSystem.RenameFile(fileModel.FullName, newFullName.GetName());
+        if (fileBase.IsFolder)
+            FileSystem.RenameDirectory(fileBase.FullName, newFullName.GetName());
+        else
+            FileSystem.RenameFile(fileBase.FullName, newFullName.GetName());
     }
-    public static void Delete(this FileViewModel fileViewModel)
+    public static void Delete(this FileBase fileBase)
     {
-        var fileModel = fileViewModel.GetFileModel();
-
-        if (fileModel.IsFolder)
-            FileSystem.DeleteDirectory(fileModel.FullName, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
-        FileSystem.DeleteFile(fileModel.FullName, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+        if (fileBase.IsFolder)
+            FileSystem.DeleteDirectory(fileBase.FullName, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+        else
+            FileSystem.DeleteFile(fileBase.FullName, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
     }
 
     public static string GetInvalidNameChars => @"\\/:*?""<>|" + new string(Path.GetInvalidPathChars());
@@ -86,20 +86,6 @@ public static class FileSystemHelper
     {
         Name = 0,
         Path = 1
-    }
-
-    public static string GetName(this string fullName)
-    {
-        var fullNameSpan = fullName.AsSpan();
-        return fullNameSpan[(fullNameSpan.LastIndexOf('\\') + 1)..].ToString();
-    }
-
-    public static string GetPath(this string fullName)
-    {
-        var fullNameSpan = fullName.AsSpan();
-        return fullNameSpan.LastIndexOf('\\') is -1
-            ? ""
-            : fullNameSpan[..fullNameSpan.LastIndexOf('\\')].ToString();
     }
 
     public static string CountSize(FileInfo file) => " " + file.Length switch

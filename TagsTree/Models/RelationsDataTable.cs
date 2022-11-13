@@ -22,14 +22,12 @@ public partial class RelationsDataTable : TableDictionary<int, int>
         get => base[tag.Id, fileModel.Id];
         set => base[tag.Id, fileModel.Id] = value;
     }
-
     private Dictionary<int, int> Tags => Columns;
     private Dictionary<int, int> Files => Rows;
     public int TagsCount => Tags.Count;
     public int FilesCount => Files.Count;
 
-    public IEnumerable<TagViewModel> GetTags(FileModel fileModel) => Tags.Where(pair => base[pair.Key, fileModel.Id]).Select(pair => App.Tags.TagsDictionary[pair.Key]);
-
+    public IEnumerable<TagViewModel> GetTags(int fileId) => Tags.Where(pair => base[pair.Key, fileId]).Select(pair => App.Tags.TagsDictionary[pair.Key]);
 
     [GeneratedRegex("(.)", RegexOptions.IgnoreCase, "zh-CN")]
     private static partial Regex MyRegex();
@@ -72,7 +70,7 @@ public partial class RelationsDataTable : TableDictionary<int, int>
         if (pathTagModel is TagViewModel tagViewModel)
         {
             filesRange = tagViewModel.SubTags.Aggregate(filesRange, (current, subTag) => GetFileModels(subTag, current));
-            return filesRange.Where(fileModel => this[tagViewModel, fileModel]);
+            return filesRange.Where(fileModel => this[tagViewModel.Id, fileModel.Id]);
         }
         // 唯一需要判断是否能使用路径作为标签的地方
         else if (App.AppConfiguration.PathTagsEnabled)

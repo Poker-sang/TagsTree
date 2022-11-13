@@ -1,36 +1,24 @@
-﻿using TagsTree.Models;
+﻿using TagsTree.ViewModels;
 
 namespace TagsTree.Services.ExtensionMethods;
 
-public static class FileModelHelper
+public static class FileViewModelHelper
 {
-    public static void AddNewAndSave(this FileModel fileModel)
+    public static void AddNewAndSave(this FileViewModel fileViewModel)
     {
-        AddNew(fileModel);
+        fileViewModel.FileModel.AddNew();
         App.SaveFiles();
         App.SaveRelations();
     }
-    public static void RemoveAndSave(this FileModel fileModel)
+    public static void RemoveAndSave(this FileViewModel fileViewModel)
     {
-        Remove(fileModel);
+        fileViewModel.FileModel.Remove();
         App.SaveFiles();
         App.SaveRelations();
     }
-    public static void MoveOrRenameAndSave(this FileModel fileModel, string newFullName)
+    public static void MoveOrRenameAndSave(this FileViewModel fileViewModel, string newFullName)
     {
-        MoveOrRename(fileModel, newFullName);
+        fileViewModel.FileModel.MoveOrRename(newFullName);
         App.SaveFiles();
     }
-
-    public static void AddNew(this FileModel fileModel)
-    {
-        App.Relations.NewFile(fileModel);
-        App.IdFile[fileModel.Id] = fileModel;
-    }
-    public static void Remove(this FileModel fileModel)
-    {
-        _ = App.IdFile.Remove(fileModel);
-        App.Relations.DeleteFile(fileModel);
-    }
-    public static void MoveOrRename(this FileModel fileModel, string newFullName) => fileModel.Reload(newFullName);
 }

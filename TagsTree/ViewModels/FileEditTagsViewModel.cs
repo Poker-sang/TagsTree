@@ -9,7 +9,7 @@ public partial class FileEditTagsViewModel : ObservableObject
     public void Load(FileViewModel fileViewModel)
     {
         _fileViewModel = fileViewModel;
-        VirtualTags = App.Relations.GetTags(fileViewModel).ToObservableCollection();
+        VirtualTags = App.Relations.GetTags(fileViewModel.Id).ToObservableCollection();
     }
 
     public static ObservableCollection<TagViewModel> TagsSource => App.Tags.TagsTree.SubTags;

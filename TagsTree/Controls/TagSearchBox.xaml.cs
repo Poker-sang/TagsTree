@@ -1,5 +1,4 @@
 ﻿using Microsoft.UI.Xaml.Controls;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using TagsTree.Delegates;
@@ -31,10 +30,13 @@ public partial class TagSearchBox : UserControl
         //        autoSuggestBox.Text = e.SelectedItem.ToString();
         //    else autoSuggestBox.Text = autoSuggestBox.Text[..index] + e.SelectedItem;
     }
+
+    [GeneratedRegex("  +")]
+    private static partial Regex MyRegex();
     private void TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
     {
         sender.Text = Regex.Replace(sender.Text, $@"[{FileSystemHelper.GetInvalidPathChars}]+", "");
-        sender.Text = Regex.Replace(sender.Text, @"  +", " ").TrimStart();
+        sender.Text = MyRegex().Replace(sender.Text, " ").TrimStart();
         sender.ItemsSource = sender.Text.TagSuggest(' ');
     }
     private void QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e)

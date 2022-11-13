@@ -1,6 +1,9 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using Windows.ApplicationModel.DataTransfer;
+using CommunityToolkit.Labs.WinUI;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.VisualBasic.FileIO;
@@ -53,7 +56,7 @@ public partial class FilePropertiesPage : Page
         if (await InputName.ShowAsync())
             return;
         var newFullName = FileViewModel.Path + @"\" + InputName.Text;
-        FileViewModel.Rename(newFullName);
+        FileViewModel.FileModel.Rename(newFullName);
         FileViewModel.MoveOrRenameAndSave(newFullName);
         Load(FileViewModel);
     }
@@ -80,7 +83,7 @@ public partial class FilePropertiesPage : Page
             return;
         }
 
-        FileViewModel.Move(newFullName);
+        FileViewModel.FileModel.Move(newFullName);
         FileViewModel.MoveOrRenameAndSave(newFullName);
         Load(FileViewModel);
     }
@@ -88,8 +91,14 @@ public partial class FilePropertiesPage : Page
     {
         if (!await ShowMessageDialog.Warning("是否删除该文件？"))
             return;
-        FileViewModel.Delete();
+        FileViewModel.FileModel.Delete();
         Remove(FileViewModel);
+    }
+    private void CopyClick(object sender, TappedRoutedEventArgs e)
+    {
+        var dataPackage = new DataPackage();
+        dataPackage.SetText((string)((SettingsCard)sender).Header);
+        Clipboard.SetContent(dataPackage);
     }
 
     #endregion
@@ -100,7 +109,6 @@ public partial class FilePropertiesPage : Page
     {
         FileViewModel = fileViewModel;
         OnPropertyChanged(nameof(FileViewModel));
-        BOpen.IsEnabled = BRename.IsEnabled = BMove.IsEnabled = BDelete.IsEnabled = FileViewModel.Exists;
     }
 
     private static void Remove(FileViewModel fileViewModel)
