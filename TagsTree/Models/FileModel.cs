@@ -10,13 +10,9 @@ using TagsTree.ViewModels;
 
 namespace TagsTree.Models;
 
-public class FileModel : IFullName
+public class FileModel : FileBase
 {
     private static int Num { get; set; }
-
-    public int Id { get; private set; }
-    public string Name { get; private set; }
-    public string Path { get; private set; }
 
     /// <summary>
     /// <see cref="FileViewModel"/>用的复制构造
@@ -35,25 +31,19 @@ public class FileModel : IFullName
     }
 
     /// <summary>
-    /// 反序列化专用，不要调用该构造器
+    /// 反序列化专用，不要从外部调用该构造器
     /// </summary>
     [JsonConstructor]
-    public FileModel(int id, string name, string path)
-    {
-        Num = Math.Max(Num, id + 1);
-        Id = id;
-        Name = name;
-        Path = path;
-    }
+    public FileModel(int id, string name, string path) : base(name, path, id) => Num = Math.Max(Num, id + 1);
 
     /// <summary>
-    /// 由虚拟构造的<see cref="FileViewModel"/>构成的<see cref="FileModel"/>，并生成Id
+    /// 从<paramref name="fullName"/>构造的<see cref="FileModel"/>，并生成Id
     /// </summary>
-    public FileModel GenerateAndUseId()
+    public static FileModel FromFullName(string fullName)
     {
-        Id = Num;
-        Num++;
-        return this;
+        var ret = new FileModel(Num, fullName.GetName(), fullName.GetPath());
+        ++Num;
+        return ret;
     }
 
     public void Reload(string fullName)
@@ -88,14 +78,7 @@ public class FileModel : IFullName
     public IEnumerable<TagViewModel> GetAncestorTags(TagViewModel parentTag) => Tags.GetTagViewModels().Where(parentTag.HasChildTag);
 
     [JsonIgnore] public string Extension => IsFolder ? "文件夹" : Name.Split('.', StringSplitOptions.RemoveEmptyEntries)[^1].ToUpper(CultureInfo.CurrentCulture);
-    /// <remarks>
-    /// Path必然包含文件路径
-    /// </remarks>
-    [JsonIgnore] protected string PartialPath => this.GetPartialPath();
-    /// <remarks>
-    /// Path必然包含文件路径
-    /// </remarks>
-    [JsonIgnore] public string FullName => Path + '\\' + Name;
+
     [JsonIgnore] public bool IsFolder => Directory.Exists(FullName);
     [JsonIgnore] public bool Exists => Directory.Exists(FullName) || File.Exists(FullName);
     [JsonIgnore]

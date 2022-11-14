@@ -23,8 +23,8 @@
             </CommandBar>
             <CommandBar DefaultLabelPosition="Collapsed" OverflowButtonVisibility="Collapsed">
                 <AppBarButton
-                    x:Name="BOpen"
                     Icon="OpenFile"
+                    IsEnabled="{x:Bind FileViewModel.Exists, Mode=OneWay}"
                     Tapped="OpenBClick"
                     ToolTipService.ToolTip="打开" />
                 <AppBarButton
@@ -41,18 +41,18 @@
                     ToolTipService.ToolTip="更改标签" />
                 <AppBarSeparator />
                 <AppBarButton
-                    x:Name="BRename"
                     Icon="Rename"
+                    IsEnabled="{x:Bind FileViewModel.Exists, Mode=OneWay}"
                     Tapped="RenameBClick"
                     ToolTipService.ToolTip="重命名" />
                 <AppBarButton
-                    x:Name="BMove"
                     Icon="MoveToFolder"
+                    IsEnabled="{x:Bind FileViewModel.Exists, Mode=OneWay}"
                     Tapped="MoveBClick"
                     ToolTipService.ToolTip="移动" />
                 <AppBarButton
-                    x:Name="BDelete"
                     Icon="Delete"
+                    IsEnabled="{x:Bind FileViewModel.Exists, Mode=OneWay}"
                     Tapped="DeleteBClick"
                     ToolTipService.ToolTip="删除" />
             </CommandBar>
@@ -93,6 +93,7 @@
                 Description="修改日期"
                 Header="{x:Bind FileViewModel.DateOfModification, Mode=OneWay}"
                 IsClickEnabled="True"
+                IsEnabled="{x:Bind FileViewModel.Exists, Mode=OneWay}"
                 Tapped="CopyClick" />
             <labs:SettingsCard
                 ActionIcon="Copy"
@@ -100,6 +101,7 @@
                 Description="大小"
                 Header="{x:Bind FileViewModel.Size, Mode=OneWay}"
                 IsClickEnabled="True"
+                IsEnabled="{x:Bind FileViewModel.Exists, Mode=OneWay}"
                 Tapped="CopyClick" />
         </StackPanel>
     </uiControls:DockPanel>

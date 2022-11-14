@@ -8,13 +8,10 @@ using TagsTree.Services.ExtensionMethods;
 
 namespace TagsTree.Models;
 
-public class FileChanged : IFullName
+public class FileChanged : FileBase
 {
     public static int Num { get; set; } = 1;
 
-    public int Id { get; }
-    public string Name { get; }
-    public string Path { get; }
     public ChangedType Type { get; }
     public string Remark { get; }
 
@@ -40,8 +37,6 @@ public class FileChanged : IFullName
         ChangedType.Rename => $"{Path}\\{Remark}",
         _ => FullName
     };
-    [JsonIgnore] public string FullName => Path + '\\' + Name; //Path必然包含文件路径
-    [JsonIgnore] public string PartialPath => this.GetPartialPath(); //Path必然包含文件路径
     [JsonIgnore] public bool IsFolder => Directory.Exists(FullName);
 
     public static ObservableCollection<FileChanged> Deserialize(string path) => Serialization.Deserialize<ObservableCollection<FileChanged>>(path);
@@ -58,12 +53,9 @@ public class FileChanged : IFullName
     /// <param name="fullName"></param>
     /// <param name="type"></param>
     /// <param name="remark">Move留旧路径，Rename留旧名称</param>
-    public FileChanged(string fullName, ChangedType type, string remark = "")
+    public FileChanged(string fullName, ChangedType type, string remark = "") : base(fullName.GetName(), fullName.GetPath(), Num)
     {
-        Id = Num;
         Num++;
-        Name = fullName.GetName();
-        Path = fullName.GetPath();
         Type = type;
         Remark = remark;
     }
@@ -71,12 +63,9 @@ public class FileChanged : IFullName
     /// 反序列化专用，不要调用该构造器
     /// </summary>
     [JsonConstructor]
-    public FileChanged(int id, string name, string path, ChangedType type, string remark = "")
+    public FileChanged(int id, string name, string path, ChangedType type, string remark = "") : base(name, path, id)
     {
         Num = Math.Max(Num, id + 1);
-        Id = id;
-        Name = name;
-        Path = path;
         Type = type;
         Remark = remark;
     }

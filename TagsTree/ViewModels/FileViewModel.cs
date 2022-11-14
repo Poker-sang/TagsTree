@@ -34,12 +34,6 @@ public partial class FileViewModel : FileModel
     /// </summary>
     public FileModel GetFileModel() => App.IdFile[Id];
 
-    public new FileViewModel GenerateAndUseId()
-    {
-        _ = base.GenerateAndUseId();
-        return this;
-    }
-
     /*
     public new void Reload(string fullName)
     {
@@ -58,7 +52,15 @@ public partial class FileViewModel : FileModel
 
     private readonly WeakReference<FileSystemInfo?> _fileSystemInfo = new(null);
 
-    private FileSystemInfo FileSystemInfo => _fileSystemInfo.Get(() => IsFolder ? new DirectoryInfo(FullName) : new FileInfo(FullName));
+    private FileSystemInfo FileSystemInfo
+    {
+        get
+        {
+            if (!_fileSystemInfo.TryGetTarget(out var value) || value.FullName != FullName)
+                _fileSystemInfo.SetTarget(value = IsFolder ? new DirectoryInfo(FullName) : new FileInfo(FullName));
+            return value;
+        }
+    }
 
     public void IconChange() => OnPropertyChanged(nameof(Icon));
     public BitmapImage Icon => this.GetIcon();

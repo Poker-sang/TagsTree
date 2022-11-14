@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using TagsTree.Interfaces;
+using TagsTree.Models;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
 
@@ -127,7 +128,7 @@ public partial class FileImporterPage : Page, ITypeGetter
         foreach (var fileViewModel in _vm.FileViewModels)
             if (!dictionary.ContainsKey(fileViewModel.FullName))
             {
-                fileViewModel.GenerateAndUseId().AddNew();
+                FileModel.FromFullName(fileViewModel.FullName).AddNew();
                 ++saved;
             }
 

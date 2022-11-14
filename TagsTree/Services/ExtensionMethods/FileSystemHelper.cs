@@ -88,20 +88,6 @@ public static class FileSystemHelper
         Path = 1
     }
 
-    public static string GetName(this string fullName)
-    {
-        var fullNameSpan = fullName.AsSpan();
-        return fullNameSpan[(fullNameSpan.LastIndexOf('\\') + 1)..].ToString();
-    }
-
-    public static string GetPath(this string fullName)
-    {
-        var fullNameSpan = fullName.AsSpan();
-        return fullNameSpan.LastIndexOf('\\') is -1
-            ? ""
-            : fullNameSpan[..fullNameSpan.LastIndexOf('\\')].ToString();
-    }
-
     public static string CountSize(FileInfo file) => " " + file.Length switch
     {
         < 1 << 10 => file.Length.ToString("F2") + "Byte",

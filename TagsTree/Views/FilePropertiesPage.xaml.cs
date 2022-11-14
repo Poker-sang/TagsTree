@@ -109,7 +109,6 @@ public partial class FilePropertiesPage : Page
     {
         FileViewModel = fileViewModel;
         OnPropertyChanged(nameof(FileViewModel));
-        BOpen.IsEnabled = BRename.IsEnabled = BMove.IsEnabled = BDelete.IsEnabled = FileViewModel.Exists;
     }
 
     private static void Remove(FileViewModel fileViewModel)
