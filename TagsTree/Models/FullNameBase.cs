@@ -1,7 +1,9 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.IO;
+using System.Text.Json.Serialization;
+using TagsTree.Interfaces;
 using TagsTree.Services.ExtensionMethods;
 
-namespace TagsTree.Interfaces;
+namespace TagsTree.Models;
 
 public abstract class FileBase : IFullName
 {
@@ -21,4 +23,5 @@ public abstract class FileBase : IFullName
     /// </remarks>
     [JsonIgnore] public string FullName => Path + '\\' + Name;
     [JsonIgnore] public string PartialPath => Path.GetPartialPath();
+    [JsonIgnore] public bool IsFolder => Directory.Exists(FullName);
 }

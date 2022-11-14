@@ -40,7 +40,7 @@ public partial class TagSearchFilesPage : Page
     {
         if (!await ShowMessageDialog.Warning("是否从软件移除该文件？"))
             return;
-        ((FileViewModel)((FrameworkElement)sender).DataContext).RemoveAndSave();
+        (((FileViewModel)((FrameworkElement)sender).DataContext)).RemoveAndSave();
         _ = _vm.FileViewModels.Remove((FileViewModel)((FrameworkElement)sender).DataContext);
     }
     private void PropertiesCmClick(object sender, RoutedEventArgs e) => App.RootFrame.Navigate(typeof(FilePropertiesPage), (FileViewModel)((MenuFlyoutItem)sender).DataContext);

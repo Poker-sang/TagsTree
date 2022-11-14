@@ -48,15 +48,15 @@ public sealed partial class TagEditFilesPage : Page
                 switch (fileViewModel.SelectedOriginal)
                 {
                     case true:
-                        App.Relations[_vm.TagViewModel, fileViewModel] = false;
+                        App.Relations[_vm.TagViewModel.Id, fileViewModel.Id] = false;
                         break;
                     // 如果原本有上级标签，则覆盖相应上级标签
                     case false:
-                        App.Relations[_vm.TagViewModel, fileViewModel] = true;
+                        App.Relations[_vm.TagViewModel.Id, fileViewModel.Id] = true;
                         foreach (var tagViewModel in fileViewModel.Tags.GetTagViewModels())
                             if (tagViewModel.HasChildTag(_vm.TagViewModel))
                             {
-                                App.Relations[tagViewModel, fileViewModel] = false;
+                                App.Relations[tagViewModel.Id, fileViewModel.Id] = false;
                                 break;
                             }
 
@@ -64,7 +64,7 @@ public sealed partial class TagEditFilesPage : Page
                     // 如果原本是null，则删除fileViewModel拥有的相应子标签
                     case null:
                         foreach (var tag in fileViewModel.GetAncestorTags(_vm.TagViewModel))
-                            App.Relations[tag, fileViewModel] = false;
+                            App.Relations[tag.Id, fileViewModel.Id] = false;
                         break;
                 }
 

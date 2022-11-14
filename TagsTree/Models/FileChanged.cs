@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Text.Json.Serialization;
 using TagsTree.Interfaces;
 using TagsTree.Services;
@@ -37,7 +36,6 @@ public class FileChanged : FileBase
         ChangedType.Rename => $"{Path}\\{Remark}",
         _ => FullName
     };
-    [JsonIgnore] public bool IsFolder => Directory.Exists(FullName);
 
     public static ObservableCollection<FileChanged> Deserialize(string path) => Serialization.Deserialize<ObservableCollection<FileChanged>>(path);
     public static void Serialize(string path, ObservableCollection<FileChanged> collection) => Serialization.Serialize(path, collection);

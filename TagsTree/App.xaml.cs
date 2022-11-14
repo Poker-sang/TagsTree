@@ -55,7 +55,7 @@ public partial class App : Application
 
     public static async Task ExceptionHandler(string exception)
     {
-        switch (await ShowMessageDialog.Warning($"路径「{AppContext.AppLocalFolder}」下，{exception}和Relations.csv存储数据数不同", "删除关系文件Relations.csv并重新生成", "关闭软件并打开目录"))
+        switch (await ShowMessageDialog.Warning($"路径「{AppContext.AppLocalFolder}」下，{exception}和{RelationsName}存储数据数不同", $"删除关系文件{RelationsName}并重新生成", "关闭软件并打开目录"))
         {
             case true:
                 File.Delete(RelationsPath);
@@ -68,10 +68,14 @@ public partial class App : Application
         }
     }
 
-    public static string FilesChangedPath => AppContext.AppLocalFolder + @"\FileChanged.json";
-    public static string TagsPath => AppContext.AppLocalFolder + @"\TagsTree.json";
-    private static string FilesPath => AppContext.AppLocalFolder + @"\Files.json";
-    private static string RelationsPath => AppContext.AppLocalFolder + @"\Relations.csv";
+    public static string FilesChangedPath => AppContext.AppLocalFolder + "\\" + FilesChangedName;
+    public static string TagsPath => AppContext.AppLocalFolder + "\\" + TagsName;
+    private static string FilesPath => AppContext.AppLocalFolder + "\\" + FilesName;
+    private static string RelationsPath => AppContext.AppLocalFolder + "\\" + RelationsName;
+    public const string FilesChangedName = "FileChanged.json";
+    public const string TagsName = "TagsTree.json";
+    private const string FilesName = "Files.json";
+    private const string RelationsName = "Relations.csv";
 
     /// <summary>
     /// 保存标签
@@ -129,9 +133,9 @@ public partial class App : Application
             // 检查
             // 第一个是空标签减去
             if (Tags.TagsDictionary.Count != Relations.TagsCount + 1)
-                return "TagsTree.json";
+                return TagsName;
             if (IdFile.Count != Relations.FilesCount)
-                return "Files.json";
+                return FilesName;
         }
 
         return null;

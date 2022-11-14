@@ -76,7 +76,7 @@ public partial class FileEditTagsPage : Page
     private void SaveBClick(object sender, RoutedEventArgs e)
     {
         foreach (var tag in App.Tags.TagsDictionaryValues)
-            App.Relations[tag, _vm.FileViewModel.GetFileModel()] = _vm.VirtualTags.Contains(tag);
+            App.Relations[tag.Id, _vm.FileViewModel.Id] = _vm.VirtualTags.Contains(tag);
         _vm.FileViewModel.TagsUpdated();
         App.SaveRelations();
         BSave.IsEnabled = false;

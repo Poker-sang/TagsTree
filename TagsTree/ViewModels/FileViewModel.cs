@@ -6,11 +6,12 @@ using System.IO;
 using TagsTree.Models;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
+using static TagsTree.Models.FileModel;
 
 namespace TagsTree.ViewModels;
 
 [INotifyPropertyChanged]
-public partial class FileViewModel : FileModel
+public partial class FileViewModel : FileModelMiddleware
 {
     /// <summary>
     /// 复制构造，可从后端<see cref="FileModel"/>创建的对象
@@ -24,7 +25,7 @@ public partial class FileViewModel : FileModel
     }
 
     /// <summary>
-    /// 虚拟构造，无后端<see cref="FileModel"/>的对象（不存在于<see cref="App.IdFile"/>）
+    /// 虚拟构造，无后端<see cref="FileModelMiddleware"/>的对象（不存在于<see cref="App.IdFile"/>）
     /// </summary>
     /// <param name="fullName">文件路径</param>
     public FileViewModel(string fullName) : base(fullName) { }
@@ -69,7 +70,7 @@ public partial class FileViewModel : FileModel
 
     public string Size => Exists && !IsFolder ? FileSystemHelper.CountSize((FileInfo)FileSystemInfo) : "";
 
-    public static new bool IsValidPath(string path) => FileModel.IsValidPath(path);
+    public static new bool IsValidPath(string path) => FileModelMiddleware.IsValidPath(path);
 
     public void TagsUpdated() => OnPropertyChanged(nameof(Tags));
 
