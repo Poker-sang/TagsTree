@@ -61,7 +61,7 @@
                 <ToggleSwitch x:Name="CbRootFoldersExist" />
             </labs:SettingsCard>
             <labs:SettingsCard
-                Description="监控文件"
+                Description="监控文件路径文件下文件（夹）的变化"
                 Header="监控文件"
                 HeaderIcon="View">
                 <ToggleSwitch x:Name="TsFilesObserver" />

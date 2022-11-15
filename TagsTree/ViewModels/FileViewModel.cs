@@ -34,22 +34,6 @@ public partial class FileViewModel : IFileModel
     /// <param name="fullName">文件路径</param>
     public FileViewModel(string fullName) => FileModel = new(-1, fullName.GetName(), fullName.GetPath());
 
-    /*
-    public new void Reload(string fullName)
-    {
-        base.Reload(fullName);
-        // 更新UI
-        GetFileModel().Reload(fullName);
-        OnPropertyChanged(nameof(Name));
-        OnPropertyChanged(nameof(Extension));
-        OnPropertyChanged(nameof(Path));
-        OnPropertyChanged(nameof(PartialPath));
-        OnPropertyChanged(nameof(Icon));
-        OnPropertyChanged(nameof(DateOfModification));
-        OnPropertyChanged(nameof(Size));
-    }
-    */
-
     private readonly WeakReference<FileSystemInfo?> _fileSystemInfo = new(null);
 
     #region FileModel

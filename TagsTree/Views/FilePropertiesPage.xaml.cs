@@ -18,9 +18,9 @@ public partial class FilePropertiesPage : Page
 {
     public FilePropertiesPage() => InitializeComponent();
 
-    private static readonly FileViewModel ConstFileViewModel = new(App.IdFile[0]);
+    private static readonly FileViewModel _constFileViewModel = new("");
 
-    public FileViewModel FileViewModel { get; private set; } = ConstFileViewModel;
+    public FileViewModel FileViewModel { get; private set; } = _constFileViewModel;
 
     #region 事件处理
 
@@ -58,7 +58,7 @@ public partial class FilePropertiesPage : Page
         var newFullName = FileViewModel.Path + @"\" + InputName.Text;
         FileViewModel.FileModel.Rename(newFullName);
         FileViewModel.MoveOrRenameAndSave(newFullName);
-        Load(FileViewModel);
+        OnPropertyChanged(nameof(FileViewModel));
     }
     private async void MoveBClick(object sender, RoutedEventArgs e)
     {
@@ -85,7 +85,7 @@ public partial class FilePropertiesPage : Page
 
         FileViewModel.FileModel.Move(newFullName);
         FileViewModel.MoveOrRenameAndSave(newFullName);
-        Load(FileViewModel);
+        OnPropertyChanged(nameof(FileViewModel));
     }
     private async void DeleteBClick(object sender, RoutedEventArgs e)
     {
