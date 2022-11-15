@@ -2,6 +2,7 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using TagsTree.Services;
 using TagsTree.Views;
@@ -18,8 +19,8 @@ public sealed partial class MainWindow : Window
         // 加载窗口后设置标题，拖拽区域才能达到原定效果
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
-        Title = "TagsTree";
-
+        Title = nameof(TagsTree);
+        // TODO: Microsoft.WindowsAppSDK 1.2后，最小化的NavigationView没有高度
         App.RootNavigationView = NavigationView;
         App.RootFrame = NavigateFrame;
     }
@@ -49,7 +50,7 @@ public sealed partial class MainWindow : Window
 
         IconsHelper.LoadFilesIcons();
 
-        foreach (NavigationViewItem menuItem in NavigationView.MenuItems)
+        foreach (var menuItem in NavigationView.MenuItems.Cast<NavigationViewItem>())
             menuItem.IsEnabled = true;
         ((NavigationViewItem)NavigationView.FooterMenuItems[0]).IsEnabled = await App.ChangeFilesObserver();
     }
