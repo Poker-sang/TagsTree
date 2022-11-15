@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Text.Json.Serialization;
-using TagsTree.Interfaces;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
 
@@ -16,10 +15,10 @@ public class FileChanged : FileBase
 
     public string DisplayType => Type switch
     {
-        ChangedType.Create => "Create",
-        ChangedType.Move => "Move",
-        ChangedType.Rename => "Rename",
-        ChangedType.Delete => "Delete",
+        ChangedType.Create => nameof(ChangedType.Create),
+        ChangedType.Move => nameof(ChangedType.Move),
+        ChangedType.Rename => nameof(ChangedType.Rename),
+        ChangedType.Delete => nameof(ChangedType.Delete),
         _ => ""
     };
     [JsonIgnore]

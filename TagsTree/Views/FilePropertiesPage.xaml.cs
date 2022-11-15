@@ -56,7 +56,7 @@ public partial class FilePropertiesPage : Page
         if (await InputName.ShowAsync())
             return;
         var newFullName = FileViewModel.Path + @"\" + InputName.Text;
-        FileViewModel.Rename(newFullName);
+        FileViewModel.FileModel.Rename(newFullName);
         FileViewModel.MoveOrRenameAndSave(newFullName);
         Load(FileViewModel);
     }
@@ -83,7 +83,7 @@ public partial class FilePropertiesPage : Page
             return;
         }
 
-        FileViewModel.Move(newFullName);
+        FileViewModel.FileModel.Move(newFullName);
         FileViewModel.MoveOrRenameAndSave(newFullName);
         Load(FileViewModel);
     }
@@ -91,7 +91,7 @@ public partial class FilePropertiesPage : Page
     {
         if (!await ShowMessageDialog.Warning("是否删除该文件？"))
             return;
-        FileViewModel.Delete();
+        FileViewModel.FileModel.Delete();
         Remove(FileViewModel);
     }
     private void CopyClick(object sender, TappedRoutedEventArgs e)

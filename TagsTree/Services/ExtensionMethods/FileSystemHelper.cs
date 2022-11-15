@@ -15,7 +15,7 @@ public static class FileSystemHelper
 {
     public static bool Exists(this string fullName) => File.Exists(fullName) || Directory.Exists(fullName);
 
-    public static async void Open(this FileBase fileBase)
+    public static async void Open(this IFullName fileBase)
     {
         try
         {
@@ -41,7 +41,7 @@ public static class FileSystemHelper
             await ShowMessageDialog.Information(true, $"打开路径「{fullName}」时出现错误");
         }
     }
-    public static async void OpenDirectory(this FileBase fileBase)
+    public static async void OpenDirectory(this IFullName fileBase)
     {
         try
         {

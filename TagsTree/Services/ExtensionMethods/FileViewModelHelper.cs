@@ -6,20 +6,19 @@ public static class FileViewModelHelper
 {
     public static void AddNewAndSave(this FileViewModel fileViewModel)
     {
-        fileViewModel.GetFileModel().AddNew();
+        fileViewModel.FileModel.AddNew();
         App.SaveFiles();
         App.SaveRelations();
     }
     public static void RemoveAndSave(this FileViewModel fileViewModel)
     {
-        fileViewModel.GetFileModel().Remove();
+        fileViewModel.FileModel.Remove();
         App.SaveFiles();
         App.SaveRelations();
     }
     public static void MoveOrRenameAndSave(this FileViewModel fileViewModel, string newFullName)
     {
-        fileViewModel.Reload(newFullName);
-        fileViewModel.GetFileModel().MoveOrRename(newFullName);
+        fileViewModel.FileModel.MoveOrRename(newFullName);
         App.SaveFiles();
     }
 }
