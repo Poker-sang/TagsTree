@@ -78,10 +78,11 @@ public static class IconsHelper
     /// </summary>
     private static async Task StartAsync()
     {
-        while (_iconRequest.TryDequeue(out var item))
+        while (_iconRequest.TryPeek(out var item))
         {
             _iconList[item.Extension] = await CreateIcon(item.Extension);
             item.CallBack();
+            _ = _iconRequest.TryDequeue(out _);
         }
     }
 
