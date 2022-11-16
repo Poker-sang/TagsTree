@@ -7,19 +7,18 @@
     xmlns:local="using:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:root="using:TagsTree"
-    xmlns:ui="using:CommunityToolkit.WinUI.UI.Controls"
     Background="Transparent"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
     <ScrollViewer>
-        <StackPanel Margin="40,30">
+        <StackPanel>
             <labs:SettingsExpander Description="应用的主题色" Header="主题">
                 <labs:SettingsExpander.HeaderIcon>
                     <FontIcon Glyph="&#xE771;" />
                 </labs:SettingsExpander.HeaderIcon>
                 <labs:SettingsExpander.Items>
                     <labs:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Vertical">
-                        <RadioButtons x:Name="RbTheme">
+                        <RadioButtons SelectedIndex="{x:Bind root:App.AppConfiguration.Theme}">
                             <RadioButton Checked="OnThemeRadioButtonChecked" Content="跟随系统">
                                 <RadioButton.Tag>
                                     <x:Int32>0</x:Int32>
@@ -49,7 +48,7 @@
                         IsClickEnabled="True"
                         Tapped="BLibraryPath_Click">
                         <labs:SettingsCard.Description>
-                            <TextBox x:Name="TbLibraryPath" />
+                            <TextBox x:Name="TbLibraryPath" KeyUp="TbLibraryPath_OnCharacterReceived" />
                         </labs:SettingsCard.Description>
                     </labs:SettingsCard>
                 </labs:SettingsExpander.Items>
@@ -58,13 +57,13 @@
                 Description="将所在路径文件夹名作为标签使用"
                 Header="文件夹标签"
                 HeaderIcon="Tag">
-                <ToggleSwitch x:Name="CbRootFoldersExist" />
+                <ToggleSwitch IsOn="{x:Bind root:App.AppConfiguration.PathTagsEnabled}" Toggled="PathTagsEnabled_OnToggled" />
             </labs:SettingsCard>
             <labs:SettingsCard
                 Description="监控文件路径文件下文件（夹）的变化"
                 Header="监控文件"
                 HeaderIcon="View">
-                <ToggleSwitch x:Name="TsFilesObserver" />
+                <ToggleSwitch IsOn="{x:Bind root:App.AppConfiguration.FilesObserverEnabled}" Toggled="FilesObserver_OnToggled" />
             </labs:SettingsCard>
             <labs:SettingsExpander
                 Description="指定文件和标签记录所在的文件夹并进行导入导出的操作"
@@ -103,13 +102,6 @@
                     </labs:SettingsCard>
                 </labs:SettingsExpander.Items>
             </labs:SettingsExpander>
-            <ui:DockPanel>
-                <Button
-                    ui:DockPanel.Dock="Left"
-                    Content="保存"
-                    Tapped="BSave_Click" />
-                <InfoBar x:Name="InfoBar" />
-            </ui:DockPanel>
         </StackPanel>
     </ScrollViewer>
 </Page>

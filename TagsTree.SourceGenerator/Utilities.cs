@@ -40,7 +40,7 @@ internal static class Utilities
     /// <summary>
     /// Generate the following code
     /// <code>
-    /// partial <paramref name="typeDeclaration" /> <paramref name="name" />
+    /// partial <paramref name="symbol" /> <paramref name="name" />
     /// {
     ///     <paramref name="member" />
     /// }
