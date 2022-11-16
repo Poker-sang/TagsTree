@@ -15,13 +15,13 @@
     <PublishProfile>Properties\PublishProfiles\win10-$(Platform).pubxml</PublishProfile>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
-    <AppxPackageDir>D:\WorkSpace\TagsTree\Publish\</AppxPackageDir>
+    <AppxPackageDir>C:\WorkSpace\TagsTree\Publish\</AppxPackageDir>
     <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppxBundle>Never</AppxBundle>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-    <PackageCertificateThumbprint>18DA8DF33B4944519B190B371623C77D07235484</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>285B17C5B8415F011663D5870944037BD0F05B6C</PackageCertificateThumbprint>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AssemblyName>TagsTree</AssemblyName>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
