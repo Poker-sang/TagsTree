@@ -1,7 +1,10 @@
-﻿using Microsoft.UI;
+﻿using System.IO;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Windows.System;
+using Microsoft.UI.Xaml.Input;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
 
@@ -9,14 +12,7 @@ namespace TagsTree.Views;
 
 public partial class SettingsPage : Page
 {
-    public SettingsPage()
-    {
-        InitializeComponent();
-        TbLibraryPath.Text = App.AppConfiguration.LibraryPath;
-        RbTheme.SelectedIndex = App.AppConfiguration.Theme;
-        TsFilesObserver.IsOn = App.AppConfiguration.FilesObserverEnabled;
-        CbRootFoldersExist.IsOn = App.AppConfiguration.PathTagsEnabled;
-    }
+    public SettingsPage() => InitializeComponent();
 
     private void OnThemeRadioButtonChecked(object sender, RoutedEventArgs e)
     {
@@ -27,6 +23,7 @@ public partial class SettingsPage : Page
             _ => ElementTheme.Default
         };
 
+        // 内含 App.AppConfiguration.Theme = selectedTheme;
         ThemeHelper.RootTheme = selectedTheme;
         Application.Current.Resources["WindowCaptionForeground"] = selectedTheme switch
         {
@@ -36,10 +33,14 @@ public partial class SettingsPage : Page
         };
 
         TitleBarHelper.TriggerTitleBarRepaint();
+        AppContext.SaveConfiguration(App.AppConfiguration);
     }
 
     private async void BLibraryPath_Click(object sender, RoutedEventArgs e)
-        => TbLibraryPath.Text = (await FileSystemHelper.GetStorageFolder())?.Path ?? TbLibraryPath.Text;
+    {
+        TbLibraryPath.Text = (await FileSystemHelper.GetStorageFolder())?.Path ?? TbLibraryPath.Text;
+        await ValidLibraryPathSet(TbLibraryPath.Text);
+    }
 
     private async void BExport_Click(object sender, RoutedEventArgs e)
     {
@@ -52,35 +53,44 @@ public partial class SettingsPage : Page
         if (await FileSystemHelper.GetStorageFolder() is { } folder)
             folder.Path.Copy(AppContext.AppLocalFolder);
     }
+
     private void BOpenDirectory_Click(object sender, RoutedEventArgs e) => AppContext.AppLocalFolder.Open();
 
-    private async void BSave_Click(object sender, RoutedEventArgs e)
+    private void FilesObserver_OnToggled(object sender, RoutedEventArgs e)
     {
-        var legalPath = new Regex($@"^[a-zA-Z]:\\[^{FileSystemHelper.GetInvalidPathChars}]*$");
-        if (!legalPath.IsMatch(TbLibraryPath.Text))
+        App.AppConfiguration.FilesObserverEnabled = ((ToggleSwitch)sender).IsOn;
+        AppContext.SaveConfiguration(App.AppConfiguration);
+    }
+
+    private void PathTagsEnabled_OnToggled(object sender, RoutedEventArgs e)
+    {
+        App.AppConfiguration.PathTagsEnabled = ((ToggleSwitch)sender).IsOn;
+        AppContext.SaveConfiguration(App.AppConfiguration);
+    }
+
+    private async void TbLibraryPath_OnCharacterReceived(object sender, KeyRoutedEventArgs e)
+    {
+        if (e.Key is not VirtualKey.Enter) 
+            return;
+        if (Directory.Exists(((TextBox)sender).Text))
         {
-            InfoBar.Severity = InfoBarSeverity.Error;
-            InfoBar.Message = "错误";
-            InfoBar.Message = "路径错误！请填写正确完整的文件夹路径！";
+            await ValidLibraryPathSet(((TextBox)sender).Text);
+            ((TextBox)sender).Description = "";
         }
         else
-        {
-            App.AppConfiguration.LibraryPath = TbLibraryPath.Text;
-            App.AppConfiguration.PathTagsEnabled = CbRootFoldersExist.IsOn;
-            App.AppConfiguration.FilesObserverEnabled = TsFilesObserver.IsOn;
-            AppContext.SaveConfiguration(App.AppConfiguration);
-            InfoBar.Severity = InfoBarSeverity.Success;
-            InfoBar.Title = "成功";
-            InfoBar.Message = "已保存";
-            if (!App.ConfigSet)
-            {
-                App.ConfigSet = true;
-                await WindowHelper.Window.ConfigIsSet();
-            }
-            else
-                ((NavigationViewItem)App.RootNavigationView.FooterMenuItems[0]).IsEnabled = await App.ChangeFilesObserver();
-        }
+            ((TextBox)sender).Description = "路径错误！请填写正确、完整、存在的文件夹路径！";
+    }
 
-        InfoBar.IsOpen = true;
+    private static async Task ValidLibraryPathSet(string path)
+    {
+        App.AppConfiguration.LibraryPath = path;
+        AppContext.SaveConfiguration(App.AppConfiguration);
+        if (!App.ConfigSet)
+        {
+            App.ConfigSet = true;
+            await WindowHelper.Window.ConfigIsSet();
+        }
+        else
+            ((NavigationViewItem)App.RootNavigationView.FooterMenuItems[0]).IsEnabled = await App.ChangeFilesObserver();
     }
 }

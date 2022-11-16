@@ -6,10 +6,10 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
-using Microsoft.VisualBasic.FileIO;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
+using System.IO;
 
 namespace TagsTree.Views;
 
@@ -45,7 +45,7 @@ public partial class FilePropertiesPage : Page
             }
 
             var newFullName = FileViewModel.Path + @"\" + cd.Text;
-            if (FileViewModel.IsFolder ? FileSystem.DirectoryExists(newFullName) : FileSystem.FileExists(newFullName))
+            if (FileViewModel.IsFolder ? Directory.Exists(newFullName) : File.Exists(newFullName))
             {
                 var isFolder = FileViewModel.IsFolder ? "夹" : "";
                 return $"新文件{isFolder}名与目录中其他文件{isFolder}同名！";
@@ -58,6 +58,7 @@ public partial class FilePropertiesPage : Page
         var newFullName = FileViewModel.Path + @"\" + InputName.Text;
         FileViewModel.FileModel.Rename(newFullName);
         FileViewModel.MoveOrRenameAndSave(newFullName);
+        // 相当于对FileViewModel的所有属性OnPropertyChanged
         OnPropertyChanged(nameof(FileViewModel));
     }
     private async void MoveBClick(object sender, RoutedEventArgs e)
