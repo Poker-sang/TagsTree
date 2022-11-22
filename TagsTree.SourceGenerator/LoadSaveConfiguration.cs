@@ -1,11 +1,10 @@
-﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Microsoft.CodeAnalysis;
 using static TagsTree.SourceGenerator.Utilities;
 
 namespace TagsTree.SourceGenerator;
@@ -76,10 +75,8 @@ partial class {name}
                          member is { Kind: SymbolKind.Property } and not { Name: "EqualityContract" })
                      .Cast<IPropertySymbol>())
         {
-            _ = loadConfigurationContent.AppendLine(LoadRecord(member.Name, member.Type.Name, type.Name, containerName,
-                methodName));
-            _ = saveConfigurationContent.AppendLine(SaveRecord(member.Name, member.Type, type.Name, containerName,
-                methodName));
+            _ = loadConfigurationContent.AppendLine(LoadRecord(member.Name, member.Type.Name, type.Name, containerName, methodName));
+            _ = saveConfigurationContent.AppendLine(SaveRecord(member.Name, member.Type, type.Name, containerName, methodName));
             namespaces.UseNamespace(usedTypes, typeSymbol, member.Type);
         }
 
@@ -101,7 +98,7 @@ partial class {name}
             ? $"{Spacing(4)}({type}){containerName}.Values[nameof({typeName}.{name})],"
             : $"{Spacing(4)}{containerName}.Values[nameof({typeName}.{name})].{methodName}<{type}>(),";
 
-    private static readonly HashSet<string> PrimitiveTypes = new()
+    private static readonly HashSet<string> _primitiveTypes = new()
     {
         nameof(SByte),
         nameof(Byte),
@@ -124,7 +121,7 @@ partial class {name}
     private static string SaveRecord(string name, ITypeSymbol type, string typeName, string containerName, string? methodName)
     {
         var body = $"{containerName}.Values[nameof({typeName}.{name})] = appConfiguration.{name}";
-        return !PrimitiveTypes.Contains(type.Name)
+        return !_primitiveTypes.Contains(type.Name)
             ? type switch
             {
                 { Name: nameof(String) } => $"{Spacing(3)}{body} ?? string.Empty;",

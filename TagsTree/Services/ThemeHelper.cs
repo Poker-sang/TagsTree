@@ -15,7 +15,7 @@ public class ThemeHelper
             if (WindowHelper.Window.Content is FrameworkElement rootElement)
                 rootElement.RequestedTheme = value;
 
-            App.AppConfiguration.Theme = (int)value;
+            App.AppConfig.Theme = (int)value;
             AppContext.ChangeTheme = (int)value;
         }
     }

@@ -47,7 +47,7 @@ internal static class Utilities
     /// </code>
     /// </summary>
     /// <returns>TypeDeclaration</returns>
-    internal static TypeDeclarationSyntax GetDeclaration(string name, INamedTypeSymbol symbol, MemberDeclarationSyntax member)
+    internal static TypeDeclarationSyntax GetDeclaration(string name, INamedTypeSymbol symbol, params MemberDeclarationSyntax[] member)
     {
         TypeDeclarationSyntax typeDeclarationTemp = symbol.TypeKind switch
         {
@@ -227,7 +227,7 @@ internal static class Utilities
     }
 
     /// <summary>
-    /// 获取某type的namespace并加入namespaces集合
+    /// 获取某<paramref name="symbol"/>的namespace并加入<paramref name="namespaces"/>集合
     /// </summary>
     /// <param name="namespaces">namespaces集合</param>
     /// <param name="usedTypes">已判断过的types</param>
@@ -252,8 +252,8 @@ internal static class Utilities
     /// <summary>
     /// 生成nullable预处理语句和引用命名空间
     /// <br/>#nullable enable
-    /// <br/>using ...;
-    /// <br/>using ...;
+    /// <br/><see langword="using"/> ...;
+    /// <br/><see langword="using"/> ...;
     /// <br/>...
     /// </summary>
     /// <param name="namespaces">namespaces集合</param>

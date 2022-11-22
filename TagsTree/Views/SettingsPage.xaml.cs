@@ -33,7 +33,7 @@ public partial class SettingsPage : Page
         };
 
         TitleBarHelper.TriggerTitleBarRepaint();
-        AppContext.SaveConfiguration(App.AppConfiguration);
+        AppContext.SaveConfiguration(App.AppConfig);
     }
 
     private async void BLibraryPath_Click(object sender, RoutedEventArgs e)
@@ -58,14 +58,14 @@ public partial class SettingsPage : Page
 
     private void FilesObserver_OnToggled(object sender, RoutedEventArgs e)
     {
-        App.AppConfiguration.FilesObserverEnabled = ((ToggleSwitch)sender).IsOn;
-        AppContext.SaveConfiguration(App.AppConfiguration);
+        App.AppConfig.FilesObserverEnabled = ((ToggleSwitch)sender).IsOn;
+        AppContext.SaveConfiguration(App.AppConfig);
     }
 
     private void PathTagsEnabled_OnToggled(object sender, RoutedEventArgs e)
     {
-        App.AppConfiguration.PathTagsEnabled = ((ToggleSwitch)sender).IsOn;
-        AppContext.SaveConfiguration(App.AppConfiguration);
+        App.AppConfig.PathTagsEnabled = ((ToggleSwitch)sender).IsOn;
+        AppContext.SaveConfiguration(App.AppConfig);
     }
 
     private async void TbLibraryPath_OnCharacterReceived(object sender, KeyRoutedEventArgs e)
@@ -83,8 +83,8 @@ public partial class SettingsPage : Page
 
     private static async Task ValidLibraryPathSet(string path)
     {
-        App.AppConfiguration.LibraryPath = path;
-        AppContext.SaveConfiguration(App.AppConfiguration);
+        App.AppConfig.LibraryPath = path;
+        AppContext.SaveConfiguration(App.AppConfig);
         if (!App.ConfigSet)
         {
             App.ConfigSet = true;

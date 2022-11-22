@@ -4,7 +4,7 @@ namespace TagsTree.Services.ExtensionMethods;
 
 public static class FullNameHelper
 {
-    public static string GetPartialPath(this string fullName) => fullName.Replace(App.AppConfiguration.LibraryPath, "...");
+    public static string GetPartialPath(this string fullName) => fullName.Replace(App.AppConfig.LibraryPath, "...");
 
     public static string GetName(this string fullName)
     {

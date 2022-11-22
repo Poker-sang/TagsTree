@@ -16,7 +16,7 @@ public static class WindowHelper
         Window = new();
 
         if (Window.Content is FrameworkElement frameworkElement)
-            frameworkElement.RequestedTheme = App.AppConfiguration.Theme switch
+            frameworkElement.RequestedTheme = App.AppConfig.Theme switch
             {
                 1 => ElementTheme.Light,
                 2 => ElementTheme.Dark,

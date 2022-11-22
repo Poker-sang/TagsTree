@@ -18,7 +18,7 @@
                 </labs:SettingsExpander.HeaderIcon>
                 <labs:SettingsExpander.Items>
                     <labs:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Vertical">
-                        <RadioButtons SelectedIndex="{x:Bind root:App.AppConfiguration.Theme}">
+                        <RadioButtons SelectedIndex="{x:Bind root:App.AppConfig.Theme}">
                             <RadioButton Checked="OnThemeRadioButtonChecked" Content="跟随系统">
                                 <RadioButton.Tag>
                                     <x:Int32>0</x:Int32>
@@ -57,13 +57,13 @@
                 Description="将所在路径文件夹名作为标签使用"
                 Header="文件夹标签"
                 HeaderIcon="Tag">
-                <ToggleSwitch IsOn="{x:Bind root:App.AppConfiguration.PathTagsEnabled}" Toggled="PathTagsEnabled_OnToggled" />
+                <ToggleSwitch IsOn="{x:Bind root:App.AppConfig.PathTagsEnabled}" Toggled="PathTagsEnabled_OnToggled" />
             </labs:SettingsCard>
             <labs:SettingsCard
                 Description="监控文件路径文件下文件（夹）的变化"
                 Header="监控文件"
                 HeaderIcon="View">
-                <ToggleSwitch IsOn="{x:Bind root:App.AppConfiguration.FilesObserverEnabled}" Toggled="FilesObserver_OnToggled" />
+                <ToggleSwitch IsOn="{x:Bind root:App.AppConfig.FilesObserverEnabled}" Toggled="FilesObserver_OnToggled" />
             </labs:SettingsCard>
             <labs:SettingsExpander
                 Description="指定文件和标签记录所在的文件夹并进行导入导出的操作"

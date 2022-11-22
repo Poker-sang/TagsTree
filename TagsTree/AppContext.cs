@@ -3,7 +3,7 @@ using Windows.Storage;
 
 namespace TagsTree;
 
-[LoadSaveConfiguration<AppConfiguration>(nameof(_configurationContainer), CastMethod = "TagsTree.Services.ExtensionMethods.Misc.CastThrow")]
+[LoadSaveConfiguration<AppConfig>(nameof(_configurationContainer), CastMethod = "TagsTree.Services.ExtensionMethods.Misc.CastThrow")]
 public static partial class AppContext
 {
     private static ApplicationDataContainer _configurationContainer = null!;
@@ -22,8 +22,6 @@ public static partial class AppContext
 
     public static int ChangeTheme
     {
-        set => _configurationContainer.Values[nameof(AppConfiguration.Theme)] = value;
+        set => _configurationContainer.Values[nameof(AppConfig.Theme)] = value;
     }
-
-    public static AppConfiguration GetDefault() => new(0, "", true, false);
 }

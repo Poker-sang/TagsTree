@@ -20,7 +20,7 @@ namespace TagsTree;
 
 public partial class App : Application
 {
-    public static AppConfiguration AppConfiguration { get; private set; } = null!;
+    public static AppConfig AppConfig { get; private set; } = null!;
     public static FilesObserver FilesObserver { get; private set; } = null!;
     public static NavigationView RootNavigationView { get; set; } = null!;
     public static Frame RootFrame { get; set; } = null!;
@@ -33,16 +33,18 @@ public partial class App : Application
         RegisterUnhandledExceptionHandler();
         FilesObserver = new();
         AppContext.Initialize();
-#if !FIRST_TIME
-        if (AppContext.LoadConfiguration() is not { } appConfigurations)
+        if (AppContext.LoadConfiguration() is not { } appConfigurations
+#if FIRST_TIME
+        || true
+#endif
+        )
         {
-            AppConfiguration = AppContext.GetDefault();
+            AppConfig = new AppConfig();
             ConfigSet = false;
         }
         else
-#endif
         {
-            AppConfiguration = appConfigurations;
+            AppConfig = appConfigurations;
             ConfigSet = true;
         }
     }
@@ -51,7 +53,7 @@ public partial class App : Application
     protected override void OnLaunched(LaunchActivatedEventArgs args) =>
         WindowHelper.Initialize().SetWindowSize(800, 450).Activate();
 
-    public static async Task<bool> ChangeFilesObserver() => await FilesObserver.Change(AppConfiguration.LibraryPath);
+    public static async Task<bool> ChangeFilesObserver() => await FilesObserver.Change(AppConfig.LibraryPath);
 
     public static async Task ExceptionHandler(string exception)
     {

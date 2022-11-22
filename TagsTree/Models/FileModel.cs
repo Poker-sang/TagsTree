@@ -53,7 +53,7 @@ public class FileModel : FileBase, IFileModel
         Path = fullName.GetPath();
     }
 
-    public static bool IsValidPath(string path) => path.Contains(App.AppConfiguration.LibraryPath);
+    public static bool IsValidPath(string path) => path.Contains(App.AppConfig.LibraryPath);
 
     /// <summary>
     /// <see langword="null"/>表示拥有的标签是<paramref name="tag"/>的子标签

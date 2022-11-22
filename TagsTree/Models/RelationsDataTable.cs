@@ -73,7 +73,7 @@ public partial class RelationsDataTable : TableDictionary<int, int>
             return filesRange.Where(fileModel => this[tagViewModel.Id, fileModel.Id]);
         }
         // 唯一需要判断是否能使用路径作为标签的地方
-        else if (App.AppConfiguration.PathTagsEnabled)
+        else if (App.AppConfig.PathTagsEnabled)
             return filesRange.Where(fileModel => fileModel.PathContains(pathTagModel));
         return Enumerable.Empty<FileModel>();
     }
