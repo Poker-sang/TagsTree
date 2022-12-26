@@ -1,4 +1,4 @@
-﻿using Windows.ApplicationModel.DataTransfer;
+using Windows.ApplicationModel.DataTransfer;
 using CommunityToolkit.Labs.WinUI;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
@@ -26,16 +26,16 @@ public partial class FilePropertiesPage : Page
 
     protected override void OnNavigatedTo(NavigationEventArgs e) => Load((FileViewModel)e.Parameter);
 
-    private void OpenBClick(object sender, RoutedEventArgs e) => FileViewModel.Open();
-    private void OpenExplorerBClick(object sender, RoutedEventArgs e) => FileViewModel.OpenDirectory();
-    private void EditTagsBClick(object sender, RoutedEventArgs e) => App.RootFrame.Navigate(typeof(FileEditTagsPage), FileViewModel);
-    private async void RemoveBClick(object sender, RoutedEventArgs e)
+    private void OpenClick(object sender, RoutedEventArgs e) => FileViewModel.Open();
+    private void OpenExplorerClick(object sender, RoutedEventArgs e) => FileViewModel.OpenDirectory();
+    private void EditTagsClick(object sender, RoutedEventArgs e) => App.RootFrame.Navigate(typeof(FileEditTagsPage), FileViewModel);
+    private async void RemoveClick(object sender, RoutedEventArgs e)
     {
         if (!await ShowMessageDialog.Warning("是否从软件移除该文件？"))
             return;
         Remove(FileViewModel);
     }
-    private async void RenameBClick(object sender, RoutedEventArgs e)
+    private async void RenameClick(object sender, RoutedEventArgs e)
     {
         InputName.Load($"文件重命名 {FileViewModel.Name}", cd =>
         {
@@ -61,7 +61,7 @@ public partial class FilePropertiesPage : Page
         // 相当于对FileViewModel的所有属性OnPropertyChanged
         OnPropertyChanged(nameof(FileViewModel));
     }
-    private async void MoveBClick(object sender, RoutedEventArgs e)
+    private async void MoveClick(object sender, RoutedEventArgs e)
     {
         if (await FileSystemHelper.GetStorageFolder() is not { } folder)
             return;
@@ -88,7 +88,7 @@ public partial class FilePropertiesPage : Page
         FileViewModel.MoveOrRenameAndSave(newFullName);
         OnPropertyChanged(nameof(FileViewModel));
     }
-    private async void DeleteBClick(object sender, RoutedEventArgs e)
+    private async void DeleteClick(object sender, RoutedEventArgs e)
     {
         if (!await ShowMessageDialog.Warning("是否删除该文件？"))
             return;

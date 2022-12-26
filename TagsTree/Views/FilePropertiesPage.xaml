@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="TagsTree.Views.FilePropertiesPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -18,41 +18,41 @@
                 uiControls:DockPanel.Dock="Left"
                 DefaultLabelPosition="Collapsed"
                 OverflowButtonVisibility="Collapsed">
-                <AppBarButton Icon="Back" Tapped="{x:Bind local:Utility.BackBClick}" />
+                <AppBarButton Icon="Back" Tapped="{x:Bind local:Utility.BackClick}" />
             </CommandBar>
             <CommandBar DefaultLabelPosition="Collapsed" OverflowButtonVisibility="Collapsed">
                 <AppBarButton
                     Icon="OpenFile"
                     IsEnabled="{x:Bind FileViewModel.Exists, Mode=OneWay}"
-                    Tapped="OpenBClick"
+                    Tapped="OpenClick"
                     ToolTipService.ToolTip="打开" />
                 <AppBarButton
                     Icon="OpenLocal"
-                    Tapped="OpenExplorerBClick"
+                    Tapped="OpenExplorerClick"
                     ToolTipService.ToolTip="打开文件夹" />
                 <AppBarButton
                     Icon="Remove"
-                    Tapped="RemoveBClick"
+                    Tapped="RemoveClick"
                     ToolTipService.ToolTip="移除" />
                 <AppBarButton
                     Icon="Edit"
-                    Tapped="EditTagsBClick"
+                    Tapped="EditTagsClick"
                     ToolTipService.ToolTip="更改标签" />
                 <AppBarSeparator />
                 <AppBarButton
                     Icon="Rename"
                     IsEnabled="{x:Bind FileViewModel.Exists, Mode=OneWay}"
-                    Tapped="RenameBClick"
+                    Tapped="RenameClick"
                     ToolTipService.ToolTip="重命名" />
                 <AppBarButton
                     Icon="MoveToFolder"
                     IsEnabled="{x:Bind FileViewModel.Exists, Mode=OneWay}"
-                    Tapped="MoveBClick"
+                    Tapped="MoveClick"
                     ToolTipService.ToolTip="移动" />
                 <AppBarButton
                     Icon="Delete"
                     IsEnabled="{x:Bind FileViewModel.Exists, Mode=OneWay}"
-                    Tapped="DeleteBClick"
+                    Tapped="DeleteClick"
                     ToolTipService.ToolTip="删除" />
             </CommandBar>
         </uiControls:DockPanel>

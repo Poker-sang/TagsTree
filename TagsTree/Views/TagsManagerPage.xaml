@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="TagsTree.Views.TagsManagerPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -21,26 +21,26 @@
                 OverflowButtonVisibility="Collapsed">
                 <AppBarButton
                     Icon="Add"
-                    Tapped="NewBClick"
+                    Tapped="NewClick"
                     ToolTipService.ToolTip="添加" />
                 <AppBarButton
                     Icon="MoveToFolder"
-                    Tapped="MoveBClick"
+                    Tapped="MoveClick"
                     ToolTipService.ToolTip="移动" />
                 <AppBarButton
                     Icon="Rename"
-                    Tapped="RenameBClick"
+                    Tapped="RenameClick"
                     ToolTipService.ToolTip="重命名" />
                 <AppBarButton
                     Icon="Remove"
-                    Tapped="DeleteBClick"
+                    Tapped="DeleteClick"
                     ToolTipService.ToolTip="删除" />
                 <AppBarSeparator />
                 <AppBarButton
                     x:Name="BSave"
                     Icon="Save"
                     IsEnabled="False"
-                    Tapped="SaveBClick"
+                    Tapped="SaveClick"
                     ToolTipService.ToolTip="保存" />
             </CommandBar>
             <InfoBar x:Name="InfoBar" />
@@ -71,28 +71,28 @@
                                 <AppBarButton
                                     Icon="Add"
                                     Tag="{x:Bind}"
-                                    Tapped="NewCmClick"
+                                    Tapped="ContextNewClick"
                                     ToolTipService.ToolTip="新建" />
                                 <AppBarButton
                                     Icon="Cut"
                                     Tag="{x:Bind}"
-                                    Tapped="CutCmClick"
+                                    Tapped="ContextCutClick"
                                     ToolTipService.ToolTip="剪切" />
                                 <AppBarButton
                                     Icon="Paste"
                                     IsEnabled="{x:Bind local:TagsManagerPage.Current.CanPaste, Mode=OneWay}"
                                     Tag="{x:Bind}"
-                                    Tapped="PasteCmClick"
+                                    Tapped="ContextPasteClick"
                                     ToolTipService.ToolTip="粘贴" />
                                 <AppBarButton
                                     Icon="Rename"
                                     Tag="{x:Bind}"
-                                    Tapped="RenameCmClick"
+                                    Tapped="ContextRenameClick"
                                     ToolTipService.ToolTip="重命名" />
                                 <AppBarButton
                                     Icon="Delete"
                                     Tag="{x:Bind}"
-                                    Tapped="DeleteCmClick"
+                                    Tapped="ContextDeleteClick"
                                     ToolTipService.ToolTip="删除" />
                             </CommandBarFlyout>
                         </TreeViewItem.ContextFlyout>
@@ -103,12 +103,12 @@
                 <CommandBarFlyout Placement="TopEdgeAlignedLeft">
                     <AppBarButton
                         Icon="Add"
-                        Tapped="NewXCmClick"
+                        Tapped="ContextNewXClick"
                         ToolTipService.ToolTip="新建" />
                     <AppBarButton
                         Icon="Paste"
                         IsEnabled="{x:Bind CanPaste, Mode=OneWay}"
-                        Tapped="PasteXCmClick"
+                        Tapped="ContextPasteXClick"
                         ToolTipService.ToolTip="粘贴" />
                 </CommandBarFlyout>
             </TreeView.ContextFlyout>

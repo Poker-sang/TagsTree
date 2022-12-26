@@ -39,7 +39,7 @@ public sealed partial class TagEditFilesPage : Page
         item.SelectedFlip();
         ((DataGrid)sender).SelectedIndex = -1;
     }
-    private async void SaveBClick(object sender, RoutedEventArgs e)
+    private async void SaveClick(object sender, RoutedEventArgs e)
     {
 
         foreach (var fileViewModel in _vm.FileViewModels)

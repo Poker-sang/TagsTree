@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
@@ -64,7 +64,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
 
     private void Tags_OnItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs e) => TbPath.Path = (e.InvokedItem as TagViewModel)?.FullName ?? TbPath.Path;
 
-    private void NewBClick(object sender, RoutedEventArgs e)
+    private void NewClick(object sender, RoutedEventArgs e)
     {
         if (ExistenceCheck(TbPath.Path, "标签路径") is not { } pathTagModel)
             return;
@@ -80,7 +80,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
         _vm.Name = "";
     }
 
-    private void MoveBClick(object sender, RoutedEventArgs e)
+    private void MoveClick(object sender, RoutedEventArgs e)
     {
         if (ExistenceCheck(TbPath.Path, "标签路径") is not { } pathTagModel)
             return;
@@ -92,7 +92,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
         _vm.Name = "";
     }
 
-    private void RenameBClick(object sender, RoutedEventArgs e)
+    private void RenameClick(object sender, RoutedEventArgs e)
     {
         if (TbPath.Path is "")
         {
@@ -115,7 +115,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
         TbPath.Path = "";
     }
 
-    private void DeleteBClick(object sender, RoutedEventArgs e)
+    private void DeleteClick(object sender, RoutedEventArgs e)
     {
         if (TbPath.Path is "")
         {
@@ -130,7 +130,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
         _vm.Name = "";
     }
 
-    private async void SaveBClick(object sender, RoutedEventArgs e)
+    private async void SaveClick(object sender, RoutedEventArgs e)
     {
         await Task.Yield();
         App.Tags = _vm.TagsSource;
@@ -146,34 +146,34 @@ public partial class TagsManagerPage : Page, ITypeGetter
         InfoBarShow("已保存", InfoBarSeverity.Success);
     }
 
-    private async void NewCmClick(object sender, RoutedEventArgs e)
+    private async void ContextNewClick(object sender, RoutedEventArgs e)
     {
         InputName.Load($"新建子标签 {sender.GetTag<TagViewModel>().Name}", cd => NewTagCheck(cd.Text), FileSystemHelper.InvalidMode.Name);
         if (!await InputName.ShowAsync())
             NewTag(InputName.Text, sender.GetTag<TagViewModel>());
     }
 
-    private async void NewXCmClick(object sender, RoutedEventArgs e)
+    private async void ContextNewXClick(object sender, RoutedEventArgs e)
     {
         InputName.Load("新建根标签", cd => NewTagCheck(cd.Text), FileSystemHelper.InvalidMode.Name);
         if (!await InputName.ShowAsync())
             NewTag(InputName.Text, _vm.TagsSource.TagsTree);
     }
 
-    private void CutCmClick(object sender, RoutedEventArgs e) => ClipBoard = sender.GetTag<TagViewModel>();
+    private void ContextCutClick(object sender, RoutedEventArgs e) => ClipBoard = sender.GetTag<TagViewModel>();
 
-    private async void RenameCmClick(object sender, RoutedEventArgs e)
+    private async void ContextRenameClick(object sender, RoutedEventArgs e)
     {
         InputName.Load($"标签重命名 {sender.GetTag<TagViewModel>().Name}", cd => NewTagCheck(cd.Text), FileSystemHelper.InvalidMode.Name);
         if (!await InputName.ShowAsync())
             RenameTag(InputName.Text, sender.GetTag<TagViewModel>());
     }
 
-    private void PasteCmClick(object sender, RoutedEventArgs e) => MoveTag(ClipBoard!, sender.GetTag<TagViewModel>());
+    private void ContextPasteClick(object sender, RoutedEventArgs e) => MoveTag(ClipBoard!, sender.GetTag<TagViewModel>());
 
-    private void PasteXCmClick(object sender, RoutedEventArgs e) => MoveTag(ClipBoard!, _vm.TagsSource.TagsTree);
+    private void ContextPasteXClick(object sender, RoutedEventArgs e) => MoveTag(ClipBoard!, _vm.TagsSource.TagsTree);
 
-    private void DeleteCmClick(object sender, RoutedEventArgs e) => DeleteTag(sender.GetTag<TagViewModel>());
+    private void ContextDeleteClick(object sender, RoutedEventArgs e) => DeleteTag(sender.GetTag<TagViewModel>());
 
     #endregion
 

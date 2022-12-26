@@ -1,4 +1,4 @@
-﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
@@ -42,7 +42,7 @@ public partial class FileImporterPage : Page, ITypeGetter
 
     #region 事件处理
 
-    private async void Import(object sender, RoutedEventArgs e)
+    private async void ImportClick(object sender, RoutedEventArgs e)
     {
         Importing = true;
         await Task.Yield();
@@ -100,7 +100,7 @@ public partial class FileImporterPage : Page, ITypeGetter
                             void RecursiveReadFiles(string folderName)
                             {
                                 temp.AddRange(new DirectoryInfo(folderName).GetFiles()
-                                    .Where(fileInfo => !dictionary!.ContainsKey(false + fileInfo.FullName))
+                                    .Where(fileInfo => !dictionary.ContainsKey(false + fileInfo.FullName))
                                     .Select(fileInfo => new FileViewModel(fileInfo.FullName)));
                                 foreach (var directoryInfo in new DirectoryInfo(folderName).GetDirectories())
                                     RecursiveReadFiles(directoryInfo.FullName);
@@ -115,9 +115,9 @@ public partial class FileImporterPage : Page, ITypeGetter
         Importing = false;
     }
 
-    private void DeleteBClick(object sender, RoutedEventArgs e) => _vm.FileViewModels.Clear();
+    private void DeleteClick(object sender, RoutedEventArgs e) => _vm.FileViewModels.Clear();
 
-    private async void SaveBClick(object sender, RoutedEventArgs e)
+    private async void SaveClick(object sender, RoutedEventArgs e)
     {
         await Task.Yield();
         var saved = 0;
@@ -140,7 +140,7 @@ public partial class FileImporterPage : Page, ITypeGetter
         IbSave.IsOpen = true;
     }
 
-    private void DeleteCmClick(object sender, RoutedEventArgs e)
+    private void ContextDeleteClick(object sender, RoutedEventArgs e)
     {
         foreach (var fileViewModel in FileImporterDataGird.SelectedItems.Cast<FileViewModel>().ToList())
             _ = _vm.FileViewModels.Remove(fileViewModel);

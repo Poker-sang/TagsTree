@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="TagsTree.Views.FileImporterPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -25,7 +25,7 @@
                         <MenuFlyout Placement="BottomEdgeAlignedLeft">
                             <MenuFlyoutItem
                                 x:Name="SelectFiles"
-                                Tapped="Import"
+                                Tapped="ImportClick"
                                 Text="文件">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE7C3;" />
@@ -33,7 +33,7 @@
                             </MenuFlyoutItem>
                             <MenuFlyoutItem
                                 x:Name="SelectFolders"
-                                Tapped="Import"
+                                Tapped="ImportClick"
                                 Text="文件夹">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8B7;" />
@@ -50,7 +50,7 @@
                         <MenuFlyout Placement="BottomEdgeAlignedLeft">
                             <MenuFlyoutItem
                                 x:Name="PathFiles"
-                                Tapped="Import"
+                                Tapped="ImportClick"
                                 Text="文件">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE7C3;" />
@@ -58,7 +58,7 @@
                             </MenuFlyoutItem>
                             <MenuFlyoutItem
                                 x:Name="PathFolders"
-                                Tapped="Import"
+                                Tapped="ImportClick"
                                 Text="文件夹">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8B7;" />
@@ -66,7 +66,7 @@
                             </MenuFlyoutItem>
                             <MenuFlyoutItem
                                 x:Name="PathBoth"
-                                Tapped="Import"
+                                Tapped="ImportClick"
                                 Text="全部">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8A9;" />
@@ -78,20 +78,20 @@
                 <AppBarButton
                     x:Name="BAll"
                     Icon="SelectAll"
-                    Tapped="Import"
+                    Tapped="ImportClick"
                     ToolTipService.ToolTip="全部引入：引入选择的目录下所有深度所有文件" />
                 <AppBarSeparator />
                 <AppBarButton
                     x:Name="BDelete"
                     Icon="Delete"
                     IsEnabled="False"
-                    Tapped="{x:Bind DeleteBClick}"
+                    Tapped="{x:Bind DeleteClick}"
                     ToolTipService.ToolTip="清空" />
                 <AppBarButton
                     x:Name="BSave"
                     Icon="Save"
                     IsEnabled="False"
-                    Tapped="{x:Bind SaveBClick}"
+                    Tapped="{x:Bind SaveClick}"
                     ToolTipService.ToolTip="保存" />
             </CommandBar>
             <Grid>
@@ -116,7 +116,7 @@
                     <Setter Property="ContextFlyout">
                         <Setter.Value>
                             <MenuFlyout>
-                                <MenuFlyoutItem Tapped="DeleteCmClick" Text="删除" />
+                                <MenuFlyoutItem Tapped="ContextDeleteClick" Text="删除" />
                             </MenuFlyout>
                         </Setter.Value>
                     </Setter>

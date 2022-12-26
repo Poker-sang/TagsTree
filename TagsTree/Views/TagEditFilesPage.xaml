@@ -21,7 +21,7 @@
                 uiControls:DockPanel.Dock="Left"
                 DefaultLabelPosition="Collapsed"
                 OverflowButtonVisibility="Collapsed">
-                <AppBarButton Icon="Back" Tapped="{x:Bind local:Utility.BackBClick}" />
+                <AppBarButton Icon="Back" Tapped="{x:Bind local:Utility.BackClick}" />
             </CommandBar>
             <CommandBar
                 uiControls:DockPanel.Dock="Right"
@@ -29,7 +29,7 @@
                 OverflowButtonVisibility="Collapsed">
                 <AppBarButton
                     Icon="Save"
-                    Tapped="SaveBClick"
+                    Tapped="SaveClick"
                     ToolTipService.ToolTip="保存" />
             </CommandBar>
             <BreadcrumbBar

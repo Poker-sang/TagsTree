@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="TagsTree.Views.TagSearchFilesPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -29,7 +29,7 @@
         <uiControls:DataGrid
             AutoGenerateColumns="False"
             CanUserReorderColumns="False"
-            DoubleTapped="PropertiesCmDoubleClick"
+            DoubleTapped="ContextPropertiesDoubleClick"
             ItemsSource="{x:Bind _vm.FileViewModels, Mode=OneWay}"
             SelectionMode="Single">
             <uiControls:DataGrid.RowStyle>
@@ -37,10 +37,10 @@
                     <Setter Property="ContextFlyout">
                         <Setter.Value>
                             <MenuFlyout>
-                                <MenuFlyoutItem Tapped="OpenCmClick" Text="打开" />
-                                <MenuFlyoutItem Tapped="OpenExplorerCmClick" Text="打开文件夹" />
-                                <MenuFlyoutItem Tapped="RemoveCmClick" Text="移除" />
-                                <MenuFlyoutItem Tapped="PropertiesCmClick" Text="属性" />
+                                <MenuFlyoutItem Tapped="ContextOpenClick" Text="打开" />
+                                <MenuFlyoutItem Tapped="ContextOpenExplorerClick" Text="打开文件夹" />
+                                <MenuFlyoutItem Tapped="ContextRemoveClick" Text="移除" />
+                                <MenuFlyoutItem Tapped="ContextPropertiesClick" Text="属性" />
                             </MenuFlyout>
                         </Setter.Value>
                     </Setter>

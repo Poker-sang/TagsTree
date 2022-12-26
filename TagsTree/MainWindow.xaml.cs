@@ -61,7 +61,7 @@ public sealed partial class MainWindow : Window
         NavigationView.SelectedItem = NavigationView.SettingsItem;
     }
 
-    private void BackRequested(NavigationView navigationView, NavigationViewBackRequestedEventArgs e)
+    private void BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs e)
     {
         NavigateFrame.GoBack();
         NavigationView.SelectedItem = NavigateFrame.Content switch

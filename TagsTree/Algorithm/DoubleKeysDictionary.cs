@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -38,8 +38,8 @@ public class DoubleKeysDictionary<TKey1, TKey2, TValue> where TKey1 : notnull wh
     }
     public TValue this[TKey1 key1] => _dict2[_dict1[key1]];
     public TValue this[TKey2 key2] => _dict2[key2];
-    public TValue? GetValueOrDefault(TKey1 key1) => _dict1.ContainsKey(key1) ? _dict2[_dict1[key1]] : default;
-    public TValue? GetValueOrDefault(TKey2 key2) => _dict2.ContainsKey(key2) ? _dict2[key2] : default;
+    public TValue? GetValueOrDefault(TKey1 key1) => _dict1.TryGetValue(key1, out var value) ? _dict2[value] : default;
+    public TValue? GetValueOrDefault(TKey2 key2) => _dict2.TryGetValue(key2, out var value) ? value : default;
 
     public bool ContainsKey(TKey1 key1) => _dict1.ContainsKey(key1);
     public bool ContainsKey(TKey2 key2) => _dict2.ContainsKey(key2);

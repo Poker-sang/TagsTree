@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="TagsTree.Views.FileEditTagsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -17,7 +17,7 @@
                 uiControls:DockPanel.Dock="Left"
                 DefaultLabelPosition="Collapsed"
                 OverflowButtonVisibility="Collapsed">
-                <AppBarButton Icon="Back" Tapped="{x:Bind local:Utility.BackBClick}" />
+                <AppBarButton Icon="Back" Tapped="{x:Bind local:Utility.BackClick}" />
             </CommandBar>
             <InfoBar x:Name="InfoBar" />
             <CommandBar DefaultLabelPosition="Collapsed" OverflowButtonVisibility="Collapsed">
@@ -25,7 +25,7 @@
                     x:Name="BSave"
                     Icon="Save"
                     IsEnabled="False"
-                    Tapped="SaveBClick"
+                    Tapped="SaveClick"
                     ToolTipService.ToolTip="保存" />
             </CommandBar>
         </uiControls:DockPanel>
@@ -43,7 +43,7 @@
                 <TreeView.ItemTemplate>
                     <DataTemplate x:DataType="viewModels:TagViewModel">
                         <TreeViewItem
-                            DoubleTapped="AddTag"
+                            DoubleTapped="AddTagClick"
                             ItemsSource="{x:Bind SubTags}"
                             Tag="{x:Bind}"
                             ToolTipService.ToolTip="{x:Bind FullName}">
@@ -59,7 +59,7 @@
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="viewModels:TagViewModel">
                         <ListViewItem
-                            DoubleTapped="DeleteTag"
+                            DoubleTapped="DeleteTagClick"
                             Tag="{x:Bind}"
                             ToolTipService.ToolTip="{x:Bind FullName}">
                             <TextBlock Text="{x:Bind Name}" />

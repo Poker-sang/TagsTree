@@ -1,4 +1,4 @@
-﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
@@ -25,7 +25,7 @@ public partial class FileEditTagsPage : Page
 
     #region 事件处理
 
-    private void AddTag(object sender, DoubleTappedRoutedEventArgs e)
+    private void AddTagClick(object sender, DoubleTappedRoutedEventArgs e)
     {
         var newTag = sender.GetTag<TagViewModel>();
         foreach (var tagExisted in _vm.VirtualTags)
@@ -67,13 +67,13 @@ public partial class FileEditTagsPage : Page
         BSave.IsEnabled = true;
     }
 
-    private void DeleteTag(object sender, RoutedEventArgs e)
+    private void DeleteTagClick(object sender, RoutedEventArgs e)
     {
         _ = _vm.VirtualTags.Remove(sender.GetTag<TagViewModel>());
         BSave.IsEnabled = true;
     }
 
-    private void SaveBClick(object sender, RoutedEventArgs e)
+    private void SaveClick(object sender, RoutedEventArgs e)
     {
         foreach (var tag in App.Tags.TagsDictionaryValues)
             App.Relations[tag.Id, _vm.FileViewModel.Id] = _vm.VirtualTags.Contains(tag);
@@ -86,5 +86,4 @@ public partial class FileEditTagsPage : Page
         InfoBar.IsOpen = true;
     }
     #endregion
-
 }

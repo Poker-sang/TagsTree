@@ -1,10 +1,11 @@
-﻿<Window
+<Window
     x:Class="TagsTree.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:TagsTree.Views"
+    xmlns:local="using:TagsTree"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:views="using:TagsTree.Views"
     mc:Ignorable="d">
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Border
@@ -38,29 +39,29 @@
                     Content="主页"
                     Icon="Home"
                     IsEnabled="False"
-                    Tag="{x:Bind local:IndexPage.TypeGetter}" />
+                    Tag="{x:Bind views:IndexPage.TypeGetter}" />
                 <NavigationViewItem
                     Content="标签管理"
                     Icon="Tag"
                     IsEnabled="False"
-                    Tag="{x:Bind local:TagsManagerPage.TypeGetter}" />
+                    Tag="{x:Bind views:TagsManagerPage.TypeGetter}" />
                 <NavigationViewItem
                     Content="文件引入"
                     Icon="Import"
                     IsEnabled="False"
-                    Tag="{x:Bind local:FileImporterPage.TypeGetter}" />
+                    Tag="{x:Bind views:FileImporterPage.TypeGetter}" />
                 <NavigationViewItem
                     Content="为标签添加文件"
                     Icon="Edit"
                     IsEnabled="False"
-                    Tag="{x:Bind local:SelectTagToEditPage.TypeGetter}" />
+                    Tag="{x:Bind views:SelectTagToEditPage.TypeGetter}" />
             </NavigationView.MenuItems>
             <NavigationView.FooterMenuItems>
                 <NavigationViewItem
                     Content="监控文件"
                     Icon="View"
                     IsEnabled="False"
-                    Tag="{x:Bind local:FilesObserverPage.TypeGetter}" />
+                    Tag="{x:Bind views:FilesObserverPage.TypeGetter}" />
             </NavigationView.FooterMenuItems>
             <Frame x:Name="NavigateFrame" />
         </NavigationView>

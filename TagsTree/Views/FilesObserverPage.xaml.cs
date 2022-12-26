@@ -1,4 +1,4 @@
-﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
@@ -31,7 +31,7 @@ public sealed partial class FilesObserverPage : Page, ITypeGetter
 
     #region 事件处理
 
-    private async void ApplyCmClick(object sender, RoutedEventArgs e)
+    private async void ContextApplyClick(object sender, RoutedEventArgs e)
     {
         var fileChanged = (FileChanged)((MenuFlyoutItem)sender).DataContext;
         if (FileViewModel.IsValidPath(fileChanged.Path))
@@ -58,13 +58,13 @@ public sealed partial class FilesObserverPage : Page, ITypeGetter
         ShowInfoBar("已应用一项并保存");
     }
 
-    private void DeleteCmClick(object sender, RoutedEventArgs e)
+    private void ContextDeleteClick(object sender, RoutedEventArgs e)
     {
         _ = Vm.FilesChangedList.Remove((FileChanged)((MenuFlyoutItem)sender).DataContext);
         ShowInfoBar("已删除一项");
     }
 
-    private void DeleteAboveCmClick(object sender, RoutedEventArgs e)
+    private void ContextDeleteBeforeClick(object sender, RoutedEventArgs e)
     {
         if ((FileChanged)((MenuFlyoutItem)sender).DataContext == Vm.FilesChangedList[^1])
         {
@@ -78,7 +78,7 @@ public sealed partial class FilesObserverPage : Page, ITypeGetter
         ShowInfoBar($"已删除序号{id}及之前项");
     }
 
-    private void DeleteFollowCmClick(object sender, RoutedEventArgs e)
+    private void ContextDeleteAfterClick(object sender, RoutedEventArgs e)
     {
         if ((FileChanged)((MenuFlyoutItem)sender).DataContext == Vm.FilesChangedList[0])
         {
@@ -92,7 +92,7 @@ public sealed partial class FilesObserverPage : Page, ITypeGetter
         ShowInfoBar($"已删除序号{id}及之后项");
     }
 
-    private async void DeleteRangeBClick(object sender, RoutedEventArgs e)
+    private async void DeleteRangeClick(object sender, RoutedEventArgs e)
     {
         var count = 0;
         CdDeleteRange.PrimaryButtonClick += (_, _) =>
@@ -113,7 +113,7 @@ public sealed partial class FilesObserverPage : Page, ITypeGetter
         _ = await CdDeleteRange.ShowAsync();
     }
 
-    private async void ApplyAllBClick(object sender, RoutedEventArgs e)
+    private async void ApplyAllClick(object sender, RoutedEventArgs e)
     {
         MergeAll();
         var nameFile = new Dictionary<string, FileModel>();
@@ -129,9 +129,9 @@ public sealed partial class FilesObserverPage : Page, ITypeGetter
                     Apply(fileChanged, null);
                     deleteList.Add(fileChanged);
                 }
-                else if (nameFile.ContainsKey(fileChanged.OldFullName))
+                else if (nameFile.TryGetValue(fileChanged.OldFullName, out var value))
                 {
-                    Apply(fileChanged, nameFile[fileChanged.OldFullName]);
+                    Apply(fileChanged, value);
                     deleteList.Add(fileChanged);
                 }
                 else
@@ -161,21 +161,21 @@ public sealed partial class FilesObserverPage : Page, ITypeGetter
         ShowInfoBar("已全部应用并保存");
     }
 
-    private void MergeAllBClick(object sender, RoutedEventArgs e)
+    private void MergeAllClick(object sender, RoutedEventArgs e)
     {
         MergeAll();
         Save();
         ShowInfoBar("已全部合并并保存");
     }
 
-    private void DeleteAllBClick(object sender, RoutedEventArgs e)
+    private void DeleteAllClick(object sender, RoutedEventArgs e)
     {
         ClearAll();
         Save();
         ShowInfoBar("已全部清除并保存");
     }
 
-    private void BSaveAllBClick(object sender, RoutedEventArgs e)
+    private void BSaveAllClick(object sender, RoutedEventArgs e)
     {
         Save();
         ShowInfoBar("已保存");

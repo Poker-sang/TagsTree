@@ -1,4 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
@@ -18,7 +18,7 @@ public class TypeWithAttributeGenerator : IIncrementalGenerator
     /// <summary>
     /// 需要生成的Attribute
     /// </summary>
-    private static readonly Dictionary<string, TypeWithAttribute> Attributes = new()
+    private static readonly Dictionary<string, TypeWithAttribute> _attributes = new()
     {
         { "TagsTree.Attributes.GenerateConstructorAttribute", TypeWithAttributeDelegates.GenerateConstructor },
         { "TagsTree.Attributes.LoadSaveConfigurationAttribute`1", TypeWithAttributeDelegates.LoadSaveConfiguration },
@@ -27,7 +27,7 @@ public class TypeWithAttributeGenerator : IIncrementalGenerator
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        foreach (var attribute in Attributes)
+        foreach (var attribute in _attributes)
         {
             var generatorAttributes = context.SyntaxProvider.ForAttributeWithMetadataName(
                 attribute.Key,

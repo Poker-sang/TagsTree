@@ -23,7 +23,7 @@ public partial class SelectTagToEditPage : Page, ITypeGetter
 
     private void Tags_OnItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs e) => TbPath.Path = (e.InvokedItem as TagViewModel)?.FullName ?? TbPath.Path;
 
-    private async void ConfirmBClick(object sender, RoutedEventArgs e)
+    private async void ConfirmClick(object sender, RoutedEventArgs e)
     {
         if (TbPath.Path.GetTagViewModel() is not { } pathTagModel)
         {
