@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using TagsTree.Algorithm;
@@ -63,7 +63,12 @@ public class TagsTreeDictionary
             RecursiveLoadTags(subTag);
     }
 
-    public void DeserializeTree(string path) => TagsTree.SubTags = Serialization.Deserialize<ObservableCollection<TagViewModel>>(path);
+    public void DeserializeTree(string path)
+    {
+        // 为了触发TagsTree.SubTags.CollectionChanged
+        foreach (var subTag in Serialization.Deserialize<List<TagViewModel>>(path))
+            TagsTree.SubTags.Add(subTag);
+    }
 
     public void LoadDictionary()
     {

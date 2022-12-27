@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
@@ -81,7 +81,7 @@ partial class {name}
         }
 
         // 去除" \r\n"
-        loadConfigurationContent = loadConfigurationContent.Remove(loadConfigurationContent.Length - 3, 3);
+        _ = loadConfigurationContent.Remove(loadConfigurationContent.Length - 3, 3);
 
         return namespaces.GenerateFileHeader()
             .AppendLine(classBegin)

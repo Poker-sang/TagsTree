@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -18,7 +18,7 @@ public partial class TagViewModel : TagModel
             if (base.Name == value)
                 return;
             base.Name = value;
-            OnPropertyChanged(nameof(Name));
+            OnPropertyChanged();
         }
     }
 
@@ -47,7 +47,7 @@ public partial class TagViewModel : TagModel
 
     private void InitializeSubTags(ObservableCollection<TagViewModel>? subTags = null)
     {
-        SubTags.CollectionChanged += OnSubTagsOnCollectionChanged;
+        SubTags.CollectionChanged += OnSubTagsCollectionChanged;
         if (subTags is not null)
             foreach (var subTag in subTags)
                 SubTags.Add(subTag);
@@ -57,7 +57,7 @@ public partial class TagViewModel : TagModel
     /// 集合改变时候更改父标签
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    private void OnSubTagsOnCollectionChanged(object? o, NotifyCollectionChangedEventArgs e)
+    private void OnSubTagsCollectionChanged(object? o, NotifyCollectionChangedEventArgs e)
     {
         switch (e.Action)
         {
