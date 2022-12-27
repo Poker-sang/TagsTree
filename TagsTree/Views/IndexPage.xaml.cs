@@ -1,4 +1,4 @@
-﻿using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using System;
 using TagsTree.Interfaces;
 
@@ -16,8 +16,7 @@ public sealed partial class IndexPage : Page, ITypeGetter
 
     #region 事件处理
 
-    private void QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e) => _ = App.RootFrame.Navigate(typeof(TagSearchFilesPage), TagSearchBox.Text);
+    private void QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e) => App.GotoPage<TagSearchFilesPage>(TagSearchBox.Text);
 
     #endregion
-
 }

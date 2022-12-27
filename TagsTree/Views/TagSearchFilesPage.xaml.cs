@@ -43,12 +43,12 @@ public partial class TagSearchFilesPage : Page
         (((FileViewModel)((FrameworkElement)sender).DataContext)).RemoveAndSave();
         _ = _vm.FileViewModels.Remove((FileViewModel)((FrameworkElement)sender).DataContext);
     }
-    private void ContextPropertiesClick(object sender, RoutedEventArgs e) => App.RootFrame.Navigate(typeof(FilePropertiesPage), (FileViewModel)((MenuFlyoutItem)sender).DataContext);
+    private void ContextPropertiesClick(object sender, RoutedEventArgs e) => App.GotoPage<FilePropertiesPage>((FileViewModel)((MenuFlyoutItem)sender).DataContext);
 
     private void ContextPropertiesDoubleClick(object sender, RoutedEventArgs e)
     {
         if ((FileViewModel)((DataGrid)sender).SelectedItem is { } fileViewModel)
-            _ = App.RootFrame.Navigate(typeof(FilePropertiesPage), fileViewModel);
+            App.GotoPage<FilePropertiesPage>(fileViewModel);
     }
 
     #endregion

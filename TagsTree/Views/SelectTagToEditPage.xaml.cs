@@ -1,4 +1,4 @@
-﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.ObjectModel;
@@ -36,8 +36,8 @@ public partial class SelectTagToEditPage : Page, ITypeGetter
             await ShowMessageDialog.Information(true, "「标签路径」不能为空！");
             return;
         }
-
-        _ = App.RootFrame.Navigate(typeof(TagEditFilesPage), pathTagModel);
+        
+        App.GotoPage<TagEditFilesPage>(pathTagModel);
     }
 
     #endregion

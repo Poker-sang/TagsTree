@@ -100,7 +100,7 @@ public partial class FileImporterPage : Page, ITypeGetter
                             void RecursiveReadFiles(string folderName)
                             {
                                 temp.AddRange(new DirectoryInfo(folderName).GetFiles()
-                                    .Where(fileInfo => !dictionary.ContainsKey(false + fileInfo.FullName))
+                                    .Where(fileInfo => !dictionary!.ContainsKey(false + fileInfo.FullName))
                                     .Select(fileInfo => new FileViewModel(fileInfo.FullName)));
                                 foreach (var directoryInfo in new DirectoryInfo(folderName).GetDirectories())
                                     RecursiveReadFiles(directoryInfo.FullName);

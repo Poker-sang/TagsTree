@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
@@ -44,7 +44,7 @@ public sealed partial class MainWindow : Window
         }
         else
         {
-            _ = NavigateFrame.Navigate(typeof(IndexPage));
+            App.GotoPage<IndexPage>();
             NavigationView.SelectedItem = NavigationView.MenuItems[0];
         }
 
@@ -57,7 +57,7 @@ public sealed partial class MainWindow : Window
 
     private void DisplaySettings()
     {
-        _ = NavigateFrame.Navigate(typeof(SettingsPage));
+        App.GotoPage<SettingsPage>();
         NavigationView.SelectedItem = NavigationView.SettingsItem;
     }
 
@@ -84,11 +84,7 @@ public sealed partial class MainWindow : Window
     private void ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs e)
     {
         if (e.InvokedItemContainer.Tag is Type item && item != NavigateFrame.Content.GetType())
-        {
-            _ = NavigateFrame.Navigate(item);
-            NavigationView.IsBackEnabled = true;
-            GC.Collect();
-        }
+            App.GotoPage(item);
     }
 
     #region AppTitle相关

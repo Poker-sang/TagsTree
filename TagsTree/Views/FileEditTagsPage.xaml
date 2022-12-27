@@ -13,12 +13,6 @@
     mc:Ignorable="d">
     <uiControls:DockPanel>
         <uiControls:DockPanel uiControls:DockPanel.Dock="Top">
-            <CommandBar
-                uiControls:DockPanel.Dock="Left"
-                DefaultLabelPosition="Collapsed"
-                OverflowButtonVisibility="Collapsed">
-                <AppBarButton Icon="Back" Tapped="{x:Bind local:Utility.BackClick}" />
-            </CommandBar>
             <InfoBar x:Name="InfoBar" />
             <CommandBar DefaultLabelPosition="Collapsed" OverflowButtonVisibility="Collapsed">
                 <AppBarButton

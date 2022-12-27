@@ -1,4 +1,4 @@
-﻿// #define DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION
+// #define DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION
 // #define DISABLE_XAML_GENERATED_BINDING_DEBUG_OUTPUT
 // #define FIRST_TIME
 using CommunityToolkit.Mvvm.Messaging;
@@ -26,6 +26,15 @@ public partial class App : Application
     public static Frame RootFrame { get; set; } = null!;
     public static ObservableCollection<FileChanged> FilesChangedList => FilesObserverPage.Vm.FilesChangedList;
     public static bool ConfigSet { get; set; }
+
+    public static void GotoPage<T>(object? parameter = null) where T : Page => GotoPage(typeof(T), parameter);
+
+    public static void GotoPage(Type page, object? parameter = null)
+    {
+        _ = RootFrame.Navigate(page, parameter);
+        RootNavigationView.IsBackEnabled = RootFrame.CanGoBack;
+        GC.Collect();
+    }
 
     public App()
     {
