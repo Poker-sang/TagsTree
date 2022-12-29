@@ -1,4 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -28,7 +28,7 @@ internal static partial class TypeWithAttributeDelegates
         }
 
         var generatedType = GetDeclaration(name, typeSymbol, defaultCtor, ctor);
-        var generatedNamespace = GetNamespaceDeclaration(typeSymbol, generatedType);
+        var generatedNamespace = GetFileScopedNamespaceDeclaration(typeSymbol, generatedType);
         var compilationUnit = GetCompilationUnit(generatedNamespace, namespaces);
         return SyntaxTree(compilationUnit, encoding: Encoding.UTF8).GetText().ToString();
     }

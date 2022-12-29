@@ -1,4 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
@@ -171,14 +171,14 @@ internal static class Utilities
     /// <summary>
     /// Generate the following code
     /// <code>
-    /// namespace <paramref name="specificClass" />.ContainingNamespace
-    /// {
-    ///     <paramref name="generatedClass" /><br/>
-    /// }
+    /// #nullable enable
+    /// namespace <paramref name="specificClass" />.ContainingNamespace;<br/>
+    /// <paramref name="generatedClass" />
     /// </code>
     /// </summary>
-    /// <returns>NamespaceDeclaration</returns>
-    internal static NamespaceDeclarationSyntax GetNamespaceDeclaration(ISymbol specificClass, MemberDeclarationSyntax generatedClass) => NamespaceDeclaration(ParseName(specificClass.ContainingNamespace.ToDisplayString()))
+    /// <returns>FileScopedNamespaceDeclaration</returns>
+    internal static FileScopedNamespaceDeclarationSyntax GetFileScopedNamespaceDeclaration(ISymbol specificClass, MemberDeclarationSyntax generatedClass)
+        => FileScopedNamespaceDeclaration(ParseName(specificClass.ContainingNamespace.ToDisplayString()))
             .AddMembers(generatedClass)
             .WithNamespaceKeyword(Token(SyntaxKind.NamespaceKeyword)
                 .WithLeadingTrivia(Trivia(NullableDirectiveTrivia(Token(SyntaxKind.EnableKeyword), true))));
