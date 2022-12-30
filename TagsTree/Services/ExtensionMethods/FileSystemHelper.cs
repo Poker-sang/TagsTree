@@ -1,11 +1,6 @@
-﻿using Microsoft.VisualBasic.FileIO;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.Storage.Pickers;
+using Microsoft.VisualBasic.FileIO;
 using TagsTree.Interfaces;
 using TagsTree.Models;
 
@@ -41,6 +36,7 @@ public static class FileSystemHelper
             await ShowMessageDialog.Information(true, $"打开路径「{fullName}」时出现错误");
         }
     }
+
     public static async void OpenDirectory(this IFullName fileBase)
     {
         try
@@ -62,6 +58,7 @@ public static class FileSystemHelper
         else
             FileSystem.MoveFile(fileBase.FullName, newFullName.GetPath(), UIOption.OnlyErrorDialogs);
     }
+
     public static void Copy(this string sourceDirectory, string destinationDirectory) => FileSystem.CopyDirectory(sourceDirectory, destinationDirectory);
 
     public static void Rename(this FileBase fileBase, string newFullName)
@@ -71,6 +68,7 @@ public static class FileSystemHelper
         else
             FileSystem.RenameFile(fileBase.FullName, newFullName.GetName());
     }
+
     public static void Delete(this FileBase fileBase)
     {
         if (fileBase.IsFolder)
@@ -80,6 +78,7 @@ public static class FileSystemHelper
     }
 
     public static string GetInvalidNameChars => @"\\/:*?""<>|" + new string(Path.GetInvalidPathChars());
+
     public static string GetInvalidPathChars => @"\/:*?""<>|" + new string(Path.GetInvalidPathChars());
 
     public enum InvalidMode
@@ -95,8 +94,4 @@ public static class FileSystemHelper
         < 1 << 30 => ((double)file.Length / (1 << 20)).ToString("F2") + "MB",
         _ => ((double)file.Length / (1 << 30)).ToString("F2") + "GB"
     };
-
-    public static async Task<StorageFolder> GetStorageFolder() => await new FolderPicker { FileTypeFilter = { "*" } /*不加会崩溃*/ }.InitializeWithWindow().PickSingleFolderAsync();
-    public static async Task<StorageFile> GetStorageFile() => await new FileOpenPicker { FileTypeFilter = { "*" } }.InitializeWithWindow().PickSingleFileAsync();
-    public static async Task<IReadOnlyList<StorageFile>> GetStorageFiles() => await new FileOpenPicker { FileTypeFilter = { "*" } }.InitializeWithWindow().PickMultipleFilesAsync();
 }

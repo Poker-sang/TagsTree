@@ -1,10 +1,10 @@
-﻿using Microsoft.UI.Xaml.Media.Imaging;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.UI.Xaml.Media.Imaging;
 using TagsTree.Properties;
 using TagsTree.ViewModels;
 using Windows.Storage;

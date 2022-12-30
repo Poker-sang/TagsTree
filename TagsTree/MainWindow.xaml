@@ -3,19 +3,20 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helper="using:WinUI3Utilities"
     xmlns:local="using:TagsTree"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="using:TagsTree.Views"
     mc:Ignorable="d">
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Border
-            x:Name="AppTitleBar"
+            x:Name="TitleBar"
             Height="{x:Bind NavigationView.CompactPaneLength}"
             VerticalAlignment="Top"
             Canvas.ZIndex="1"
             IsHitTestVisible="True">
             <TextBlock
-                x:Name="AppTitle"
+                x:Name="TitleTextBlock"
                 Margin="0,15,0,0"
                 VerticalAlignment="Top"
                 Style="{StaticResource CaptionTextBlockStyle}"
@@ -26,14 +27,14 @@
             AlwaysShowHeader="True"
             BackRequested="BackRequested"
             Canvas.ZIndex="0"
-            DisplayModeChanged="DisplayModeChanged"
+            DisplayModeChanged="{x:Bind helper:TitleBarHelper.DisplayModeChanged}"
             IsBackButtonVisible="Visible"
             IsTabStop="False"
             IsTitleBarAutoPaddingEnabled="False"
             ItemInvoked="ItemInvoked"
             Loaded="Loaded"
-            PaneClosing="PaneClosing"
-            PaneOpening="PaneOpening">
+            PaneClosing="{x:Bind helper:TitleBarHelper.PaneClosing}"
+            PaneOpening="{x:Bind helper:TitleBarHelper.PaneOpening}">
             <NavigationView.MenuItems>
                 <NavigationViewItem
                     Content="主页"

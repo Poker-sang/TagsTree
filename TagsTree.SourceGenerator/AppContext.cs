@@ -11,39 +11,63 @@ namespace TagsTree.SourceGenerator;
 
 internal static partial class TypeWithAttributeDelegates
 {
-    public static string? LoadSaveConfiguration(INamedTypeSymbol typeSymbol, ImmutableArray<AttributeData> attributeList)
+    public static string? AppContext(INamedTypeSymbol typeSymbol, ImmutableArray<AttributeData> attributeList)
     {
         var attribute = attributeList[0];
 
         if (attribute.AttributeClass is not ({ IsGenericType: true } and { TypeArguments.IsDefaultOrEmpty: false }))
             return null;
         var type = attribute.AttributeClass.TypeArguments[0];
-        if (attribute.ConstructorArguments[0].Value is not string containerName)
-            return null;
 
-        string? staticClassName = null;
-        string? methodName = null;
+        var staticClassName = "static WinUI3Utilities.Misc";
+        var methodName = "Cast";
 
-        if (attribute.NamedArguments[0].Key is "CastMethod" && attribute.NamedArguments[0].Value.Value is string castMethodFullName)
-        {
-            var dotPosition = castMethodFullName.LastIndexOf('.');
-            if (dotPosition is -1)
-                throw new InvalidDataException("\"CastMethod\" must contain the full name.");
-            staticClassName = "static " + castMethodFullName.Substring(0, dotPosition);
-            methodName = castMethodFullName.Substring(dotPosition + 1);
-        }
+        string? configKey = null;
+
+        foreach (var namedArgument in attribute.NamedArguments)
+            if (namedArgument.Value.Value is { } value)
+                switch (namedArgument.Key)
+                {
+                    case "ConfigKey":
+                        configKey = (string)value;
+                        break;
+                    case "CastMethod":
+                        var castMethodFullName = (string)value;
+                        var dotPosition = castMethodFullName.LastIndexOf('.');
+                        if (dotPosition is -1)
+                            throw new InvalidDataException("\"CastMethod\" must contain the full name.");
+                        staticClassName = "static " + castMethodFullName.Substring(0, dotPosition);
+                        methodName = castMethodFullName.Substring(dotPosition + 1);
+                        break;
+                }
+
+        configKey ??= "Configuration";
 
         var name = typeSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-        var namespaces = new HashSet<string>();
-        if (staticClassName is not null)
-            _ = namespaces.Add(staticClassName); //methodName方法所用namespace
+        var namespaces = new HashSet<string> { "Windows.Storage" };
+        // methodName方法所用namespace
+        _ = namespaces.Add(staticClassName);
         var usedTypes = new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
         /*-----Body Begin-----*/
         var classBegin = @$"
 namespace {typeSymbol.ContainingNamespace.ToDisplayString()};
 
-partial class {name}
-{{";
+public static partial class {name}
+{{
+    private static ApplicationDataContainer _configurationContainer = null!;
+
+    private const string ConfigurationContainerKey = ""{configKey}"";
+
+    public static string AppLocalFolder {{ get; private set; }} = null!;
+
+    public static void Initialize()
+    {{
+        AppLocalFolder = ApplicationData.Current.LocalFolder.Path;
+        if (!ApplicationData.Current.RoamingSettings.Containers.ContainsKey(ConfigurationContainerKey))
+            _ = ApplicationData.Current.RoamingSettings.CreateContainer(ConfigurationContainerKey, ApplicationDataCreateDisposition.Always);
+
+        _configurationContainer = ApplicationData.Current.RoamingSettings.Containers[ConfigurationContainerKey];
+    }}";
         var loadConfigurationBegin = $@"    public static {type.Name}? LoadConfiguration()
     {{
         try
@@ -67,7 +91,7 @@ partial class {name}
         /*-----Splitter-----*/
         var saveConfigurationContent = new StringBuilder();
         /*-----Splitter-----*/
-        const string saveConfigurationEndAndClassEnd = $@"      }}
+        const string saveConfigurationEndAndClassEnd = $@"        }}
     }}
 }}";
         /*-----Body End-----*/
@@ -75,8 +99,8 @@ partial class {name}
                          member is { Kind: SymbolKind.Property } and not { Name: "EqualityContract" })
                      .Cast<IPropertySymbol>())
         {
-            _ = loadConfigurationContent.AppendLine(LoadRecord(member.Name, member.Type.Name, type.Name, containerName, methodName));
-            _ = saveConfigurationContent.AppendLine(SaveRecord(member.Name, member.Type, type.Name, containerName, methodName));
+            _ = loadConfigurationContent.AppendLine(LoadRecord(member.Name, member.Type.Name, type.Name, methodName));
+            _ = saveConfigurationContent.AppendLine(SaveRecord(member.Name, member.Type, type.Name, methodName));
             namespaces.UseNamespace(usedTypes, typeSymbol, member.Type);
         }
 
@@ -94,9 +118,9 @@ partial class {name}
             .ToString();
     }
 
-    private static string LoadRecord(string name, string type, string typeName, string containerName, string? methodName) => methodName is null
-            ? $"{Spacing(4)}({type}){containerName}.Values[nameof({typeName}.{name})],"
-            : $"{Spacing(4)}{containerName}.Values[nameof({typeName}.{name})].{methodName}<{type}>(),";
+    private static string LoadRecord(string name, string type, string typeName, string? methodName) => methodName is null
+            ? $"{Spacing(4)}({type})_configurationContainer.Values[nameof({typeName}.{name})],"
+            : $"{Spacing(4)}_configurationContainer.Values[nameof({typeName}.{name})].{methodName}<{type}>(),";
 
     private static readonly HashSet<string> _primitiveTypes = new()
     {
@@ -118,9 +142,9 @@ partial class {name}
         nameof(DateTimeOffset)
     };
 
-    private static string SaveRecord(string name, ITypeSymbol type, string typeName, string containerName, string? methodName)
+    private static string SaveRecord(string name, ITypeSymbol type, string typeName, string? methodName)
     {
-        var body = $"{containerName}.Values[nameof({typeName}.{name})] = appConfiguration.{name}";
+        var body = $"_configurationContainer.Values[nameof({typeName}.{name})] = appConfiguration.{name}";
         return !_primitiveTypes.Contains(type.Name)
             ? type switch
             {

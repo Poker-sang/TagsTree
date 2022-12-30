@@ -1,8 +1,8 @@
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Text;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static TagsTree.SourceGenerator.Utilities;
 
@@ -21,10 +21,8 @@ internal static partial class TypeWithAttributeDelegates
             if (attribute.AttributeClass is not ({ IsGenericType: true } and { TypeArguments.IsDefaultOrEmpty: false }))
                 return null;
             var type = attribute.AttributeClass.TypeArguments[0];
-            if (attribute.ConstructorArguments[0].Value is not string propertyName)
-                continue;
 
-            if (attribute.ConstructorArguments.Length < 2 || attribute.ConstructorArguments[1].Value is not string propertyChanged)
+            if (attribute.ConstructorArguments.Length < 2 || attribute.ConstructorArguments[0].Value is not string propertyName || attribute.ConstructorArguments[1].Value is not string propertyChanged)
                 continue;
 
             var isSetterPublic = true;

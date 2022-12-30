@@ -1,7 +1,7 @@
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.ObjectModel;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using TagsTree.Interfaces;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
@@ -36,7 +36,7 @@ public partial class SelectTagToEditPage : Page, ITypeGetter
             await ShowMessageDialog.Information(true, "「标签路径」不能为空！");
             return;
         }
-        
+
         App.GotoPage<TagEditFilesPage>(pathTagModel);
     }
 

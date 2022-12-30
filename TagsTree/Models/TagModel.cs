@@ -1,5 +1,5 @@
-﻿using Microsoft.UI.Xaml.Controls;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+using Microsoft.UI.Xaml.Controls;
 using TagsTree.Interfaces;
 
 namespace TagsTree.Models;

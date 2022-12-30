@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="TagsTree.Views.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -19,17 +19,17 @@
                 <labs:SettingsExpander.Items>
                     <labs:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Vertical">
                         <RadioButtons SelectedIndex="{x:Bind root:App.AppConfig.Theme}">
-                            <RadioButton Checked="OnThemeRadioButtonChecked" Content="跟随系统">
+                            <RadioButton Checked="ThemeChecked" Content="跟随系统">
                                 <RadioButton.Tag>
                                     <x:Int32>0</x:Int32>
                                 </RadioButton.Tag>
                             </RadioButton>
-                            <RadioButton Checked="OnThemeRadioButtonChecked" Content="浅色">
+                            <RadioButton Checked="ThemeChecked" Content="浅色">
                                 <RadioButton.Tag>
                                     <x:Int32>1</x:Int32>
                                 </RadioButton.Tag>
                             </RadioButton>
-                            <RadioButton Checked="OnThemeRadioButtonChecked" Content="深色">
+                            <RadioButton Checked="ThemeChecked" Content="深色">
                                 <RadioButton.Tag>
                                     <x:Int32>2</x:Int32>
                                 </RadioButton.Tag>
@@ -46,9 +46,9 @@
                     <labs:SettingsCard
                         ActionIcon="More"
                         IsClickEnabled="True"
-                        Tapped="BLibraryPath_Click">
+                        Tapped="LibraryPathClick">
                         <labs:SettingsCard.Description>
-                            <TextBox x:Name="TbLibraryPath" KeyUp="TbLibraryPath_OnCharacterReceived" />
+                            <TextBox x:Name="TbLibraryPath" KeyUp="TbLibraryPathCharacterReceived" />
                         </labs:SettingsCard.Description>
                     </labs:SettingsCard>
                 </labs:SettingsExpander.Items>
@@ -57,7 +57,7 @@
                 Description="将所在路径文件夹名作为标签使用"
                 Header="文件夹标签"
                 HeaderIcon="Tag">
-                <ToggleSwitch IsOn="{x:Bind root:App.AppConfig.PathTagsEnabled}" Toggled="PathTagsEnabled_OnToggled" />
+                <ToggleSwitch IsOn="{x:Bind root:App.AppConfig.PathTagsEnabled}" Toggled="PathTagsEnabledToggled" />
             </labs:SettingsCard>
             <labs:SettingsCard
                 Description="监控文件路径文件下文件（夹）的变化"
@@ -74,7 +74,7 @@
                         Header="导入"
                         HeaderIcon="Import"
                         IsClickEnabled="True"
-                        Tapped="BImport_Click">
+                        Tapped="ImportClick">
                         <labs:SettingsCard.ActionIcon>
                             <FontIcon Glyph="&#xE8A7;" />
                         </labs:SettingsCard.ActionIcon>
@@ -82,7 +82,7 @@
                     <labs:SettingsCard
                         Header="导出"
                         IsClickEnabled="True"
-                        Tapped="BExport_Click">
+                        Tapped="ExportClick">
                         <labs:SettingsCard.HeaderIcon>
                             <FontIcon Glyph="&#xEA52;" />
                         </labs:SettingsCard.HeaderIcon>
@@ -95,7 +95,7 @@
                         Header="打开"
                         HeaderIcon="OpenLocal"
                         IsClickEnabled="True"
-                        Tapped="BOpenDirectory_Click">
+                        Tapped="OpenDirectoryClick">
                         <labs:SettingsCard.ActionIcon>
                             <FontIcon Glyph="&#xE8A7;" />
                         </labs:SettingsCard.ActionIcon>

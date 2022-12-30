@@ -1,7 +1,7 @@
-﻿using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Threading.Tasks;
-using TagsTree.Services.ExtensionMethods;
+using Microsoft.UI.Xaml.Controls;
+using WinUI3Utilities;
 
 namespace TagsTree.Services;
 
@@ -44,7 +44,7 @@ public static class ShowMessageDialog
             PrimaryButtonText = "确定",
             CloseButtonText = "取消",
             DefaultButton = ContentDialogButton.Close,
-            XamlRoot = WindowHelper.Window.Content.XamlRoot
+            XamlRoot = CurrentContext.Window.Content.XamlRoot
         };
         messageDialog.PrimaryButtonClick += (_, _) => result = true;
         messageDialog.CloseButtonClick += (_, _) => result = false;
@@ -65,7 +65,7 @@ public static class ShowMessageDialog
         var no = noHint is "" ? "" : $"\n按“否”{noHint}";
         var cancel = cancelHint is "" ? "" : $"\n按“取消”{cancelHint}";
         bool? result = null;
-        var messageDialog = new ContentDialog()
+        var messageDialog = new ContentDialog
         {
             Title = "提示",
             Content = message + "\n" + yes + no + cancel,
@@ -73,7 +73,7 @@ public static class ShowMessageDialog
             SecondaryButtonText = "否",
             CloseButtonText = "取消",
             DefaultButton = ContentDialogButton.Close,
-            XamlRoot = WindowHelper.Window.Content.XamlRoot
+            XamlRoot = CurrentContext.Window.Content.XamlRoot
         };
         messageDialog.PrimaryButtonClick += (_, _) => result = true;
         messageDialog.SecondaryButtonClick += (_, _) => result = false;

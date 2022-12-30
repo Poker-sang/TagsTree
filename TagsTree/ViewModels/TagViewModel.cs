@@ -1,8 +1,8 @@
-using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Text.Json.Serialization;
+using CommunityToolkit.Mvvm.ComponentModel;
 using TagsTree.Models;
 
 namespace TagsTree.ViewModels;

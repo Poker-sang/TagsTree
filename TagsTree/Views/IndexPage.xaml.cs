@@ -1,5 +1,5 @@
-using Microsoft.UI.Xaml.Controls;
 using System;
+using Microsoft.UI.Xaml.Controls;
 using TagsTree.Interfaces;
 
 namespace TagsTree.Views;

@@ -1,20 +1,18 @@
 // #define DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION
 // #define DISABLE_XAML_GENERATED_BINDING_DEBUG_OUTPUT
 // #define FIRST_TIME
-using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.WinUI;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using TagsTree.Algorithm;
 using TagsTree.Models;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.Views;
+using WinUI3Utilities;
 
 namespace TagsTree;
 
@@ -39,14 +37,15 @@ public partial class App : Application
     public App()
     {
         InitializeComponent();
-        RegisterUnhandledExceptionHandler();
-        FilesObserver = new();
+        CurrentContext.App = this;
+        CurrentContext.Title = nameof(TagsTree);
         AppContext.Initialize();
+        FilesObserver = new();
         if (AppContext.LoadConfiguration() is not { } appConfigurations
 #if FIRST_TIME
         || true
 #endif
-        )
+           )
         {
             AppConfig = new AppConfig();
             ConfigSet = false;
@@ -59,14 +58,19 @@ public partial class App : Application
     }
 
     /// <param name="args">Details about the launch request and process.</param>
-    protected override void OnLaunched(LaunchActivatedEventArgs args) =>
-        WindowHelper.Initialize().SetWindowSize(800, 450).Activate();
+    protected override void OnLaunched(LaunchActivatedEventArgs args)
+    {
+        CurrentContext.Window = new MainWindow();
+        AppHelper.InitializeAsync(AppHelper.PredetermineEstimatedWindowSize());
+    }
 
     public static async Task<bool> ChangeFilesObserver() => await FilesObserver.Change(AppConfig.LibraryPath);
 
     public static async Task ExceptionHandler(string exception)
     {
-        switch (await ShowMessageDialog.Warning($"路径「{AppContext.AppLocalFolder}」下，{exception}和{RelationsName}存储数据数不同", $"删除关系文件{RelationsName}并重新生成", "关闭软件并打开目录"))
+        switch (await ShowMessageDialog.Warning(
+                    $"路径「{AppContext.AppLocalFolder}」下，{exception}和{RelationsName}存储数据数不同",
+                    $"删除关系文件{RelationsName}并重新生成", "关闭软件并打开目录"))
         {
             case true:
                 File.Delete(RelationsPath);
@@ -151,54 +155,4 @@ public partial class App : Application
 
         return null;
     }
-
-    #region 错误捕捉
-
-    private void RegisterUnhandledExceptionHandler()
-    {
-        UnhandledException += async (_, args) =>
-        {
-            args.Handled = true;
-            await WindowHelper.Window.DispatcherQueue.EnqueueAsync(async () => await UncaughtExceptionHandler(args.Exception));
-        };
-
-        TaskScheduler.UnobservedTaskException += async (_, args) =>
-        {
-            args.SetObserved();
-            await WindowHelper.Window.DispatcherQueue.EnqueueAsync(async () => await UncaughtExceptionHandler(args.Exception));
-        };
-
-        AppDomain.CurrentDomain.UnhandledException += async (_, args) =>
-        {
-            if (args.ExceptionObject is Exception e)
-                await WindowHelper.Window.DispatcherQueue.EnqueueAsync(async () => await UncaughtExceptionHandler(e));
-            else
-                ExitWithPushedNotification();
-        };
-
-        DebugSettings.BindingFailed += (sender, args) => Debug.WriteLine(args.Message);
-
-#if DEBUG
-        static Task UncaughtExceptionHandler(Exception e)
-        {
-            if (Debugger.IsAttached)
-                Debugger.Break();
-            return Task.CompletedTask;
-        }
-#elif RELEASE
-        static async Task UncaughtExceptionHandler(Exception e)
-        {
-            await ShowMessageDialog.Information(true, e.ToString());
-            // ExitWithPushedNotification();
-        }
-#endif
-    }
-    private static void ExitWithPushedNotification()
-    {
-        _ = WeakReferenceMessenger.Default.Send(new ApplicationExitingMessage());
-        Current.Exit();
-    }
-    public record ApplicationExitingMessage;
-
-    #endregion
 }

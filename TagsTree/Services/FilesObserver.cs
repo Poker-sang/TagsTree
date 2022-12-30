@@ -1,8 +1,9 @@
-﻿using System.IO;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using TagsTree.Models;
 using TagsTree.Services.ExtensionMethods;
+using WinUI3Utilities;
 
 namespace TagsTree.Services;
 
@@ -31,7 +32,7 @@ public class FilesObserver : FileSystemWatcher
     }
 
     private static new void Created(object sender, FileSystemEventArgs e)
-        => _ = WindowHelper.Window.DispatcherQueue.TryEnqueue(() =>
+        => _ = CurrentContext.Window.DispatcherQueue.TryEnqueue(() =>
         {
             if (App.FilesChangedList.LastOrDefault() is { Type: FileChanged.ChangedType.Delete } item && item.Name == e.FullPath.GetName() && item.FullName != e.FullPath)
             {
@@ -42,12 +43,12 @@ public class FilesObserver : FileSystemWatcher
                 App.FilesChangedList.Add(new(e.FullPath, FileChanged.ChangedType.Create));
         });
 
-    private static new void Renamed(object sender, RenamedEventArgs e) => _ = WindowHelper.Window.DispatcherQueue.TryEnqueue
+    private static new void Renamed(object sender, RenamedEventArgs e) => _ = CurrentContext.Window.DispatcherQueue.TryEnqueue
         (
             () => App.FilesChangedList.Add(new(e.FullPath, FileChanged.ChangedType.Rename, e.OldFullPath.GetName()))
         );
 
-    private static new void Deleted(object sender, FileSystemEventArgs e) => _ = WindowHelper.Window.DispatcherQueue.TryEnqueue
+    private static new void Deleted(object sender, FileSystemEventArgs e) => _ = CurrentContext.Window.DispatcherQueue.TryEnqueue
         (
             () => App.FilesChangedList.Add(new(e.FullPath, FileChanged.ChangedType.Delete))
         );

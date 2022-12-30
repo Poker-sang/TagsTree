@@ -1,14 +1,15 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
 using TagsTree.Models;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
+using WinUI3Utilities;
 
 namespace TagsTree.Views;
 
@@ -35,14 +36,17 @@ public partial class TagSearchFilesPage : Page
     private void QuerySubmitted(AutoSuggestBox autoSuggestBox, AutoSuggestBoxQuerySubmittedEventArgs e) => _vm.FileViewModels = autoSuggestBox.Text is "" ? _vm.ResultCallBack : RelationsDataTable.FuzzySearchName(autoSuggestBox.Text, _vm.ResultCallBack);
 
     private void ContextOpenClick(object sender, RoutedEventArgs e) => ((FileViewModel)((MenuFlyoutItem)sender).DataContext).Open();
+    
     private void ContextOpenExplorerClick(object sender, RoutedEventArgs e) => ((FileViewModel)((MenuFlyoutItem)sender).DataContext).OpenDirectory();
+    
     private async void ContextRemoveClick(object sender, RoutedEventArgs e)
     {
         if (!await ShowMessageDialog.Warning("是否从软件移除该文件？"))
             return;
-        (((FileViewModel)((FrameworkElement)sender).DataContext)).RemoveAndSave();
+        ((FileViewModel)((FrameworkElement)sender).DataContext).RemoveAndSave();
         _ = _vm.FileViewModels.Remove((FileViewModel)((FrameworkElement)sender).DataContext);
     }
+    
     private void ContextPropertiesClick(object sender, RoutedEventArgs e) => App.GotoPage<FilePropertiesPage>((FileViewModel)((MenuFlyoutItem)sender).DataContext);
 
     private void ContextPropertiesDoubleClick(object sender, RoutedEventArgs e)

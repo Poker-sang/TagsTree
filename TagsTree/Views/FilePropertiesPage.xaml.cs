@@ -1,4 +1,4 @@
-using Windows.ApplicationModel.DataTransfer;
+using System.IO;
 using CommunityToolkit.Labs.WinUI;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
@@ -9,7 +9,8 @@ using Microsoft.UI.Xaml.Navigation;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
-using System.IO;
+using Windows.ApplicationModel.DataTransfer;
+using WinUI3Utilities;
 
 namespace TagsTree.Views;
 
@@ -63,7 +64,7 @@ public partial class FilePropertiesPage : Page
     }
     private async void MoveClick(object sender, RoutedEventArgs e)
     {
-        if (await FileSystemHelper.GetStorageFolder() is not { } folder)
+        if (await PickerHelper.PickFolderAsync() is not { } folder)
             return;
         if (FileViewModel.Path == folder.Path)
         {

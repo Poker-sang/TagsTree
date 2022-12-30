@@ -1,12 +1,12 @@
-﻿using System.IO;
+using System.IO;
+using System.Threading.Tasks;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System.Threading.Tasks;
-using Windows.System;
 using Microsoft.UI.Xaml.Input;
-using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
+using Windows.System;
+using WinUI3Utilities;
 
 namespace TagsTree.Views;
 
@@ -14,17 +14,18 @@ public partial class SettingsPage : Page
 {
     public SettingsPage() => InitializeComponent();
 
-    private void OnThemeRadioButtonChecked(object sender, RoutedEventArgs e)
+    private void ThemeChecked(object sender, RoutedEventArgs e)
     {
-        var selectedTheme = (int)((FrameworkElement)sender).Tag switch
+        var selectedTheme = sender.GetTag<int>() switch
         {
             1 => ElementTheme.Light,
             2 => ElementTheme.Dark,
             _ => ElementTheme.Default
         };
 
-        // 内含 App.AppConfiguration.Theme = selectedTheme;
-        ThemeHelper.RootTheme = selectedTheme;
+        if (CurrentContext.Window.Content is FrameworkElement rootElement)
+            rootElement.RequestedTheme = selectedTheme;
+
         Application.Current.Resources["WindowCaptionForeground"] = selectedTheme switch
         {
             ElementTheme.Dark => Colors.White,
@@ -32,29 +33,30 @@ public partial class SettingsPage : Page
             _ => Application.Current.RequestedTheme is ApplicationTheme.Dark ? Colors.White : Colors.Black
         };
 
-        TitleBarHelper.TriggerTitleBarRepaint();
+        App.AppConfig.Theme = (int)selectedTheme;
+
         AppContext.SaveConfiguration(App.AppConfig);
     }
 
-    private async void BLibraryPath_Click(object sender, RoutedEventArgs e)
+    private async void LibraryPathClick(object sender, RoutedEventArgs e)
     {
-        TbLibraryPath.Text = (await FileSystemHelper.GetStorageFolder())?.Path ?? TbLibraryPath.Text;
+        TbLibraryPath.Text = (await PickerHelper.PickFolderAsync())?.Path ?? TbLibraryPath.Text;
         await ValidLibraryPathSet(TbLibraryPath.Text);
     }
 
-    private async void BExport_Click(object sender, RoutedEventArgs e)
+    private async void ExportClick(object sender, RoutedEventArgs e)
     {
-        if (await FileSystemHelper.GetStorageFolder() is { } folder)
+        if (await PickerHelper.PickFolderAsync() is { } folder)
             AppContext.AppLocalFolder.Copy(folder.Path);
     }
 
-    private async void BImport_Click(object sender, RoutedEventArgs e)
+    private async void ImportClick(object sender, RoutedEventArgs e)
     {
-        if (await FileSystemHelper.GetStorageFolder() is { } folder)
+        if (await PickerHelper.PickFolderAsync() is { } folder)
             folder.Path.Copy(AppContext.AppLocalFolder);
     }
 
-    private void BOpenDirectory_Click(object sender, RoutedEventArgs e) => AppContext.AppLocalFolder.Open();
+    private void OpenDirectoryClick(object sender, RoutedEventArgs e) => AppContext.AppLocalFolder.Open();
 
     private void FilesObserver_OnToggled(object sender, RoutedEventArgs e)
     {
@@ -62,15 +64,15 @@ public partial class SettingsPage : Page
         AppContext.SaveConfiguration(App.AppConfig);
     }
 
-    private void PathTagsEnabled_OnToggled(object sender, RoutedEventArgs e)
+    private void PathTagsEnabledToggled(object sender, RoutedEventArgs e)
     {
         App.AppConfig.PathTagsEnabled = ((ToggleSwitch)sender).IsOn;
         AppContext.SaveConfiguration(App.AppConfig);
     }
 
-    private async void TbLibraryPath_OnCharacterReceived(object sender, KeyRoutedEventArgs e)
+    private async void TbLibraryPathCharacterReceived(object sender, KeyRoutedEventArgs e)
     {
-        if (e.Key is not VirtualKey.Enter) 
+        if (e.Key is not VirtualKey.Enter)
             return;
         if (Directory.Exists(((TextBox)sender).Text))
         {
@@ -88,7 +90,7 @@ public partial class SettingsPage : Page
         if (!App.ConfigSet)
         {
             App.ConfigSet = true;
-            await WindowHelper.Window.ConfigIsSet();
+            await ((MainWindow)CurrentContext.Window).ConfigIsSet();
         }
         else
             ((NavigationViewItem)App.RootNavigationView.FooterMenuItems[0]).IsEnabled = await App.ChangeFilesObserver();

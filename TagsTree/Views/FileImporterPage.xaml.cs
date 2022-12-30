@@ -1,14 +1,15 @@
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using TagsTree.Interfaces;
 using TagsTree.Models;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
+using WinUI3Utilities;
 
 namespace TagsTree.Views;
 
@@ -52,7 +53,7 @@ public partial class FileImporterPage : Page, ITypeGetter
         if (((FrameworkElement)sender).Name is { } mode)
             if (mode is nameof(SelectFiles))
             {
-                if (await FileSystemHelper.GetStorageFiles() is { } files and not { Count: 0 })
+                if (await PickerHelper.PickMultipleFilesAsync() is { } files and not { Count: 0 })
                     if (FileViewModel.IsValidPath(files[0].Path.GetPath()))
                     {
                         foreach (var fileViewModelModel in _vm.FileViewModels)
@@ -62,7 +63,7 @@ public partial class FileImporterPage : Page, ITypeGetter
                                 .Select(file => new FileViewModel(file.Path)));
                     }
             }
-            else if (await FileSystemHelper.GetStorageFolder() is { } folder)
+            else if (await PickerHelper.PickFolderAsync() is { } folder)
             {
                 foreach (var fileViewModelModel in _vm.FileViewModels)
                     dictionary[fileViewModelModel.FullName] = true;

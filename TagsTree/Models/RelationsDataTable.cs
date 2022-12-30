@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using TagsTree.Algorithm;
-using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
+using WinUI3Utilities;
 
 namespace TagsTree.Models;
 

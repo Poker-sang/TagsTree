@@ -1,6 +1,6 @@
-using Microsoft.CodeAnalysis;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
 
 namespace TagsTree.SourceGenerator;
 
@@ -20,9 +20,9 @@ public class TypeWithAttributeGenerator : IIncrementalGenerator
     /// </summary>
     private static readonly Dictionary<string, TypeWithAttribute> _attributes = new()
     {
-        { "TagsTree.Attributes.GenerateConstructorAttribute", TypeWithAttributeDelegates.GenerateConstructor },
-        { "TagsTree.Attributes.LoadSaveConfigurationAttribute`1", TypeWithAttributeDelegates.LoadSaveConfiguration },
-        { "TagsTree.Attributes.DependencyPropertyAttribute`1", TypeWithAttributeDelegates.DependencyProperty }
+        { "WinUI3Utilities.Attributes.GenerateConstructorAttribute", TypeWithAttributeDelegates.GenerateConstructor },
+        { "WinUI3Utilities.Attributes.AppContextAttribute`1", TypeWithAttributeDelegates.AppContext },
+        { "WinUI3Utilities.Attributes.DependencyPropertyAttribute`1", TypeWithAttributeDelegates.DependencyProperty }
     };
 
     public void Initialize(IncrementalGeneratorInitializationContext context)

@@ -1,6 +1,6 @@
-﻿using Microsoft.UI.Xaml.Controls;
-using System.Linq;
+﻿using System.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.UI.Xaml.Controls;
 using TagsTree.Delegates;
 using TagsTree.Models;
 using TagsTree.Services.ExtensionMethods;

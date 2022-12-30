@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace TagsTree.Services;
+namespace WinUI3Utilities;
 
 public class RelayCommand : System.Windows.Input.ICommand
 {

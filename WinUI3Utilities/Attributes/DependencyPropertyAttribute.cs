@@ -1,15 +1,15 @@
-﻿using Microsoft.UI.Xaml;
 using System;
+using Microsoft.UI.Xaml;
 
-namespace TagsTree.Attributes;
+namespace WinUI3Utilities.Attributes;
 
 /// <summary>
-///     生成如下代码
-///     <code>
+/// 生成如下代码
+/// <code>
 /// <see langword="public static readonly"/> <see cref="DependencyProperty"/> Property = <see cref="DependencyProperty"/>.Register("Field", <see langword="typeof"/>(Type), <see langword="typeof"/>(TClass), <see langword="new"/> <see cref="PropertyMetadata"/>(DefaultValue, OnPropertyChanged));
 /// <br/>
-/// <see langword="public"/> <see cref="T:TagsTree.Attributes.DependencyPropertyAttribute`1"/> Field { <see langword="get"/> => (<see cref="T:TagsTree.Attributes.DependencyPropertyAttribute`1"/>)GetValue(Property); <see langword="set"/> => SetValue(Property, <see langword="value"/>); }
-///     </code>
+/// <see langword="public"/> <see cref="T:Attributes.DependencyPropertyAttribute`1"/> Field { <see langword="get"/> => (<see cref="T:Attributes.DependencyPropertyAttribute`1"/>)GetValue(Property); <see langword="set"/> => SetValue(Property, <see langword="value"/>); }
+/// </code>
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
 public sealed class DependencyPropertyAttribute<T> : Attribute

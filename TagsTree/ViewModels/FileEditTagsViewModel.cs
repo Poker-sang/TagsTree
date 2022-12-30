@@ -1,6 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
-using TagsTree.Services.ExtensionMethods;
+using CommunityToolkit.Mvvm.ComponentModel;
+using WinUI3Utilities;
 
 namespace TagsTree.ViewModels;
 
