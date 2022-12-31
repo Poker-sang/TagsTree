@@ -61,7 +61,7 @@ public partial class App : Application
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
         CurrentContext.Window = new MainWindow();
-        AppHelper.InitializeAsync(AppHelper.PredetermineEstimatedWindowSize());
+        AppHelper.Initialize(AppHelper.PredetermineEstimatedWindowSize());
     }
 
     public static async Task<bool> ChangeFilesObserver() => await FilesObserver.Change(AppConfig.LibraryPath);
