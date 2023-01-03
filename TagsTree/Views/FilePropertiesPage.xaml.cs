@@ -29,7 +29,7 @@ public partial class FilePropertiesPage : Page
 
     private void OpenClick(object sender, RoutedEventArgs e) => FileViewModel.Open();
     private void OpenExplorerClick(object sender, RoutedEventArgs e) => FileViewModel.OpenDirectory();
-    private void EditTagsClick(object sender, RoutedEventArgs e) => App.GotoPage<FileEditTagsPage>(FileViewModel);
+    private void EditTagsClick(object sender, RoutedEventArgs e) => NavigationHelper.GotoPage<FileEditTagsPage>(FileViewModel);
     private async void RemoveClick(object sender, RoutedEventArgs e)
     {
         if (!await ShowMessageDialog.Warning("是否从软件移除该文件？"))
@@ -64,7 +64,7 @@ public partial class FilePropertiesPage : Page
     }
     private async void MoveClick(object sender, RoutedEventArgs e)
     {
-        if (await PickerHelper.PickFolderAsync() is not { } folder)
+        if (await PickerHelper.PickSingleFolderAsync() is not { } folder)
             return;
         if (FileViewModel.Path == folder.Path)
         {
@@ -115,7 +115,7 @@ public partial class FilePropertiesPage : Page
 
     private static void Remove(FileViewModel fileViewModel)
     {
-        App.RootFrame.GoBack(new SlideNavigationTransitionInfo());
+        CurrentContext.Frame.GoBack(new SlideNavigationTransitionInfo());
         fileViewModel.RemoveAndSave();
         TagSearchFilesPage.FileRemoved(fileViewModel);
     }

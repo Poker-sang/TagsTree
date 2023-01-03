@@ -19,8 +19,8 @@ public sealed partial class MainWindow : Window
         CurrentContext.TitleBar = TitleBar;
         CurrentContext.TitleTextBlock = TitleTextBlock;
         // TODO: Microsoft.WindowsAppSDK 1.2后，最小化的NavigationView没有高度
-        App.RootNavigationView = NavigationView;
-        App.RootFrame = NavigateFrame;
+        CurrentContext.NavigationView = NavigationView;
+        CurrentContext.Frame = NavigateFrame;
     }
 
     private async void Loaded(object sender, RoutedEventArgs e)
@@ -42,7 +42,7 @@ public sealed partial class MainWindow : Window
         }
         else
         {
-            App.GotoPage<IndexPage>();
+            NavigationHelper.GotoPage<IndexPage>();
             NavigationView.SelectedItem = NavigationView.MenuItems[0];
         }
 
@@ -55,7 +55,7 @@ public sealed partial class MainWindow : Window
 
     private void DisplaySettings()
     {
-        App.GotoPage<SettingsPage>();
+        NavigationHelper.GotoPage<SettingsPage>();
         NavigationView.SelectedItem = NavigationView.SettingsItem;
     }
 
@@ -82,6 +82,6 @@ public sealed partial class MainWindow : Window
     private void ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs e)
     {
         if (e.InvokedItemContainer.Tag is Type item && item != NavigateFrame.Content.GetType())
-            App.GotoPage(item);
+            NavigationHelper.GotoPage(item);
     }
 }

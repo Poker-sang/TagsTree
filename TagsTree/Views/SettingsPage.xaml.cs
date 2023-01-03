@@ -26,11 +26,11 @@ public partial class SettingsPage : Page
         if (CurrentContext.Window.Content is FrameworkElement rootElement)
             rootElement.RequestedTheme = selectedTheme;
 
-        Application.Current.Resources["WindowCaptionForeground"] = selectedTheme switch
+        CurrentContext.App.Resources["WindowCaptionForeground"] = selectedTheme switch
         {
             ElementTheme.Dark => Colors.White,
             ElementTheme.Light => Colors.Black,
-            _ => Application.Current.RequestedTheme is ApplicationTheme.Dark ? Colors.White : Colors.Black
+            _ => CurrentContext.App.RequestedTheme is ApplicationTheme.Dark ? Colors.White : Colors.Black
         };
 
         App.AppConfig.Theme = (int)selectedTheme;
@@ -40,19 +40,19 @@ public partial class SettingsPage : Page
 
     private async void LibraryPathClick(object sender, RoutedEventArgs e)
     {
-        TbLibraryPath.Text = (await PickerHelper.PickFolderAsync())?.Path ?? TbLibraryPath.Text;
+        TbLibraryPath.Text = (await PickerHelper.PickSingleFolderAsync())?.Path ?? TbLibraryPath.Text;
         await ValidLibraryPathSet(TbLibraryPath.Text);
     }
 
     private async void ExportClick(object sender, RoutedEventArgs e)
     {
-        if (await PickerHelper.PickFolderAsync() is { } folder)
+        if (await PickerHelper.PickSingleFolderAsync() is { } folder)
             AppContext.AppLocalFolder.Copy(folder.Path);
     }
 
     private async void ImportClick(object sender, RoutedEventArgs e)
     {
-        if (await PickerHelper.PickFolderAsync() is { } folder)
+        if (await PickerHelper.PickSingleFolderAsync() is { } folder)
             folder.Path.Copy(AppContext.AppLocalFolder);
     }
 
@@ -93,6 +93,6 @@ public partial class SettingsPage : Page
             await ((MainWindow)CurrentContext.Window).ConfigIsSet();
         }
         else
-            ((NavigationViewItem)App.RootNavigationView.FooterMenuItems[0]).IsEnabled = await App.ChangeFilesObserver();
+            ((NavigationViewItem)CurrentContext.NavigationView.FooterMenuItems[0]).IsEnabled = await App.ChangeFilesObserver();
     }
 }

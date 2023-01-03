@@ -6,6 +6,7 @@ using TagsTree.Interfaces;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
+using WinUI3Utilities;
 
 namespace TagsTree.Views;
 
@@ -37,7 +38,7 @@ public partial class SelectTagToEditPage : Page, ITypeGetter
             return;
         }
 
-        App.GotoPage<TagEditFilesPage>(pathTagModel);
+        NavigationHelper.GotoPage<TagEditFilesPage>(pathTagModel);
     }
 
     #endregion

@@ -20,19 +20,8 @@ public partial class App : Application
 {
     public static AppConfig AppConfig { get; private set; } = null!;
     public static FilesObserver FilesObserver { get; private set; } = null!;
-    public static NavigationView RootNavigationView { get; set; } = null!;
-    public static Frame RootFrame { get; set; } = null!;
     public static ObservableCollection<FileChanged> FilesChangedList => FilesObserverPage.Vm.FilesChangedList;
     public static bool ConfigSet { get; set; }
-
-    public static void GotoPage<T>(object? parameter = null) where T : Page => GotoPage(typeof(T), parameter);
-
-    public static void GotoPage(Type page, object? parameter = null)
-    {
-        _ = RootFrame.Navigate(page, parameter);
-        RootNavigationView.IsBackEnabled = RootFrame.CanGoBack;
-        GC.Collect();
-    }
 
     public App()
     {
@@ -61,7 +50,7 @@ public partial class App : Application
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
         CurrentContext.Window = new MainWindow();
-        AppHelper.Initialize(AppHelper.PredetermineEstimatedWindowSize());
+        AppHelper.Initialize(WindowHelper.PredetermineEstimatedWindowSize());
     }
 
     public static async Task<bool> ChangeFilesObserver() => await FilesObserver.Change(AppConfig.LibraryPath);

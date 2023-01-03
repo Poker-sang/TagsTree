@@ -74,7 +74,7 @@ public sealed partial class TagEditFilesPage : Page
 
         App.SaveRelations();
         await ShowMessageDialog.Information(false, "已保存更改");
-        App.RootFrame.GoBack(new SlideNavigationTransitionInfo());
+        CurrentContext.Frame.GoBack(new SlideNavigationTransitionInfo());
     }
 
     #endregion

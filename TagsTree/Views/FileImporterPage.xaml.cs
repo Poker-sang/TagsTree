@@ -63,7 +63,7 @@ public partial class FileImporterPage : Page, ITypeGetter
                                 .Select(file => new FileViewModel(file.Path)));
                     }
             }
-            else if (await PickerHelper.PickFolderAsync() is { } folder)
+            else if (await PickerHelper.PickSingleFolderAsync() is { } folder)
             {
                 foreach (var fileViewModelModel in _vm.FileViewModels)
                     dictionary[fileViewModelModel.FullName] = true;

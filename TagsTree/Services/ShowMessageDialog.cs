@@ -20,7 +20,7 @@ public static class ShowMessageDialog
             Content = message,
             CloseButtonText = "确定",
             DefaultButton = ContentDialogButton.Close,
-            XamlRoot = App.RootNavigationView.XamlRoot
+            XamlRoot = CurrentContext.Window.Content.XamlRoot
         };
         _ = await messageDialog.ShowAsync();
     }
