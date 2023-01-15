@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -8,7 +8,7 @@ using TagsTree.Services.ExtensionMethods;
 namespace TagsTree.Controls;
 
 [INotifyPropertyChanged]
-public partial class InputContentDialog : ContentDialog
+public partial class InputContentDialog : UserControl
 {
     public InputContentDialog() => InitializeComponent();
     /// <summary>
@@ -19,9 +19,10 @@ public partial class InputContentDialog : ContentDialog
     /// 输入的格式
     /// </summary>
     [ObservableProperty] private string _warningText = "";
+
     public void Load(string title, Func<InputContentDialog, string?> judge, FileSystemHelper.InvalidMode mode, string text = "")
     {
-        Title = title;
+        ((ContentDialog)Content).Title = title;
         _judge = judge;
         InfoBar.IsOpen = false;
         switch (mode)
@@ -48,10 +49,10 @@ public partial class InputContentDialog : ContentDialog
 
     #region 事件处理
 
-    public new async Task<bool> ShowAsync()
+    public async Task<bool> ShowAsync()
     {
         _canceled = true;
-        _ = await base.ShowAsync();
+        _ = await ((ContentDialog)Content).ShowAsync();
         return _canceled;
     }
 
