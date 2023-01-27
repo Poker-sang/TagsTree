@@ -17,7 +17,7 @@
                     <FontIcon Glyph="&#xE771;" />
                 </labs:SettingsExpander.HeaderIcon>
                 <labs:SettingsExpander.Items>
-                    <labs:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Vertical">
+                    <labs:SettingsCard ContentAlignment="Left">
                         <RadioButtons SelectedIndex="{x:Bind root:App.AppConfig.Theme}">
                             <RadioButton Checked="ThemeChecked" Content="跟随系统">
                                 <RadioButton.Tag>

@@ -15,6 +15,7 @@ public sealed partial class MainWindow : Window
 {
     public MainWindow()
     {
+        CurrentContext.Window = this;
         InitializeComponent();
         CurrentContext.TitleBar = TitleBar;
         CurrentContext.TitleTextBlock = TitleTextBlock;

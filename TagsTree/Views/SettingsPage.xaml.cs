@@ -1,6 +1,6 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -25,13 +25,6 @@ public partial class SettingsPage : Page
 
         if (CurrentContext.Window.Content is FrameworkElement rootElement)
             rootElement.RequestedTheme = selectedTheme;
-
-        CurrentContext.App.Resources["WindowCaptionForeground"] = selectedTheme switch
-        {
-            ElementTheme.Dark => Colors.White,
-            ElementTheme.Light => Colors.Black,
-            _ => CurrentContext.App.RequestedTheme is ApplicationTheme.Dark ? Colors.White : Colors.Black
-        };
 
         App.AppConfig.Theme = (int)selectedTheme;
 

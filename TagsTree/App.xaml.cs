@@ -1,12 +1,10 @@
 // #define DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION
 // #define DISABLE_XAML_GENERATED_BINDING_DEBUG_OUTPUT
 // #define FIRST_TIME
-using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using TagsTree.Algorithm;
 using TagsTree.Models;
 using TagsTree.Services;
@@ -49,8 +47,8 @@ public partial class App : Application
     /// <param name="args">Details about the launch request and process.</param>
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
-        CurrentContext.Window = new MainWindow();
-        AppHelper.Initialize(WindowHelper.PredetermineEstimatedWindowSize());
+        _ = new MainWindow();
+        AppHelper.Initialize(WindowHelper.EstimatedWindowSize());
     }
 
     public static async Task<bool> ChangeFilesObserver() => await FilesObserver.Change(AppConfig.LibraryPath);

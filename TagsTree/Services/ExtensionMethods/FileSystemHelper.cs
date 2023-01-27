@@ -10,12 +10,18 @@ public static class FileSystemHelper
 {
     public static bool Exists(this string fullName) => File.Exists(fullName) || Directory.Exists(fullName);
 
-    public static async void Open(this IFullName fileBase)
+    public static async void Open(this IFullName fullName)
     {
         try
         {
-            var process = new Process { StartInfo = new(fileBase.FullName) };
-            process.StartInfo.UseShellExecute = true;
+            var process = new Process
+            {
+                StartInfo = new()
+                {
+                    FileName = fullName.FullName,
+                    UseShellExecute = true
+                }
+            };
             _ = process.Start();
         }
         catch (System.ComponentModel.Win32Exception)
@@ -27,8 +33,14 @@ public static class FileSystemHelper
     {
         try
         {
-            var process = new Process { StartInfo = new(fullName) };
-            process.StartInfo.UseShellExecute = true;
+            using var process = new Process
+            {
+                StartInfo = new()
+                {
+                    FileName = fullName,
+                    UseShellExecute = true
+                }
+            };
             _ = process.Start();
         }
         catch (System.ComponentModel.Win32Exception)
@@ -37,12 +49,18 @@ public static class FileSystemHelper
         }
     }
 
-    public static async void OpenDirectory(this IFullName fileBase)
+    public static async void OpenDirectory(this IFullName fullName)
     {
         try
         {
-            var process = new Process { StartInfo = new(fileBase.Path) };
-            process.StartInfo.UseShellExecute = true;
+            var process = new Process
+            {
+                StartInfo = new()
+                {
+                    FileName = fullName.FullName,
+                    UseShellExecute = true
+                }
+            };
             _ = process.Start();
         }
         catch (System.ComponentModel.Win32Exception)

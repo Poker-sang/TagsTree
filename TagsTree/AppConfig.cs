@@ -12,6 +12,6 @@ public partial record AppConfig
 
     public AppConfig()
     {
-        
+
     }
 }
