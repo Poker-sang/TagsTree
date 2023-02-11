@@ -1,22 +1,21 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.UI.Xaml.Controls;
 using TagsTree.Delegates;
 using TagsTree.Models;
 using TagsTree.Services.ExtensionMethods;
 using Windows.Foundation;
+using CommunityToolkit.Mvvm.ComponentModel;
+using WinUI3Utilities.Attributes;
 
 namespace TagsTree.Controls;
 
+[INotifyPropertyChanged]
+[DependencyProperty<string>("Text", DefaultValue = @"""""")]
+[DependencyProperty<TagsTreeDictionary>("TagsSource", IsNullable = true, DefaultValue = "null")]
 public partial class TagSearchBox : UserControl
 {
     public TagSearchBox() => InitializeComponent();
-
-    public string Text
-    {
-        get => AutoSuggestBox.Text;
-        set => AutoSuggestBox.Text = value;
-    }
 
     public event ResultChangedEventHandler ResultChanged = null!;
 
@@ -25,29 +24,31 @@ public partial class TagSearchBox : UserControl
     private void SuggestionChosen(AutoSuggestBox autoSuggestBox, AutoSuggestBoxSuggestionChosenEventArgs e)
     {
         // TODO: SuggestionChosen
-        //    var index = autoSuggestBox.Text.LastIndexOf(' ') + 1;
+        //    var index = Text.LastIndexOf(' ') + 1;
         //    if (index is 0)
-        //        autoSuggestBox.Text = e.SelectedItem.ToString();
-        //    else autoSuggestBox.Text = autoSuggestBox.Text[..index] + e.SelectedItem;
+        //        Text = e.SelectedItem.ToString();
+        //    else Text = Text[..index] + e.SelectedItem;
     }
 
     [GeneratedRegex("  +")]
     private static partial Regex MyRegex();
+
     private void TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
     {
-        sender.Text = Regex.Replace(sender.Text, $@"[{FileSystemHelper.GetInvalidPathChars}]+", "");
-        sender.Text = MyRegex().Replace(sender.Text, " ").TrimStart();
-        sender.ItemsSource = sender.Text.TagSuggest(' ');
+        Text = Regex.Replace(Text, $@"[{FileSystemHelper.GetInvalidPathChars}]+", "");
+        Text = MyRegex().Replace(Text, " ").TrimStart();
+        sender.ItemsSource = Text.TagSuggest(' ', TagsSource);
     }
+
     private void QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e)
     {
-        if (sender.Text is "")
+        if (Text is "")
         {
             ResultChanged.Invoke(App.IdFile.Values);
             return;
         }
 
-        var temp = sender.Text.Split(' ').Select(item => App.Tags.TagsDictionary.GetValueOrDefault(item) ?? new PathTagModel(item)).ToArray();
+        var temp = Text.Split(' ').Select(item => App.Tags.TagsDictionary.GetValueOrDefault(item) ?? new PathTagModel(item)).ToArray();
         ResultChanged.Invoke(App.Relations.GetFileModels(temp));
     }
 
@@ -61,7 +62,7 @@ public partial class TagSearchBox : UserControl
         AutoSuggestBox.QuerySubmitted += eventHandler;
     }
 
-    public void InvokeQuerySubmitted() => QuerySubmitted(AutoSuggestBox, null!);
+    public void InvokeQuerySubmitted() => QuerySubmitted(AutoSuggestBox, new AutoSuggestBoxQuerySubmittedEventArgs());
 
     #endregion
 }

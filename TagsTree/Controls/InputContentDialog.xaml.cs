@@ -1,38 +1,33 @@
 using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Controls;
 using TagsTree.Services.ExtensionMethods;
+using TagsTree.ViewModels.Controls;
+using WinUI3Utilities;
+using WinUI3Utilities.Attributes;
 
 namespace TagsTree.Controls;
 
-[INotifyPropertyChanged]
+[DependencyProperty<string>("Text", DefaultValue = @"""""")]
 public partial class InputContentDialog : UserControl
 {
+    private readonly InputContentDialogViewModels _vm = new();
+
     public InputContentDialog() => InitializeComponent();
-    /// <summary>
-    /// 输入的内容
-    /// </summary>
-    [ObservableProperty] private string _text = "";
-    /// <summary>
-    /// 输入的格式
-    /// </summary>
-    [ObservableProperty] private string _warningText = "";
 
     public void Load(string title, Func<InputContentDialog, string?> judge, FileSystemHelper.InvalidMode mode, string text = "")
     {
-        ((ContentDialog)Content).Title = title;
+        Content.To<ContentDialog>().Title = title;
         _judge = judge;
-        InfoBar.IsOpen = false;
         switch (mode)
         {
             case FileSystemHelper.InvalidMode.Name:
-                WarningText = @"不能包含\/:*?""<>|和除空格外的空白字符";
+                _vm.WarningText = @"不能包含\/:*?""<>|和除空格外的空白字符";
                 _invalidRegex = FileSystemHelper.GetInvalidNameChars;
                 break;
             case FileSystemHelper.InvalidMode.Path:
-                WarningText = @"不能包含/:*?""<>|和除空格外的空白字符";
+                _vm.WarningText = @"不能包含/:*?""<>|和除空格外的空白字符";
                 _invalidRegex = FileSystemHelper.GetInvalidPathChars;
                 break;
             default: throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
@@ -52,7 +47,7 @@ public partial class InputContentDialog : UserControl
     public async Task<bool> ShowAsync()
     {
         _canceled = true;
-        _ = await ((ContentDialog)Content).ShowAsync();
+        _ = await Content.To<ContentDialog>().ShowAsync();
         return _canceled;
     }
 
@@ -61,16 +56,16 @@ public partial class InputContentDialog : UserControl
         e.Cancel = true;
         if (!new Regex($@"^[^{_invalidRegex}]+$").IsMatch(Text))
         {
-            InfoBar.Message = WarningText;
-            InfoBar.IsOpen = true;
+            _vm.Message = _vm.WarningText;
+            _vm.IsOpen = true;
             return;
         }
 
         var result = _judge(this);
         if (result is not null)
         {
-            InfoBar.Message = result;
-            InfoBar.IsOpen = true;
+            _vm.Message = result;
+            _vm.IsOpen = true;
             return;
         }
 

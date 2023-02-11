@@ -44,7 +44,7 @@
             </CommandBar>
             <InfoBar x:Name="InfoBar" />
         </uiControls:DockPanel>
-        <AutoSuggestBox
+        <TextBox
             uiControls:DockPanel.Dock="Top"
             PlaceholderText="标签名称"
             Text="{x:Bind _vm.Name, Mode=TwoWay}"

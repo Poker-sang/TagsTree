@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:TagsTree.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
     mc:Ignorable="d">
@@ -13,14 +14,16 @@
         PrimaryButtonClick="OnPrimaryButtonClick"
         PrimaryButtonText="确定">
         <uiControls:DockPanel>
-            <AutoSuggestBox
+            <TextBox
                 uiControls:DockPanel.Dock="Top"
-                PlaceholderText="{x:Bind WarningText, Mode=OneWay}"
+                PlaceholderText="{x:Bind _vm.WarningText, Mode=OneWay}"
                 Text="{x:Bind Text, Mode=TwoWay}" />
             <Rectangle Height="5" uiControls:DockPanel.Dock="Top" />
             <InfoBar
                 x:Name="InfoBar"
                 Title="错误"
+                IsOpen="{x:Bind _vm.IsOpen, Mode=OneWay}"
+                Message="{x:Bind _vm.Message, Mode=OneWay}"
                 Severity="Error" />
         </uiControls:DockPanel>
     </ContentDialog>

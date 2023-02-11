@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="TagsTree.Controls.TagSearchBox"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -13,6 +13,7 @@
         QueryIcon="Find"
         QuerySubmitted="QuerySubmitted"
         SuggestionChosen="SuggestionChosen"
+        Text="{x:Bind Text, Mode=TwoWay}"
         TextChanged="TextChanged"
         ToolTipService.ToolTip="不包含/:*?&quot;&lt;&gt;|,和空白字符，留空显示全部">
         <AutoSuggestBox.ItemTemplate>

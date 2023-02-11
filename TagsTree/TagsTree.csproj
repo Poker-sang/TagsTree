@@ -41,7 +41,7 @@
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755" />
         <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.230118.102" />
         <PackageReference Include="PInvoke.User32" Version="0.7.124" />
-        <PackageReference Include="WinUI3Utilities" Version="1.0.9" />
+        <PackageReference Include="WinUI3Utilities" Version="1.0.9.1" />
         <Manifest Include="$(ApplicationManifest)" />
     </ItemGroup>
 
@@ -109,5 +109,9 @@
         <Page Update="Views\TagsManagerPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="ViewModels\Controls\" />
     </ItemGroup>
 </Project>
