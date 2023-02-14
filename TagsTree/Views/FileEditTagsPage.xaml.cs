@@ -9,23 +9,19 @@ namespace TagsTree.Views;
 
 public partial class FileEditTagsPage : Page
 {
-    public FileEditTagsPage()
-    {
-        _vm = new();
-        InitializeComponent();
-    }
+    public FileEditTagsPage() => InitializeComponent();
 
-    private readonly FileEditTagsViewModel _vm;
+    private readonly FileEditTagsViewModel _vm = new();
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
-        BSave.IsEnabled = false;
-        _vm.Load((FileViewModel)e.Parameter);
+        _vm.IsSaveEnabled = false;
+        _vm.FileViewModel = e.Parameter.To<FileViewModel>();
     }
 
     #region 事件处理
 
-    private void AddTagClick(object sender, DoubleTappedRoutedEventArgs e)
+    private void AddTagTapped(object sender, DoubleTappedRoutedEventArgs e)
     {
         var newTag = sender.GetTag<TagViewModel>();
         foreach (var tagExisted in _vm.VirtualTags)
@@ -51,11 +47,11 @@ public partial class FileEditTagsPage : Page
                 InfoBar.Title = "警告";
                 InfoBar.Message = $"「{newTag.Name}」将会覆盖上级标签「{tagExisted.Name}」，是否继续？";
                 InfoBar.ActionButton = new Button { Content = "确认" };
-                InfoBar.ActionButton.Click += (_, _) =>
+                InfoBar.ActionButton.Tapped += (_, _) =>
                 {
                     _ = _vm.VirtualTags.Remove(tagExisted);
                     _vm.VirtualTags.Add(newTag);
-                    BSave.IsEnabled = true;
+                    _vm.IsSaveEnabled = true;
                     InfoBar.ActionButton = null;
                     InfoBar.IsOpen = false;
                 };
@@ -64,26 +60,27 @@ public partial class FileEditTagsPage : Page
             }
 
         _vm.VirtualTags.Add(newTag);
-        BSave.IsEnabled = true;
+        _vm.IsSaveEnabled = true;
     }
 
-    private void DeleteTagClick(object sender, RoutedEventArgs e)
+    private void DeleteTagTapped(object sender, DoubleTappedRoutedEventArgs e)
     {
         _ = _vm.VirtualTags.Remove(sender.GetTag<TagViewModel>());
-        BSave.IsEnabled = true;
+        _vm.IsSaveEnabled = true;
     }
 
-    private void SaveClick(object sender, RoutedEventArgs e)
+    private void SaveTapped(object sender, TappedRoutedEventArgs e)
     {
-        foreach (var tag in App.Tags.TagsDictionaryValues)
-            App.Relations[tag.Id, _vm.FileViewModel.Id] = _vm.VirtualTags.Contains(tag);
-        _vm.FileViewModel.TagsUpdated();
-        App.SaveRelations();
-        BSave.IsEnabled = false;
+        foreach (var tag in AppContext.Tags.TagsDictionaryValues)
+            AppContext.Relations[tag.Id, _vm.FileViewModel.Id] = _vm.VirtualTags.Contains(tag);
+        _vm.FileViewModel.TagsChanged();
+        AppContext.SaveRelations();
+        _vm.IsSaveEnabled = false;
         InfoBar.Severity = InfoBarSeverity.Success;
         InfoBar.Title = "成功";
         InfoBar.Message = "已保存更改";
         InfoBar.IsOpen = true;
     }
+
     #endregion
 }

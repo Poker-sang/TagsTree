@@ -27,10 +27,10 @@ public partial class RelationsDataTable : TableDictionary<int, int>
     public int TagsCount => Tags.Count;
     public int FilesCount => Files.Count;
 
-    public IEnumerable<TagViewModel> GetTags(int fileId) => Tags.Where(pair => base[pair.Key, fileId]).Select(pair => App.Tags.TagsDictionary[pair.Key]);
+    public IEnumerable<TagViewModel> GetTags(int fileId) => Tags.Where(pair => base[pair.Key, fileId]).Select(pair => AppContext.Tags.TagsDictionary[pair.Key]);
 
-    [GeneratedRegex("(.)", RegexOptions.IgnoreCase, "zh-CN")]
-    private static partial Regex MyRegex();
+    [GeneratedRegex("(.)", RegexOptions.IgnoreCase)]
+    private static partial Regex FuzzyRegex();
 
     public static ObservableCollection<FileViewModel> FuzzySearchName(string input, IEnumerable<FileViewModel> range)
     {   // 大小写不敏感
@@ -40,7 +40,7 @@ public partial class RelationsDataTable : TableDictionary<int, int>
         var fuzzy = new List<FileViewModel>();
         // 包含任意一个字符，并按包含数排序
         var part = new List<(int Count, FileViewModel FileViewModel)>();
-        var fuzzyRegex = new Regex(MyRegex().Replace(input, ".+$1"));
+        var fuzzyRegex = new Regex(FuzzyRegex().Replace(input, ".+$1"));
         var partRegex = new Regex($"[{input}]", RegexOptions.IgnoreCase);
         foreach (var fileViewModel in range)
             if (fileViewModel.Name.Contains(input, StringComparison.OrdinalIgnoreCase))
@@ -57,7 +57,7 @@ public partial class RelationsDataTable : TableDictionary<int, int>
     }
     public IEnumerable<FileModel> GetFileModels(ICollection<PathTagModel>? tags = null)
     {
-        IEnumerable<FileModel> filesRange = App.IdFile.Values;
+        IEnumerable<FileModel> filesRange = AppContext.IdFile.Values;
         if (tags is null or { Count: 0 })
             return filesRange;
         var individualTags = new Dictionary<PathTagModel, bool>();
@@ -73,7 +73,7 @@ public partial class RelationsDataTable : TableDictionary<int, int>
             return filesRange.Where(fileModel => this[tagViewModel.Id, fileModel.Id]);
         }
         // 唯一需要判断是否能使用路径作为标签的地方
-        else if (App.AppConfig.PathTagsEnabled)
+        else if (AppContext.AppConfig.PathTagsEnabled)
             return filesRange.Where(fileModel => fileModel.PathContains(pathTagModel));
         return Enumerable.Empty<FileModel>();
     }
@@ -87,13 +87,13 @@ public partial class RelationsDataTable : TableDictionary<int, int>
         Table.Clear();
         Columns.Clear();
         Rows.Clear();
-        foreach (var fileIds in App.IdFile.Keys)
+        foreach (var fileIds in AppContext.IdFile.Keys)
             Files[fileIds] = FilesCount;
-        foreach (var tagIds in App.Tags.TagsDictionary.Keys1.Skip(1))
+        foreach (var tagIds in AppContext.Tags.TagsDictionary.Keys1.Skip(1))
         {
             Tags[tagIds] = TagsCount;
             Table.Add(new());
-            for (var i = 0; i < App.IdFile.Keys.Count; ++i)
+            for (var i = 0; i < AppContext.IdFile.Keys.Count; ++i)
                 this[tagIds].Add(false);
         }
     }

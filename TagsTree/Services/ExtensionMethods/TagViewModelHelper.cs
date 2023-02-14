@@ -16,7 +16,7 @@ public static class TagViewModelHelper
     /// <returns>找到的标签，若返回<see langword="null"/>即没找到路径</returns>
     public static TagViewModel? GetTagViewModel(this string name, TagsTreeDictionary? range = null)
     {
-        range ??= App.Tags;
+        range ??= AppContext.Tags;
         var temp = name.Split('\\', StringSplitOptions.RemoveEmptyEntries);
         return temp.Length is 0 ? range.TagsDictionaryRoot : range.TagsDictionary.GetValueOrDefault(temp[^1]);
     }
@@ -29,7 +29,7 @@ public static class TagViewModelHelper
     /// <returns></returns>
     public static IEnumerable<TagViewModel> GetTagViewModels(this string name, TagsTreeDictionary? range = null)
     {
-        range ??= App.Tags;
+        range ??= AppContext.Tags;
         foreach (var tagName in name.Split(' ', StringSplitOptions.RemoveEmptyEntries))
             if (range.TagsDictionary.GetValueOrDefault(tagName) is { } tagModel)
                 yield return tagModel;
@@ -44,7 +44,7 @@ public static class TagViewModelHelper
     /// <returns>标签建议列表</returns>
     public static IEnumerable<TagViewModel> TagSuggest(this string name, char separator, TagsTreeDictionary? range = null)
     {
-        range ??= App.Tags;
+        range ??= AppContext.Tags;
         var tempName = name.Split(separator, StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
         if (tempName is "" or null)
             yield break;

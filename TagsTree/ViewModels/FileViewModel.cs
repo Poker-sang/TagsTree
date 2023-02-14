@@ -1,19 +1,22 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using TagsTree.Interfaces;
 using TagsTree.Models;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
+using WinUI3Utilities;
 
 namespace TagsTree.ViewModels;
 
-[INotifyPropertyChanged]
-public partial class FileViewModel : IFileModel
+public class FileViewModel : ObservableObject, IFileModel
 {
+    public static readonly FileViewModel DefaultFileViewModel = new("");
+
     public FileModel FileModel { get; }
 
     /// <summary>
@@ -29,7 +32,7 @@ public partial class FileViewModel : IFileModel
     }
 
     /// <summary>
-    /// 虚拟构造（不存在于<see cref="App.IdFile"/>）
+    /// 虚拟构造（文件对象不存在于<see cref="AppContext.IdFile"/>）
     /// </summary>
     /// <param name="fullName">文件路径</param>
     public FileViewModel(string fullName) => FileModel = new(-1, fullName.GetName(), fullName.GetPath());
@@ -38,7 +41,7 @@ public partial class FileViewModel : IFileModel
 
     #region FileModel
 
-    public int Id => FileModel.Id is -1 ? throw new() : FileModel.Id;
+    public int Id => FileModel.Id is -1 ? ThrowHelper.Exception<int>() : FileModel.Id;
     public string Name => FileModel.Name;
     public string Path => FileModel.Path;
     public string FullName => FileModel.FullName;
@@ -62,17 +65,17 @@ public partial class FileViewModel : IFileModel
             return value;
         }
     }
-
-    public void IconChange() => OnPropertyChanged(nameof(Icon));
-    public BitmapImage Icon => this.GetIcon();
+    public ImageSource Icon => this.GetIcon();
 
     public string DateOfModification => FileModel.Exists ? FileSystemInfo.LastWriteTime.ToString(CultureInfo.CurrentCulture) : "";
 
-    public string Size => FileModel.Exists && !FileModel.IsFolder ? FileSystemHelper.CountSize((FileInfo)FileSystemInfo) : "";
+    public string Size => FileModel is { Exists: true, IsFolder: false } ? FileSystemHelper.CountSize((FileInfo)FileSystemInfo) : "";
 
     public static bool IsValidPath(string path) => FileModel.IsValidPath(path);
 
-    public void TagsUpdated() => OnPropertyChanged(nameof(Tags));
+    public void IconChanged() => OnPropertyChanged(nameof(Icon));
+
+    public void TagsChanged() => OnPropertyChanged(nameof(Tags));
 
     /// <summary>
     /// <see langword="true"/>表示拥有提供的标签<br/>

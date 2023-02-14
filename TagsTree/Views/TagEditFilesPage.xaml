@@ -23,7 +23,7 @@
                 OverflowButtonVisibility="Collapsed">
                 <AppBarButton
                     Icon="Save"
-                    Tapped="SaveClick"
+                    Tapped="SaveTapped"
                     ToolTipService.ToolTip="保存" />
             </CommandBar>
             <BreadcrumbBar

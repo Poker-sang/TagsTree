@@ -6,14 +6,13 @@ namespace TagsTree.ViewModels;
 
 public partial class FileEditTagsViewModel : ObservableObject
 {
-    public void Load(FileViewModel fileViewModel)
-    {
-        _fileViewModel = fileViewModel;
-        VirtualTags = App.Relations.GetTags(fileViewModel.Id).ToObservableCollection();
-    }
+    [ObservableProperty] private bool _isSaveEnabled;
 
-    public static ObservableCollection<TagViewModel> TagsSource => App.Tags.TagsTree.SubTags;
+    public static ObservableCollection<TagViewModel> TagsSource => AppContext.Tags.TagsTree.SubTags;
 
-    [ObservableProperty] private FileViewModel _fileViewModel = null!;
-    [ObservableProperty] private ObservableCollection<TagViewModel> _virtualTags = null!;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(VirtualTags))]
+    private FileViewModel _fileViewModel = FileViewModel.DefaultFileViewModel;
+
+    public ObservableCollection<TagViewModel> VirtualTags => AppContext.Relations.GetTags(FileViewModel.Id).ToObservableCollection();
 }

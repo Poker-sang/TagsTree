@@ -53,7 +53,7 @@ public class FileModel : FileBase, IFileModel
         Path = fullName.GetPath();
     }
 
-    public static bool IsValidPath(string path) => path.Contains(App.AppConfig.LibraryPath);
+    public static bool IsValidPath(string path) => path.Contains(AppContext.AppConfig.LibraryPath);
 
     /// <summary>
     /// <see langword="null"/>表示拥有的标签是<paramref name="tag"/>的子标签
@@ -80,7 +80,7 @@ public class FileModel : FileBase, IFileModel
     {
         get
         {
-            var tags = App.Relations.GetTags(Id).Select(tag => tag.Name).Aggregate("", (current, tag) => current + " " + tag);
+            var tags = AppContext.Relations.GetTags(Id).Select(tag => tag.Name).Aggregate("", (current, tag) => current + " " + tag);
             return tags is "" ? "" : tags[1..];
         }
     }

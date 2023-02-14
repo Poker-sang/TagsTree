@@ -6,7 +6,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="using:CommunityToolkit.WinUI.UI"
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:viewModels="using:TagsTree.ViewModels"
     Background="Transparent"
@@ -20,17 +19,17 @@
                 OverflowButtonVisibility="Collapsed">
                 <AppBarButton
                     Icon="Accept"
-                    Tapped="ConfirmClick"
+                    Tapped="ConfirmTapped"
                     ToolTipService.ToolTip="确定" />
             </CommandBar>
-            <controls:TagCompleteBox x:Name="TbPath" />
+            <controls:TagCompleteBox Path="{x:Bind _vm.Path, Mode=TwoWay}" />
         </uiControls:DockPanel>
         <TreeView
             VerticalAlignment="Stretch"
             AllowDrop="False"
             CanDragItems="False"
-            ItemInvoked="Tags_OnItemInvoked"
-            ItemsSource="{x:Bind Vm}">
+            ItemInvoked="TagsOnItemInvoked"
+            ItemsSource="{x:Bind _vm.AllTags}">
             <TreeView.ItemTemplate>
                 <DataTemplate x:DataType="viewModels:TagViewModel">
                     <TreeViewItem ItemsSource="{x:Bind SubTags}" ToolTipService.ToolTip="{x:Bind FullName}">

@@ -7,9 +7,28 @@
     xmlns:local="using:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:root="using:TagsTree"
+    xmlns:rs="using:TagsTree.Resources"
     Background="Transparent"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
+    <Page.Resources>
+        <Style
+            x:Key="FirstSettingHeaderStyle"
+            BasedOn="{StaticResource BodyStrongTextBlockStyle}"
+            TargetType="TextBlock">
+            <Style.Setters>
+                <Setter Property="Margin" Value="1,0,0,4" />
+            </Style.Setters>
+        </Style>
+        <Style
+            x:Key="SettingHeaderStyle"
+            BasedOn="{StaticResource BodyStrongTextBlockStyle}"
+            TargetType="TextBlock">
+            <Style.Setters>
+                <Setter Property="Margin" Value="1,28,0,4" />
+            </Style.Setters>
+        </Style>
+    </Page.Resources>
     <ScrollViewer>
         <StackPanel>
             <labs:SettingsExpander Description="应用的主题色" Header="主题">
@@ -18,7 +37,7 @@
                 </labs:SettingsExpander.HeaderIcon>
                 <labs:SettingsExpander.Items>
                     <labs:SettingsCard ContentAlignment="Left">
-                        <RadioButtons SelectedIndex="{x:Bind root:App.AppConfig.Theme}">
+                        <RadioButtons SelectedIndex="{x:Bind Vm.Theme, Mode=TwoWay}">
                             <RadioButton Checked="ThemeChecked" Content="跟随系统">
                                 <RadioButton.Tag>
                                     <x:Int32>0</x:Int32>
@@ -44,11 +63,15 @@
                 </labs:SettingsExpander.HeaderIcon>
                 <labs:SettingsExpander.Items>
                     <labs:SettingsCard
-                        ActionIcon="More"
+                        ActionIcon="Save"
+                        Header="记得点击右侧保存噢x"
                         IsClickEnabled="True"
-                        Tapped="LibraryPathClick">
+                        Tapped="LibraryPathSaved">
                         <labs:SettingsCard.Description>
-                            <TextBox x:Name="TbLibraryPath" KeyUp="TbLibraryPathCharacterReceived" />
+                            <AutoSuggestBox
+                                PlaceholderText="{x:Bind Vm.LibraryPath, Mode=OneWay}"
+                                QueryIcon="More"
+                                QuerySubmitted="LibraryPathTapped" />
                         </labs:SettingsCard.Description>
                     </labs:SettingsCard>
                 </labs:SettingsExpander.Items>
@@ -57,13 +80,13 @@
                 Description="将所在路径文件夹名作为标签使用"
                 Header="文件夹标签"
                 HeaderIcon="Tag">
-                <ToggleSwitch IsOn="{x:Bind root:App.AppConfig.PathTagsEnabled}" Toggled="PathTagsEnabledToggled" />
+                <ToggleSwitch IsOn="{x:Bind Vm.PathTagsEnabled, Mode=TwoWay}" Toggled="Save" />
             </labs:SettingsCard>
             <labs:SettingsCard
                 Description="监控文件路径文件下文件（夹）的变化"
                 Header="监控文件"
                 HeaderIcon="View">
-                <ToggleSwitch IsOn="{x:Bind root:App.AppConfig.FilesObserverEnabled}" Toggled="FilesObserver_OnToggled" />
+                <ToggleSwitch IsOn="{x:Bind Vm.FilesObserverEnabled, Mode=TwoWay}" Toggled="Save" />
             </labs:SettingsCard>
             <labs:SettingsExpander
                 Description="指定文件和标签记录所在的文件夹并进行导入导出的操作"
@@ -74,7 +97,7 @@
                         Header="导入"
                         HeaderIcon="Import"
                         IsClickEnabled="True"
-                        Tapped="ImportClick">
+                        Tapped="ImportTapped">
                         <labs:SettingsCard.ActionIcon>
                             <FontIcon Glyph="&#xE8A7;" />
                         </labs:SettingsCard.ActionIcon>
@@ -82,7 +105,7 @@
                     <labs:SettingsCard
                         Header="导出"
                         IsClickEnabled="True"
-                        Tapped="ExportClick">
+                        Tapped="ExportTapped">
                         <labs:SettingsCard.HeaderIcon>
                             <FontIcon Glyph="&#xEA52;" />
                         </labs:SettingsCard.HeaderIcon>
@@ -95,13 +118,98 @@
                         Header="打开"
                         HeaderIcon="OpenLocal"
                         IsClickEnabled="True"
-                        Tapped="OpenDirectoryClick">
+                        Tapped="OpenDirectoryTapped">
                         <labs:SettingsCard.ActionIcon>
                             <FontIcon Glyph="&#xE8A7;" />
                         </labs:SettingsCard.ActionIcon>
                     </labs:SettingsCard>
                 </labs:SettingsExpander.Items>
             </labs:SettingsExpander>
+            <!--  危险区域  -->
+            <TextBlock Style="{StaticResource SettingHeaderStyle}" Text="危险区域" />
+            <labs:SettingsExpander
+                Description="恢复默认设置并保存"
+                Header="恢复默认设置"
+                HeaderIcon="Refresh"
+                Tapped="SetDefaultAppConfigTapped">
+                <labs:SettingsExpander.Items>
+                    <labs:SettingsCard
+                        ActionIcon="Important"
+                        Header="确认"
+                        IsClickEnabled="True" />
+                </labs:SettingsExpander.Items>
+            </labs:SettingsExpander>
+            <!--  关于  -->
+            <TextBlock Style="{StaticResource SettingHeaderStyle}" Text="关于" />
+            <labs:SettingsExpander Header="关于 TagsTree v1.30">
+                <labs:SettingsExpander.HeaderIcon>
+                    <FontIcon Glyph="&#xE946;" />
+                </labs:SettingsExpander.HeaderIcon>
+                <labs:SettingsExpander.Items>
+                    <labs:SettingsCard
+                        Tapped="NavigateUriTapped"
+                        Description="poker_sang@outlook.com"
+                        Header="邮箱"
+                        HeaderIcon="Mail"
+                        IsClickEnabled="True"
+                        Tag="{x:Bind rs:ConstantStrings.MailUri}">
+                        <!--<PathIcon Data="{x:Bind rs:ConstantStrings.OutlookSvgPath}" />显示不正确不知道为什么-->
+                        <labs:SettingsCard.ActionIcon>
+                            <FontIcon Glyph="&#xE8A7;" />
+                        </labs:SettingsCard.ActionIcon>
+                    </labs:SettingsCard>
+                    <labs:SettingsCard
+                        Tapped="NavigateUriTapped"
+                        Description="扑克"
+                        Header="作者"
+                        IsClickEnabled="True"
+                        Tag="{x:Bind rs:ConstantStrings.AuthorUri}">
+                        <labs:SettingsCard.HeaderIcon>
+                            <PathIcon Data="{x:Bind rs:ConstantStrings.GitHubSvgPath}" />
+                        </labs:SettingsCard.HeaderIcon>
+                        <labs:SettingsCard.ActionIcon>
+                            <FontIcon Glyph="&#xE8A7;" />
+                        </labs:SettingsCard.ActionIcon>
+                    </labs:SettingsCard>
+                    <labs:SettingsCard
+                        Tapped="NavigateUriTapped"
+                        Description="2639914082"
+                        Header="QQ"
+                        IsClickEnabled="True"
+                        Tag="{x:Bind rs:ConstantStrings.QqUri}">
+                        <labs:SettingsCard.HeaderIcon>
+                            <PathIcon Data="{x:Bind rs:ConstantStrings.QqSvgPath}" />
+                        </labs:SettingsCard.HeaderIcon>
+                        <labs:SettingsCard.ActionIcon>
+                            <FontIcon Glyph="&#xE8A7;" />
+                        </labs:SettingsCard.ActionIcon>
+                    </labs:SettingsCard>
+                    <labs:SettingsCard
+                        Tapped="NavigateUriTapped"
+                        Description="TagsTree"
+                        Header="仓库"
+                        HeaderIcon="Library"
+                        IsClickEnabled="True"
+                        Tag="{x:Bind rs:ConstantStrings.RepositoryUri}">
+                        <labs:SettingsCard.ActionIcon>
+                            <FontIcon Glyph="&#xE8A7;" />
+                        </labs:SettingsCard.ActionIcon>
+                    </labs:SettingsCard>
+                </labs:SettingsExpander.Items>
+            </labs:SettingsExpander>
+            <labs:SettingsCard
+                Tapped="NavigateUriTapped"
+                Description="GNU General Public License v3.0"
+                Header="License"
+                IsClickEnabled="True"
+                Tag="{x:Bind rs:ConstantStrings.LicenseUri}">
+                <labs:SettingsCard.HeaderIcon>
+                    <PathIcon Data="{x:Bind rs:ConstantStrings.GnuSvgPath}" />
+                </labs:SettingsCard.HeaderIcon>
+                <labs:SettingsCard.ActionIcon>
+                    <FontIcon Glyph="&#xE8A7;" />
+                </labs:SettingsCard.ActionIcon>
+            </labs:SettingsCard>
         </StackPanel>
     </ScrollViewer>
 </Page>

@@ -2,6 +2,7 @@ using System.Text.RegularExpressions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using TagsTree.Models;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
@@ -24,15 +25,22 @@ public partial class TagCompleteBox : UserControl
         _vm.State = true;
     }
 
+    #region 依赖属性
+
+    public static readonly DependencyProperty PathProperty = DependencyProperty.Register(nameof(Path), typeof(string), typeof(TagCompleteBox), new PropertyMetadata(""));
+
     public string Path
     {
-        get => _vm.Path;
+        get => GetValue(PathProperty).To<string>();
         set
         {
+            SetValue(PathProperty, value);
             _vm.Path = value;
             _vm.State = false;
         }
     }
+
+    #endregion
 
     #region 事件处理
 

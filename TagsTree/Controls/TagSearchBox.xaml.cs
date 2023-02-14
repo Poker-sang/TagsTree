@@ -44,12 +44,12 @@ public partial class TagSearchBox : UserControl
     {
         if (Text is "")
         {
-            ResultChanged.Invoke(App.IdFile.Values);
+            ResultChanged.Invoke(AppContext.IdFile.Values);
             return;
         }
 
-        var temp = Text.Split(' ').Select(item => App.Tags.TagsDictionary.GetValueOrDefault(item) ?? new PathTagModel(item)).ToArray();
-        ResultChanged.Invoke(App.Relations.GetFileModels(temp));
+        var temp = Text.Split(' ').Select(item => AppContext.Tags.TagsDictionary.GetValueOrDefault(item) ?? new PathTagModel(item)).ToArray();
+        ResultChanged.Invoke(AppContext.Relations.GetFileModels(temp));
     }
 
     #endregion

@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using TagsTree.Models;
 using TagsTree.Services;
@@ -35,11 +36,11 @@ public partial class TagSearchFilesPage : Page
 
     private void QuerySubmitted(AutoSuggestBox autoSuggestBox, AutoSuggestBoxQuerySubmittedEventArgs e) => _vm.FileViewModels = autoSuggestBox.Text is "" ? _vm.ResultCallBack : RelationsDataTable.FuzzySearchName(autoSuggestBox.Text, _vm.ResultCallBack);
 
-    private void ContextOpenClick(object sender, RoutedEventArgs e) => ((FileViewModel)((MenuFlyoutItem)sender).DataContext).Open();
+    private void ContextOpenTapped(object sender, TappedRoutedEventArgs e) => ((FileViewModel)((MenuFlyoutItem)sender).DataContext).Open();
 
-    private void ContextOpenExplorerClick(object sender, RoutedEventArgs e) => ((FileViewModel)((MenuFlyoutItem)sender).DataContext).OpenDirectory();
+    private void ContextOpenExplorerTapped(object sender, TappedRoutedEventArgs e) => ((FileViewModel)((MenuFlyoutItem)sender).DataContext).OpenDirectory();
 
-    private async void ContextRemoveClick(object sender, RoutedEventArgs e)
+    private async void ContextRemoveTapped(object sender, TappedRoutedEventArgs e)
     {
         if (!await ShowMessageDialog.Warning("是否从软件移除该文件？"))
             return;
@@ -47,9 +48,9 @@ public partial class TagSearchFilesPage : Page
         _ = _vm.FileViewModels.Remove((FileViewModel)((FrameworkElement)sender).DataContext);
     }
 
-    private void ContextPropertiesClick(object sender, RoutedEventArgs e) => NavigationHelper.GotoPage<FilePropertiesPage>((FileViewModel)((MenuFlyoutItem)sender).DataContext);
+    private void ContextPropertiesTapped(object sender, TappedRoutedEventArgs e) => NavigationHelper.GotoPage<FilePropertiesPage>((FileViewModel)((MenuFlyoutItem)sender).DataContext);
 
-    private void ContextPropertiesDoubleClick(object sender, RoutedEventArgs e)
+    private void ContextPropertiesDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
     {
         if ((FileViewModel)((DataGrid)sender).SelectedItem is { } fileViewModel)
             NavigationHelper.GotoPage<FilePropertiesPage>(fileViewModel);

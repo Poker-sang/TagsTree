@@ -3,41 +3,38 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using TagsTree.Interfaces;
 using TagsTree.Models;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
+using WinUI3Utilities;
 
 namespace TagsTree.Views;
 
 public sealed partial class FilesObserverPage : Page, ITypeGetter
 {
-    public FilesObserverPage()
-    {
-        InitializeComponent();
-        Vm.FilesChangedList.CollectionChanged += (_, _) => CollectionChanged();
-        CollectionChanged();
+    public FilesObserverPage() => InitializeComponent();
 
-        void CollectionChanged()
-        {
-            BMergeAll.IsEnabled = BDeleteAll.IsEnabled = BApplyAll.IsEnabled = BSaveAll.IsEnabled = Vm.FilesChangedList.Count is not 0;
-            BDeleteRange.IsEnabled = Vm.FilesChangedList.Count > 1;
-        }
-    }
     public static Type TypeGetter => typeof(FilesObserverPage);
+
+#pragma warning disable CA1822, IDE1006
+    // ReSharper disable once InconsistentNaming, MemberCanBeMadeStatic.Local
+    private FilesObserverViewModel _vm => Vm;
+#pragma warning restore CA1822, IDE1006
 
     public static FilesObserverViewModel Vm { get; set; } = null!;
 
     #region 事件处理
 
-    private async void ContextApplyClick(object sender, RoutedEventArgs e)
+    private async void ContextApplyTapped(object sender, TappedRoutedEventArgs e)
     {
-        var fileChanged = (FileChanged)((MenuFlyoutItem)sender).DataContext;
+        var fileChanged = sender.GetDataContext<FileChanged>();
         if (FileViewModel.IsValidPath(fileChanged.Path))
             if (fileChanged.Type is FileChanged.ChangedType.Create)
                 Apply(fileChanged, null);
-            else if (App.IdFile.Values.FirstOrDefault(f => f.FullName == fileChanged.OldFullName) is { } fileModel)
+            else if (AppContext.IdFile.Values.FirstOrDefault(f => f.FullName == fileChanged.OldFullName) is { } fileModel)
                 Apply(fileChanged, fileModel);
             else
             {
@@ -50,79 +47,77 @@ public sealed partial class FilesObserverPage : Page, ITypeGetter
             return;
         }
 
-        _ = Vm.FilesChangedList.Remove(fileChanged);
-        App.SaveFiles();
+        _ = _vm.FilesChangedList.Remove(fileChanged);
+        AppContext.SaveFiles();
         if (fileChanged.Type is FileChanged.ChangedType.Create or FileChanged.ChangedType.Delete)
-            App.SaveRelations();
+            AppContext.SaveRelations();
         Save();
         ShowInfoBar("已应用一项并保存");
     }
 
-    private void ContextDeleteClick(object sender, RoutedEventArgs e)
+    private void ContextDeleteTapped(object sender, TappedRoutedEventArgs e)
     {
-        _ = Vm.FilesChangedList.Remove((FileChanged)((MenuFlyoutItem)sender).DataContext);
+        _ = _vm.FilesChangedList.Remove(sender.GetDataContext<FileChanged>());
         ShowInfoBar("已删除一项");
     }
 
-    private void ContextDeleteBeforeClick(object sender, RoutedEventArgs e)
+    private void ContextDeleteBeforeTapped(object sender, TappedRoutedEventArgs e)
     {
-        if ((FileChanged)((MenuFlyoutItem)sender).DataContext == Vm.FilesChangedList[^1])
+        if (sender.GetDataContext<FileChanged>() == _vm.FilesChangedList[^1])
         {
-            Vm.FilesChangedList.Clear();
+            _vm.FilesChangedList.Clear();
             return;
         }
 
-        var id = ((FileChanged)((MenuFlyoutItem)sender).DataContext).Id;
-        while (Vm.FilesChangedList[0].Id <= id)
-            Vm.FilesChangedList.RemoveAt(0);
+        var id = sender.GetDataContext<FileChanged>().Id;
+        while (_vm.FilesChangedList[0].Id <= id)
+            _vm.FilesChangedList.RemoveAt(0);
         ShowInfoBar($"已删除序号{id}及之前项");
     }
 
-    private void ContextDeleteAfterClick(object sender, RoutedEventArgs e)
+    private void ContextDeleteAfterTapped(object sender, TappedRoutedEventArgs e)
     {
-        if ((FileChanged)((MenuFlyoutItem)sender).DataContext == Vm.FilesChangedList[0])
+        if (sender.GetDataContext<FileChanged>() == _vm.FilesChangedList[0])
         {
-            Vm.FilesChangedList.Clear();
+            _vm.FilesChangedList.Clear();
             return;
         }
 
-        var id = ((FileChanged)((MenuFlyoutItem)sender).DataContext).Id;
-        while (Vm.FilesChangedList[^1].Id >= id)
-            _ = Vm.FilesChangedList.Remove(Vm.FilesChangedList[^1]);
+        var id = sender.GetDataContext<FileChanged>().Id;
+        while (_vm.FilesChangedList[^1].Id >= id)
+            _ = _vm.FilesChangedList.Remove(_vm.FilesChangedList[^1]);
         ShowInfoBar($"已删除序号{id}及之后项");
     }
 
-    private async void DeleteRangeClick(object sender, RoutedEventArgs e)
+    private void DeleteRangeConfirmTapped(ContentDialog sender, ContentDialogButtonClickEventArgs e)
     {
         var count = 0;
-        CdDeleteRange.PrimaryButtonClick += (_, _) =>
-        {
-            for (var i = 0; i < Vm.FilesChangedList.Count;)
-                if (Rs.RangeStart > Vm.FilesChangedList[i].Id)
-                    ++i;
-                else if (Vm.FilesChangedList[i].Id > Rs.RangeEnd)
-                    break;
-                else
-                {
-                    Vm.FilesChangedList.RemoveAt(i);
-                    ++count;
-                }
+        for (var i = 0; i < _vm.FilesChangedList.Count;)
+            if (Rs.RangeStart > _vm.FilesChangedList[i].Id)
+                ++i;
+            else if (_vm.FilesChangedList[i].Id > Rs.RangeEnd)
+                break;
+            else
+            {
+                _vm.FilesChangedList.RemoveAt(i);
+                ++count;
+            }
 
-            ShowInfoBar($"已删除{count}项");
-        };
-        _ = await CdDeleteRange.ShowAsync();
+        ShowInfoBar($"已删除{count}项");
     }
 
-    private async void ApplyAllClick(object sender, RoutedEventArgs e)
+    private async void DeleteRangeTapped(object sender, TappedRoutedEventArgs e) => await CdDeleteRange.ShowAsync();
+
+    private async void ApplyAllTapped(object sender, TappedRoutedEventArgs e)
     {
         MergeAll();
         var nameFile = new Dictionary<string, FileModel>();
-        foreach (var fileModel in App.IdFile.Values)
+        foreach (var fileModel in AppContext.IdFile.Values)
             nameFile[fileModel.FullName] = fileModel;
         var deleteList = new List<FileChanged>();
         var invalidExceptions = new List<FileChanged>();
         var notExistExceptions = new List<FileChanged>();
-        foreach (var fileChanged in Vm.FilesChangedList)
+        foreach (var fileChanged in _vm.FilesChangedList)
             if (FileViewModel.IsValidPath(fileChanged.Path))
                 if (fileChanged.Type is FileChanged.ChangedType.Create)
                 {
@@ -139,7 +134,7 @@ public sealed partial class FilesObserverPage : Page, ITypeGetter
             else
                 invalidExceptions.Add(fileChanged);
         foreach (var deleteItem in deleteList)
-            _ = Vm.FilesChangedList.Remove(deleteItem);
+            _ = _vm.FilesChangedList.Remove(deleteItem);
         var exception = "";
         if (invalidExceptions.Count is not 0)
         {
@@ -155,27 +150,27 @@ public sealed partial class FilesObserverPage : Page, ITypeGetter
 
         if (exception is not "")
             await ShowMessageDialog.Information(true, exception);
-        App.SaveFiles();
-        App.SaveRelations();
+        AppContext.SaveFiles();
+        AppContext.SaveRelations();
         Save();
         ShowInfoBar("已全部应用并保存");
     }
 
-    private void MergeAllClick(object sender, RoutedEventArgs e)
+    private void MergeAllTapped(object sender, TappedRoutedEventArgs e)
     {
         MergeAll();
         Save();
         ShowInfoBar("已全部合并并保存");
     }
 
-    private void DeleteAllClick(object sender, RoutedEventArgs e)
+    private void DeleteAllTapped(object sender, TappedRoutedEventArgs e)
     {
         ClearAll();
         Save();
         ShowInfoBar("已全部清除并保存");
     }
 
-    private void BSaveAllClick(object sender, RoutedEventArgs e)
+    private void SaveAllTapped(object sender, TappedRoutedEventArgs e)
     {
         Save();
         ShowInfoBar("已保存");
@@ -193,14 +188,14 @@ public sealed partial class FilesObserverPage : Page, ITypeGetter
             case FileChanged.ChangedType.Move: fileModel!.MoveOrRename(fileChanged.FullName); break;
             case FileChanged.ChangedType.Rename: fileModel!.MoveOrRename(fileChanged.FullName); break;
             case FileChanged.ChangedType.Delete: fileModel!.Remove(); break;
-            default: throw new ArgumentOutOfRangeException(nameof(fileChanged));
+            default: ThrowHelper.ArgumentOutOfRange(fileChanged); break;
         }
     }
 
-    private static void MergeAll()
+    private void MergeAll()
     {
         var fileChangedMergers = new List<FileChangedMerger>();
-        foreach (var fileChanged in Vm.FilesChangedList)
+        foreach (var fileChanged in _vm.FilesChangedList)
             if (!fileChangedMergers.Any(fileChangedMerger => fileChangedMerger.CanMerge(fileChanged)))
                 fileChangedMergers.Add(new(fileChanged));
 
@@ -209,20 +204,20 @@ public sealed partial class FilesObserverPage : Page, ITypeGetter
             switch (fileChangedMerger.GetMergeResult())
             {
                 case FileChangedMerger.MergeResult.Move:
-                    Vm.FilesChangedList.Add(new(fileChangedMerger.CurrentFullName, FileChanged.ChangedType.Move, fileChangedMerger.OriginalPath));
+                    _vm.FilesChangedList.Add(new(fileChangedMerger.CurrentFullName, FileChanged.ChangedType.Move, fileChangedMerger.OriginalPath));
                     break;
                 case FileChangedMerger.MergeResult.Rename:
-                    Vm.FilesChangedList.Add(new(fileChangedMerger.CurrentFullName, FileChanged.ChangedType.Rename, fileChangedMerger.OriginalName));
+                    _vm.FilesChangedList.Add(new(fileChangedMerger.CurrentFullName, FileChanged.ChangedType.Rename, fileChangedMerger.OriginalName));
                     break;
                 case FileChangedMerger.MergeResult.MoveRename:
-                    Vm.FilesChangedList.Add(new($"{fileChangedMerger.CurrentPath}\\{fileChangedMerger.OriginalName}", FileChanged.ChangedType.Move, fileChangedMerger.OriginalPath));
-                    Vm.FilesChangedList.Add(new(fileChangedMerger.CurrentFullName, FileChanged.ChangedType.Rename, fileChangedMerger.OriginalName));
+                    _vm.FilesChangedList.Add(new($"{fileChangedMerger.CurrentPath}\\{fileChangedMerger.OriginalName}", FileChanged.ChangedType.Move, fileChangedMerger.OriginalPath));
+                    _vm.FilesChangedList.Add(new(fileChangedMerger.CurrentFullName, FileChanged.ChangedType.Rename, fileChangedMerger.OriginalName));
                     break;
                 case FileChangedMerger.MergeResult.Create:
-                    Vm.FilesChangedList.Add(new(fileChangedMerger.CurrentFullName, FileChanged.ChangedType.Create));
+                    _vm.FilesChangedList.Add(new(fileChangedMerger.CurrentFullName, FileChanged.ChangedType.Create));
                     break;
                 case FileChangedMerger.MergeResult.Delete:
-                    Vm.FilesChangedList.Add(new(fileChangedMerger.OriginalFullName, FileChanged.ChangedType.Delete));
+                    _vm.FilesChangedList.Add(new(fileChangedMerger.OriginalFullName, FileChanged.ChangedType.Delete));
                     break;
                 // MergeResult.Nothing或者不合法数据都不进行操作
                 case FileChangedMerger.MergeResult.Nothing:
@@ -230,20 +225,23 @@ public sealed partial class FilesObserverPage : Page, ITypeGetter
             }
     }
 
-    private static void ClearAll()
+    private void ClearAll()
     {
-        Vm.FilesChangedList.Clear();
+        _vm.FilesChangedList.Clear();
         FileChanged.Num = 1;
     }
 
-    private static void Save()
-        // 或App.FilesChangedList
-        => FileChanged.Serialize(App.FilesChangedPath, Vm.FilesChangedList);
+    private void Save()
+    {
+        // 或AppContext.FilesChangedList
+        FileChanged.Serialize(AppContext.FilesChangedPath, _vm.FilesChangedList);
+        _vm.IsSaveEnabled = false;
+    }
 
     private void ShowInfoBar(string message)
     {
-        InfoBar.Message = message;
-        InfoBar.IsOpen = true;
+        _vm.Message = "";
+        _vm.Message = message;
     }
 
     #endregion

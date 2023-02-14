@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -6,7 +6,7 @@ using TagsTree.Models;
 
 namespace TagsTree.ViewModels;
 
-public class FilesObserverViewModel : ObservableObject
+public partial class FilesObserverViewModel : ObservableObject
 {
     public ObservableCollection<FileChanged> FilesChangedList { get; }
 
@@ -20,8 +20,19 @@ public class FilesObserverViewModel : ObservableObject
         {
             if (e.Action is NotifyCollectionChangedAction.Remove)
                 FileChanged.Num = FilesChangedList.LastOrDefault() is { } fileChanged ? fileChanged.Id + 1 : 1;
+            IsSaveEnabled = true;
             OnPropertyChanged(nameof(FirstId));
             OnPropertyChanged(nameof(LastId));
+            OnPropertyChanged(nameof(IsListNotEmpty));
+            OnPropertyChanged(nameof(IsMultipleItems));
         };
     }
+
+    [ObservableProperty] private bool _isSaveEnabled;
+
+    public bool IsListNotEmpty => FilesChangedList.Count is not 0;
+
+    public bool IsMultipleItems => FilesChangedList.Count > 1;
+
+    [ObservableProperty] private string _message = "";
 }

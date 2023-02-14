@@ -2,6 +2,7 @@
     x:Class="TagsTree.Views.FilesObserverPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:TagsTree.Services.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -11,12 +12,16 @@
     Background="Transparent"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
+    <Page.Resources>
+        <converters:StringToBoolConverter x:Key="StringToBoolConverter" />
+    </Page.Resources>
     <uiControls:DockPanel>
         <ContentDialog
             x:Name="CdDeleteRange"
             Title="删除序号范围"
             CloseButtonText="取消"
             DefaultButton="Close"
+            PrimaryButtonClick="DeleteRangeConfirmTapped"
             PrimaryButtonText="确认">
             <uiControls:RangeSelector
                 x:Name="Rs"
@@ -30,60 +35,64 @@
                 DefaultLabelPosition="Collapsed"
                 OverflowButtonVisibility="Collapsed">
                 <AppBarButton
-                    x:Name="BDeleteRange"
                     Icon="Remove"
-                    IsEnabled="False"
-                    Tapped="DeleteRangeClick"
+                    IsEnabled="{x:Bind _vm.IsMultipleItems, Mode=OneWay}"
+                    Tapped="DeleteRangeTapped"
                     ToolTipService.ToolTip="删除范围" />
                 <AppBarButton
-                    x:Name="BMergeAll"
-                    IsEnabled="False"
-                    Tapped="MergeAllClick"
+                    IsEnabled="{x:Bind _vm.IsListNotEmpty, Mode=OneWay}"
+                    Tapped="MergeAllTapped"
                     ToolTipService.ToolTip="合并全部">
                     <AppBarButton.Icon>
                         <FontIcon Glyph="&#xEA3C;" />
                     </AppBarButton.Icon>
                 </AppBarButton>
                 <AppBarButton
-                    x:Name="BApplyAll"
                     Icon="Accept"
-                    IsEnabled="False"
-                    Tapped="ApplyAllClick"
+                    IsEnabled="{x:Bind _vm.IsListNotEmpty, Mode=OneWay}"
+                    Tapped="ApplyAllTapped"
                     ToolTipService.ToolTip="应用全部更改" />
                 <AppBarButton
-                    x:Name="BDeleteAll"
                     Icon="Delete"
-                    IsEnabled="False"
-                    Tapped="DeleteAllClick"
+                    IsEnabled="{x:Bind _vm.IsListNotEmpty, Mode=OneWay}"
+                    Tapped="DeleteAllTapped"
                     ToolTipService.ToolTip="清除全部" />
                 <AppBarSeparator />
                 <AppBarButton
-                    x:Name="BSaveAll"
                     Icon="Save"
-                    IsEnabled="False"
-                    Tapped="BSaveAllClick"
+                    IsEnabled="{x:Bind _vm.IsSaveEnabled, Mode=OneWay}"
+                    Tapped="SaveAllTapped"
                     ToolTipService.ToolTip="暂存更改" />
             </CommandBar>
             <InfoBar
-                x:Name="InfoBar"
                 Title="成功"
+                IsOpen="{x:Bind _vm.Message, Converter={StaticResource StringToBoolConverter}, Mode=OneWay}"
+                Message="{x:Bind _vm.Message, Mode=OneWay}"
                 Severity="Success" />
         </uiControls:DockPanel>
         <uiControls:DataGrid AutoGenerateColumns="False" ItemsSource="{x:Bind local:FilesObserverPage.Vm.FilesChangedList}">
-            <uiControls:DataGrid.RowStyle>
-                <Style TargetType="uiControls:DataGridRow">
-                    <Setter Property="ContextFlyout">
-                        <Setter.Value>
-                            <MenuFlyout>
-                                <MenuFlyoutItem Tapped="ContextApplyClick" Text="应用更改" />
-                                <MenuFlyoutItem Tapped="ContextDeleteClick" Text="删除本条" />
-                                <MenuFlyoutItem Tapped="ContextDeleteBeforeClick" Text="删除本条及更小序号项" />
-                                <MenuFlyoutItem Tapped="ContextDeleteAfterClick" Text="删除本条及更大序号项" />
-                            </MenuFlyout>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </uiControls:DataGrid.RowStyle>
+            <uiControls:DataGrid.RowDetailsTemplate>
+                <DataTemplate x:DataType="models:FileChanged">
+                    <CommandBar DefaultLabelPosition="Right">
+                        <AppBarButton
+                            Icon="Accept"
+                            Label="应用本条"
+                            Tapped="ContextApplyTapped" />
+                        <AppBarButton
+                            Icon="Remove"
+                            Label="删除本条"
+                            Tapped="ContextDeleteTapped" />
+                        <AppBarButton
+                            Icon="Upload"
+                            Label="删除本条及更小序号项"
+                            Tapped="ContextDeleteBeforeTapped" />
+                        <AppBarButton
+                            Icon="Download"
+                            Label="删除本条及更大序号项"
+                            Tapped="ContextDeleteAfterTapped" />
+                    </CommandBar>
+                </DataTemplate>
+            </uiControls:DataGrid.RowDetailsTemplate>
             <uiControls:DataGrid.Columns>
                 <uiControls:DataGridTemplateColumn
                     Width="*"
@@ -94,7 +103,6 @@
                             <TextBlock
                                 Margin="10,0"
                                 VerticalAlignment="Center"
-                                Tag="{x:Bind}"
                                 Text="{x:Bind Id}" />
                         </DataTemplate>
                     </uiControls:DataGridTemplateColumn.CellTemplate>
@@ -108,7 +116,6 @@
                             <TextBlock
                                 Margin="10,0"
                                 VerticalAlignment="Center"
-                                Tag="{x:Bind}"
                                 Text="{x:Bind Name}" />
                         </DataTemplate>
                     </uiControls:DataGridTemplateColumn.CellTemplate>
@@ -122,7 +129,6 @@
                             <TextBlock
                                 Margin="10,0"
                                 VerticalAlignment="Center"
-                                Tag="{x:Bind}"
                                 Text="{x:Bind PartialPath}" />
                         </DataTemplate>
                     </uiControls:DataGridTemplateColumn.CellTemplate>
@@ -136,7 +142,6 @@
                             <TextBlock
                                 Margin="10,0"
                                 VerticalAlignment="Center"
-                                Tag="{x:Bind}"
                                 Text="{x:Bind DisplayType}" />
                         </DataTemplate>
                     </uiControls:DataGridTemplateColumn.CellTemplate>
@@ -150,7 +155,6 @@
                             <TextBlock
                                 Margin="10,0"
                                 VerticalAlignment="Center"
-                                Tag="{x:Bind}"
                                 Text="{x:Bind DisplayRemark}" />
                         </DataTemplate>
                     </uiControls:DataGridTemplateColumn.CellTemplate>

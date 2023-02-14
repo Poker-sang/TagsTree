@@ -30,7 +30,9 @@ public partial class InputContentDialog : UserControl
                 _vm.WarningText = @"不能包含/:*?""<>|和除空格外的空白字符";
                 _invalidRegex = FileSystemHelper.GetInvalidPathChars;
                 break;
-            default: throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
+            default:
+                ThrowHelper.ArgumentOutOfRange(mode);
+                return;
         }
 
         Text = text;
@@ -73,7 +75,7 @@ public partial class InputContentDialog : UserControl
         _canceled = false;
     }
 
-    private void OnCloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args) => _canceled = true;
+    private void OnCloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs e) => _canceled = true;
 
     #endregion
 }

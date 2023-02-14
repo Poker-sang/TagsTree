@@ -1,5 +1,5 @@
-﻿using System;
 using System.Collections.Generic;
+using WinUI3Utilities;
 
 namespace TagsTree.Models;
 
@@ -65,7 +65,8 @@ public class FileChangedMerger
                 IsExisted = false;
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(fileChanged));
+                ThrowHelper.ArgumentOutOfRange(fileChanged);
+                break;
         }
     }
 
@@ -75,7 +76,7 @@ public class FileChangedMerger
             return false;
         // 同或逻辑
         if (fileChanged is { Type: FileChanged.ChangedType.Create } == IsExisted)
-            throw new("逻辑出错，可能是遗漏监听文件所致");
+            return ThrowHelper.Exception<bool>("逻辑出错，可能是遗漏监听文件所致");
         switch (fileChanged.Type)
         {
             case FileChanged.ChangedType.Create:
@@ -93,7 +94,7 @@ public class FileChangedMerger
                 IsExisted = false;
                 return true;
             default:
-                throw new ArgumentOutOfRangeException(nameof(fileChanged));
+                return ThrowHelper.ArgumentOutOfRange<FileChanged, bool>(fileChanged);
         }
     }
 

@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Text.Json.Serialization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using TagsTree.Models;
+using WinUI3Utilities;
 
 namespace TagsTree.ViewModels;
 
@@ -83,7 +84,8 @@ public partial class TagViewModel : TagModel
             case NotifyCollectionChangedAction.Move:
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(e), e, null);
+                ThrowHelper.ArgumentOutOfRange(e);
+                break;
         }
     }
 }

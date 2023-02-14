@@ -3,6 +3,7 @@ using System.Linq;
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using TagsTree.Models;
@@ -27,37 +28,39 @@ public sealed partial class TagEditFilesPage : Page
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
-        _vm.TagViewModel = (TagViewModel)e.Parameter;
-        _vm.FileViewModels = App.Relations.GetFileModels().Select(fileModel => new FileViewModel(fileModel, _vm.TagViewModel)).ToObservableCollection();
+        _vm.TagViewModel = e.Parameter.To<TagViewModel>();
+        _vm.FileViewModels = AppContext.Relations.GetFileModels().Select(fileModel => new FileViewModel(fileModel, _vm.TagViewModel)).ToObservableCollection();
     }
 
     private void ResultChanged(IEnumerable<FileModel> newResult) => _vm.FileViewModels = newResult.Select(fileModel => new FileViewModel(fileModel, _vm.TagViewModel.Parent)).ToObservableCollection();
 
+    
     private void Selected(object sender, SelectionChangedEventArgs e)
     {
-        if ((FileViewModel)((DataGrid)sender).SelectedItem is not { } item)
+        var dg = sender.To<DataGrid>();
+        if (dg.SelectedItem.To<FileViewModel>() is not { } item)
             return;
         item.SelectedFlip();
-        ((DataGrid)sender).SelectedIndex = -1;
+        dg.SelectedIndex = -1;
     }
-    private async void SaveClick(object sender, RoutedEventArgs e)
-    {
 
+    private async void SaveTapped(object sender, TappedRoutedEventArgs e)
+    {
         foreach (var fileViewModel in _vm.FileViewModels)
             if (fileViewModel.Selected != fileViewModel.SelectedOriginal)
             {
                 switch (fileViewModel.SelectedOriginal)
                 {
                     case true:
-                        App.Relations[_vm.TagViewModel.Id, fileViewModel.Id] = false;
+                        AppContext.Relations[_vm.TagViewModel.Id, fileViewModel.Id] = false;
                         break;
                     // 如果原本有上级标签，则覆盖相应上级标签
                     case false:
-                        App.Relations[_vm.TagViewModel.Id, fileViewModel.Id] = true;
+                        AppContext.Relations[_vm.TagViewModel.Id, fileViewModel.Id] = true;
                         foreach (var tagViewModel in fileViewModel.Tags.GetTagViewModels())
                             if (tagViewModel.HasChildTag(_vm.TagViewModel))
                             {
-                                App.Relations[tagViewModel.Id, fileViewModel.Id] = false;
+                                AppContext.Relations[tagViewModel.Id, fileViewModel.Id] = false;
                                 break;
                             }
 
@@ -65,14 +68,14 @@ public sealed partial class TagEditFilesPage : Page
                     // 如果原本是null，则删除fileViewModel拥有的相应子标签
                     case null:
                         foreach (var tag in fileViewModel.GetAncestorTags(_vm.TagViewModel))
-                            App.Relations[tag.Id, fileViewModel.Id] = false;
+                            AppContext.Relations[tag.Id, fileViewModel.Id] = false;
                         break;
                 }
 
-                fileViewModel.TagsUpdated();
+                fileViewModel.TagsChanged();
             }
 
-        App.SaveRelations();
+        AppContext.SaveRelations();
         await ShowMessageDialog.Information(false, "已保存更改");
         CurrentContext.Frame.GoBack(new SlideNavigationTransitionInfo());
     }

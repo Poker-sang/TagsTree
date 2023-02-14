@@ -1,15 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Media.Imaging;
-using TagsTree.Properties;
 using TagsTree.ViewModels;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
+using Microsoft.UI.Xaml.Media;
 
 namespace TagsTree.Services;
 
@@ -18,25 +18,24 @@ public static class IconsHelper
     /// <summary>
     /// 将已有文件列表里所有文件图标预加载
     /// </summary>
-    public static async void LoadFilesIcons()
+    public static void LoadFilesIcons()
     {
-        using var ms1 = new MemoryStream(Resources.NotFound);
+        using var ms1 = new MemoryStream(Properties.Resources.NotFound);
         _notFoundIcon = GetBitmapImage(ms1.AsRandomAccessStream());
 
-        using var ms2 = new MemoryStream(Resources.Loading);
+        using var ms2 = new MemoryStream(Properties.Resources.Loading);
         _loadingIcon = GetBitmapImage(ms2.AsRandomAccessStream());
 
-        using var ms3 = new MemoryStream(Resources.Folder);
+        using var ms3 = new MemoryStream(Properties.Resources.Folder);
         _iconList["文件夹"] = GetBitmapImage(ms3.AsRandomAccessStream());
 
-        using var ms4 = new MemoryStream(Resources.Link);
+        using var ms4 = new MemoryStream(Properties.Resources.Link);
         _iconList["LNK"] = _iconList["URL"] = GetBitmapImage(ms4.AsRandomAccessStream());
 
         foreach (var file in Directory.GetFiles(ApplicationData.Current.TemporaryFolder.Path, "Temp.*"))
             File.Delete(file);
 
-        await Task.Yield();
-        foreach (var extension in App.IdFile.Values.Select(file => file.Extension).Where(extension => !_iconList.ContainsKey(extension)).Distinct())
+        foreach (var extension in AppContext.IdFile.Values.Select(file => file.Extension).Where(extension => !_iconList.ContainsKey(extension)).Distinct())
         {
             _iconRequest.Enqueue(new(extension));
             _iconList[extension] = null;
@@ -50,7 +49,7 @@ public static class IconsHelper
     /// </summary>
     /// <param name="fileViewModel">文件</param>
     /// <returns>图标</returns>
-    public static BitmapImage GetIcon(this FileViewModel fileViewModel)
+    public static ImageSource GetIcon(this FileViewModel fileViewModel)
     {
         if (!fileViewModel.Exists)
             return _notFoundIcon;
@@ -62,11 +61,11 @@ public static class IconsHelper
             else
             {
                 _iconRequest.First(iconGetter => iconGetter.Extension == fileViewModel.Extension).CallBack +=
-                    fileViewModel.IconChange;
+                    fileViewModel.IconChanged;
                 return _loadingIcon;
             }
 
-        _iconRequest.Enqueue(new(fileViewModel.Extension, fileViewModel.IconChange));
+        _iconRequest.Enqueue(new(fileViewModel.Extension, fileViewModel.IconChanged));
         _iconList[fileViewModel.Extension] = null;
         if (_iconRequest.Count <= 1)
             _ = StartAsync();
@@ -165,5 +164,5 @@ public static class IconsHelper
     /// <summary>
     /// 图标字典，键是扩展名，值是图标
     /// </summary>
-    private static readonly Dictionary<string, BitmapImage?> _iconList = new();
+    private static readonly Dictionary<string, ImageSource?> _iconList = new();
 }

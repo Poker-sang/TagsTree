@@ -20,26 +20,25 @@
                 OverflowButtonVisibility="Collapsed">
                 <AppBarButton
                     Icon="Add"
-                    Tapped="NewClick"
+                    Tapped="NewTapped"
                     ToolTipService.ToolTip="添加" />
                 <AppBarButton
                     Icon="MoveToFolder"
-                    Tapped="MoveClick"
+                    Tapped="MoveTapped"
                     ToolTipService.ToolTip="移动" />
                 <AppBarButton
                     Icon="Rename"
-                    Tapped="RenameClick"
+                    Tapped="RenameTapped"
                     ToolTipService.ToolTip="重命名" />
                 <AppBarButton
                     Icon="Remove"
-                    Tapped="DeleteClick"
+                    Tapped="DeleteTapped"
                     ToolTipService.ToolTip="删除" />
                 <AppBarSeparator />
                 <AppBarButton
-                    x:Name="BSave"
                     Icon="Save"
-                    IsEnabled="False"
-                    Tapped="SaveClick"
+                    IsEnabled="{x:Bind _vm.CanPaste, Mode=OneWay}"
+                    Tapped="SaveTapped"
                     ToolTipService.ToolTip="保存" />
             </CommandBar>
             <InfoBar x:Name="InfoBar" />
@@ -51,65 +50,65 @@
             TextChanged="NameChanged"
             ToolTipService.ToolTip="不包含\/:*?&quot;&lt;&gt;|,和空白字符且不为空" />
         <controls:TagCompleteBox
-            x:Name="TbPath"
             uiControls:DockPanel.Dock="Top"
+            Path="{x:Bind _vm.Path, Mode=TwoWay}"
             TagsSource="{x:Bind _vm.TagsSource}" />
         <TreeView
             AllowDrop="True"
             CanDragItems="True"
             DragItemsCompleted="OnDragItemsCompleted"
             DragItemsStarting="OnDragItemsStarting"
-            ItemInvoked="Tags_OnItemInvoked"
+            ItemInvoked="TagsOnItemInvoked"
             ItemsSource="{x:Bind _vm.TagsSource.TagsTree.SubTags, Mode=OneWay}">
             <TreeView.ItemTemplate>
                 <DataTemplate x:DataType="viewModels:TagViewModel">
                     <TreeViewItem ItemsSource="{x:Bind SubTags, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind FullName}">
                         <TextBlock Text="{x:Bind Name, Mode=OneWay}" />
                         <TreeViewItem.ContextFlyout>
-                            <CommandBarFlyout Placement="TopEdgeAlignedLeft">
-                                <AppBarButton
+                            <MenuFlyout Placement="TopEdgeAlignedLeft">
+                                <MenuFlyoutItem
                                     Icon="Add"
                                     Tag="{x:Bind}"
-                                    Tapped="ContextNewClick"
-                                    ToolTipService.ToolTip="新建" />
-                                <AppBarButton
+                                    Tapped="ContextNewTapped"
+                                    Text="新建" />
+                                <MenuFlyoutItem
                                     Icon="Cut"
                                     Tag="{x:Bind}"
-                                    Tapped="ContextCutClick"
-                                    ToolTipService.ToolTip="剪切" />
-                                <AppBarButton
+                                    Tapped="ContextCutTapped"
+                                    Text="剪切" />
+                                <MenuFlyoutItem
                                     Icon="Paste"
-                                    IsEnabled="{x:Bind local:TagsManagerPage.Current.CanPaste, Mode=OneWay}"
+                                    IsEnabled="{x:Bind local:TagsManagerPage.Current._vm.CanPaste, Mode=OneWay}"
                                     Tag="{x:Bind}"
-                                    Tapped="ContextPasteClick"
-                                    ToolTipService.ToolTip="粘贴" />
-                                <AppBarButton
+                                    Tapped="ContextPasteTapped"
+                                    Text="粘贴" />
+                                <MenuFlyoutItem
                                     Icon="Rename"
                                     Tag="{x:Bind}"
-                                    Tapped="ContextRenameClick"
-                                    ToolTipService.ToolTip="重命名" />
-                                <AppBarButton
+                                    Tapped="ContextRenameTapped"
+                                    Text="重命名" />
+                                <MenuFlyoutItem
                                     Icon="Delete"
                                     Tag="{x:Bind}"
-                                    Tapped="ContextDeleteClick"
-                                    ToolTipService.ToolTip="删除" />
-                            </CommandBarFlyout>
+                                    Tapped="ContextDeleteTapped"
+                                    Text="删除" />
+                            </MenuFlyout>
                         </TreeViewItem.ContextFlyout>
                     </TreeViewItem>
                 </DataTemplate>
             </TreeView.ItemTemplate>
             <TreeView.ContextFlyout>
-                <CommandBarFlyout Placement="TopEdgeAlignedLeft">
-                    <AppBarButton
+                <MenuFlyout Placement="TopEdgeAlignedLeft">
+                    <MenuFlyoutItem
                         Icon="Add"
-                        Tapped="ContextNewXClick"
-                        ToolTipService.ToolTip="新建" />
-                    <AppBarButton
+                        Tapped="RootContextNewTapped"
+                        Text="新建" />
+                    <MenuFlyoutItem
                         Icon="Paste"
-                        IsEnabled="{x:Bind CanPaste, Mode=OneWay}"
-                        Tapped="ContextPasteXClick"
-                        ToolTipService.ToolTip="粘贴" />
-                </CommandBarFlyout>
+                        IsEnabled="{x:Bind _vm.CanPaste, Mode=OneWay}"
+                        Tapped="RootContextPasteTapped"
+                        Text="粘贴" />
+                </MenuFlyout>
             </TreeView.ContextFlyout>
         </TreeView>
     </uiControls:DockPanel>

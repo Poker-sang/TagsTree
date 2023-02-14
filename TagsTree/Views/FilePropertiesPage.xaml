@@ -19,88 +19,88 @@
             OverflowButtonVisibility="Collapsed">
             <AppBarButton
                 Icon="OpenFile"
-                IsEnabled="{x:Bind FileViewModel.Exists, Mode=OneWay}"
-                Tapped="OpenClick"
+                IsEnabled="{x:Bind _vm.FileViewModel.Exists, Mode=OneWay}"
+                Tapped="OpenTapped"
                 ToolTipService.ToolTip="打开" />
             <AppBarButton
                 Icon="OpenLocal"
-                Tapped="OpenExplorerClick"
+                Tapped="OpenExplorerTapped"
                 ToolTipService.ToolTip="打开文件夹" />
             <AppBarButton
                 Icon="Remove"
-                Tapped="RemoveClick"
+                Tapped="RemoveTapped"
                 ToolTipService.ToolTip="移除" />
             <AppBarButton
                 Icon="Edit"
-                Tapped="EditTagsClick"
+                Tapped="EditTagsTapped"
                 ToolTipService.ToolTip="更改标签" />
             <AppBarSeparator />
             <AppBarButton
                 Icon="Rename"
-                IsEnabled="{x:Bind FileViewModel.Exists, Mode=OneWay}"
-                Tapped="RenameClick"
+                IsEnabled="{x:Bind _vm.FileViewModel.Exists, Mode=OneWay}"
+                Tapped="RenameTapped"
                 ToolTipService.ToolTip="重命名" />
             <AppBarButton
                 Icon="MoveToFolder"
-                IsEnabled="{x:Bind FileViewModel.Exists, Mode=OneWay}"
-                Tapped="MoveClick"
+                IsEnabled="{x:Bind _vm.FileViewModel.Exists, Mode=OneWay}"
+                Tapped="MoveTapped"
                 ToolTipService.ToolTip="移动" />
             <AppBarButton
                 Icon="Delete"
-                IsEnabled="{x:Bind FileViewModel.Exists, Mode=OneWay}"
-                Tapped="DeleteClick"
+                IsEnabled="{x:Bind _vm.FileViewModel.Exists, Mode=OneWay}"
+                Tapped="DeleteTapped"
                 ToolTipService.ToolTip="删除" />
         </CommandBar>
         <ScrollViewer>
             <StackPanel Orientation="Vertical">
                 <Rectangle Height="32" />
-                <Image Width="64" Source="{x:Bind FileViewModel.Icon, Mode=OneWay}" />
+                <Image Width="64" Source="{x:Bind _vm.FileViewModel.Icon, Mode=OneWay}" />
                 <Rectangle Height="32" />
                 <StackPanel Orientation="Vertical">
                     <labs:SettingsCard
                         ActionIcon="Copy"
                         ActionIconToolTip="复制到剪切板"
                         Description="名称"
-                        Header="{x:Bind FileViewModel.Name, Mode=OneWay}"
+                        Header="{x:Bind _vm.FileViewModel.Name, Mode=OneWay}"
                         IsClickEnabled="True"
-                        Tapped="CopyClick" />
+                        Tapped="CopyTapped" />
                     <labs:SettingsCard
                         ActionIcon="Copy"
                         ActionIconToolTip="复制到剪切板"
                         Description="路径"
-                        Header="{x:Bind FileViewModel.PartialPath, Mode=OneWay}"
+                        Header="{x:Bind _vm.FileViewModel.PartialPath, Mode=OneWay}"
                         IsClickEnabled="True"
-                        Tapped="CopyClick" />
+                        Tapped="CopyTapped" />
                     <labs:SettingsCard
                         ActionIcon="Copy"
                         ActionIconToolTip="复制到剪切板"
                         Description="类型"
-                        Header="{x:Bind FileViewModel.Extension, Mode=OneWay}"
+                        Header="{x:Bind _vm.FileViewModel.Extension, Mode=OneWay}"
                         IsClickEnabled="True"
-                        Tapped="CopyClick" />
+                        Tapped="CopyTapped" />
                     <labs:SettingsCard
                         ActionIcon="Copy"
                         ActionIconToolTip="复制到剪切板"
                         Description="标签"
-                        Header="{x:Bind FileViewModel.Tags, Mode=OneWay}"
+                        Header="{x:Bind _vm.FileViewModel.Tags, Mode=OneWay}"
                         IsClickEnabled="True"
-                        Tapped="CopyClick" />
+                        Tapped="CopyTapped" />
                     <labs:SettingsCard
                         ActionIcon="Copy"
                         ActionIconToolTip="复制到剪切板"
                         Description="修改日期"
-                        Header="{x:Bind FileViewModel.DateOfModification, Mode=OneWay}"
+                        Header="{x:Bind _vm.FileViewModel.DateOfModification, Mode=OneWay}"
                         IsClickEnabled="True"
-                        IsEnabled="{x:Bind FileViewModel.Exists, Mode=OneWay}"
-                        Tapped="CopyClick" />
+                        IsEnabled="{x:Bind _vm.FileViewModel.Exists, Mode=OneWay}"
+                        Tapped="CopyTapped" />
                     <labs:SettingsCard
                         ActionIcon="Copy"
                         ActionIconToolTip="复制到剪切板"
                         Description="大小"
-                        Header="{x:Bind FileViewModel.Size, Mode=OneWay}"
+                        Header="{x:Bind _vm.FileViewModel.Size, Mode=OneWay}"
                         IsClickEnabled="True"
-                        IsEnabled="{x:Bind FileViewModel.Exists, Mode=OneWay}"
-                        Tapped="CopyClick" />
+                        IsEnabled="{x:Bind _vm.FileViewModel.Exists, Mode=OneWay}"
+                        Tapped="CopyTapped" />
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>

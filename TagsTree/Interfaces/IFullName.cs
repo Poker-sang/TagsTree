@@ -1,4 +1,4 @@
-﻿namespace TagsTree.Interfaces;
+namespace TagsTree.Interfaces;
 
 public interface IFullName
 {

@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using TagsTree.Interfaces;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.ViewModels;
@@ -12,35 +12,19 @@ using WinUI3Utilities;
 
 namespace TagsTree.Views;
 
-[INotifyPropertyChanged]
 public partial class TagsManagerPage : Page, ITypeGetter
 {
     public TagsManagerPage()
     {
         Current = this;
-        _vm = new();
         InitializeComponent();
     }
+
     public static Type TypeGetter => typeof(TagsManagerPage);
 
     public static TagsManagerPage Current { get; private set; } = null!;
 
-    private readonly TagsManagerViewModel _vm;
-
-    [ObservableProperty] private bool _canPaste;
-
-    private TagViewModel? _clipBoard;
-    private TagViewModel? ClipBoard
-    {
-        get => _clipBoard;
-        set
-        {
-            if (Equals(value, _clipBoard))
-                return;
-            _clipBoard = value;
-            CanPaste = value is not null;
-        }
-    }
+    private readonly TagsManagerViewModel _vm = new();
 
     #region 事件处理
 
@@ -48,26 +32,26 @@ public partial class TagsManagerPage : Page, ITypeGetter
 
     private void OnDragItemsCompleted(TreeView sender, TreeViewDragItemsCompletedEventArgs e)
     {
-        if ((e.NewParentItem as TagViewModel) == _tempPath)
-            InfoBarShow($"移动标签 {((TagViewModel)e.Items[0]).Name} 到原位置", InfoBarSeverity.Informational);
+        if ((e.NewParentItem.To<TagViewModel>()) == _tempPath)
+            InfoBarShow($"移动标签 {e.Items[0].To<TagViewModel>().Name} 到原位置", InfoBarSeverity.Informational);
         else
         {
-            BSave.IsEnabled = true;
-            InfoBarShow($"移动标签 {((TagViewModel)e.Items[0]).Name}", InfoBarSeverity.Success);
+            _vm.IsSaveEnabled = true;
+            InfoBarShow($"移动标签 {e.Items[0].To<TagViewModel>().Name}", InfoBarSeverity.Success);
         }
 
         _tempPath = null;
     }
 
-    private void OnDragItemsStarting(TreeView sender, TreeViewDragItemsStartingEventArgs e) => _tempPath = ((TagViewModel)e.Items[0]).Parent;
+    private void OnDragItemsStarting(TreeView sender, TreeViewDragItemsStartingEventArgs e) => _tempPath = e.Items[0].To<TagViewModel>().Parent;
 
     private void NameChanged(object sender, TextChangedEventArgs e) => _vm.Name = Regex.Replace(_vm.Name, $@"[{FileSystemHelper.GetInvalidNameChars}]+", "");
 
-    private void Tags_OnItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs e) => TbPath.Path = (e.InvokedItem as TagViewModel)?.FullName ?? TbPath.Path;
+    private void TagsOnItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs e) => _vm.Path = (e.InvokedItem as TagViewModel)?.FullName ?? _vm.Path;
 
-    private void NewClick(object sender, RoutedEventArgs e)
+    private void NewTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (ExistenceCheck(TbPath.Path, "标签路径") is not { } pathTagModel)
+        if (ExistenceCheck(_vm.Path, "标签路径") is not { } pathTagModel)
             return;
 
         var result = NewTagCheck(_vm.Name);
@@ -81,9 +65,9 @@ public partial class TagsManagerPage : Page, ITypeGetter
         _vm.Name = "";
     }
 
-    private void MoveClick(object sender, RoutedEventArgs e)
+    private void MoveTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (ExistenceCheck(TbPath.Path, "标签路径") is not { } pathTagModel)
+        if (ExistenceCheck(_vm.Path, "标签路径") is not { } pathTagModel)
             return;
 
         if (ExistenceCheck(_vm.Name, "标签名称") is not { } nameTagModel)
@@ -93,15 +77,15 @@ public partial class TagsManagerPage : Page, ITypeGetter
         _vm.Name = "";
     }
 
-    private void RenameClick(object sender, RoutedEventArgs e)
+    private void RenameTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (TbPath.Path is "")
+        if (_vm.Path is "")
         {
             InfoBarShow("未输入希望重命名的标签！", InfoBarSeverity.Error);
             return;
         }
 
-        if (ExistenceCheck(TbPath.Path, "标签路径") is not { } pathTagModel)
+        if (ExistenceCheck(_vm.Path, "标签路径") is not { } pathTagModel)
             return;
 
         var result = NewTagCheck(_vm.Name);
@@ -113,68 +97,68 @@ public partial class TagsManagerPage : Page, ITypeGetter
 
         RenameTag(_vm.Name, pathTagModel);
         _vm.Name = "";
-        TbPath.Path = "";
+        _vm.Path = "";
     }
 
-    private void DeleteClick(object sender, RoutedEventArgs e)
+    private void DeleteTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (TbPath.Path is "")
+        if (_vm.Path is "")
         {
             InfoBarShow("未输入希望删除的标签！", InfoBarSeverity.Error);
             return;
         }
 
-        if (ExistenceCheck(TbPath.Path, "标签路径") is not { } pathTagModel)
+        if (ExistenceCheck(_vm.Path, "标签路径") is not { } pathTagModel)
             return;
 
         DeleteTag(pathTagModel);
         _vm.Name = "";
     }
 
-    private async void SaveClick(object sender, RoutedEventArgs e)
+    private async void SaveTapped(object sender, TappedRoutedEventArgs e)
     {
         await Task.Yield();
-        App.Tags = _vm.TagsSource;
-        App.SaveTags();
+        AppContext.Tags = _vm.TagsSource;
+        AppContext.SaveTags();
         foreach (var (mode, tagViewModel) in _buffer)
             if (mode)
-                App.Relations.NewTag(tagViewModel);
+                AppContext.Relations.NewTag(tagViewModel);
             else
-                App.Relations.DeleteTag(tagViewModel);
+                AppContext.Relations.DeleteTag(tagViewModel);
         _buffer.Clear();
-        App.SaveRelations();
-        BSave.IsEnabled = false;
+        AppContext.SaveRelations();
+        _vm.IsSaveEnabled = false;
         InfoBarShow("已保存", InfoBarSeverity.Success);
     }
 
-    private async void ContextNewClick(object sender, RoutedEventArgs e)
+    private async void ContextNewTapped(object sender, TappedRoutedEventArgs e)
     {
         InputName.Load($"新建子标签 {sender.GetTag<TagViewModel>().Name}", cd => NewTagCheck(cd.Text), FileSystemHelper.InvalidMode.Name);
         if (!await InputName.ShowAsync())
             NewTag(InputName.Text, sender.GetTag<TagViewModel>());
     }
 
-    private async void ContextNewXClick(object sender, RoutedEventArgs e)
+    private async void RootContextNewTapped(object sender, TappedRoutedEventArgs e)
     {
         InputName.Load("新建根标签", cd => NewTagCheck(cd.Text), FileSystemHelper.InvalidMode.Name);
         if (!await InputName.ShowAsync())
             NewTag(InputName.Text, _vm.TagsSource.TagsTree);
     }
 
-    private void ContextCutClick(object sender, RoutedEventArgs e) => ClipBoard = sender.GetTag<TagViewModel>();
+    private void ContextCutTapped(object sender, TappedRoutedEventArgs e) => _vm.ClipBoard = sender.GetTag<TagViewModel>();
 
-    private async void ContextRenameClick(object sender, RoutedEventArgs e)
+    private async void ContextRenameTapped(object sender, TappedRoutedEventArgs e)
     {
         InputName.Load($"标签重命名 {sender.GetTag<TagViewModel>().Name}", cd => NewTagCheck(cd.Text), FileSystemHelper.InvalidMode.Name);
         if (!await InputName.ShowAsync())
             RenameTag(InputName.Text, sender.GetTag<TagViewModel>());
     }
 
-    private void ContextPasteClick(object sender, RoutedEventArgs e) => MoveTag(ClipBoard!, sender.GetTag<TagViewModel>());
+    private void ContextPasteTapped(object sender, TappedRoutedEventArgs e) => MoveTag(_vm.ClipBoard!, sender.GetTag<TagViewModel>());
 
-    private void ContextPasteXClick(object sender, RoutedEventArgs e) => MoveTag(ClipBoard!, _vm.TagsSource.TagsTree);
+    private void RootContextPasteTapped(object sender, TappedRoutedEventArgs e) => MoveTag(_vm.ClipBoard!, _vm.TagsSource.TagsTree);
 
-    private void ContextDeleteClick(object sender, RoutedEventArgs e) => DeleteTag(sender.GetTag<TagViewModel>());
+    private void ContextDeleteTapped(object sender, TappedRoutedEventArgs e) => DeleteTag(sender.GetTag<TagViewModel>());
 
     #endregion
 
@@ -189,7 +173,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
     private void NewTag(string name, TagViewModel path)
     {
         _buffer.Add(new(true, _vm.TagsSource.AddTag(path, name)));
-        BSave.IsEnabled = true;
+        _vm.IsSaveEnabled = true;
         InfoBarShow($"新建标签 {name}", InfoBarSeverity.Success);
     }
 
@@ -207,16 +191,16 @@ public partial class TagsManagerPage : Page, ITypeGetter
             return;
         }
 
-        ClipBoard = null;
+        _vm.ClipBoard = null;
         _vm.TagsSource.MoveTag(name, path);
-        BSave.IsEnabled = true;
+        _vm.IsSaveEnabled = true;
         InfoBarShow($"移动标签 {name.Name}", InfoBarSeverity.Success);
     }
 
     private void RenameTag(string name, TagViewModel path)
     {
         _vm.TagsSource.RenameTag(path, name);
-        BSave.IsEnabled = true;
+        _vm.IsSaveEnabled = true;
         InfoBarShow($"重命名标签 {name}", InfoBarSeverity.Success);
     }
 
@@ -224,8 +208,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
     {
         _vm.TagsSource.DeleteTag(path);
         _buffer.Add(new(false, path));
-        BSave.IsEnabled = true;
-        InfoBar.Title = "成功";
+        _vm.IsSaveEnabled = true;
         InfoBarShow($"删除标签 {path.Name}", InfoBarSeverity.Success);
     }
 
@@ -252,7 +235,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
             InfoBarSeverity.Success => "成功",
             InfoBarSeverity.Warning => "警告",
             InfoBarSeverity.Error => "错误",
-            _ => throw new ArgumentOutOfRangeException(nameof(severity), severity, null)
+            _ => ThrowHelper.ArgumentOutOfRange<InfoBarSeverity, string>(severity)
         };
         InfoBar.Message = message;
         InfoBar.Severity = severity;

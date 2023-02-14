@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using TagsTree.Services;
 using TagsTree.Views;
 using WinUI3Utilities;
@@ -28,7 +29,7 @@ public sealed partial class MainWindow : Window
     {
         ((NavigationViewItem)NavigationView.SettingsItem).Tag = typeof(SettingsPage);
 
-        if (App.ConfigSet)
+        if (AppContext.ConfigSet)
             await ConfigIsSet();
         else
             DisplaySettings();
@@ -36,10 +37,10 @@ public sealed partial class MainWindow : Window
 
     public async Task ConfigIsSet()
     {
-        if (App.LoadConfig() is { } exception)
+        if (AppContext.LoadConfig() is { } exception)
         {
             DisplaySettings();
-            await App.ExceptionHandler(exception);
+            await AppContext.ExceptionHandler(exception);
         }
         else
         {
@@ -51,7 +52,7 @@ public sealed partial class MainWindow : Window
 
         foreach (var menuItem in NavigationView.MenuItems.Cast<NavigationViewItem>())
             menuItem.IsEnabled = true;
-        ((NavigationViewItem)NavigationView.FooterMenuItems[0]).IsEnabled = await App.ChangeFilesObserver();
+        ((NavigationViewItem)NavigationView.FooterMenuItems[0]).IsEnabled = await AppContext.ChangeFilesObserver();
     }
 
     private void DisplaySettings()

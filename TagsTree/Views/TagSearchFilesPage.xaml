@@ -29,7 +29,7 @@
         <uiControls:DataGrid
             AutoGenerateColumns="False"
             CanUserReorderColumns="False"
-            DoubleTapped="ContextPropertiesDoubleClick"
+            DoubleTapped="ContextPropertiesDoubleTapped"
             ItemsSource="{x:Bind _vm.FileViewModels, Mode=OneWay}"
             SelectionMode="Single">
             <uiControls:DataGrid.RowStyle>
@@ -37,10 +37,10 @@
                     <Setter Property="ContextFlyout">
                         <Setter.Value>
                             <MenuFlyout>
-                                <MenuFlyoutItem Tapped="ContextOpenClick" Text="打开" />
-                                <MenuFlyoutItem Tapped="ContextOpenExplorerClick" Text="打开文件夹" />
-                                <MenuFlyoutItem Tapped="ContextRemoveClick" Text="移除" />
-                                <MenuFlyoutItem Tapped="ContextPropertiesClick" Text="属性" />
+                                <MenuFlyoutItem Tapped="ContextOpenTapped" Text="打开" />
+                                <MenuFlyoutItem Tapped="ContextOpenExplorerTapped" Text="打开文件夹" />
+                                <MenuFlyoutItem Tapped="ContextRemoveTapped" Text="移除" />
+                                <MenuFlyoutItem Tapped="ContextPropertiesTapped" Text="属性" />
                             </MenuFlyout>
                         </Setter.Value>
                     </Setter>

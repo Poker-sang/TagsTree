@@ -2,7 +2,6 @@
     x:Class="TagsTree.Views.FileEditTagsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:TagsTree.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -16,10 +15,9 @@
             <InfoBar x:Name="InfoBar" />
             <CommandBar DefaultLabelPosition="Collapsed" OverflowButtonVisibility="Collapsed">
                 <AppBarButton
-                    x:Name="BSave"
                     Icon="Save"
-                    IsEnabled="False"
-                    Tapped="SaveClick"
+                    IsEnabled="{x:Bind _vm.IsSaveEnabled, Mode=OneWay}"
+                    Tapped="SaveTapped"
                     ToolTipService.ToolTip="保存" />
             </CommandBar>
         </uiControls:DockPanel>
@@ -33,11 +31,11 @@
                 Margin="0,0,8,0"
                 CanDragItems="False"
                 CanReorderItems="False"
-                ItemsSource="{x:Bind viewModels:FileEditTagsViewModel.TagsSource}">
+                ItemsSource="{x:Bind viewModels:FileEditTagsViewModel.TagsSource, Mode=OneWay}">
                 <TreeView.ItemTemplate>
                     <DataTemplate x:DataType="viewModels:TagViewModel">
                         <TreeViewItem
-                            DoubleTapped="AddTagClick"
+                            DoubleTapped="AddTagTapped"
                             ItemsSource="{x:Bind SubTags}"
                             Tag="{x:Bind}"
                             ToolTipService.ToolTip="{x:Bind FullName}">
@@ -49,11 +47,11 @@
             <ListView
                 Grid.Column="1"
                 Margin="8,0,0,0"
-                ItemsSource="{x:Bind _vm.VirtualTags, Mode=TwoWay}">
+                ItemsSource="{x:Bind _vm.VirtualTags, Mode=OneWay}">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="viewModels:TagViewModel">
                         <ListViewItem
-                            DoubleTapped="DeleteTagClick"
+                            DoubleTapped="DeleteTagTapped"
                             Tag="{x:Bind}"
                             ToolTipService.ToolTip="{x:Bind FullName}">
                             <TextBlock Text="{x:Bind Name}" />

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using TagsTree.Interfaces;
 using TagsTree.Models;
 using TagsTree.Services.ExtensionMethods;
@@ -15,42 +16,23 @@ namespace TagsTree.Views;
 
 public partial class FileImporterPage : Page, ITypeGetter
 {
-    public FileImporterPage()
-    {
-        _vm = new();
-        _vm.FileViewModels.CollectionChanged += (_, _) => BDelete.IsEnabled = BSave.IsEnabled = !Importing && _vm.FileViewModels.Count is not 0;
-        InitializeComponent();
-    }
+    public FileImporterPage() => InitializeComponent();
+
     public static Type TypeGetter => typeof(FileImporterPage);
 
-    private readonly FileImporterViewModel _vm;
-
-    private bool _importing;
-    private bool Importing
-    {
-        get => _importing;
-        set
-        {
-            if (Equals(value, _importing))
-                return;
-            _importing = value;
-            PbSave.Opacity = value ? 1 : 0;
-            // 虽然写上更安全，但一般看不到这些选项：SelectFiles.IsEnabled = SelectFolders.IsEnabled = PathFiles.IsEnabled = PathFolders.IsEnabled = PathBoth.IsEnabled
-            BPath.IsEnabled = BSelect.IsEnabled = BAll.IsEnabled = !value;
-            BDelete.IsEnabled = BSave.IsEnabled = !value && _vm.FileViewModels.Count is not 0;
-        }
-    }
+    
+    private readonly FileImporterViewModel _vm = new();
 
     #region 事件处理
 
-    private async void ImportClick(object sender, RoutedEventArgs e)
+    private async void ImportTapped(object sender, TappedRoutedEventArgs e)
     {
-        Importing = true;
+        _vm.Importing = true;
         await Task.Yield();
         var temp = new List<FileViewModel>();
         var dictionary = new Dictionary<string, bool>();
 
-        if (((FrameworkElement)sender).Name is { } mode)
+        if (sender.To<FrameworkElement>().Name is { } mode)
             if (mode is nameof(SelectFiles))
             {
                 if (await PickerHelper.PickMultipleFilesAsync() is { } files and not { Count: 0 })
@@ -97,7 +79,7 @@ public partial class FileImporterPage : Page, ITypeGetter
                         }
 
                         break;
-                        case nameof(BAll):
+                        case nameof(All):
                             void RecursiveReadFiles(string folderName)
                             {
                                 temp.AddRange(new DirectoryInfo(folderName).GetFiles()
@@ -113,19 +95,19 @@ public partial class FileImporterPage : Page, ITypeGetter
             }
 
         _vm.FileViewModels = temp.ToObservableCollection();
-        Importing = false;
+        _vm.Importing = false;
     }
 
-    private void DeleteClick(object sender, RoutedEventArgs e) => _vm.FileViewModels.Clear();
+    private void DeleteTapped(object sender, TappedRoutedEventArgs e) => _vm.FileViewModels.Clear();
 
-    private async void SaveClick(object sender, RoutedEventArgs e)
+    private async void SaveTapped(object sender, TappedRoutedEventArgs e)
     {
         await Task.Yield();
         var saved = 0;
         var dictionary = new Dictionary<string, bool>();
-        foreach (var fileModel in App.IdFile.Values)
+        foreach (var fileModel in AppContext.IdFile.Values)
             dictionary[fileModel.FullName] = true;
-        PbSave.Opacity = 1;
+        _vm.SavedMessage = "";
         foreach (var fileViewModel in _vm.FileViewModels)
             if (!dictionary.ContainsKey(fileViewModel.FullName))
             {
@@ -133,15 +115,13 @@ public partial class FileImporterPage : Page, ITypeGetter
                 ++saved;
             }
 
-        App.SaveFiles();
-        App.SaveRelations();
-        PbSave.Opacity = 0;
-        IbSave.Message = $"导入「{saved}/{_vm.FileViewModels.Count}」个文件";
+        AppContext.SaveFiles();
+        AppContext.SaveRelations();
         _vm.FileViewModels.Clear();
-        IbSave.IsOpen = true;
+        _vm.SavedMessage = $"导入「{saved}/{_vm.FileViewModels.Count}」个文件";
     }
 
-    private void ContextDeleteClick(object sender, RoutedEventArgs e)
+    private void ContextDeleteTapped(object sender, TappedRoutedEventArgs e)
     {
         foreach (var fileViewModel in FileImporterDataGird.SelectedItems.Cast<FileViewModel>().ToList())
             _ = _vm.FileViewModels.Remove(fileViewModel);
