@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using CommunityToolkit.WinUI.UI.Controls;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -16,13 +15,9 @@ namespace TagsTree.Views;
 
 public sealed partial class TagEditFilesPage : Page
 {
-    public TagEditFilesPage()
-    {
-        _vm = new();
-        InitializeComponent();
-    }
+    public TagEditFilesPage() => InitializeComponent();
 
-    private readonly TagEditFilesViewModel _vm;
+    private readonly TagEditFilesViewModel _vm = new();
 
     #region 事件处理
 

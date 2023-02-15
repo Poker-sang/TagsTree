@@ -10,7 +10,7 @@
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:viewModels="using:TagsTree.ViewModels"
     Background="Transparent"
-    NavigationCacheMode="Required"
+    NavigationCacheMode="Disabled"
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />

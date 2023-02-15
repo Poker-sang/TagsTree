@@ -10,7 +10,7 @@
     xmlns:ui="using:CommunityToolkit.WinUI.UI"
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
     Background="Transparent"
-    NavigationCacheMode="Required"
+    NavigationCacheMode="Disabled"
     mc:Ignorable="d">
     <Page.Resources>
         <converters:StringToBoolConverter x:Key="StringToBoolConverter" />
@@ -70,7 +70,10 @@
                 Message="{x:Bind _vm.Message, Mode=OneWay}"
                 Severity="Success" />
         </uiControls:DockPanel>
-        <uiControls:DataGrid AutoGenerateColumns="False" ItemsSource="{x:Bind local:FilesObserverPage.Vm.FilesChangedList}">
+        <uiControls:DataGrid
+            AutoGenerateColumns="False"
+            ItemsSource="{x:Bind local:FilesObserverPage.Vm.FilesChangedList}"
+            SelectionMode="Single">
             <uiControls:DataGrid.RowDetailsTemplate>
                 <DataTemplate x:DataType="models:FileChanged">
                     <CommandBar DefaultLabelPosition="Right">

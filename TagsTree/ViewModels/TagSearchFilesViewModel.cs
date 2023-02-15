@@ -8,7 +8,9 @@ namespace TagsTree.ViewModels;
 public partial class TagSearchFilesViewModel : ObservableObject
 {
     private ObservableCollection<FileViewModel> _resultCallBack = Enumerable.Empty<FileViewModel>().ToObservableCollection();
+
     [ObservableProperty] private ObservableCollection<FileViewModel> _fileViewModels = Enumerable.Empty<FileViewModel>().ToObservableCollection();
+
     public ObservableCollection<FileViewModel> ResultCallBack
     {
         get => _resultCallBack;

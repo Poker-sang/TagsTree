@@ -18,17 +18,17 @@ public class FilesObserver : FileSystemWatcher
         base.Deleted += Deleted;
     }
 
-    public async Task<bool> Change(string path)
+    public async Task FilesObserverChanged(string path)
     {
         // 路径是否存在
         if (!Directory.Exists(AppContext.AppConfig.LibraryPath))
         {
             await ShowMessageDialog.Information(true, $"路径「{AppContext.AppConfig.LibraryPath}」不存在，无法开启文件监视，请在设置修改正确路径后保存");
-            return AppContext.FilesObserver.EnableRaisingEvents = false;
+            AppContext.FilesObserver.EnableRaisingEvents = false;
         }
         // 不能是错误路径
         Path = path;
-        return AppContext.FilesObserver.EnableRaisingEvents = AppContext.AppConfig.FilesObserverEnabled;
+        AppContext.FilesObserver.EnableRaisingEvents = AppContext.AppConfig.FilesObserverEnabled;
     }
 
     private static new void Created(object sender, FileSystemEventArgs e)

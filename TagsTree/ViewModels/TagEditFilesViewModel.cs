@@ -8,16 +8,9 @@ namespace TagsTree.ViewModels;
 
 public partial class TagEditFilesViewModel : ObservableObject
 {
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(Tags))]
     private TagViewModel _tagViewModel = null!;
-    public TagViewModel TagViewModel
-    {
-        get => _tagViewModel;
-        set
-        {
-            _tagViewModel = value;
-            OnPropertyChanged(nameof(Tags));
-        }
-    }
 
     public IEnumerable<string> Tags => (TagViewModel?.FullName + '\\').Split('\\');
 

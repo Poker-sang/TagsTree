@@ -100,7 +100,7 @@
         <Page Update="MainWindow.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
-        <Page Update="Views\SettingsPage.xaml">
+        <Page Update="Views\SettingPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
         <Page Update="Views\SelectTagToEditPage.xaml">

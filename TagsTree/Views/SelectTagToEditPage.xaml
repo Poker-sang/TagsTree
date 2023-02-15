@@ -9,7 +9,7 @@
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:viewModels="using:TagsTree.ViewModels"
     Background="Transparent"
-    NavigationCacheMode="Required"
+    NavigationCacheMode="Disabled"
     mc:Ignorable="d">
     <uiControls:DockPanel>
         <uiControls:DockPanel uiControls:DockPanel.Dock="Top">

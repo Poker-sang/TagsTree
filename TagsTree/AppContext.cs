@@ -1,3 +1,4 @@
+#define FIRST_TIME
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using TagsTree.Views;
 using Windows.Storage;
 using Microsoft.UI.Xaml;
 using WinUI3Utilities.Attributes;
+using TagsTree.ViewModels;
 
 namespace TagsTree;
 
@@ -23,32 +25,23 @@ public static partial class AppContext
 
     public static ObservableCollection<FileChanged> FilesChangedList => FilesObserverPage.Vm.FilesChangedList;
 
-    public static bool ConfigSet { get; set; }
+    public static SettingViewModel SettingViewModel { get; } = new();
 
     public static void Initialize()
     {
         AppLocalFolder = ApplicationData.Current.LocalFolder.Path;
         InitializeConfigurationContainer();
-        if (LoadConfiguration() is not { } appConfigurations
-#if FIRST_TIME
-        || true
+        AppConfig =
+#if !FIRST_TIME
+                   LoadConfiguration() ??
 #endif
-           )
-        {
-            AppConfig = new AppConfig();
-            ConfigSet = false;
-        }
-        else
-        {
-            AppConfig = appConfigurations;
-            ConfigSet = true;
-        }
+            new AppConfig();
         FilesObserver = new();
     }
 
     public static void SetDefaultAppConfig() => AppConfig = new();
 
-    public static async Task<bool> ChangeFilesObserver() => await FilesObserver.Change(AppConfig.LibraryPath);
+    public static async Task FilesObserverChanged() => await FilesObserver.FilesObserverChanged(AppConfig.LibraryPath);
 
     public static async Task ExceptionHandler(string exception)
     {
@@ -68,12 +61,19 @@ public static partial class AppContext
     }
 
     public static string FilesChangedPath => AppLocalFolder + "\\" + FilesChangedName;
+
     public static string TagsPath => AppLocalFolder + "\\" + TagsName;
+
     private static string FilesPath => AppLocalFolder + "\\" + FilesName;
+
     private static string RelationsPath => AppLocalFolder + "\\" + RelationsName;
+
     public const string FilesChangedName = "FileChanged.json";
+
     public const string TagsName = "TagsTree.json";
+
     private const string FilesName = "Files.json";
+
     private const string RelationsName = "Relations.csv";
 
     /// <summary>

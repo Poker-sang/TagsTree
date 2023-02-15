@@ -38,29 +38,29 @@
                 <NavigationViewItem
                     Content="主页"
                     Icon="Home"
-                    IsEnabled="False"
+                    IsEnabled="{x:Bind local:AppContext.SettingViewModel.ConfigSet, Mode=OneWay}"
                     Tag="{x:Bind views:IndexPage.TypeGetter}" />
                 <NavigationViewItem
                     Content="标签管理"
                     Icon="Tag"
-                    IsEnabled="False"
+                    IsEnabled="{x:Bind local:AppContext.SettingViewModel.ConfigSet, Mode=OneWay}"
                     Tag="{x:Bind views:TagsManagerPage.TypeGetter}" />
                 <NavigationViewItem
                     Content="文件引入"
                     Icon="Import"
-                    IsEnabled="False"
+                    IsEnabled="{x:Bind local:AppContext.SettingViewModel.ConfigSet, Mode=OneWay}"
                     Tag="{x:Bind views:FileImporterPage.TypeGetter}" />
                 <NavigationViewItem
                     Content="为标签添加文件"
                     Icon="Edit"
-                    IsEnabled="False"
+                    IsEnabled="{x:Bind local:AppContext.SettingViewModel.ConfigSet, Mode=OneWay}"
                     Tag="{x:Bind views:SelectTagToEditPage.TypeGetter}" />
             </NavigationView.MenuItems>
             <NavigationView.FooterMenuItems>
                 <NavigationViewItem
                     Content="监控文件"
                     Icon="View"
-                    IsEnabled="False"
+                    IsEnabled="{x:Bind local:AppContext.SettingViewModel.IsFileObserverItemEnabled, Mode=OneWay}"
                     Tag="{x:Bind views:FilesObserverPage.TypeGetter}" />
             </NavigationView.FooterMenuItems>
             <Frame x:Name="NavigateFrame" />

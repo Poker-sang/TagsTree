@@ -9,15 +9,26 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using WinUI3Utilities;
 using TagsTree.ViewModels;
 using System.Diagnostics;
+using TagsTree.Interfaces;
 
 namespace TagsTree.Views;
 
 [INotifyPropertyChanged]
-public partial class SettingsPage : Page
+public partial class SettingsPage : Page, ITypeGetter
 {
-    public SettingsPage() => InitializeComponent();
+    public SettingsPage()
+    {
+        Current = this;
+        InitializeComponent();
+    }
 
-    [ObservableProperty] private SettingViewModel _vm = new();
+    public static Type TypeGetter => typeof(SettingsPage);
+
+    public static SettingsPage Current { get; private set; } = null!;
+
+#pragma warning disable CA1822
+    private SettingViewModel Vm => AppContext.SettingViewModel;
+#pragma warning restore CA1822
 
     #region 事件处理
 
@@ -47,8 +58,6 @@ public partial class SettingsPage : Page
             rootElement.RequestedTheme = selectedTheme;
 
         AppContext.AppConfig.Theme = selectedTheme.To<int>();
-
-        Save(sender, e);
     }
 
     private async void LibraryPathTapped(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e)
@@ -81,26 +90,18 @@ public partial class SettingsPage : Page
 
         Vm.LibraryPath = asb.Text;
         asb.Text = "";
+        Vm.ConfigSetChanged();
 
-        Save(sender, e);
-
-        if (!AppContext.ConfigSet)
-        {
-            AppContext.ConfigSet = true;
-            await CurrentContext.Window.To<MainWindow>().ConfigIsSet();
-        }
-        else
-            CurrentContext.NavigationView.FooterMenuItems[0].To<NavigationViewItem>().IsEnabled = await AppContext.ChangeFilesObserver();
+        await CurrentContext.Window.To<MainWindow>().ConfigIsSet();
     }
 
     private void SetDefaultAppConfigTapped(object sender, TappedRoutedEventArgs e)
     {
         AppContext.SetDefaultAppConfig();
         OnPropertyChanged(nameof(Vm));
-        Save(sender, e);
     }
 
-    private void Save(object sender, RoutedEventArgs e) => AppContext.SaveConfiguration(Vm.AppConfig);
+    private new void Unloaded(object sender, RoutedEventArgs e) => AppContext.SaveConfiguration(Vm.AppConfig);
 
     #endregion
 }

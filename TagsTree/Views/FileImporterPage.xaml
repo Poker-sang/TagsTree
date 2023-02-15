@@ -10,7 +10,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
     Background="Transparent"
-    NavigationCacheMode="Required"
+    NavigationCacheMode="Disabled"
     mc:Ignorable="d">
     <Page.Resources>
         <ctkConverters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
@@ -119,7 +119,8 @@
             x:Name="FileImporterDataGird"
             AutoGenerateColumns="False"
             CanUserReorderColumns="False"
-            ItemsSource="{x:Bind _vm.FileViewModels, Mode=OneWay}">
+            ItemsSource="{x:Bind _vm.FileViewModels, Mode=OneWay}"
+            SelectionMode="Extended">
             <uiControls:DataGrid.RowStyle>
                 <Style TargetType="uiControls:DataGridRow">
                     <Setter Property="ContextFlyout">
