@@ -1,6 +1,7 @@
 // #define DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION
 // #define DISABLE_XAML_GENERATED_BINDING_DEBUG_OUTPUT
 // #define FIRST_TIME
+
 using Microsoft.UI.Xaml;
 using WinUI3Utilities;
 
@@ -11,7 +12,6 @@ public partial class App : Application
     public App()
     {
         InitializeComponent();
-        CurrentContext.App = this;
         CurrentContext.Title = nameof(TagsTree);
         AppContext.Initialize();
     }

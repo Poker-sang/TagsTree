@@ -8,8 +8,9 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using TagsTree.Interfaces;
 using TagsTree.Models;
+using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
-using TagsTree.ViewModels;
+using TagsTree.Views.ViewModels;
 using WinUI3Utilities;
 
 namespace TagsTree.Views;
@@ -20,14 +21,14 @@ public partial class FileImporterPage : Page, ITypeGetter
 
     public static Type TypeGetter => typeof(FileImporterPage);
 
-    
+
     private readonly FileImporterViewModel _vm = new();
 
     #region 事件处理
 
     private async void ImportTapped(object sender, TappedRoutedEventArgs e)
     {
-        _vm.Importing = true;
+        _vm.Processing = true;
         await Task.Yield();
         var temp = new List<FileViewModel>();
         var dictionary = new Dictionary<string, bool>();
@@ -95,19 +96,19 @@ public partial class FileImporterPage : Page, ITypeGetter
             }
 
         _vm.FileViewModels = temp.ToObservableCollection();
-        _vm.Importing = false;
+        _vm.Processing = false;
     }
 
     private void DeleteTapped(object sender, TappedRoutedEventArgs e) => _vm.FileViewModels.Clear();
 
-    private async void SaveTapped(object sender, TappedRoutedEventArgs e)
+    private void SaveTapped(object sender, TappedRoutedEventArgs e)
     {
-        await Task.Yield();
         var saved = 0;
+        _vm.Processing = true;
+
         var dictionary = new Dictionary<string, bool>();
         foreach (var fileModel in AppContext.IdFile.Values)
             dictionary[fileModel.FullName] = true;
-        _vm.SavedMessage = "";
         foreach (var fileViewModel in _vm.FileViewModels)
             if (!dictionary.ContainsKey(fileViewModel.FullName))
             {
@@ -115,15 +116,17 @@ public partial class FileImporterPage : Page, ITypeGetter
                 ++saved;
             }
 
+        _vm.Processing = false;
+
         AppContext.SaveFiles();
         AppContext.SaveRelations();
         _vm.FileViewModels.Clear();
-        _vm.SavedMessage = $"导入「{saved}/{_vm.FileViewModels.Count}」个文件";
+        SnackBarHelper.Show($"导入「{saved}/{_vm.FileViewModels.Count}」个文件");
     }
 
     private void ContextDeleteTapped(object sender, TappedRoutedEventArgs e)
     {
-        foreach (var fileViewModel in FileImporterDataGird.SelectedItems.Cast<FileViewModel>().ToList())
+        foreach (var fileViewModel in FileImporterDataGird.SelectedItems.Cast<FileViewModel>())
             _ = _vm.FileViewModels.Remove(fileViewModel);
     }
 

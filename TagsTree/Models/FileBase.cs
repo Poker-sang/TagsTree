@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Text.Json.Serialization;
 using TagsTree.Interfaces;
@@ -18,7 +17,7 @@ public abstract class FileBase : IFullName
     public int Id { get; }
 
     public string Name { get; protected set; }
-    
+
     public string Path { get; protected set; }
 
     /// <remarks>
@@ -27,6 +26,6 @@ public abstract class FileBase : IFullName
     [JsonIgnore] public string FullName => @$"{Path}\{Name}";
 
     [JsonIgnore] public string PartialPath => Path.GetPartialPath();
-    
+
     [JsonIgnore] public bool IsFolder => Directory.Exists(FullName);
 }

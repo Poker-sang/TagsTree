@@ -8,6 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:viewModels="using:TagsTree.ViewModels"
+    xmlns:viewModels1="using:TagsTree.Views.ViewModels"
     Background="Transparent"
     NavigationCacheMode="Disabled"
     mc:Ignorable="d">
@@ -41,7 +42,6 @@
                     Tapped="SaveTapped"
                     ToolTipService.ToolTip="保存" />
             </CommandBar>
-            <InfoBar x:Name="InfoBar" />
         </uiControls:DockPanel>
         <TextBox
             uiControls:DockPanel.Dock="Top"
@@ -61,7 +61,7 @@
             ItemInvoked="TagsOnItemInvoked"
             ItemsSource="{x:Bind _vm.TagsSource.TagsTree.SubTags, Mode=OneWay}">
             <TreeView.ItemTemplate>
-                <DataTemplate x:DataType="viewModels:TagViewModel">
+                <DataTemplate x:DataType="viewModels1:TagViewModel">
                     <TreeViewItem ItemsSource="{x:Bind SubTags, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind FullName}">
                         <TextBlock Text="{x:Bind Name, Mode=OneWay}" />
                         <TreeViewItem.ContextFlyout>

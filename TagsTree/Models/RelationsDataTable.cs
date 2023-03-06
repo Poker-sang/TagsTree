@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using TagsTree.Algorithm;
-using TagsTree.ViewModels;
+using TagsTree.Views.ViewModels;
 using WinUI3Utilities;
 
 namespace TagsTree.Models;
@@ -32,14 +32,14 @@ public partial class RelationsDataTable : TableDictionary<int, int>
     [GeneratedRegex("(.)", RegexOptions.IgnoreCase)]
     private static partial Regex FuzzyRegex();
 
-    public static ObservableCollection<FileViewModel> FuzzySearchName(string input, IEnumerable<FileViewModel> range)
+    public static ObservableCollection<Views.ViewModels.FileViewModel> FuzzySearchName(string input, IEnumerable<Views.ViewModels.FileViewModel> range)
     {   // 大小写不敏感
         // 完整包含搜索内容
-        var precise = new List<FileViewModel>();
+        var precise = new List<Views.ViewModels.FileViewModel>();
         // 有序并全部包含所有字符
-        var fuzzy = new List<FileViewModel>();
+        var fuzzy = new List<Views.ViewModels.FileViewModel>();
         // 包含任意一个字符，并按包含数排序
-        var part = new List<(int Count, FileViewModel FileViewModel)>();
+        var part = new List<(int Count, Views.ViewModels.FileViewModel FileViewModel)>();
         var fuzzyRegex = new Regex(FuzzyRegex().Replace(input, ".+$1"));
         var partRegex = new Regex($"[{input}]", RegexOptions.IgnoreCase);
         foreach (var fileViewModel in range)

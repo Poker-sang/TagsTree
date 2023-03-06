@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
 using TagsTree.Services.ExtensionMethods;
-using TagsTree.ViewModels.Controls;
+using TagsTree.Views.ViewModels.Controls;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 

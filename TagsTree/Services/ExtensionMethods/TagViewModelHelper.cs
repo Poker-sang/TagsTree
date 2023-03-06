@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TagsTree.Models;
-using TagsTree.ViewModels;
+using TagsTree.Views.ViewModels;
 
 namespace TagsTree.Services.ExtensionMethods;
 

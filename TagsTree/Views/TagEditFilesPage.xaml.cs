@@ -8,7 +8,7 @@ using Microsoft.UI.Xaml.Navigation;
 using TagsTree.Models;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
-using TagsTree.ViewModels;
+using TagsTree.Views.ViewModels;
 using WinUI3Utilities;
 
 namespace TagsTree.Views;
@@ -29,7 +29,7 @@ public sealed partial class TagEditFilesPage : Page
 
     private void ResultChanged(IEnumerable<FileModel> newResult) => _vm.FileViewModels = newResult.Select(fileModel => new FileViewModel(fileModel, _vm.TagViewModel.Parent)).ToObservableCollection();
 
-    
+
     private void Selected(object sender, SelectionChangedEventArgs e)
     {
         var dg = sender.To<DataGrid>();
@@ -39,7 +39,7 @@ public sealed partial class TagEditFilesPage : Page
         dg.SelectedIndex = -1;
     }
 
-    private async void SaveTapped(object sender, TappedRoutedEventArgs e)
+    private void SaveTapped(object sender, TappedRoutedEventArgs e)
     {
         foreach (var fileViewModel in _vm.FileViewModels)
             if (fileViewModel.Selected != fileViewModel.SelectedOriginal)
@@ -71,7 +71,7 @@ public sealed partial class TagEditFilesPage : Page
             }
 
         AppContext.SaveRelations();
-        await ShowMessageDialog.Information(false, "已保存更改");
+        SnackBarHelper.Show("已保存更改");
         CurrentContext.Frame.GoBack(new SlideNavigationTransitionInfo());
     }
 

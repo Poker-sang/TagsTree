@@ -6,6 +6,7 @@
     xmlns:local="using:TagsTree.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:TagsTree.ViewModels"
+    xmlns:viewModels1="using:TagsTree.Views.ViewModels"
     mc:Ignorable="d">
     <AutoSuggestBox
         x:Name="AutoSuggestBox"
@@ -17,7 +18,7 @@
         TextChanged="TextChanged"
         ToolTipService.ToolTip="不包含/:*?&quot;&lt;&gt;|,和空白字符，留空显示全部">
         <AutoSuggestBox.ItemTemplate>
-            <DataTemplate x:DataType="viewModels:TagViewModel">
+            <DataTemplate x:DataType="viewModels1:TagViewModel">
                 <TextBlock Text="{x:Bind FullName}" />
             </DataTemplate>
         </AutoSuggestBox.ItemTemplate>

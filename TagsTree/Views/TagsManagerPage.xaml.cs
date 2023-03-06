@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using TagsTree.Interfaces;
+using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
-using TagsTree.ViewModels;
+using TagsTree.Views.ViewModels;
 using WinUI3Utilities;
 
 namespace TagsTree.Views;
@@ -33,11 +33,11 @@ public partial class TagsManagerPage : Page, ITypeGetter
     private void OnDragItemsCompleted(TreeView sender, TreeViewDragItemsCompletedEventArgs e)
     {
         if ((e.NewParentItem.To<TagViewModel>()) == _tempPath)
-            InfoBarShow($"移动标签 {e.Items[0].To<TagViewModel>().Name} 到原位置", InfoBarSeverity.Informational);
+            SnackBarHelper.Show($"移动标签 {e.Items[0].To<TagViewModel>().Name} 到原位置", Severity.Information);
         else
         {
             _vm.IsSaveEnabled = true;
-            InfoBarShow($"移动标签 {e.Items[0].To<TagViewModel>().Name}", InfoBarSeverity.Success);
+            SnackBarHelper.Show($"移动标签 {e.Items[0].To<TagViewModel>().Name}");
         }
 
         _tempPath = null;
@@ -57,7 +57,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
         var result = NewTagCheck(_vm.Name);
         if (result is not null)
         {
-            InfoBarShow(result, InfoBarSeverity.Error);
+            SnackBarHelper.Show(result, Severity.Error);
             return;
         }
 
@@ -81,7 +81,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
     {
         if (_vm.Path is "")
         {
-            InfoBarShow("未输入希望重命名的标签！", InfoBarSeverity.Error);
+            SnackBarHelper.Show("未输入希望重命名的标签！", Severity.Error);
             return;
         }
 
@@ -91,7 +91,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
         var result = NewTagCheck(_vm.Name);
         if (result is not null)
         {
-            InfoBarShow(result, InfoBarSeverity.Error);
+            SnackBarHelper.Show(result, Severity.Error);
             return;
         }
 
@@ -104,7 +104,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
     {
         if (_vm.Path is "")
         {
-            InfoBarShow("未输入希望删除的标签！", InfoBarSeverity.Error);
+            SnackBarHelper.Show("未输入希望删除的标签！", Severity.Error);
             return;
         }
 
@@ -128,7 +128,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
         _buffer.Clear();
         AppContext.SaveRelations();
         _vm.IsSaveEnabled = false;
-        InfoBarShow("已保存", InfoBarSeverity.Success);
+        SnackBarHelper.Show("已保存");
     }
 
     private async void ContextNewTapped(object sender, TappedRoutedEventArgs e)
@@ -174,34 +174,34 @@ public partial class TagsManagerPage : Page, ITypeGetter
     {
         _buffer.Add(new(true, _vm.TagsSource.AddTag(path, name)));
         _vm.IsSaveEnabled = true;
-        InfoBarShow($"新建标签 {name}", InfoBarSeverity.Success);
+        SnackBarHelper.Show($"新建标签 {name}");
     }
 
     private void MoveTag(TagViewModel name, TagViewModel path)
     {
         if (path == name.Parent)
         {
-            InfoBarShow($"移动标签 {name.Name} 到原位置", InfoBarSeverity.Informational);
+            SnackBarHelper.Show($"移动标签 {name.Name} 到原位置", Severity.Information);
             return;
         }
 
         if (name == path || _vm.TagsSource.TagsDictionary.GetValueOrDefault(name.Id)!.HasChildTag(_vm.TagsSource.TagsDictionary.GetValueOrDefault(path.Id)!))
         {
-            InfoBarShow("禁止将标签移动到自己目录下！", InfoBarSeverity.Error);
+            SnackBarHelper.Show("禁止将标签移动到自己目录下！", Severity.Error);
             return;
         }
 
         _vm.ClipBoard = null;
         _vm.TagsSource.MoveTag(name, path);
         _vm.IsSaveEnabled = true;
-        InfoBarShow($"移动标签 {name.Name}", InfoBarSeverity.Success);
+        SnackBarHelper.Show($"移动标签 {name.Name}");
     }
 
     private void RenameTag(string name, TagViewModel path)
     {
         _vm.TagsSource.RenameTag(path, name);
         _vm.IsSaveEnabled = true;
-        InfoBarShow($"重命名标签 {name}", InfoBarSeverity.Success);
+        SnackBarHelper.Show($"重命名标签 {name}");
     }
 
     private void DeleteTag(TagViewModel path)
@@ -209,7 +209,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
         _vm.TagsSource.DeleteTag(path);
         _buffer.Add(new(false, path));
         _vm.IsSaveEnabled = true;
-        InfoBarShow($"删除标签 {path.Name}", InfoBarSeverity.Success);
+        SnackBarHelper.Show($"删除标签 {path.Name}");
     }
 
     private string? NewTagCheck(string name)
@@ -223,23 +223,8 @@ public partial class TagsManagerPage : Page, ITypeGetter
     {
         var pathTagModel = path.GetTagViewModel(_vm.TagsSource);
         if (pathTagModel is null)
-            InfoBarShow($"「{label}」不存在！", InfoBarSeverity.Error);
+            SnackBarHelper.Show($"「{label}」不存在！", Severity.Error);
         return pathTagModel;
-    }
-
-    private void InfoBarShow(string message, InfoBarSeverity severity)
-    {
-        InfoBar.Title = severity switch
-        {
-            InfoBarSeverity.Informational => "提示",
-            InfoBarSeverity.Success => "成功",
-            InfoBarSeverity.Warning => "警告",
-            InfoBarSeverity.Error => "错误",
-            _ => ThrowHelper.ArgumentOutOfRange<InfoBarSeverity, string>(severity)
-        };
-        InfoBar.Message = message;
-        InfoBar.Severity = severity;
-        InfoBar.IsOpen = true;
     }
 
     #endregion

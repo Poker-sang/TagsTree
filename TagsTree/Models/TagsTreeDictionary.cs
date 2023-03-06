@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TagsTree.Algorithm;
 using TagsTree.Services;
-using TagsTree.ViewModels;
+using TagsTree.Views.ViewModels;
 
 namespace TagsTree.Models;
 

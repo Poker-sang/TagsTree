@@ -2,7 +2,7 @@ using System;
 using Microsoft.UI.Xaml.Data;
 using WinUI3Utilities;
 
-namespace TagsTree.Services.Converters;
+namespace TagsTree.Views.Converters;
 
 public class BoolToDoubleConverter : IValueConverter
 {

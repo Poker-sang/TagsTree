@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Controls;
 using WinUI3Utilities.Attributes;
 
-namespace TagsTree.ViewModels;
+namespace TagsTree.Views.ViewModels;
 
 [SettingsViewModel<AppConfig>(nameof(AppConfig))]
 public partial class SettingViewModel : ObservableObject

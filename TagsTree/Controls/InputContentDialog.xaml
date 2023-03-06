@@ -20,7 +20,6 @@
                 Text="{x:Bind Text, Mode=TwoWay}" />
             <Rectangle Height="5" uiControls:DockPanel.Dock="Top" />
             <InfoBar
-                x:Name="InfoBar"
                 Title="错误"
                 IsOpen="{x:Bind _vm.IsOpen, Mode=OneWay}"
                 Message="{x:Bind _vm.Message, Mode=OneWay}"

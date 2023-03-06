@@ -4,7 +4,7 @@ using Microsoft.UI.Xaml.Input;
 using TagsTree.Interfaces;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
-using TagsTree.ViewModels;
+using TagsTree.Views.ViewModels;
 using WinUI3Utilities;
 
 namespace TagsTree.Views;
@@ -24,13 +24,13 @@ public partial class SelectTagToEditPage : Page, ITypeGetter
     {
         if (_vm.Path.GetTagViewModel() is not { } pathTagModel)
         {
-            await ShowMessageDialog.Information(true, "「标签路径」不存在！");
+            await ShowContentDialog.Information(true, "「标签路径」不存在！");
             return;
         }
 
         if (pathTagModel == AppContext.Tags.TagsDictionaryRoot)
         {
-            await ShowMessageDialog.Information(true, "「标签路径」不能为空！");
+            await ShowContentDialog.Information(true, "「标签路径」不能为空！");
             return;
         }
 

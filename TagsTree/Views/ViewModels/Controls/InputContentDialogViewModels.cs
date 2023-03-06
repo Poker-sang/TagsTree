@@ -1,6 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace TagsTree.ViewModels.Controls;
+namespace TagsTree.Views.ViewModels.Controls;
 
 public partial class InputContentDialogViewModels : ObservableObject
 {

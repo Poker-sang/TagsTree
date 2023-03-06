@@ -4,14 +4,13 @@ using System.Globalization;
 using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Imaging;
 using TagsTree.Interfaces;
 using TagsTree.Models;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
 using WinUI3Utilities;
 
-namespace TagsTree.ViewModels;
+namespace TagsTree.Views.ViewModels;
 
 public class FileViewModel : ObservableObject, IFileModel
 {

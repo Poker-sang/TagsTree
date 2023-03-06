@@ -1,14 +1,53 @@
+using System;
 using System.Diagnostics;
 using System.IO;
+using CommunityToolkit.WinUI;
+using Microsoft.UI.Xaml.Documents;
 using Microsoft.VisualBasic.FileIO;
 using TagsTree.Interfaces;
 using TagsTree.Models;
+using WinUI3Utilities;
 
 namespace TagsTree.Services.ExtensionMethods;
 
 public static class FileSystemHelper
 {
     public static bool Exists(this string fullName) => File.Exists(fullName) || Directory.Exists(fullName);
+
+    public static Hyperlink GetHyperlink(this string uri, string alt)
+    {
+        var hyperlink = new Hyperlink
+        {
+            NavigateUri = new Uri(uri),
+            Inlines = { new Run { Text = alt } }
+        };
+
+        hyperlink.Click += async (sender, e) =>
+        {
+            await CurrentContext.Window.DispatcherQueue.EnqueueAsync(
+                 () =>
+                 {
+                     try
+                     {
+                         var process = new Process
+                         {
+                             StartInfo = new()
+                             {
+                                 FileName = sender.NavigateUri.AbsolutePath,
+                                 UseShellExecute = true
+                             }
+                         };
+                         _ = process.Start();
+                     }
+                     catch (Exception ex)
+                     {
+
+                     }
+                 });
+        };
+
+        return hyperlink;
+    }
 
     public static async void Open(this IFullName fullName)
     {
@@ -26,9 +65,10 @@ public static class FileSystemHelper
         }
         catch (System.ComponentModel.Win32Exception)
         {
-            await ShowMessageDialog.Information(true, "找不到文件（夹），源文件可能已被更改");
+            await ShowContentDialog.Information(true, "找不到文件（夹），源文件可能已被更改");
         }
     }
+
     public static async void Open(this string fullName)
     {
         try
@@ -45,7 +85,7 @@ public static class FileSystemHelper
         }
         catch (System.ComponentModel.Win32Exception)
         {
-            await ShowMessageDialog.Information(true, $"打开路径「{fullName}」时出现错误");
+            await ShowContentDialog.Information(true, $"打开路径「{fullName}」时出现错误");
         }
     }
 
@@ -65,7 +105,7 @@ public static class FileSystemHelper
         }
         catch (System.ComponentModel.Win32Exception)
         {
-            await ShowMessageDialog.Information(true, "找不到目录，源文件目录可能已被更改");
+            await ShowContentDialog.Information(true, "找不到目录，源文件目录可能已被更改");
         }
     }
 

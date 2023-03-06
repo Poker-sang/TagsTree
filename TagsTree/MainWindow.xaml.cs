@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using TagsTree.Services;
@@ -10,7 +9,6 @@ using WinUI3Utilities;
 
 namespace TagsTree;
 
-[INotifyPropertyChanged]
 public sealed partial class MainWindow : Window
 {
     public MainWindow()
@@ -21,7 +19,7 @@ public sealed partial class MainWindow : Window
         CurrentContext.TitleTextBlock = TitleTextBlock;
         // TODO: Microsoft.WindowsAppSDK 1.2后，最小化的NavigationView没有高度
         CurrentContext.NavigationView = NavigationView;
-        CurrentContext.Frame = NavigateFrame;
+        CurrentContext.Frame = NavigationView.Content.To<Frame>();
     }
 
     private async void Loaded(object sender, RoutedEventArgs e)
@@ -33,6 +31,9 @@ public sealed partial class MainWindow : Window
         else
             DisplaySettings();
     }
+
+    private void OnSizeChanged(object sender, WindowSizeChangedEventArgs e)
+        => DragZoneHelper.SetDragZones(dragZoneLeftIntent: (int)NavigationView.CompactPaneLength);
 
     public async Task ConfigIsSet()
     {
@@ -63,8 +64,8 @@ public sealed partial class MainWindow : Window
 
     private void BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs e)
     {
-        NavigateFrame.GoBack();
-        NavigationView.SelectedItem = NavigateFrame.Content switch
+        CurrentContext.Frame.GoBack();
+        NavigationView.SelectedItem = CurrentContext.Frame.Content switch
         {
             IndexPage => NavigationView.MenuItems[0],
             TagSearchFilesPage => NavigationView.MenuItems[0],
@@ -78,12 +79,14 @@ public sealed partial class MainWindow : Window
             SettingsPage => NavigationView.SettingsItem,
             _ => NavigationView.SelectedItem
         };
-        NavigationView.IsBackEnabled = NavigateFrame.CanGoBack;
+        NavigationView.IsBackEnabled = CurrentContext.Frame.CanGoBack;
     }
 
     private void ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs e)
     {
-        if (e.InvokedItemContainer.Tag is Type item && item != NavigateFrame.Content.GetType())
+        if (e.InvokedItemContainer.Tag is Type item && item != CurrentContext.Frame.Content.GetType())
             NavigationHelper.GotoPage(item);
     }
+
+    private void TeachingTipOnLoaded(object sender, RoutedEventArgs e) => SnackBarHelper.SnackBar = sender.To<TeachingTip>();
 }

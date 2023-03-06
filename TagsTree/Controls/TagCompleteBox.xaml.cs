@@ -2,13 +2,12 @@ using System.Text.RegularExpressions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using TagsTree.Models;
 using TagsTree.Services.ExtensionMethods;
-using TagsTree.ViewModels;
-using TagsTree.ViewModels.Controls;
+using TagsTree.Views.ViewModels;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
+using TagCompleteBoxViewModel = TagsTree.Views.ViewModels.Controls.TagCompleteBoxViewModel;
 
 namespace TagsTree.Controls;
 

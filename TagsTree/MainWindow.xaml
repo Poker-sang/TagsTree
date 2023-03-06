@@ -7,6 +7,7 @@
     xmlns:local="using:TagsTree"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="using:TagsTree.Views"
+    SizeChanged="OnSizeChanged"
     mc:Ignorable="d">
     <Grid>
         <!--  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"  -->
@@ -15,21 +16,27 @@
             Height="{x:Bind NavigationView.CompactPaneLength}"
             VerticalAlignment="Top"
             IsHitTestVisible="True">
-            <TextBlock
-                x:Name="TitleTextBlock"
-                Margin="0,15,0,0"
-                VerticalAlignment="Top"
-                Style="{StaticResource CaptionTextBlockStyle}"
-                Text="{x:Bind helper:CurrentContext.Title}" />
+            <StackPanel
+                Margin="12"
+                Orientation="Horizontal"
+                Spacing="14">
+                <FontIcon
+                    Width="25"
+                    Height="25"
+                    Glyph="&#xEA3A;" />
+                <TextBlock
+                    x:Name="TitleTextBlock"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="{x:Bind helper:CurrentContext.Title}" />
+            </StackPanel>
         </Border>
         <NavigationView
             x:Name="NavigationView"
-            AlwaysShowHeader="True"
             BackRequested="BackRequested"
             DisplayModeChanged="{x:Bind helper:TitleBarHelper.DisplayModeChanged}"
             IsBackButtonVisible="Visible"
             IsTabStop="False"
-            IsTitleBarAutoPaddingEnabled="False"
             ItemInvoked="ItemInvoked"
             Loaded="Loaded"
             PaneClosing="{x:Bind helper:TitleBarHelper.PaneClosing}"
@@ -63,7 +70,12 @@
                     IsEnabled="{x:Bind local:AppContext.SettingViewModel.IsFileObserverItemEnabled, Mode=OneWay}"
                     Tag="{x:Bind views:FilesObserverPage.TypeGetter}" />
             </NavigationView.FooterMenuItems>
-            <Frame x:Name="NavigateFrame" />
+            <Frame />
         </NavigationView>
+        <TeachingTip Loaded="TeachingTipOnLoaded">
+            <TeachingTip.IconSource>
+                <FontIconSource />
+            </TeachingTip.IconSource>
+        </TeachingTip>
     </Grid>
 </Window>

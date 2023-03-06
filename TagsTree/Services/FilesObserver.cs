@@ -23,7 +23,7 @@ public class FilesObserver : FileSystemWatcher
         // 路径是否存在
         if (!Directory.Exists(AppContext.AppConfig.LibraryPath))
         {
-            await ShowMessageDialog.Information(true, $"路径「{AppContext.AppConfig.LibraryPath}」不存在，无法开启文件监视，请在设置修改正确路径后保存");
+            await ShowContentDialog.Information(true, $"路径「{AppContext.AppConfig.LibraryPath}」不存在，无法开启文件监视，请在设置修改正确路径后保存");
             AppContext.FilesObserver.EnableRaisingEvents = false;
         }
         // 不能是错误路径

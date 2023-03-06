@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using TagsTree.Models;
 using WinUI3Utilities;
 
-namespace TagsTree.ViewModels;
+namespace TagsTree.Views.ViewModels;
 
 [INotifyPropertyChanged]
 public partial class TagViewModel : TagModel

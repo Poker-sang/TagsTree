@@ -9,6 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:viewModels="using:TagsTree.ViewModels"
+    xmlns:viewModels1="using:TagsTree.Views.ViewModels"
     Background="Transparent"
     NavigationCacheMode="Disabled"
     mc:Ignorable="d">
@@ -45,7 +46,7 @@
                     CanUserSort="False"
                     IsReadOnly="True">
                     <uiControls:DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate x:DataType="viewModels:FileViewModel">
+                        <DataTemplate x:DataType="viewModels1:FileViewModel">
                             <CheckBox
                                 Margin="12.5,0"
                                 IsChecked="{x:Bind Selected, Mode=OneWay}"

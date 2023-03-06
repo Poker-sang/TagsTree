@@ -1,4 +1,4 @@
-using TagsTree.ViewModels;
+using TagsTree.Views.ViewModels;
 
 namespace TagsTree.Services.ExtensionMethods;
 
@@ -17,7 +17,7 @@ public static class FileViewModelHelper
         AppContext.SaveFiles();
         AppContext.SaveRelations();
     }
-    
+
     public static void MoveOrRenameAndSave(this FileViewModel fileViewModel, string newFullName)
     {
         fileViewModel.FileModel.MoveOrRename(newFullName);

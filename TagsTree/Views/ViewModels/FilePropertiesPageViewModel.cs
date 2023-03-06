@@ -1,6 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace TagsTree.ViewModels;
+namespace TagsTree.Views.ViewModels;
 
 public partial class FilePropertiesPageViewModel : ObservableObject
 {

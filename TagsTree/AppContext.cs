@@ -2,15 +2,15 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.UI.Xaml;
 using TagsTree.Algorithm;
 using TagsTree.Models;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.Views;
+using TagsTree.Views.ViewModels;
 using Windows.Storage;
-using Microsoft.UI.Xaml;
 using WinUI3Utilities.Attributes;
-using TagsTree.ViewModels;
 
 namespace TagsTree;
 
@@ -32,7 +32,7 @@ public static partial class AppContext
         AppLocalFolder = ApplicationData.Current.LocalFolder.Path;
         InitializeConfigurationContainer();
         AppConfig =
-#if !FIRST_TIME
+#if FIRST_TIME
                    LoadConfiguration() ??
 #endif
             new AppConfig();
@@ -45,18 +45,27 @@ public static partial class AppContext
 
     public static async Task ExceptionHandler(string exception)
     {
-        switch (await ShowMessageDialog.Warning(
-                    $"路径「{AppLocalFolder}」下，{exception}和{RelationsName}存储数据数不同",
-                    $"删除关系文件{RelationsName}并重新生成", "关闭软件并打开目录"))
+        //switch (await ShowContentDialog.Warning(
+        //            new TextBlock
+        //            {
+        //                TextWrapping = TextWrapping.Wrap,
+        //                Inlines =
+        //                {
+        //                    AppLocalFolder.GetHyperlink("软件设置"),
+        //                    new Run { Text = $"里，{exception}和{RelationsName}存储数据数不同" }
+        //                }
+        //            }))
+        if (await ShowContentDialog.Warning(
+                $"路径「{AppLocalFolder}」下，{exception}和{RelationsName}存储数据数不同",
+                $"删除关系文件{RelationsName}并重新生成", "关闭软件并打开目录"))
         {
-            case true:
-                File.Delete(RelationsPath);
-                Relations.Reload();
-                break;
-            case false:
-                AppLocalFolder.Open();
-                Application.Current.Exit();
-                break;
+            File.Delete(RelationsPath);
+            Relations.Reload();
+        }
+        else
+        {
+            AppLocalFolder.Open();
+            Application.Current.Exit();
         }
     }
 

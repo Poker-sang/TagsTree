@@ -3,7 +3,7 @@ using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using WinUI3Utilities;
 
-namespace TagsTree.ViewModels;
+namespace TagsTree.Views.ViewModels;
 
 public partial class TagSearchFilesViewModel : ObservableObject
 {

@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.UI.Xaml;
+using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using TagsTree.Interfaces;
 using TagsTree.Models;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
-using TagsTree.ViewModels;
+using TagsTree.Views.ViewModels;
 using WinUI3Utilities;
 
 namespace TagsTree.Views;
@@ -38,12 +38,12 @@ public sealed partial class FilesObserverPage : Page, ITypeGetter
                 Apply(fileChanged, fileModel);
             else
             {
-                await ShowMessageDialog.Information(true, $"文件列表中不存在：{fileChanged.OldFullName}");
+                await ShowContentDialog.Information(true, $"文件列表中不存在：{fileChanged.OldFullName}");
                 return;
             }
         else
         {
-            await ShowMessageDialog.Information(true, $"不在指定文件路径下：{fileChanged.FullName}");
+            await ShowContentDialog.Information(true, $"不在指定文件路径下：{fileChanged.FullName}");
             return;
         }
 
@@ -52,13 +52,13 @@ public sealed partial class FilesObserverPage : Page, ITypeGetter
         if (fileChanged.Type is FileChanged.ChangedType.Create or FileChanged.ChangedType.Delete)
             AppContext.SaveRelations();
         Save();
-        ShowInfoBar("已应用一项并保存");
+        SnackBarHelper.Show("已应用一项并保存");
     }
 
     private void ContextDeleteTapped(object sender, TappedRoutedEventArgs e)
     {
         _ = _vm.FilesChangedList.Remove(sender.GetDataContext<FileChanged>());
-        ShowInfoBar("已删除一项");
+        SnackBarHelper.Show("已删除一项");
     }
 
     private void ContextDeleteBeforeTapped(object sender, TappedRoutedEventArgs e)
@@ -72,7 +72,7 @@ public sealed partial class FilesObserverPage : Page, ITypeGetter
         var id = sender.GetDataContext<FileChanged>().Id;
         while (_vm.FilesChangedList[0].Id <= id)
             _vm.FilesChangedList.RemoveAt(0);
-        ShowInfoBar($"已删除序号{id}及之前项");
+        SnackBarHelper.Show($"已删除序号{id}及之前项");
     }
 
     private void ContextDeleteAfterTapped(object sender, TappedRoutedEventArgs e)
@@ -86,16 +86,17 @@ public sealed partial class FilesObserverPage : Page, ITypeGetter
         var id = sender.GetDataContext<FileChanged>().Id;
         while (_vm.FilesChangedList[^1].Id >= id)
             _ = _vm.FilesChangedList.Remove(_vm.FilesChangedList[^1]);
-        ShowInfoBar($"已删除序号{id}及之后项");
+        SnackBarHelper.Show($"已删除序号{id}及之后项");
     }
 
     private void DeleteRangeConfirmTapped(ContentDialog sender, ContentDialogButtonClickEventArgs e)
     {
+        var rs = sender.Content.To<RangeSelector>();
         var count = 0;
         for (var i = 0; i < _vm.FilesChangedList.Count;)
-            if (Rs.RangeStart > _vm.FilesChangedList[i].Id)
+            if (rs.RangeStart > _vm.FilesChangedList[i].Id)
                 ++i;
-            else if (_vm.FilesChangedList[i].Id > Rs.RangeEnd)
+            else if (_vm.FilesChangedList[i].Id > rs.RangeEnd)
                 break;
             else
             {
@@ -103,7 +104,7 @@ public sealed partial class FilesObserverPage : Page, ITypeGetter
                 ++count;
             }
 
-        ShowInfoBar($"已删除{count}项");
+        SnackBarHelper.Show($"已删除{count}项");
     }
 
     private async void DeleteRangeTapped(object sender, TappedRoutedEventArgs e) => await CdDeleteRange.ShowAsync();
@@ -149,31 +150,31 @@ public sealed partial class FilesObserverPage : Page, ITypeGetter
         }
 
         if (exception is not "")
-            await ShowMessageDialog.Information(true, exception);
+            await ShowContentDialog.Information(true, exception);
         AppContext.SaveFiles();
         AppContext.SaveRelations();
         Save();
-        ShowInfoBar("已全部应用并保存");
+        SnackBarHelper.Show("已全部应用并保存");
     }
 
     private void MergeAllTapped(object sender, TappedRoutedEventArgs e)
     {
         MergeAll();
         Save();
-        ShowInfoBar("已全部合并并保存");
+        SnackBarHelper.Show("已全部合并并保存");
     }
 
     private void DeleteAllTapped(object sender, TappedRoutedEventArgs e)
     {
         ClearAll();
         Save();
-        ShowInfoBar("已全部清除并保存");
+        SnackBarHelper.Show("已全部清除并保存");
     }
 
     private void SaveAllTapped(object sender, TappedRoutedEventArgs e)
     {
         Save();
-        ShowInfoBar("已保存");
+        SnackBarHelper.Show("已保存");
     }
 
     #endregion
@@ -236,12 +237,6 @@ public sealed partial class FilesObserverPage : Page, ITypeGetter
         // 或AppContext.FilesChangedList
         FileChanged.Serialize(AppContext.FilesChangedPath, _vm.FilesChangedList);
         _vm.IsSaveEnabled = false;
-    }
-
-    private void ShowInfoBar(string message)
-    {
-        _vm.Message = "";
-        _vm.Message = message;
     }
 
     #endregion

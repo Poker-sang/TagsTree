@@ -1,11 +1,11 @@
 using System.Linq;
 using System.Text.RegularExpressions;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Controls;
 using TagsTree.Delegates;
 using TagsTree.Models;
 using TagsTree.Services.ExtensionMethods;
 using Windows.Foundation;
-using CommunityToolkit.Mvvm.ComponentModel;
 using WinUI3Utilities.Attributes;
 
 namespace TagsTree.Controls;

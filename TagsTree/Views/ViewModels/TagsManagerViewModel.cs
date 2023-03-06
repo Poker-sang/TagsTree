@@ -1,7 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using TagsTree.Models;
 
-namespace TagsTree.ViewModels;
+namespace TagsTree.Views.ViewModels;
 
 public sealed partial class TagsManagerViewModel : ObservableObject
 {

@@ -2,14 +2,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using CommunityToolkit.WinUI.UI.Controls;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using TagsTree.Models;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
-using TagsTree.ViewModels;
+using TagsTree.Views.ViewModels;
 using WinUI3Utilities;
 
 namespace TagsTree.Views;
@@ -24,7 +23,7 @@ public partial class TagSearchFilesPage : Page
         TbSearch.InvokeQuerySubmitted();
     }
 
-    protected override void OnNavigatedTo(NavigationEventArgs e) => TbSearch.Text = (string)e.Parameter;
+    protected override void OnNavigatedTo(NavigationEventArgs e) => TbSearch.Text = e.Parameter.To<string>();
 
     private readonly TagSearchFilesViewModel _vm;
 
@@ -36,23 +35,25 @@ public partial class TagSearchFilesPage : Page
 
     private void QuerySubmitted(AutoSuggestBox autoSuggestBox, AutoSuggestBoxQuerySubmittedEventArgs e) => _vm.FileViewModels = autoSuggestBox.Text is "" ? _vm.ResultCallBack : RelationsDataTable.FuzzySearchName(autoSuggestBox.Text, _vm.ResultCallBack);
 
-    private void ContextOpenTapped(object sender, TappedRoutedEventArgs e) => ((FileViewModel)((MenuFlyoutItem)sender).DataContext).Open();
+    private void ContextOpenTapped(object sender, TappedRoutedEventArgs e) => sender.GetDataContext<FileViewModel>().Open();
 
-    private void ContextOpenExplorerTapped(object sender, TappedRoutedEventArgs e) => ((FileViewModel)((MenuFlyoutItem)sender).DataContext).OpenDirectory();
+    private void ContextOpenExplorerTapped(object sender, TappedRoutedEventArgs e) => sender.GetDataContext<FileViewModel>().OpenDirectory();
 
     private async void ContextRemoveTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (!await ShowMessageDialog.Warning("是否从软件移除该文件？"))
+        var fileViewModel = sender.GetDataContext<FileViewModel>();
+        // 打开确认框会关闭菜单，导致DataContext变为null，所以提前记录
+        if (!await ShowContentDialog.Warning("是否从软件移除该文件？"))
             return;
-        ((FileViewModel)((FrameworkElement)sender).DataContext).RemoveAndSave();
-        _ = _vm.FileViewModels.Remove((FileViewModel)((FrameworkElement)sender).DataContext);
+        fileViewModel.RemoveAndSave();
+        _ = _vm.FileViewModels.Remove(fileViewModel);
     }
 
-    private void ContextPropertiesTapped(object sender, TappedRoutedEventArgs e) => NavigationHelper.GotoPage<FilePropertiesPage>((FileViewModel)((MenuFlyoutItem)sender).DataContext);
+    private void ContextPropertiesTapped(object sender, TappedRoutedEventArgs e) => NavigationHelper.GotoPage<FilePropertiesPage>(sender.GetDataContext<FileViewModel>());
 
     private void ContextPropertiesDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
     {
-        if ((FileViewModel)((DataGrid)sender).SelectedItem is { } fileViewModel)
+        if (sender.To<DataGrid>().SelectedItem is FileViewModel fileViewModel)
             NavigationHelper.GotoPage<FilePropertiesPage>(fileViewModel);
     }
 
@@ -61,6 +62,7 @@ public partial class TagSearchFilesPage : Page
     #region 操作
 
     private static TagSearchFilesPage _current = null!;
+
     public static void FileRemoved(FileViewModel removedItem) => _ = _current._vm.FileViewModels.Remove(removedItem);
 
     #endregion

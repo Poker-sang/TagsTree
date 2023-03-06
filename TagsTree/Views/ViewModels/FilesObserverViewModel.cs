@@ -4,13 +4,14 @@ using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using TagsTree.Models;
 
-namespace TagsTree.ViewModels;
+namespace TagsTree.Views.ViewModels;
 
 public partial class FilesObserverViewModel : ObservableObject
 {
     public ObservableCollection<FileChanged> FilesChangedList { get; }
 
     public int FirstId => FilesChangedList.Count is 0 ? 0 : FilesChangedList[0].Id;
+
     public int LastId => FilesChangedList.Count is 0 ? 1 : FilesChangedList[^1].Id;
 
     public FilesObserverViewModel(ObservableCollection<FileChanged> filesChangedList)
@@ -33,6 +34,4 @@ public partial class FilesObserverViewModel : ObservableObject
     public bool IsListNotEmpty => FilesChangedList.Count is not 0;
 
     public bool IsMultipleItems => FilesChangedList.Count > 1;
-
-    [ObservableProperty] private string _message = "";
 }

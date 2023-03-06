@@ -1,15 +1,15 @@
 using System;
+using System.Diagnostics;
 using System.IO;
+using CommunityToolkit.Labs.WinUI;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using TagsTree.Services.ExtensionMethods;
-using CommunityToolkit.Labs.WinUI;
-using CommunityToolkit.Mvvm.ComponentModel;
-using WinUI3Utilities;
-using TagsTree.ViewModels;
-using System.Diagnostics;
 using TagsTree.Interfaces;
+using TagsTree.Services.ExtensionMethods;
+using TagsTree.Views.ViewModels;
+using WinUI3Utilities;
 
 namespace TagsTree.Views;
 

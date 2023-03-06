@@ -7,12 +7,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:viewModels="using:TagsTree.ViewModels"
+    xmlns:viewModels1="using:TagsTree.Views.ViewModels"
     Background="Transparent"
     NavigationCacheMode="Disabled"
     mc:Ignorable="d">
     <uiControls:DockPanel>
         <uiControls:DockPanel uiControls:DockPanel.Dock="Top">
-            <InfoBar x:Name="InfoBar" />
             <CommandBar DefaultLabelPosition="Collapsed" OverflowButtonVisibility="Collapsed">
                 <AppBarButton
                     Icon="Save"
@@ -31,9 +31,9 @@
                 Margin="0,0,8,0"
                 CanDragItems="False"
                 CanReorderItems="False"
-                ItemsSource="{x:Bind viewModels:FileEditTagsViewModel.TagsSource, Mode=OneWay}">
+                ItemsSource="{x:Bind viewModels1:FileEditTagsViewModel.TagsSource, Mode=OneWay}">
                 <TreeView.ItemTemplate>
-                    <DataTemplate x:DataType="viewModels:TagViewModel">
+                    <DataTemplate x:DataType="viewModels1:TagViewModel">
                         <TreeViewItem
                             DoubleTapped="AddTagTapped"
                             ItemsSource="{x:Bind SubTags}"
@@ -49,7 +49,7 @@
                 Margin="8,0,0,0"
                 ItemsSource="{x:Bind _vm.VirtualTags, Mode=OneWay}">
                 <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="viewModels:TagViewModel">
+                    <DataTemplate x:DataType="viewModels1:TagViewModel">
                         <ListViewItem
                             DoubleTapped="DeleteTagTapped"
                             Tag="{x:Bind}"

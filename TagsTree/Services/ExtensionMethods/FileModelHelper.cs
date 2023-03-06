@@ -15,6 +15,6 @@ public static class FileModelHelper
         _ = AppContext.IdFile.Remove(fileModel);
         AppContext.Relations.DeleteFile(fileModel);
     }
-    
+
     public static void MoveOrRename(this FileModel fileModel, string newFullName) => fileModel.Reload(newFullName);
 }

@@ -1,14 +1,13 @@
 using System;
 using System.IO;
 using CommunityToolkit.Labs.WinUI;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
-using TagsTree.ViewModels;
+using TagsTree.Views.ViewModels;
 using Windows.ApplicationModel.DataTransfer;
 using WinUI3Utilities;
 
@@ -18,7 +17,7 @@ public partial class FilePropertiesPage : Page
 {
     public FilePropertiesPage() => InitializeComponent();
 
-    private readonly FilePropertiesPageViewModel _vm = null!;
+    private readonly FilePropertiesPageViewModel _vm = new();
 
     #region 事件处理
 
@@ -32,7 +31,7 @@ public partial class FilePropertiesPage : Page
 
     private async void RemoveTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (!await ShowMessageDialog.Warning("是否从软件移除该文件？"))
+        if (!await ShowContentDialog.Warning("是否从软件移除该文件？"))
             return;
         Remove(_vm.FileViewModel);
     }
@@ -68,20 +67,20 @@ public partial class FilePropertiesPage : Page
             return;
         if (_vm.FileViewModel.Path == folder.Path)
         {
-            await ShowMessageDialog.Information(true, "新目录与原目录一致！");
+            await ShowContentDialog.Information(true, "新目录与原目录一致！");
             return;
         }
 
         if (folder.Path.Contains(_vm.FileViewModel.Path))
         {
-            await ShowMessageDialog.Information(true, "不能将其移动到原目录下！");
+            await ShowContentDialog.Information(true, "不能将其移动到原目录下！");
             return;
         }
 
         var newFullName = folder.Path + @"\" + _vm.FileViewModel.Name;
         if (newFullName.Exists())
         {
-            await ShowMessageDialog.Information(true, "新名称与目录下其他文件（夹）同名！");
+            await ShowContentDialog.Information(true, "新名称与目录下其他文件（夹）同名！");
             return;
         }
 
@@ -92,7 +91,7 @@ public partial class FilePropertiesPage : Page
 
     private async void DeleteTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (!await ShowMessageDialog.Warning("是否删除该文件？"))
+        if (!await ShowContentDialog.Warning("是否删除该文件？"))
             return;
         _vm.FileViewModel.FileModel.Delete();
         Remove(_vm.FileViewModel);
