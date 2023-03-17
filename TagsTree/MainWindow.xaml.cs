@@ -32,8 +32,16 @@ public sealed partial class MainWindow : Window
             DisplaySettings();
     }
 
-    private void OnSizeChanged(object sender, WindowSizeChangedEventArgs e)
-        => DragZoneHelper.SetDragZones(dragZoneLeftIntent: (int)NavigationView.CompactPaneLength);
+    private void OnSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        DragZoneHelper.SetDragZones(new()
+        {
+#if DEBUG
+            ExcludeDebugToolbarArea = true,
+#endif
+            DragZoneLeftIndent = (int)NavigationView.CompactPaneLength
+        });
+    }
 
     public async Task ConfigIsSet()
     {
@@ -88,5 +96,5 @@ public sealed partial class MainWindow : Window
             NavigationHelper.GotoPage(item);
     }
 
-    private void TeachingTipOnLoaded(object sender, RoutedEventArgs e) => SnackBarHelper.SnackBar = sender.To<TeachingTip>();
+    private void TeachingTipOnLoaded(object sender, RoutedEventArgs e) => SnackBarHelper.RootSnackBar = sender.To<TeachingTip>();
 }

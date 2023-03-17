@@ -27,12 +27,12 @@ public partial class FileEditTagsPage : Page
         foreach (var tagExisted in _vm.VirtualTags)
             if (tagExisted.Name == newTag.Name)
             {
-                SnackBarHelper.Show($"已拥有该标签「{newTag.Name}」", Severity.Error);
+                SnackBarHelper.ShowAndHide($"已拥有该标签「{newTag.Name}」", SnackBarHelper.Severity.Error);
                 return;
             }
             else if (newTag.HasChildTag(tagExisted))
             {
-                SnackBarHelper.Show($"已拥有「{newTag.Name}」的下级标签「{tagExisted.Name}」或更多", Severity.Error);
+                SnackBarHelper.ShowAndHide($"已拥有「{newTag.Name}」的下级标签「{tagExisted.Name}」或更多", SnackBarHelper.Severity.Error);
                 return;
             }
             else if (tagExisted.HasChildTag(newTag))
@@ -43,7 +43,7 @@ public partial class FileEditTagsPage : Page
                     _vm.VirtualTags.Add(newTag);
                     _vm.IsSaveEnabled = true;
                 }
-                SnackBarHelper.Show($"「{newTag.Name}」覆盖上级标签「{tagExisted.Name}」");
+                SnackBarHelper.ShowAndHide($"「{newTag.Name}」覆盖上级标签「{tagExisted.Name}」");
                 return;
             }
 
@@ -64,7 +64,7 @@ public partial class FileEditTagsPage : Page
         _vm.FileViewModel.TagsChanged();
         AppContext.SaveRelations();
         _vm.IsSaveEnabled = false;
-        SnackBarHelper.Show("已保存更改");
+        SnackBarHelper.ShowAndHide("已保存更改");
     }
 
     #endregion

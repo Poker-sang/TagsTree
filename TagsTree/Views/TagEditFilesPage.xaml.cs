@@ -71,7 +71,7 @@ public sealed partial class TagEditFilesPage : Page
             }
 
         AppContext.SaveRelations();
-        SnackBarHelper.Show("已保存更改");
+        SnackBarHelper.ShowAndHide("已保存更改");
         CurrentContext.Frame.GoBack(new SlideNavigationTransitionInfo());
     }
 

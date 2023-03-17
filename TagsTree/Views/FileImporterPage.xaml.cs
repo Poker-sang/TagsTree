@@ -121,7 +121,7 @@ public partial class FileImporterPage : Page, ITypeGetter
         AppContext.SaveFiles();
         AppContext.SaveRelations();
         _vm.FileViewModels.Clear();
-        SnackBarHelper.Show($"导入「{saved}/{_vm.FileViewModels.Count}」个文件");
+        SnackBarHelper.ShowAndHide($"导入「{saved}/{_vm.FileViewModels.Count}」个文件");
     }
 
     private void ContextDeleteTapped(object sender, TappedRoutedEventArgs e)

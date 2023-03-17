@@ -7,9 +7,8 @@
     xmlns:local="using:TagsTree"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="using:TagsTree.Views"
-    SizeChanged="OnSizeChanged"
     mc:Ignorable="d">
-    <Grid>
+    <Grid SizeChanged="OnSizeChanged">
         <!--  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"  -->
         <Border
             x:Name="TitleBar"
@@ -72,10 +71,6 @@
             </NavigationView.FooterMenuItems>
             <Frame />
         </NavigationView>
-        <TeachingTip Loaded="TeachingTipOnLoaded">
-            <TeachingTip.IconSource>
-                <FontIconSource />
-            </TeachingTip.IconSource>
-        </TeachingTip>
+        <TeachingTip Loaded="TeachingTipOnLoaded" />
     </Grid>
 </Window>
