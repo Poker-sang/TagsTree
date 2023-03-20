@@ -2,8 +2,6 @@
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net7.0-windows10.0.19041.0</TargetFramework>
-        <LangVersion>preview</LangVersion>
-        <EnablePreviewFeatures>true</EnablePreviewFeatures>
         <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
         <RootNamespace>TagsTree</RootNamespace>
         <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -11,20 +9,9 @@
         <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
         <UseWinUI>true</UseWinUI>
         <Nullable>enable</Nullable>
-        <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
-        <PublishProfile>Properties\PublishProfiles\win10-$(Platform).pubxml</PublishProfile>
-        <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-        <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
-        <AppxPackageDir>C:\WorkSpace\TagsTree\Publish\</AppxPackageDir>
-        <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
-        <GenerateTestArtifacts>True</GenerateTestArtifacts>
-        <AppxBundle>Never</AppxBundle>
+        <LangVersion>preview</LangVersion>
         <DefaultLanguage>zh-CN</DefaultLanguage>
-        <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-        <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-        <PackageCertificateThumbprint>285B17C5B8415F011663D5870944037BD0F05B6C</PackageCertificateThumbprint>
-        <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
-        <AssemblyName>TagsTree</AssemblyName>
+        <EnableMsixTooling>true</EnableMsixTooling>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -39,7 +26,7 @@
         <PackageReference Include="CommunityToolkit.Labs.WinUI.SettingsControls" Version="0.0.8" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
         <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
-        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755" />
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.756" />
         <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.230313.1" />
         <PackageReference Include="PInvoke.User32" Version="0.7.124" />
         <PackageReference Include="WinUI3Utilities" Version="1.0.13" />
@@ -111,4 +98,23 @@
             <Generator>MSBuild:Compile</Generator>
         </Page>
     </ItemGroup>
+
+    <!-- 
+        Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
+        Tools extension to be activated for this project even if the Windows App SDK Nuget
+        package has not yet been restored.
+      -->
+    <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+        <ProjectCapability Include="Msix" />
+    </ItemGroup>
+
+    <!-- 
+        Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution 
+        Explorer "Package and Publish" context menu entry to be enabled for this project even if 
+        the Windows App SDK Nuget package has not yet been restored.
+      -->
+    <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+        <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
+    </PropertyGroup>
+
 </Project>

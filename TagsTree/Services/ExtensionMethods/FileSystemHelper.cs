@@ -39,7 +39,7 @@ public static class FileSystemHelper
                          };
                          _ = process.Start();
                      }
-                     catch (Exception ex)
+                     catch (Exception)
                      {
 
                      }

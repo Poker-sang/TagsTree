@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using TagsTree.Interfaces;
-using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.Views.ViewModels;
 using WinUI3Utilities;

@@ -8,7 +8,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using TagsTree.Interfaces;
 using TagsTree.Models;
-using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.Views.ViewModels;
 using WinUI3Utilities;
@@ -20,7 +19,6 @@ public partial class FileImporterPage : Page, ITypeGetter
     public FileImporterPage() => InitializeComponent();
 
     public static Type TypeGetter => typeof(FileImporterPage);
-
 
     private readonly FileImporterViewModel _vm = new();
 

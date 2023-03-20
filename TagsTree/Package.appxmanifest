@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Package
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
@@ -31,7 +31,7 @@
                      Executable="$targetnametoken$.exe"
                      EntryPoint="$targetentrypoint$">
             <uap:VisualElements
-                DisplayName="DanmakuPlayer"
+                DisplayName="TagsTree"
                 Description="TagsTree是一个用树状结构标签管理文件的软件，能在不干涉文件本身的前提下，为文件添加标签"
                 BackgroundColor="transparent"
                 Square150x150Logo="Assets\Square150x150Logo.png"

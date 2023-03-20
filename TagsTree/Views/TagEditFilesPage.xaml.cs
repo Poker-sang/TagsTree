@@ -6,7 +6,6 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using TagsTree.Models;
-using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.Views.ViewModels;
 using WinUI3Utilities;

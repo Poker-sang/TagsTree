@@ -12,6 +12,7 @@ namespace TagsTree.Views;
 public partial class SelectTagToEditPage : Page, ITypeGetter
 {
     public SelectTagToEditPage() => InitializeComponent();
+
     public static Type TypeGetter => typeof(SelectTagToEditPage);
 
     private readonly SelectTagToEditPageViewModel _vm = new();

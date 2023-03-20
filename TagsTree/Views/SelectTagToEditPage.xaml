@@ -7,7 +7,6 @@
     xmlns:local="using:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
-    xmlns:viewModels="using:TagsTree.ViewModels"
     xmlns:viewModels1="using:TagsTree.Views.ViewModels"
     Background="Transparent"
     NavigationCacheMode="Disabled"

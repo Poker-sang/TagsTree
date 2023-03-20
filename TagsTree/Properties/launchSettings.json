@@ -2,6 +2,9 @@
     "profiles": {
         "TagsTree": {
             "commandName": "MsixPackage"
+        },
+        "TagsTree (Unpackaged)": {
+            "commandName": "Project"
         }
     }
 }
