@@ -8,25 +8,29 @@
     xmlns:local="using:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
-    Background="Transparent"
-    NavigationCacheMode="Disabled"
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
     </Page.Resources>
-    <uiControls:DockPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
         <controls:TagSearchBox
             x:Name="TbSearch"
-            uiControls:DockPanel.Dock="Top"
+            Grid.Row="0"
             ResultChanged="ResultChanged" />
         <AutoSuggestBox
-            uiControls:DockPanel.Dock="Top"
+            Grid.Row="1"
             PlaceholderText="文件名"
             QueryIcon="Find"
             QuerySubmitted="QuerySubmitted"
             TextChanged="TextChanged"
             ToolTipService.ToolTip="模糊搜索，不包含\/:*?&quot;&lt;&gt;|,和空白字符，留空显示全部" />
         <uiControls:DataGrid
+            Grid.Row="2"
             AutoGenerateColumns="False"
             CanUserReorderColumns="False"
             DoubleTapped="ContextPropertiesDoubleTapped"
@@ -53,5 +57,5 @@
                 <items:DataGridPartialPathColumn />
             </uiControls:DataGrid.Columns>
         </uiControls:DataGrid>
-    </uiControls:DockPanel>
+    </Grid>
 </Page>

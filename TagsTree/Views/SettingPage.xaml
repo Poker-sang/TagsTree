@@ -8,8 +8,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:root="using:TagsTree"
     xmlns:rs="using:TagsTree.Resources"
-    Background="Transparent"
-    NavigationCacheMode="Disabled"
     Unloaded="Unloaded"
     mc:Ignorable="d">
     <Page.Resources>

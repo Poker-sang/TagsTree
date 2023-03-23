@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml.Controls;
 using TagsTree.Services;
 using TagsTree.Views;
 using WinUI3Utilities;
+using WinUI3Utilities.Models;
 
 namespace TagsTree;
 
@@ -13,7 +14,7 @@ public sealed partial class MainWindow : Window
 {
     public MainWindow()
     {
-        CurrentContext.Window = this;
+        CurrentContext.WindowInfo = new WindowInfo(this);
         InitializeComponent();
         CurrentContext.TitleBar = TitleBar;
         CurrentContext.TitleTextBlock = TitleTextBlock;
@@ -32,16 +33,16 @@ public sealed partial class MainWindow : Window
             DisplaySettings();
     }
 
-    private void OnSizeChanged(object sender, SizeChangedEventArgs e)
-    {
-        DragZoneHelper.SetDragZones(new()
-        {
-#if DEBUG
-            ExcludeDebugToolbarArea = true,
-#endif
-            DragZoneLeftIndent = (int)NavigationView.CompactPaneLength
-        });
-    }
+//    private void OnSizeChanged(object sender, SizeChangedEventArgs e)
+//    {
+//        DragZoneHelper.SetDragZones(new()
+//        {
+//#if DEBUG
+//            ExcludeDebugToolbarArea = true,
+//#endif
+//            DragZoneLeftIndent = (int)NavigationView.CompactPaneLength
+//        });
+//    }
 
     public async Task ConfigIsSet()
     {

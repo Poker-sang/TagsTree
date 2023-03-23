@@ -6,8 +6,7 @@
     xmlns:local="using:TagsTree.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uicontrols="using:CommunityToolkit.WinUI.UI.Controls"
-    xmlns:viewModels="using:TagsTree.ViewModels"
-    xmlns:viewModels1="using:TagsTree.Views.ViewModels"
+    xmlns:viewModels="using:TagsTree.Views.ViewModels"
     Width="32"
     CanUserReorder="False"
     CanUserResize="False"
@@ -15,7 +14,7 @@
     IsReadOnly="True"
     mc:Ignorable="d">
     <uicontrols:DataGridTemplateColumn.CellTemplate>
-        <DataTemplate x:DataType="viewModels1:FileViewModel">
+        <DataTemplate x:DataType="viewModels:FileViewModel">
             <Image
                 Width="32"
                 Height="32"

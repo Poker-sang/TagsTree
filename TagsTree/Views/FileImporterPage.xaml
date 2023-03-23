@@ -8,106 +8,116 @@
     xmlns:local="using:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
-    Background="Transparent"
-    NavigationCacheMode="Disabled"
     mc:Ignorable="d">
     <Page.Resources>
         <ctkConverters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </Page.Resources>
-    <uiControls:DockPanel>
-        <uiControls:DockPanel uiControls:DockPanel.Dock="Top">
-            <CommandBar
-                uiControls:DockPanel.Dock="Right"
-                DefaultLabelPosition="Collapsed"
-                OverflowButtonVisibility="Collapsed">
-                <AppBarButton IsEnabled="{x:Bind _vm.Processed, Mode=OneWay}" ToolTipService.ToolTip="选择引入：引入选择的文件或文件夹">
-                    <AppBarButton.Icon>
-                        <FontIcon Glyph="&#xE762;" />
-                    </AppBarButton.Icon>
-                    <AppBarButton.Flyout>
-                        <MenuFlyout Placement="BottomEdgeAlignedLeft">
-                            <MenuFlyoutItem
-                                x:Name="SelectFiles"
-                                IsEnabled="{x:Bind _vm.Processed, Mode=OneWay}"
-                                Tapped="ImportTapped"
-                                Text="文件">
-                                <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="&#xE7C3;" />
-                                </MenuFlyoutItem.Icon>
-                            </MenuFlyoutItem>
-                            <MenuFlyoutItem
-                                x:Name="SelectFolders"
-                                IsEnabled="{x:Bind _vm.Processed, Mode=OneWay}"
-                                Tapped="ImportTapped"
-                                Text="文件夹">
-                                <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="&#xE8B7;" />
-                                </MenuFlyoutItem.Icon>
-                            </MenuFlyoutItem>
-                        </MenuFlyout>
-                    </AppBarButton.Flyout>
-                </AppBarButton>
-                <AppBarButton IsEnabled="{x:Bind _vm.Processed, Mode=OneWay}" ToolTipService.ToolTip="目录引入：引入选择的目录下一级所有文件或文件夹或全部">
-                    <AppBarButton.Icon>
-                        <FontIcon Glyph="&#xF89A;" />
-                    </AppBarButton.Icon>
-                    <AppBarButton.Flyout>
-                        <MenuFlyout Placement="BottomEdgeAlignedLeft">
-                            <MenuFlyoutItem
-                                x:Name="PathFiles"
-                                IsEnabled="{x:Bind _vm.Processed, Mode=OneWay}"
-                                Tapped="ImportTapped"
-                                Text="文件">
-                                <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="&#xE7C3;" />
-                                </MenuFlyoutItem.Icon>
-                            </MenuFlyoutItem>
-                            <MenuFlyoutItem
-                                x:Name="PathFolders"
-                                IsEnabled="{x:Bind _vm.Processed, Mode=OneWay}"
-                                Tapped="ImportTapped"
-                                Text="文件夹">
-                                <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="&#xE8B7;" />
-                                </MenuFlyoutItem.Icon>
-                            </MenuFlyoutItem>
-                            <MenuFlyoutItem
-                                x:Name="PathBoth"
-                                IsEnabled="{x:Bind _vm.Processed, Mode=OneWay}"
-                                Tapped="ImportTapped"
-                                Text="全部">
-                                <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="&#xE8A9;" />
-                                </MenuFlyoutItem.Icon>
-                            </MenuFlyoutItem>
-                        </MenuFlyout>
-                    </AppBarButton.Flyout>
-                </AppBarButton>
-                <AppBarButton
-                    x:Name="All"
-                    Icon="SelectAll"
-                    IsEnabled="{x:Bind _vm.Processed, Mode=OneWay}"
-                    Tapped="ImportTapped"
-                    ToolTipService.ToolTip="全部引入：引入选择的目录下所有深度所有文件" />
-                <AppBarSeparator />
-                <AppBarButton
-                    Icon="Delete"
-                    IsEnabled="{x:Bind _vm.DeleteSaveEnabled, Mode=OneWay}"
-                    Tapped="DeleteTapped"
-                    ToolTipService.ToolTip="清空" />
-                <AppBarButton
-                    Icon="Save"
-                    IsEnabled="{x:Bind _vm.DeleteSaveEnabled, Mode=OneWay}"
-                    Tapped="SaveTapped"
-                    ToolTipService.ToolTip="保存" />
-            </CommandBar>
-            <ProgressBar
-                Width="200"
-                IsIndeterminate="True"
-                Visibility="{x:Bind _vm.Processing, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
-        </uiControls:DockPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <CommandBar
+            Grid.Row="0"
+            Grid.Column="1"
+            DefaultLabelPosition="Collapsed"
+            OverflowButtonVisibility="Collapsed">
+            <AppBarButton IsEnabled="{x:Bind _vm.Processed, Mode=OneWay}" ToolTipService.ToolTip="选择引入：引入选择的文件或文件夹">
+                <AppBarButton.Icon>
+                    <FontIcon Glyph="&#xE762;" />
+                </AppBarButton.Icon>
+                <AppBarButton.Flyout>
+                    <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                        <MenuFlyoutItem
+                            x:Name="SelectFiles"
+                            IsEnabled="{x:Bind _vm.Processed, Mode=OneWay}"
+                            Tapped="ImportTapped"
+                            Text="文件">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE7C3;" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem
+                            x:Name="SelectFolders"
+                            IsEnabled="{x:Bind _vm.Processed, Mode=OneWay}"
+                            Tapped="ImportTapped"
+                            Text="文件夹">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE8B7;" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
+            <AppBarButton IsEnabled="{x:Bind _vm.Processed, Mode=OneWay}" ToolTipService.ToolTip="目录引入：引入选择的目录下一级所有文件或文件夹或全部">
+                <AppBarButton.Icon>
+                    <FontIcon Glyph="&#xF89A;" />
+                </AppBarButton.Icon>
+                <AppBarButton.Flyout>
+                    <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                        <MenuFlyoutItem
+                            x:Name="PathFiles"
+                            IsEnabled="{x:Bind _vm.Processed, Mode=OneWay}"
+                            Tapped="ImportTapped"
+                            Text="文件">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE7C3;" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem
+                            x:Name="PathFolders"
+                            IsEnabled="{x:Bind _vm.Processed, Mode=OneWay}"
+                            Tapped="ImportTapped"
+                            Text="文件夹">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE8B7;" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem
+                            x:Name="PathBoth"
+                            IsEnabled="{x:Bind _vm.Processed, Mode=OneWay}"
+                            Tapped="ImportTapped"
+                            Text="全部">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE8A9;" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
+            <AppBarButton
+                x:Name="All"
+                Icon="SelectAll"
+                IsEnabled="{x:Bind _vm.Processed, Mode=OneWay}"
+                Tapped="ImportTapped"
+                ToolTipService.ToolTip="全部引入：引入选择的目录下所有深度所有文件" />
+            <AppBarSeparator />
+            <AppBarButton
+                Icon="Delete"
+                IsEnabled="{x:Bind _vm.DeleteSaveEnabled, Mode=OneWay}"
+                Tapped="DeleteTapped"
+                ToolTipService.ToolTip="清空" />
+            <AppBarButton
+                Icon="Save"
+                IsEnabled="{x:Bind _vm.DeleteSaveEnabled, Mode=OneWay}"
+                Tapped="SaveTapped"
+                ToolTipService.ToolTip="保存" />
+        </CommandBar>
+        <ProgressBar
+            Grid.Row="0"
+            Grid.Column="0"
+            Width="200"
+            IsIndeterminate="True"
+            Visibility="{x:Bind _vm.Processing, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
         <uiControls:DataGrid
             x:Name="FileImporterDataGird"
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
             AutoGenerateColumns="False"
             CanUserReorderColumns="False"
             ItemsSource="{x:Bind _vm.FileViewModels, Mode=OneWay}"
@@ -132,5 +142,5 @@
                 <items:DataGridPartialPathColumn />
             </uiControls:DataGrid.Columns>
         </uiControls:DataGrid>
-    </uiControls:DockPanel>
+    </Grid>
 </Page>

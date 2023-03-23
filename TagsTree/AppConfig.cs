@@ -11,7 +11,7 @@ public partial record AppConfig
 
     public bool PathTagsEnabled { get; set; } = true;
 
-    [SettingsViewModelExclusion]
+    [AttributeIgnore(typeof(SettingsViewModelAttribute<>))]
     public bool FilesObserverEnabled { get; set; }
 
     public AppConfig()

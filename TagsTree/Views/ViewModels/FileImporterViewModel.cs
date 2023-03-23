@@ -9,6 +9,7 @@ public partial class FileImporterViewModel : ObservableObject
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Processed))]
+    [NotifyPropertyChangedFor(nameof(DeleteSaveEnabled))]
     private bool _processing;
 
     public bool Processed => !Processing;

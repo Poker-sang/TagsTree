@@ -2,12 +2,11 @@
     x:Class="TagsTree.Controls.TagCompleteBox"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:TagsTree.Views.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:TagsTree.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModels="using:TagsTree.ViewModels"
-    xmlns:viewModels1="using:TagsTree.Views.ViewModels"
-    xmlns:converters="using:TagsTree.Views.Converters"
+    xmlns:viewModels="using:TagsTree.Views.ViewModels"
     mc:Ignorable="d">
     <UserControl.Resources>
         <converters:BoolToDoubleConverter x:Key="BoolToDoubleConverter" />
@@ -36,7 +35,7 @@
             ToolTipService.ToolTip="不包含/:*?&quot;&lt;&gt;|,和空白字符且不为空"
             UpdateTextOnSelect="False">
             <AutoSuggestBox.ItemTemplate>
-                <DataTemplate x:DataType="viewModels1:TagViewModel">
+                <DataTemplate x:DataType="viewModels:TagViewModel">
                     <TextBlock Text="{x:Bind FullName}" />
                 </DataTemplate>
             </AutoSuggestBox.ItemTemplate>

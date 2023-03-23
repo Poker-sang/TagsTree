@@ -10,7 +10,7 @@
         <UseWinUI>true</UseWinUI>
         <Nullable>enable</Nullable>
         <LangVersion>preview</LangVersion>
-        <DefaultLanguage>zh-CN</DefaultLanguage>
+        <DefaultLanguage>zh-Hans</DefaultLanguage>
         <EnableMsixTooling>true</EnableMsixTooling>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
@@ -23,13 +23,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="CommunityToolkit.Labs.WinUI.SettingsControls" Version="0.0.8" />
+        <PackageReference Include="CommunityToolkit.Labs.WinUI.SettingsControls" Version="0.0.17" />
+        <PackageReference Include="CommunityToolkit.Labs.WinUI.SizerBase" Version="0.0.4" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
         <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.756" />
         <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.230313.1" />
         <PackageReference Include="PInvoke.User32" Version="0.7.124" />
-        <PackageReference Include="WinUI3Utilities" Version="1.0.13" />
+        <PackageReference Include="WinUI3Utilities" Version="1.1.1.1" />
         <Manifest Include="$(ApplicationManifest)" />
     </ItemGroup>
 

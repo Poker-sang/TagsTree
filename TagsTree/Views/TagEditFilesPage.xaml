@@ -8,32 +8,46 @@
     xmlns:local="using:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
-    xmlns:viewModels="using:TagsTree.ViewModels"
-    xmlns:viewModels1="using:TagsTree.Views.ViewModels"
-    Background="Transparent"
-    NavigationCacheMode="Disabled"
+    xmlns:viewModels="using:TagsTree.Views.ViewModels"
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
     </Page.Resources>
-    <uiControls:DockPanel>
-        <uiControls:DockPanel uiControls:DockPanel.Dock="Top">
-            <CommandBar
-                uiControls:DockPanel.Dock="Right"
-                DefaultLabelPosition="Collapsed"
-                OverflowButtonVisibility="Collapsed">
-                <AppBarButton
-                    Icon="Save"
-                    Tapped="SaveTapped"
-                    ToolTipService.ToolTip="保存" />
-            </CommandBar>
-            <BreadcrumbBar
-                Margin="10,0"
-                VerticalAlignment="Center"
-                ItemsSource="{x:Bind _vm.Tags, Mode=OneWay}" />
-        </uiControls:DockPanel>
-        <controls:TagSearchBox uiControls:DockPanel.Dock="Top" ResultChanged="ResultChanged" />
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <CommandBar
+            Grid.Row="0"
+            Grid.Column="1"
+            DefaultLabelPosition="Collapsed"
+            OverflowButtonVisibility="Collapsed">
+            <AppBarButton
+                Icon="Save"
+                Tapped="SaveTapped"
+                ToolTipService.ToolTip="保存" />
+        </CommandBar>
+        <BreadcrumbBar
+            Grid.Row="0"
+            Grid.Column="0"
+            Margin="10,0"
+            VerticalAlignment="Center"
+            ItemsSource="{x:Bind _vm.Tags, Mode=OneWay}" />
+        <controls:TagSearchBox
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            ResultChanged="ResultChanged" />
         <uiControls:DataGrid
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
             AutoGenerateColumns="False"
             CanUserReorderColumns="False"
             ItemsSource="{x:Bind _vm.FileViewModels, Mode=OneWay}"
@@ -46,7 +60,7 @@
                     CanUserSort="False"
                     IsReadOnly="True">
                     <uiControls:DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate x:DataType="viewModels1:FileViewModel">
+                        <DataTemplate x:DataType="viewModels:FileViewModel">
                             <CheckBox
                                 Margin="12.5,0"
                                 IsChecked="{x:Bind Selected, Mode=OneWay}"
@@ -61,5 +75,5 @@
                 <items:DataGridPartialPathColumn />
             </uiControls:DataGrid.Columns>
         </uiControls:DataGrid>
-    </uiControls:DockPanel>
+    </Grid>
 </Page>

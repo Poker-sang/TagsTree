@@ -6,37 +6,47 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
-    xmlns:viewModels1="using:TagsTree.Views.ViewModels"
-    Background="Transparent"
-    NavigationCacheMode="Disabled"
+    xmlns:viewModels="using:TagsTree.Views.ViewModels"
     mc:Ignorable="d">
-    <uiControls:DockPanel>
-        <uiControls:DockPanel uiControls:DockPanel.Dock="Top">
-            <CommandBar
-                uiControls:DockPanel.Dock="Right"
-                DefaultLabelPosition="Collapsed"
-                OverflowButtonVisibility="Collapsed">
-                <AppBarButton
-                    Icon="Accept"
-                    Tapped="ConfirmTapped"
-                    ToolTipService.ToolTip="确定" />
-            </CommandBar>
-            <controls:TagCompleteBox Path="{x:Bind _vm.Path, Mode=TwoWay}" />
-        </uiControls:DockPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <CommandBar
+            Grid.Row="0"
+            Grid.Column="1"
+            DefaultLabelPosition="Collapsed"
+            OverflowButtonVisibility="Collapsed">
+            <AppBarButton
+                Icon="Accept"
+                Tapped="ConfirmTapped"
+                ToolTipService.ToolTip="确定" />
+        </CommandBar>
+        <controls:TagCompleteBox
+            Grid.Row="0"
+            Grid.Column="0"
+            Path="{x:Bind _vm.Path, Mode=TwoWay}" />
         <TreeView
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
             VerticalAlignment="Stretch"
             AllowDrop="False"
             CanDragItems="False"
             ItemInvoked="TagsOnItemInvoked"
             ItemsSource="{x:Bind _vm.AllTags}">
             <TreeView.ItemTemplate>
-                <DataTemplate x:DataType="viewModels1:TagViewModel">
+                <DataTemplate x:DataType="viewModels:TagViewModel">
                     <TreeViewItem ItemsSource="{x:Bind SubTags}" ToolTipService.ToolTip="{x:Bind FullName}">
                         <TextBlock Text="{x:Bind Name}" />
                     </TreeViewItem>
                 </DataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
-    </uiControls:DockPanel>
+    </Grid>
 </Page>

@@ -20,6 +20,9 @@ public partial class App : Application
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
         _ = new MainWindow();
-        AppHelper.Initialize(WindowHelper.EstimatedWindowSize());
+        AppHelper.Initialize(new()
+        {
+            Size = WindowHelper.EstimatedWindowSize()
+        });
     }
 }

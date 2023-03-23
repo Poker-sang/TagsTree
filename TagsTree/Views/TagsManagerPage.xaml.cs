@@ -23,6 +23,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
 
     public static TagsManagerPage Current { get; private set; } = null!;
 
+    // TODO: TextBox绑定更新慢
     private readonly TagsManagerViewModel _vm = new();
 
     #region 事件处理
@@ -31,7 +32,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
 
     private void OnDragItemsCompleted(TreeView sender, TreeViewDragItemsCompletedEventArgs e)
     {
-        if ((e.NewParentItem.To<TagViewModel>()) == _tempPath)
+        if (e.NewParentItem.To<TagViewModel>() == _tempPath)
             SnackBarHelper.ShowAndHide($"移动标签 {e.Items[0].To<TagViewModel>().Name} 到原位置", SnackBarHelper.Severity.Information);
         else
         {

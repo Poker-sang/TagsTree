@@ -7,59 +7,48 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:TagsTree.Models"
     xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
-    Background="Transparent"
-    NavigationCacheMode="Disabled"
     mc:Ignorable="d">
-    <uiControls:DockPanel>
-        <ContentDialog
-            x:Name="CdDeleteRange"
-            Title="删除序号范围"
-            CloseButtonText="取消"
-            DefaultButton="Close"
-            PrimaryButtonClick="DeleteRangeConfirmTapped"
-            PrimaryButtonText="确认">
-            <uiControls:RangeSelector
-                Maximum="{x:Bind local:FilesObserverPage.Vm.LastId, Mode=OneWay}"
-                Minimum="{x:Bind local:FilesObserverPage.Vm.FirstId, Mode=OneWay}"
-                StepFrequency="1" />
-        </ContentDialog>
-        <uiControls:DockPanel uiControls:DockPanel.Dock="Top">
-            <CommandBar
-                uiControls:DockPanel.Dock="Right"
-                DefaultLabelPosition="Collapsed"
-                OverflowButtonVisibility="Collapsed">
-                <AppBarButton
-                    Icon="Remove"
-                    IsEnabled="{x:Bind _vm.IsMultipleItems, Mode=OneWay}"
-                    Tapped="DeleteRangeTapped"
-                    ToolTipService.ToolTip="删除范围" />
-                <AppBarButton
-                    IsEnabled="{x:Bind _vm.IsListNotEmpty, Mode=OneWay}"
-                    Tapped="MergeAllTapped"
-                    ToolTipService.ToolTip="合并全部">
-                    <AppBarButton.Icon>
-                        <FontIcon Glyph="&#xEA3C;" />
-                    </AppBarButton.Icon>
-                </AppBarButton>
-                <AppBarButton
-                    Icon="Accept"
-                    IsEnabled="{x:Bind _vm.IsListNotEmpty, Mode=OneWay}"
-                    Tapped="ApplyAllTapped"
-                    ToolTipService.ToolTip="应用全部更改" />
-                <AppBarButton
-                    Icon="Delete"
-                    IsEnabled="{x:Bind _vm.IsListNotEmpty, Mode=OneWay}"
-                    Tapped="DeleteAllTapped"
-                    ToolTipService.ToolTip="清除全部" />
-                <AppBarSeparator />
-                <AppBarButton
-                    Icon="Save"
-                    IsEnabled="{x:Bind _vm.IsSaveEnabled, Mode=OneWay}"
-                    Tapped="SaveAllTapped"
-                    ToolTipService.ToolTip="暂存更改" />
-            </CommandBar>
-        </uiControls:DockPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <CommandBar
+            Grid.Row="0"
+            DefaultLabelPosition="Collapsed"
+            OverflowButtonVisibility="Collapsed">
+            <AppBarButton
+                Icon="Remove"
+                IsEnabled="{x:Bind _vm.IsMultipleItems, Mode=OneWay}"
+                Tapped="DeleteRangeTapped"
+                ToolTipService.ToolTip="删除范围" />
+            <AppBarButton
+                IsEnabled="{x:Bind _vm.IsListNotEmpty, Mode=OneWay}"
+                Tapped="MergeAllTapped"
+                ToolTipService.ToolTip="合并全部">
+                <AppBarButton.Icon>
+                    <FontIcon Glyph="&#xEA3C;" />
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton
+                Icon="Accept"
+                IsEnabled="{x:Bind _vm.IsListNotEmpty, Mode=OneWay}"
+                Tapped="ApplyAllTapped"
+                ToolTipService.ToolTip="应用全部更改" />
+            <AppBarButton
+                Icon="Delete"
+                IsEnabled="{x:Bind _vm.IsListNotEmpty, Mode=OneWay}"
+                Tapped="DeleteAllTapped"
+                ToolTipService.ToolTip="清除全部" />
+            <AppBarSeparator />
+            <AppBarButton
+                Icon="Save"
+                IsEnabled="{x:Bind _vm.IsSaveEnabled, Mode=OneWay}"
+                Tapped="SaveAllTapped"
+                ToolTipService.ToolTip="暂存更改" />
+        </CommandBar>
         <uiControls:DataGrid
+            Grid.Row="1"
             AutoGenerateColumns="False"
             ItemsSource="{x:Bind local:FilesObserverPage.Vm.FilesChangedList}"
             SelectionMode="Single">
@@ -153,5 +142,19 @@
                 </uiControls:DataGridTemplateColumn>
             </uiControls:DataGrid.Columns>
         </uiControls:DataGrid>
-    </uiControls:DockPanel>
+        <ContentDialog
+            x:Name="CdDeleteRange"
+            Title="删除序号范围"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            CloseButtonText="取消"
+            DefaultButton="Close"
+            PrimaryButtonClick="DeleteRangeConfirmTapped"
+            PrimaryButtonText="确认">
+            <uiControls:RangeSelector
+                Maximum="{x:Bind local:FilesObserverPage.Vm.LastId, Mode=OneWay}"
+                Minimum="{x:Bind local:FilesObserverPage.Vm.FirstId, Mode=OneWay}"
+                StepFrequency="1" />
+        </ContentDialog>
+    </Grid>
 </Page>

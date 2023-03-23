@@ -6,54 +6,66 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:uiControls="using:CommunityToolkit.WinUI.UI.Controls"
-    xmlns:viewModels="using:TagsTree.ViewModels"
-    xmlns:viewModels1="using:TagsTree.Views.ViewModels"
-    Background="Transparent"
-    NavigationCacheMode="Disabled"
+    xmlns:viewModels="using:TagsTree.Views.ViewModels"
     mc:Ignorable="d">
-    <uiControls:DockPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
         <controls:InputContentDialog x:Name="InputName" />
-        <uiControls:DockPanel uiControls:DockPanel.Dock="Top">
-            <CommandBar
-                uiControls:DockPanel.Dock="Right"
-                DefaultLabelPosition="Collapsed"
-                OverflowButtonVisibility="Collapsed">
-                <AppBarButton
-                    Icon="Add"
-                    Tapped="NewTapped"
-                    ToolTipService.ToolTip="添加" />
-                <AppBarButton
-                    Icon="MoveToFolder"
-                    Tapped="MoveTapped"
-                    ToolTipService.ToolTip="移动" />
-                <AppBarButton
-                    Icon="Rename"
-                    Tapped="RenameTapped"
-                    ToolTipService.ToolTip="重命名" />
-                <AppBarButton
-                    Icon="Remove"
-                    Tapped="DeleteTapped"
-                    ToolTipService.ToolTip="删除" />
-                <AppBarSeparator />
-                <AppBarButton
-                    Icon="Save"
-                    IsEnabled="{x:Bind _vm.CanPaste, Mode=OneWay}"
-                    Tapped="SaveTapped"
-                    ToolTipService.ToolTip="保存" />
-            </CommandBar>
-        </uiControls:DockPanel>
+        <CommandBar
+            Grid.Row="0"
+            Grid.Column="1"
+            DefaultLabelPosition="Collapsed"
+            OverflowButtonVisibility="Collapsed">
+            <AppBarButton
+                Icon="Add"
+                Tapped="NewTapped"
+                ToolTipService.ToolTip="添加" />
+            <AppBarButton
+                Icon="MoveToFolder"
+                Tapped="MoveTapped"
+                ToolTipService.ToolTip="移动" />
+            <AppBarButton
+                Icon="Rename"
+                Tapped="RenameTapped"
+                ToolTipService.ToolTip="重命名" />
+            <AppBarButton
+                Icon="Remove"
+                Tapped="DeleteTapped"
+                ToolTipService.ToolTip="删除" />
+            <AppBarSeparator />
+            <AppBarButton
+                Icon="Save"
+                IsEnabled="{x:Bind _vm.IsSaveEnabled, Mode=OneWay}"
+                Tapped="SaveTapped"
+                ToolTipService.ToolTip="保存" />
+        </CommandBar>
         <TextBox
-            uiControls:DockPanel.Dock="Top"
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
             PlaceholderText="标签名称"
             Text="{x:Bind _vm.Name, Mode=TwoWay}"
             TextChanged="NameChanged"
             ToolTipService.ToolTip="不包含\/:*?&quot;&lt;&gt;|,和空白字符且不为空" />
         <controls:TagCompleteBox
-            uiControls:DockPanel.Dock="Top"
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
             Path="{x:Bind _vm.Path, Mode=TwoWay}"
             TagsSource="{x:Bind _vm.TagsSource}" />
         <TreeView
+            Grid.Row="3"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
             AllowDrop="True"
             CanDragItems="True"
             DragItemsCompleted="OnDragItemsCompleted"
@@ -61,7 +73,7 @@
             ItemInvoked="TagsOnItemInvoked"
             ItemsSource="{x:Bind _vm.TagsSource.TagsTree.SubTags, Mode=OneWay}">
             <TreeView.ItemTemplate>
-                <DataTemplate x:DataType="viewModels1:TagViewModel">
+                <DataTemplate x:DataType="viewModels:TagViewModel">
                     <TreeViewItem ItemsSource="{x:Bind SubTags, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind FullName}">
                         <TextBlock Text="{x:Bind Name, Mode=OneWay}" />
                         <TreeViewItem.ContextFlyout>
@@ -111,5 +123,5 @@
                 </MenuFlyout>
             </TreeView.ContextFlyout>
         </TreeView>
-    </uiControls:DockPanel>
+    </Grid>
 </Page>
