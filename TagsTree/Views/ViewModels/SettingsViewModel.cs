@@ -6,7 +6,7 @@ using WinUI3Utilities.Attributes;
 namespace TagsTree.Views.ViewModels;
 
 [SettingsViewModel<AppConfig>(nameof(AppConfig))]
-public partial class SettingViewModel : ObservableObject
+public partial class SettingsViewModel : ObservableObject
 {
     public bool ConfigSet => Directory.Exists(LibraryPath);
 

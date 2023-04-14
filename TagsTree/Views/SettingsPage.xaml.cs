@@ -27,7 +27,7 @@ public partial class SettingsPage : Page, ITypeGetter
     public static SettingsPage Current { get; private set; } = null!;
 
 #pragma warning disable CA1822
-    private SettingViewModel Vm => AppContext.SettingViewModel;
+    private SettingsViewModel Vm => AppContext.SettingViewModel;
 #pragma warning restore CA1822
 
     #region 事件处理

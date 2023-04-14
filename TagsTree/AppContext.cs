@@ -25,7 +25,7 @@ public static partial class AppContext
 
     public static ObservableCollection<FileChanged> FilesChangedList => FilesObserverPage.Vm.FilesChangedList;
 
-    public static SettingViewModel SettingViewModel { get; } = new();
+    public static SettingsViewModel SettingViewModel { get; } = new();
 
     public static void Initialize()
     {

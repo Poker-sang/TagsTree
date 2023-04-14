@@ -6,7 +6,6 @@ using Microsoft.UI.Xaml.Controls;
 using TagsTree.Services;
 using TagsTree.Views;
 using WinUI3Utilities;
-using WinUI3Utilities.Models;
 
 namespace TagsTree;
 
@@ -14,7 +13,7 @@ public sealed partial class MainWindow : Window
 {
     public MainWindow()
     {
-        CurrentContext.WindowInfo = new WindowInfo(this);
+        CurrentContext.Window = this;
         InitializeComponent();
         CurrentContext.TitleBar = TitleBar;
         CurrentContext.TitleTextBlock = TitleTextBlock;
@@ -33,16 +32,16 @@ public sealed partial class MainWindow : Window
             DisplaySettings();
     }
 
-//    private void OnSizeChanged(object sender, SizeChangedEventArgs e)
-//    {
-//        DragZoneHelper.SetDragZones(new()
-//        {
-//#if DEBUG
-//            ExcludeDebugToolbarArea = true,
-//#endif
-//            DragZoneLeftIndent = (int)NavigationView.CompactPaneLength
-//        });
-//    }
+    //    private void OnSizeChanged(object sender, SizeChangedEventArgs e)
+    //    {
+    //        DragZoneHelper.SetDragZones(new()
+    //        {
+    //#if DEBUG
+    //            ExcludeDebugToolbarArea = true,
+    //#endif
+    //            DragZoneLeftIndent = (int)NavigationView.CompactPaneLength
+    //        });
+    //    }
 
     public async Task ConfigIsSet()
     {
@@ -76,14 +75,14 @@ public sealed partial class MainWindow : Window
         CurrentContext.Frame.GoBack();
         NavigationView.SelectedItem = CurrentContext.Frame.Content switch
         {
-            IndexPage => NavigationView.MenuItems[0],
-            TagSearchFilesPage => NavigationView.MenuItems[0],
-            FilePropertiesPage => NavigationView.MenuItems[0],
-            FileEditTagsPage => NavigationView.MenuItems[0],
+            IndexPage or
+                TagSearchFilesPage or
+                FilePropertiesPage or
+                FileEditTagsPage => NavigationView.MenuItems[0],
             TagsManagerPage => NavigationView.MenuItems[1],
             FileImporterPage => NavigationView.MenuItems[2],
-            SelectTagToEditPage => NavigationView.MenuItems[3],
-            TagEditFilesPage => NavigationView.MenuItems[3],
+            SelectTagToEditPage or
+                TagEditFilesPage => NavigationView.MenuItems[3],
             FilesObserverPage => NavigationView.FooterMenuItems[0],
             SettingsPage => NavigationView.SettingsItem,
             _ => NavigationView.SelectedItem

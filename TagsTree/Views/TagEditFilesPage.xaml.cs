@@ -57,7 +57,6 @@ public sealed partial class TagEditFilesPage : Page
                                 AppContext.Relations[tagViewModel.Id, fileViewModel.Id] = false;
                                 break;
                             }
-
                         break;
                     // 如果原本是null，则删除fileViewModel拥有的相应子标签
                     case null:
