@@ -9,7 +9,7 @@ using WinUI3Utilities.Attributes;
 
 namespace TagsTree.Controls;
 
-[DependencyProperty<string>("Text", DefaultValue = @"""""")]
+[DependencyProperty<string>("Text", @"""""")]
 public partial class InputContentDialog : UserControl
 {
     private readonly InputContentDialogViewModels _vm = new();

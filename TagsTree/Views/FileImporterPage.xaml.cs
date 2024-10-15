@@ -34,7 +34,7 @@ public partial class FileImporterPage : Page, ITypeGetter
         if (sender.To<FrameworkElement>().Name is { } mode)
             if (mode is nameof(SelectFiles))
             {
-                if (await PickerHelper.PickMultipleFilesAsync() is { } files and not { Count: 0 })
+                if (await App.MainWindow.PickMultipleFilesAsync() is { } files and not { Count: 0 })
                     if (FileViewModel.IsValidPath(files[0].Path.GetPath()))
                     {
                         foreach (var fileViewModelModel in _vm.FileViewModels)
@@ -44,7 +44,7 @@ public partial class FileImporterPage : Page, ITypeGetter
                                 .Select(file => new FileViewModel(file.Path)));
                     }
             }
-            else if (await PickerHelper.PickSingleFolderAsync() is { } folder)
+            else if (await App.MainWindow.PickSingleFolderAsync() is { } folder)
             {
                 foreach (var fileViewModelModel in _vm.FileViewModels)
                     dictionary[fileViewModelModel.FullName] = true;
@@ -93,7 +93,7 @@ public partial class FileImporterPage : Page, ITypeGetter
                     }
             }
 
-        _vm.FileViewModels = temp.ToObservableCollection();
+        _vm.FileViewModels = [..temp];
         _vm.Processing = false;
     }
 
@@ -118,7 +118,7 @@ public partial class FileImporterPage : Page, ITypeGetter
 
         AppContext.SaveFiles();
         AppContext.SaveRelations();
-        SnackBarHelper.ShowAndHide($"导入「{saved}/{_vm.FileViewModels.Count}」个文件");
+        this.CreateTeachingTip().ShowAndHide($"导入「{saved}/{_vm.FileViewModels.Count}」个文件");
         _vm.FileViewModels.Clear();
     }
 

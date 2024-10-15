@@ -11,8 +11,8 @@ using WinUI3Utilities.Attributes;
 namespace TagsTree.Controls;
 
 [INotifyPropertyChanged]
-[DependencyProperty<string>("Text", DefaultValue = @"""""")]
-[DependencyProperty<TagsTreeDictionary>("TagsSource", IsNullable = true, DefaultValue = "null")]
+[DependencyProperty<string>("Text", @"""""")]
+[DependencyProperty<TagsTreeDictionary>("TagsSource", DependencyPropertyDefaultValue.Default, IsNullable = true)]
 public partial class TagSearchBox : UserControl
 {
     public TagSearchBox() => InitializeComponent();

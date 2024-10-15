@@ -1,5 +1,3 @@
-// #define DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION
-// #define DISABLE_XAML_GENERATED_BINDING_DEBUG_OUTPUT
 // #define FIRST_TIME
 
 using Microsoft.UI.Xaml;
@@ -9,21 +7,22 @@ namespace TagsTree;
 
 public partial class App : Application
 {
+    public const string AppName = nameof(TagsTree);
+
     public App()
     {
         InitializeComponent();
-        CurrentContext.Title = nameof(TagsTree);
+        SettingsValueConverter.Context = ConfigSerializeContext.Default;
         AppContext.Initialize();
     }
+
+    public static MainWindow MainWindow { get; private set; } = null!;
 
     /// <param name="args">Details about the launch request and process.</param>
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
-        _ = new MainWindow();
-
-        AppHelper.Initialize(new()
-        {
-            Size = WindowHelper.EstimatedWindowSize()
-        });
+        MainWindow = new();
+        MainWindow.Initialize(new() { Size = WindowHelper.EstimatedWindowSize() });
+        MainWindow.Activate();
     }
 }

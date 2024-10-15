@@ -5,20 +5,13 @@ using TagsTree.Services.ExtensionMethods;
 
 namespace TagsTree.Models;
 
-public abstract class FileBase : IFullName
+public abstract class FileBase(string name, string path, int id) : IFullName
 {
-    protected FileBase(string name, string path, int id)
-    {
-        Id = id;
-        Name = name;
-        Path = path;
-    }
+    public int Id { get; } = id;
 
-    public int Id { get; }
+    public string Name { get; protected set; } = name;
 
-    public string Name { get; protected set; }
-
-    public string Path { get; protected set; }
+    public string Path { get; protected set; } = path;
 
     /// <remarks>
     /// Path必然包含文件路径

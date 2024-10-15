@@ -2,8 +2,8 @@
     x:Class="TagsTree.Views.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:local="using:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:root="using:TagsTree"
@@ -30,12 +30,12 @@
     </Page.Resources>
     <ScrollViewer>
         <StackPanel>
-            <labs:SettingsExpander Description="应用的主题色" Header="主题">
-                <labs:SettingsExpander.HeaderIcon>
+            <controls:SettingsExpander Description="应用的主题色" Header="主题">
+                <controls:SettingsExpander.HeaderIcon>
                     <FontIcon Glyph="&#xE771;" />
-                </labs:SettingsExpander.HeaderIcon>
-                <labs:SettingsExpander.Items>
-                    <labs:SettingsCard ContentAlignment="Left">
+                </controls:SettingsExpander.HeaderIcon>
+                <controls:SettingsExpander.Items>
+                    <controls:SettingsCard ContentAlignment="Left">
                         <RadioButtons SelectedIndex="{x:Bind Vm.Theme, Mode=TwoWay}">
                             <RadioButton Checked="ThemeChecked" Content="跟随系统">
                                 <RadioButton.Tag>
@@ -53,99 +53,99 @@
                                 </RadioButton.Tag>
                             </RadioButton>
                         </RadioButtons>
-                    </labs:SettingsCard>
-                </labs:SettingsExpander.Items>
-            </labs:SettingsExpander>
-            <labs:SettingsExpander Description="被归类文件的根目录文件夹" Header="文件路径">
-                <labs:SettingsExpander.HeaderIcon>
+                    </controls:SettingsCard>
+                </controls:SettingsExpander.Items>
+            </controls:SettingsExpander>
+            <controls:SettingsExpander Description="被归类文件的根目录文件夹" Header="文件路径">
+                <controls:SettingsExpander.HeaderIcon>
                     <FontIcon Glyph="&#xE8B7;" />
-                </labs:SettingsExpander.HeaderIcon>
-                <labs:SettingsExpander.Items>
-                    <labs:SettingsCard
+                </controls:SettingsExpander.HeaderIcon>
+                <controls:SettingsExpander.Items>
+                    <controls:SettingsCard
                         ActionIcon="Save"
                         Header="记得点击右侧保存噢x"
                         IsClickEnabled="True"
                         Tapped="LibraryPathSaved">
-                        <labs:SettingsCard.Description>
+                        <controls:SettingsCard.Description>
                             <AutoSuggestBox
                                 PlaceholderText="{x:Bind Vm.LibraryPath, Mode=OneWay}"
                                 QueryIcon="More"
                                 QuerySubmitted="LibraryPathTapped" />
-                        </labs:SettingsCard.Description>
-                    </labs:SettingsCard>
-                </labs:SettingsExpander.Items>
-            </labs:SettingsExpander>
-            <labs:SettingsCard
+                        </controls:SettingsCard.Description>
+                    </controls:SettingsCard>
+                </controls:SettingsExpander.Items>
+            </controls:SettingsExpander>
+            <controls:SettingsCard
                 Description="将所在路径文件夹名作为标签使用"
                 Header="文件夹标签"
                 HeaderIcon="Tag">
                 <ToggleSwitch IsOn="{x:Bind Vm.PathTagsEnabled, Mode=TwoWay}" />
-            </labs:SettingsCard>
-            <labs:SettingsCard
+            </controls:SettingsCard>
+            <controls:SettingsCard
                 Description="监控文件路径文件下文件（夹）的变化"
                 Header="监控文件"
                 HeaderIcon="View">
                 <ToggleSwitch IsOn="{x:Bind Vm.FilesObserverEnabled, Mode=TwoWay}" />
-            </labs:SettingsCard>
-            <labs:SettingsExpander
+            </controls:SettingsCard>
+            <controls:SettingsExpander
                 Description="指定文件和标签记录所在的文件夹并进行导入导出的操作"
                 Header="导入导出记录"
                 HeaderIcon="Switch">
-                <labs:SettingsExpander.Items>
-                    <labs:SettingsCard
+                <controls:SettingsExpander.Items>
+                    <controls:SettingsCard
                         Header="导入"
                         HeaderIcon="Import"
                         IsClickEnabled="True"
                         Tapped="ImportTapped">
-                        <labs:SettingsCard.ActionIcon>
+                        <controls:SettingsCard.ActionIcon>
                             <FontIcon Glyph="&#xE8A7;" />
-                        </labs:SettingsCard.ActionIcon>
-                    </labs:SettingsCard>
-                    <labs:SettingsCard
+                        </controls:SettingsCard.ActionIcon>
+                    </controls:SettingsCard>
+                    <controls:SettingsCard
                         Header="导出"
                         IsClickEnabled="True"
                         Tapped="ExportTapped">
-                        <labs:SettingsCard.HeaderIcon>
+                        <controls:SettingsCard.HeaderIcon>
                             <FontIcon Glyph="&#xEA52;" />
-                        </labs:SettingsCard.HeaderIcon>
-                        <labs:SettingsCard.ActionIcon>
+                        </controls:SettingsCard.HeaderIcon>
+                        <controls:SettingsCard.ActionIcon>
                             <FontIcon Glyph="&#xE8A7;" />
-                        </labs:SettingsCard.ActionIcon>
-                    </labs:SettingsCard>
-                    <labs:SettingsCard
+                        </controls:SettingsCard.ActionIcon>
+                    </controls:SettingsCard>
+                    <controls:SettingsCard
                         Description="{x:Bind root:AppContext.AppLocalFolder}"
                         Header="打开"
                         HeaderIcon="OpenLocal"
                         IsClickEnabled="True"
                         Tapped="OpenDirectoryTapped">
-                        <labs:SettingsCard.ActionIcon>
+                        <controls:SettingsCard.ActionIcon>
                             <FontIcon Glyph="&#xE8A7;" />
-                        </labs:SettingsCard.ActionIcon>
-                    </labs:SettingsCard>
-                </labs:SettingsExpander.Items>
-            </labs:SettingsExpander>
+                        </controls:SettingsCard.ActionIcon>
+                    </controls:SettingsCard>
+                </controls:SettingsExpander.Items>
+            </controls:SettingsExpander>
             <!--  危险区域  -->
             <TextBlock Style="{StaticResource SettingHeaderStyle}" Text="危险区域" />
-            <labs:SettingsExpander
+            <controls:SettingsExpander
                 Description="恢复默认设置并保存"
                 Header="恢复默认设置"
                 HeaderIcon="Refresh">
-                <labs:SettingsExpander.Items>
-                    <labs:SettingsCard
+                <controls:SettingsExpander.Items>
+                    <controls:SettingsCard
                         ActionIcon="Important"
                         Header="确认"
                         IsClickEnabled="True"
                         Tapped="SetDefaultAppConfigTapped" />
-                </labs:SettingsExpander.Items>
-            </labs:SettingsExpander>
+                </controls:SettingsExpander.Items>
+            </controls:SettingsExpander>
             <!--  关于  -->
             <TextBlock Style="{StaticResource SettingHeaderStyle}" Text="关于" />
-            <labs:SettingsExpander Header="关于 TagsTree v1.30">
-                <labs:SettingsExpander.HeaderIcon>
+            <controls:SettingsExpander Header="关于 TagsTree v1.30">
+                <controls:SettingsExpander.HeaderIcon>
                     <FontIcon Glyph="&#xE946;" />
-                </labs:SettingsExpander.HeaderIcon>
-                <labs:SettingsExpander.Items>
-                    <labs:SettingsCard
+                </controls:SettingsExpander.HeaderIcon>
+                <controls:SettingsExpander.Items>
+                    <controls:SettingsCard
                         Description="poker_sang@outlook.com"
                         Header="邮箱"
                         HeaderIcon="Mail"
@@ -153,62 +153,62 @@
                         Tag="{x:Bind rs:ConstantStrings.MailUri}"
                         Tapped="NavigateUriTapped">
                         <!--<PathIcon Data="{x:Bind rs:ConstantStrings.OutlookSvgPath}" />显示不正确不知道为什么-->
-                        <labs:SettingsCard.ActionIcon>
+                        <controls:SettingsCard.ActionIcon>
                             <FontIcon Glyph="&#xE8A7;" />
-                        </labs:SettingsCard.ActionIcon>
-                    </labs:SettingsCard>
-                    <labs:SettingsCard
+                        </controls:SettingsCard.ActionIcon>
+                    </controls:SettingsCard>
+                    <controls:SettingsCard
                         Description="扑克"
                         Header="作者"
                         IsClickEnabled="True"
                         Tag="{x:Bind rs:ConstantStrings.AuthorUri}"
                         Tapped="NavigateUriTapped">
-                        <labs:SettingsCard.HeaderIcon>
+                        <controls:SettingsCard.HeaderIcon>
                             <PathIcon Data="{x:Bind rs:ConstantStrings.GitHubSvgPath}" />
-                        </labs:SettingsCard.HeaderIcon>
-                        <labs:SettingsCard.ActionIcon>
+                        </controls:SettingsCard.HeaderIcon>
+                        <controls:SettingsCard.ActionIcon>
                             <FontIcon Glyph="&#xE8A7;" />
-                        </labs:SettingsCard.ActionIcon>
-                    </labs:SettingsCard>
-                    <labs:SettingsCard
+                        </controls:SettingsCard.ActionIcon>
+                    </controls:SettingsCard>
+                    <controls:SettingsCard
                         Description="2639914082"
                         Header="QQ"
                         IsClickEnabled="True"
                         Tag="{x:Bind rs:ConstantStrings.QqUri}"
                         Tapped="NavigateUriTapped">
-                        <labs:SettingsCard.HeaderIcon>
+                        <controls:SettingsCard.HeaderIcon>
                             <PathIcon Data="{x:Bind rs:ConstantStrings.QqSvgPath}" />
-                        </labs:SettingsCard.HeaderIcon>
-                        <labs:SettingsCard.ActionIcon>
+                        </controls:SettingsCard.HeaderIcon>
+                        <controls:SettingsCard.ActionIcon>
                             <FontIcon Glyph="&#xE8A7;" />
-                        </labs:SettingsCard.ActionIcon>
-                    </labs:SettingsCard>
-                    <labs:SettingsCard
+                        </controls:SettingsCard.ActionIcon>
+                    </controls:SettingsCard>
+                    <controls:SettingsCard
                         Description="TagsTree"
                         Header="仓库"
                         HeaderIcon="Library"
                         IsClickEnabled="True"
                         Tag="{x:Bind rs:ConstantStrings.RepositoryUri}"
                         Tapped="NavigateUriTapped">
-                        <labs:SettingsCard.ActionIcon>
+                        <controls:SettingsCard.ActionIcon>
                             <FontIcon Glyph="&#xE8A7;" />
-                        </labs:SettingsCard.ActionIcon>
-                    </labs:SettingsCard>
-                </labs:SettingsExpander.Items>
-            </labs:SettingsExpander>
-            <labs:SettingsCard
+                        </controls:SettingsCard.ActionIcon>
+                    </controls:SettingsCard>
+                </controls:SettingsExpander.Items>
+            </controls:SettingsExpander>
+            <controls:SettingsCard
                 Description="GNU General Public License v3.0"
                 Header="License"
                 IsClickEnabled="True"
                 Tag="{x:Bind rs:ConstantStrings.LicenseUri}"
                 Tapped="NavigateUriTapped">
-                <labs:SettingsCard.HeaderIcon>
+                <controls:SettingsCard.HeaderIcon>
                     <PathIcon Data="{x:Bind rs:ConstantStrings.GnuSvgPath}" />
-                </labs:SettingsCard.HeaderIcon>
-                <labs:SettingsCard.ActionIcon>
+                </controls:SettingsCard.HeaderIcon>
+                <controls:SettingsCard.ActionIcon>
                     <FontIcon Glyph="&#xE8A7;" />
-                </labs:SettingsCard.ActionIcon>
-            </labs:SettingsCard>
+                </controls:SettingsCard.ActionIcon>
+            </controls:SettingsCard>
         </StackPanel>
     </ScrollViewer>
 </Page>

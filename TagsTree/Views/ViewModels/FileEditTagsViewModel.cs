@@ -1,6 +1,5 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
-using WinUI3Utilities;
 
 namespace TagsTree.Views.ViewModels;
 
@@ -14,5 +13,5 @@ public partial class FileEditTagsViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(VirtualTags))]
     private FileViewModel _fileViewModel = FileViewModel.DefaultFileViewModel;
 
-    public ObservableCollection<TagViewModel> VirtualTags => AppContext.Relations.GetTags(FileViewModel.Id).ToObservableCollection();
+    public ObservableCollection<TagViewModel> VirtualTags => [..AppContext.Relations.GetTags(FileViewModel.Id)];
 }

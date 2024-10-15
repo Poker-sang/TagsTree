@@ -23,10 +23,10 @@ public sealed partial class TagEditFilesPage : Page
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
         _vm.TagViewModel = e.Parameter.To<TagViewModel>();
-        _vm.FileViewModels = AppContext.Relations.GetFileModels().Select(fileModel => new FileViewModel(fileModel, _vm.TagViewModel)).ToObservableCollection();
+        _vm.FileViewModels = [.. AppContext.Relations.GetFileModels().Select(fileModel => new FileViewModel(fileModel, _vm.TagViewModel))];
     }
 
-    private void ResultChanged(IEnumerable<FileModel> newResult) => _vm.FileViewModels = newResult.Select(fileModel => new FileViewModel(fileModel, _vm.TagViewModel.Parent)).ToObservableCollection();
+    private void ResultChanged(IEnumerable<FileModel> newResult) => _vm.FileViewModels = [.. newResult.Select(fileModel => new FileViewModel(fileModel, _vm.TagViewModel.Parent))];
 
 
     private void Selected(object sender, SelectionChangedEventArgs e)
@@ -69,8 +69,8 @@ public sealed partial class TagEditFilesPage : Page
             }
 
         AppContext.SaveRelations();
-        SnackBarHelper.ShowAndHide("已保存更改");
-        CurrentContext.Frame.GoBack(new SlideNavigationTransitionInfo());
+        this.CreateTeachingTip().ShowAndHide("已保存更改");
+        App.MainWindow.Frame.GoBack(new SlideNavigationTransitionInfo());
     }
 
     #endregion

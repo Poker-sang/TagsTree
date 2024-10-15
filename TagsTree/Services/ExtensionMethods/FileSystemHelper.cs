@@ -1,12 +1,10 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.VisualBasic.FileIO;
 using TagsTree.Interfaces;
 using TagsTree.Models;
-using WinUI3Utilities;
 
 namespace TagsTree.Services.ExtensionMethods;
 
@@ -22,9 +20,9 @@ public static class FileSystemHelper
             Inlines = { new Run { Text = alt } }
         };
 
-        hyperlink.Click += async (sender, e) =>
+        hyperlink.Click += (sender, e) =>
         {
-            await CurrentContext.Window.DispatcherQueue.EnqueueAsync(
+            App.MainWindow.DispatcherQueue.TryEnqueue(
                  () =>
                  {
                      try
@@ -39,7 +37,7 @@ public static class FileSystemHelper
                          };
                          _ = process.Start();
                      }
-                     catch (Exception)
+                     catch
                      {
 
                      }

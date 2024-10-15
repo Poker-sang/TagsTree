@@ -2,6 +2,7 @@
     x:Class="TagsTree.Views.FilesObserverPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -151,7 +152,7 @@
             DefaultButton="Close"
             PrimaryButtonClick="DeleteRangeConfirmTapped"
             PrimaryButtonText="确认">
-            <uiControls:RangeSelector
+            <controls:RangeSelector
                 Maximum="{x:Bind local:FilesObserverPage.Vm.LastId, Mode=OneWay}"
                 Minimum="{x:Bind local:FilesObserverPage.Vm.FirstId, Mode=OneWay}"
                 StepFrequency="1" />

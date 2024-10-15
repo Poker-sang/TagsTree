@@ -1,13 +1,12 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 using Microsoft.UI.Xaml.Controls;
 using TagsTree.Interfaces;
 
 namespace TagsTree.Models;
 
-public class PathTagModel
+public class PathTagModel(string name)
 {
-    public string Name { get; protected set; }
-    public PathTagModel(string name) => Name = name;
+    public string Name { get; protected set; } = name;
 
     /// <summary>
     /// <see cref="AutoSuggestBox"/>选择建议时会用到

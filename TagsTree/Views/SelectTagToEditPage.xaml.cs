@@ -35,7 +35,7 @@ public partial class SelectTagToEditPage : Page, ITypeGetter
             return;
         }
 
-        NavigationHelper.GotoPage<TagEditFilesPage>(pathTagModel);
+        App.MainWindow.GotoPage<TagEditFilesPage>(pathTagModel);
     }
 
     #endregion

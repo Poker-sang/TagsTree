@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using TagsTree.Interfaces;
@@ -33,11 +34,11 @@ public partial class TagsManagerPage : Page, ITypeGetter
     private void OnDragItemsCompleted(TreeView sender, TreeViewDragItemsCompletedEventArgs e)
     {
         if (e.NewParentItem.To<TagViewModel>() == _tempPath)
-            SnackBarHelper.ShowAndHide($"移动标签 {e.Items[0].To<TagViewModel>().Name} 到原位置", SnackBarHelper.Severity.Information);
+            this.CreateTeachingTip().ShowAndHide($"移动标签 {e.Items[0].To<TagViewModel>().Name} 到原位置", TeachingTipSeverity.Information);
         else
         {
             _vm.IsSaveEnabled = true;
-            SnackBarHelper.ShowAndHide($"移动标签 {e.Items[0].To<TagViewModel>().Name}");
+            this.CreateTeachingTip().ShowAndHide($"移动标签 {e.Items[0].To<TagViewModel>().Name}");
         }
 
         _tempPath = null;
@@ -57,7 +58,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
         var result = NewTagCheck(_vm.Name);
         if (result is not null)
         {
-            SnackBarHelper.ShowAndHide(result, SnackBarHelper.Severity.Error);
+            this.CreateTeachingTip().ShowAndHide(result, TeachingTipSeverity.Error);
             return;
         }
 
@@ -81,7 +82,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
     {
         if (_vm.Path is "")
         {
-            SnackBarHelper.ShowAndHide("未输入希望重命名的标签！", SnackBarHelper.Severity.Error);
+            this.CreateTeachingTip().ShowAndHide("未输入希望重命名的标签！", TeachingTipSeverity.Error);
             return;
         }
 
@@ -91,7 +92,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
         var result = NewTagCheck(_vm.Name);
         if (result is not null)
         {
-            SnackBarHelper.ShowAndHide(result, SnackBarHelper.Severity.Error);
+            this.CreateTeachingTip().ShowAndHide(result, TeachingTipSeverity.Error);
             return;
         }
 
@@ -104,7 +105,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
     {
         if (_vm.Path is "")
         {
-            SnackBarHelper.ShowAndHide("未输入希望删除的标签！", SnackBarHelper.Severity.Error);
+            this.CreateTeachingTip().ShowAndHide("未输入希望删除的标签！", TeachingTipSeverity.Error);
             return;
         }
 
@@ -128,14 +129,14 @@ public partial class TagsManagerPage : Page, ITypeGetter
         _buffer.Clear();
         AppContext.SaveRelations();
         _vm.IsSaveEnabled = false;
-        SnackBarHelper.ShowAndHide("已保存");
+        this.CreateTeachingTip().ShowAndHide("已保存");
     }
 
     private async void ContextNewTapped(object sender, TappedRoutedEventArgs e)
     {
-        InputName.Load($"新建子标签 {sender.GetTag<TagViewModel>().Name}", cd => NewTagCheck(cd.Text), FileSystemHelper.InvalidMode.Name);
+        InputName.Load($"新建子标签 {sender.To<FrameworkElement>().GetTag<TagViewModel>().Name}", cd => NewTagCheck(cd.Text), FileSystemHelper.InvalidMode.Name);
         if (!await InputName.ShowAsync())
-            NewTag(InputName.Text, sender.GetTag<TagViewModel>());
+            NewTag(InputName.Text, sender.To<FrameworkElement>().GetTag<TagViewModel>());
     }
 
     private async void RootContextNewTapped(object sender, TappedRoutedEventArgs e)
@@ -145,20 +146,20 @@ public partial class TagsManagerPage : Page, ITypeGetter
             NewTag(InputName.Text, _vm.TagsSource.TagsTree);
     }
 
-    private void ContextCutTapped(object sender, TappedRoutedEventArgs e) => _vm.ClipBoard = sender.GetTag<TagViewModel>();
+    private void ContextCutTapped(object sender, TappedRoutedEventArgs e) => _vm.ClipBoard = sender.To<FrameworkElement>().GetTag<TagViewModel>();
 
     private async void ContextRenameTapped(object sender, TappedRoutedEventArgs e)
     {
-        InputName.Load($"标签重命名 {sender.GetTag<TagViewModel>().Name}", cd => NewTagCheck(cd.Text), FileSystemHelper.InvalidMode.Name);
+        InputName.Load($"标签重命名 {sender.To<FrameworkElement>().GetTag<TagViewModel>().Name}", cd => NewTagCheck(cd.Text), FileSystemHelper.InvalidMode.Name);
         if (!await InputName.ShowAsync())
-            RenameTag(InputName.Text, sender.GetTag<TagViewModel>());
+            RenameTag(InputName.Text, sender.To<FrameworkElement>().GetTag<TagViewModel>());
     }
 
-    private void ContextPasteTapped(object sender, TappedRoutedEventArgs e) => MoveTag(_vm.ClipBoard!, sender.GetTag<TagViewModel>());
+    private void ContextPasteTapped(object sender, TappedRoutedEventArgs e) => MoveTag(_vm.ClipBoard!, sender.To<FrameworkElement>().GetTag<TagViewModel>());
 
     private void RootContextPasteTapped(object sender, TappedRoutedEventArgs e) => MoveTag(_vm.ClipBoard!, _vm.TagsSource.TagsTree);
 
-    private void ContextDeleteTapped(object sender, TappedRoutedEventArgs e) => DeleteTag(sender.GetTag<TagViewModel>());
+    private void ContextDeleteTapped(object sender, TappedRoutedEventArgs e) => DeleteTag(sender.To<FrameworkElement>().GetTag<TagViewModel>());
 
     #endregion
 
@@ -166,7 +167,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
     /// 暂存关系表的变化<br/>
     /// <see langword="true"/>表示添加，<see langword="false"/>表示删除
     /// </summary>
-    private readonly List<(bool, TagViewModel)> _buffer = new();
+    private readonly List<(bool, TagViewModel)> _buffer = [];
 
     #region 操作
 
@@ -174,34 +175,34 @@ public partial class TagsManagerPage : Page, ITypeGetter
     {
         _buffer.Add(new(true, _vm.TagsSource.AddTag(path, name)));
         _vm.IsSaveEnabled = true;
-        SnackBarHelper.ShowAndHide($"新建标签 {name}");
+        this.CreateTeachingTip().ShowAndHide($"新建标签 {name}");
     }
 
     private void MoveTag(TagViewModel name, TagViewModel path)
     {
         if (path == name.Parent)
         {
-            SnackBarHelper.ShowAndHide($"移动标签 {name.Name} 到原位置", SnackBarHelper.Severity.Information);
+            this.CreateTeachingTip().ShowAndHide($"移动标签 {name.Name} 到原位置", TeachingTipSeverity.Information);
             return;
         }
 
         if (name == path || _vm.TagsSource.TagsDictionary.GetValueOrDefault(name.Id)!.HasChildTag(_vm.TagsSource.TagsDictionary.GetValueOrDefault(path.Id)!))
         {
-            SnackBarHelper.ShowAndHide("禁止将标签移动到自己目录下！", SnackBarHelper.Severity.Error);
+            this.CreateTeachingTip().ShowAndHide("禁止将标签移动到自己目录下！", TeachingTipSeverity.Error);
             return;
         }
 
         _vm.ClipBoard = null;
         _vm.TagsSource.MoveTag(name, path);
         _vm.IsSaveEnabled = true;
-        SnackBarHelper.ShowAndHide($"移动标签 {name.Name}");
+        this.CreateTeachingTip().ShowAndHide($"移动标签 {name.Name}");
     }
 
     private void RenameTag(string name, TagViewModel path)
     {
         _vm.TagsSource.RenameTag(path, name);
         _vm.IsSaveEnabled = true;
-        SnackBarHelper.ShowAndHide($"重命名标签 {name}");
+        this.CreateTeachingTip().ShowAndHide($"重命名标签 {name}");
     }
 
     private void DeleteTag(TagViewModel path)
@@ -209,7 +210,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
         _vm.TagsSource.DeleteTag(path);
         _buffer.Add(new(false, path));
         _vm.IsSaveEnabled = true;
-        SnackBarHelper.ShowAndHide($"删除标签 {path.Name}");
+        this.CreateTeachingTip().ShowAndHide($"删除标签 {path.Name}");
     }
 
     private string? NewTagCheck(string name)
@@ -223,7 +224,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
     {
         var pathTagModel = path.GetTagViewModel(_vm.TagsSource);
         if (pathTagModel is null)
-            SnackBarHelper.ShowAndHide($"「{label}」不存在！", SnackBarHelper.Severity.Error);
+            this.CreateTeachingTip().ShowAndHide($"「{label}」不存在！", TeachingTipSeverity.Error);
         return pathTagModel;
     }
 

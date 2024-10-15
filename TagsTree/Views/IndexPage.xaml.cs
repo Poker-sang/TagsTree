@@ -1,7 +1,6 @@
 using System;
 using Microsoft.UI.Xaml.Controls;
 using TagsTree.Interfaces;
-using WinUI3Utilities;
 
 namespace TagsTree.Views;
 
@@ -17,7 +16,7 @@ public sealed partial class IndexPage : Page, ITypeGetter
 
     #region 事件处理
 
-    private void QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e) => NavigationHelper.GotoPage<TagSearchFilesPage>(TagSearchBox.Text);
+    private void QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e) => App.MainWindow.GotoPage<TagSearchFilesPage>(TagSearchBox.Text);
 
     #endregion
 }

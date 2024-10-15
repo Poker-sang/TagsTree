@@ -30,7 +30,7 @@ public static partial class AppContext
     public static void Initialize()
     {
         AppLocalFolder = ApplicationData.Current.LocalFolder.Path;
-        InitializeConfigurationContainer();
+        InitializeConfiguration();
         AppConfig =
 #if FIRST_TIME
                    LoadConfiguration() ??

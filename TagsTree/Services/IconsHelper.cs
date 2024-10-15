@@ -125,20 +125,14 @@ public static class IconsHelper
     /// <summary>
     /// 包含扩展名和对应的回调函数（用于更新UI）
     /// </summary>
-    private class IconGetter
+    private class IconGetter(string extension, Action callBack)
     {
-        public IconGetter(string extension)
+        public IconGetter(string extension) : this(extension, () => { })
         {
-            Extension = extension;
-            CallBack = () => { };
         }
-        public IconGetter(string extension, Action callBack)
-        {
-            Extension = extension;
-            CallBack = callBack;
-        }
-        public readonly string Extension;
-        public Action CallBack;
+
+        public readonly string Extension = extension;
+        public Action CallBack = callBack;
     }
 
     /// <summary>

@@ -1,3 +1,4 @@
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
@@ -23,16 +24,16 @@ public partial class FileEditTagsPage : Page
 
     private async void AddTagTapped(object sender, DoubleTappedRoutedEventArgs e)
     {
-        var newTag = sender.GetTag<TagViewModel>();
+        var newTag = sender.To<FrameworkElement>().GetTag<TagViewModel>();
         foreach (var tagExisted in _vm.VirtualTags)
             if (tagExisted.Name == newTag.Name)
             {
-                SnackBarHelper.ShowAndHide($"已拥有该标签「{newTag.Name}」", SnackBarHelper.Severity.Error);
+                this.CreateTeachingTip().ShowAndHide($"已拥有该标签「{newTag.Name}」", TeachingTipSeverity.Error);
                 return;
             }
             else if (newTag.HasChildTag(tagExisted))
             {
-                SnackBarHelper.ShowAndHide($"已拥有「{newTag.Name}」的下级标签「{tagExisted.Name}」或更多", SnackBarHelper.Severity.Error);
+                this.CreateTeachingTip().ShowAndHide($"已拥有「{newTag.Name}」的下级标签「{tagExisted.Name}」或更多", TeachingTipSeverity.Error);
                 return;
             }
             else if (tagExisted.HasChildTag(newTag))
@@ -43,7 +44,7 @@ public partial class FileEditTagsPage : Page
                     _vm.VirtualTags.Add(newTag);
                     _vm.IsSaveEnabled = true;
                 }
-                SnackBarHelper.ShowAndHide($"「{newTag.Name}」覆盖上级标签「{tagExisted.Name}」");
+                this.CreateTeachingTip().ShowAndHide($"「{newTag.Name}」覆盖上级标签「{tagExisted.Name}」");
                 return;
             }
 
@@ -53,7 +54,7 @@ public partial class FileEditTagsPage : Page
 
     private void DeleteTagTapped(object sender, DoubleTappedRoutedEventArgs e)
     {
-        _ = _vm.VirtualTags.Remove(sender.GetTag<TagViewModel>());
+        _ = _vm.VirtualTags.Remove(sender.To<FrameworkElement>().GetTag<TagViewModel>());
         _vm.IsSaveEnabled = true;
     }
 
@@ -64,7 +65,7 @@ public partial class FileEditTagsPage : Page
         _vm.FileViewModel.TagsChanged();
         AppContext.SaveRelations();
         _vm.IsSaveEnabled = false;
-        SnackBarHelper.ShowAndHide("已保存更改");
+        this.CreateTeachingTip().ShowAndHide("已保存更改");
     }
 
     #endregion

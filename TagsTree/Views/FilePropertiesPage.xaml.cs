@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using CommunityToolkit.Labs.WinUI;
+using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -27,7 +27,7 @@ public partial class FilePropertiesPage : Page
 
     private void OpenExplorerTapped(object sender, TappedRoutedEventArgs e) => _vm.FileViewModel.OpenDirectory();
 
-    private void EditTagsTapped(object sender, TappedRoutedEventArgs e) => NavigationHelper.GotoPage<FileEditTagsPage>(_vm.FileViewModel);
+    private void EditTagsTapped(object sender, TappedRoutedEventArgs e) => App.MainWindow.GotoPage<FileEditTagsPage>(_vm.FileViewModel);
 
     private async void RemoveTapped(object sender, TappedRoutedEventArgs e)
     {
@@ -63,7 +63,7 @@ public partial class FilePropertiesPage : Page
 
     private async void MoveTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (await PickerHelper.PickSingleFolderAsync() is not { } folder)
+        if (await App.MainWindow.PickSingleFolderAsync() is not { } folder)
             return;
         if (_vm.FileViewModel.Path == folder.Path)
         {
@@ -110,7 +110,7 @@ public partial class FilePropertiesPage : Page
 
     private static void Remove(FileViewModel fileViewModel)
     {
-        CurrentContext.Frame.GoBack(new SlideNavigationTransitionInfo());
+        App.MainWindow.Frame.GoBack(new SlideNavigationTransitionInfo());
         fileViewModel.RemoveAndSave();
         TagSearchFilesPage.FileRemoved(fileViewModel);
     }

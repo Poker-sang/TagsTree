@@ -11,16 +11,7 @@ namespace TagsTree;
 
 public sealed partial class MainWindow : Window
 {
-    public MainWindow()
-    {
-        CurrentContext.Window = this;
-        InitializeComponent();
-        CurrentContext.TitleBar = TitleBar;
-        CurrentContext.TitleTextBlock = TitleTextBlock;
-        // TODO: Microsoft.WindowsAppSDK 1.2后，最小化的NavigationView没有高度
-        CurrentContext.NavigationView = NavigationView;
-        CurrentContext.Frame = NavigationView.Content.To<Frame>();
-    }
+    public MainWindow() => InitializeComponent();
 
     private async void Loaded(object sender, RoutedEventArgs e)
     {
@@ -52,7 +43,7 @@ public sealed partial class MainWindow : Window
         }
         else
         {
-            NavigationHelper.GotoPage<IndexPage>();
+            GotoPage<IndexPage>();
             NavigationView.SelectedItem = NavigationView.MenuItems[0];
         }
 
@@ -64,16 +55,18 @@ public sealed partial class MainWindow : Window
         await AppContext.FilesObserverChanged();
     }
 
+    public void GotoPage<T>(object? parameter = null) where T : Page => Frame.Navigate(typeof(T), parameter);
+
     private void DisplaySettings()
     {
-        NavigationHelper.GotoPage<SettingsPage>();
+        GotoPage<SettingsPage>();
         NavigationView.SelectedItem = NavigationView.SettingsItem;
     }
 
     private void BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs e)
     {
-        CurrentContext.Frame.GoBack();
-        NavigationView.SelectedItem = CurrentContext.Frame.Content switch
+        Frame.GoBack();
+        NavigationView.SelectedItem = Frame.Content switch
         {
             IndexPage or
                 TagSearchFilesPage or
@@ -87,14 +80,17 @@ public sealed partial class MainWindow : Window
             SettingsPage => NavigationView.SettingsItem,
             _ => NavigationView.SelectedItem
         };
-        NavigationView.IsBackEnabled = CurrentContext.Frame.CanGoBack;
+        NavigationView.IsBackEnabled = Frame.CanGoBack;
     }
 
     private void ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs e)
     {
-        if (e.InvokedItemContainer.Tag is Type item && item != CurrentContext.Frame.Content.GetType())
-            NavigationHelper.GotoPage(item);
+        if (e.InvokedItemContainer.Tag is Type item && item != Frame.Content.GetType())
+            Frame.Navigate(item);
     }
 
-    private void TeachingTipOnLoaded(object sender, RoutedEventArgs e) => SnackBarHelper.RootSnackBar = sender.To<TeachingTip>();
+    private void OnPaneChanging(NavigationView sender, object e)
+    {
+        sender.UpdateAppTitleMargin(TitleTextBlock);
+    }
 }

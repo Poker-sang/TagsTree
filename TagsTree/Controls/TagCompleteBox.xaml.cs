@@ -12,7 +12,7 @@ using TagCompleteBoxViewModel = TagsTree.Views.ViewModels.Controls.TagCompleteBo
 namespace TagsTree.Controls;
 
 [INotifyPropertyChanged]
-[DependencyProperty<TagsTreeDictionary>("TagsSource", IsNullable = true, DefaultValue = "null")]
+[DependencyProperty<TagsTreeDictionary>("TagsSource", DependencyPropertyDefaultValue.Default, IsNullable = true)]
 public partial class TagCompleteBox : UserControl
 {
     private readonly TagCompleteBoxViewModel _vm;

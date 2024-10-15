@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using CommunityToolkit.Labs.WinUI;
+using CommunityToolkit.WinUI.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -38,7 +38,7 @@ public partial class SettingsPage : Page, ITypeGetter
         {
             StartInfo = new()
             {
-                FileName = sender.GetTag<string>(),
+                FileName = sender.To<FrameworkElement>().GetTag<string>(),
                 UseShellExecute = true
             }
         };
@@ -47,31 +47,31 @@ public partial class SettingsPage : Page, ITypeGetter
 
     private void ThemeChecked(object sender, RoutedEventArgs e)
     {
-        var selectedTheme = sender.GetTag<int>() switch
+        var selectedTheme = sender.To<FrameworkElement>().GetTag<int>() switch
         {
             1 => ElementTheme.Light,
             2 => ElementTheme.Dark,
             _ => ElementTheme.Default
         };
 
-        if (CurrentContext.Window.Content is FrameworkElement rootElement)
+        if (App.MainWindow.Content is FrameworkElement rootElement)
             rootElement.RequestedTheme = selectedTheme;
 
         AppContext.AppConfig.Theme = selectedTheme.To<int>();
     }
 
     private async void LibraryPathTapped(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e)
-        => sender.Text = (await PickerHelper.PickSingleFolderAsync())?.Path;
+        => sender.Text = (await App.MainWindow.PickSingleFolderAsync())?.Path;
 
     private async void ExportTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (await PickerHelper.PickSingleFolderAsync() is { } folder)
+        if (await App.MainWindow.PickSingleFolderAsync() is { } folder)
             AppContext.AppLocalFolder.Copy(folder.Path);
     }
 
     private async void ImportTapped(object sender, TappedRoutedEventArgs e)
     {
-        if (await PickerHelper.PickSingleFolderAsync() is { } folder)
+        if (await App.MainWindow.PickSingleFolderAsync() is { } folder)
             folder.Path.Copy(AppContext.AppLocalFolder);
     }
 
@@ -92,7 +92,7 @@ public partial class SettingsPage : Page, ITypeGetter
         asb.Text = "";
         Vm.ConfigSetChanged();
 
-        await CurrentContext.Window.To<MainWindow>().ConfigIsSet();
+        await App.MainWindow.ConfigIsSet();
     }
 
     private void SetDefaultAppConfigTapped(object sender, TappedRoutedEventArgs e)

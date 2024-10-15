@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using WinUI3Utilities.Attributes;
 
 namespace TagsTree;
@@ -19,3 +20,6 @@ public partial record AppConfig
 
     }
 }
+
+[JsonSerializable(typeof(string))]
+public partial class ConfigSerializeContext : JsonSerializerContext;

@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
-using WinUI3Utilities;
 
 namespace TagsTree.Services;
 
@@ -20,7 +19,7 @@ public static class ShowContentDialog
             Content = control,
             CloseButtonText = "确定",
             DefaultButton = ContentDialogButton.Close,
-            XamlRoot = CurrentContext.Window.Content.XamlRoot
+            XamlRoot = App.MainWindow.Content.XamlRoot
         };
         _ = await messageDialog.ShowAsync();
     }
@@ -51,7 +50,7 @@ public static class ShowContentDialog
             PrimaryButtonText = "确定",
             CloseButtonText = "取消",
             DefaultButton = ContentDialogButton.Close,
-            XamlRoot = CurrentContext.Window.Content.XamlRoot
+            XamlRoot = App.MainWindow.Content.XamlRoot
         };
         messageDialog.PrimaryButtonClick += (_, _) => result = true;
         messageDialog.CloseButtonClick += (_, _) => result = false;
@@ -88,7 +87,7 @@ public static class ShowContentDialog
             SecondaryButtonText = "否",
             CloseButtonText = "取消",
             DefaultButton = ContentDialogButton.Close,
-            XamlRoot = CurrentContext.Window.Content.XamlRoot
+            XamlRoot = App.MainWindow.Content.XamlRoot
         };
         messageDialog.PrimaryButtonClick += (_, _) => result = true;
         messageDialog.SecondaryButtonClick += (_, _) => result = false;

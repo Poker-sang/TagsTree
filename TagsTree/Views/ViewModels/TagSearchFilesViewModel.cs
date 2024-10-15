@@ -1,15 +1,13 @@
 using System.Collections.ObjectModel;
-using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
-using WinUI3Utilities;
 
 namespace TagsTree.Views.ViewModels;
 
 public partial class TagSearchFilesViewModel : ObservableObject
 {
-    private ObservableCollection<FileViewModel> _resultCallBack = Enumerable.Empty<FileViewModel>().ToObservableCollection();
+    private ObservableCollection<FileViewModel> _resultCallBack = [];
 
-    [ObservableProperty] private ObservableCollection<FileViewModel> _fileViewModels = Enumerable.Empty<FileViewModel>().ToObservableCollection();
+    [ObservableProperty] private ObservableCollection<FileViewModel> _fileViewModels = [];
 
     public ObservableCollection<FileViewModel> ResultCallBack
     {
