@@ -1,5 +1,6 @@
 // #define FIRST_TIME
 
+using FluentIcons.WinUI;
 using Microsoft.UI.Xaml;
 using WinUI3Utilities;
 
@@ -11,6 +12,7 @@ public partial class App : Application
 
     public App()
     {
+        _ = this.UseSegoeMetrics();
         InitializeComponent();
         SettingsValueConverter.Context = ConfigSerializeContext.Default;
         AppContext.Initialize();

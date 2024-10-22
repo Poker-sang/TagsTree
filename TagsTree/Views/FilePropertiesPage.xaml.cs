@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using TagsTree.Services;

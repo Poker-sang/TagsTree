@@ -31,9 +31,9 @@ public partial class SettingsPage : Page, ITypeGetter
 
     #region 事件处理
 
-    private void NavigateUriClicked(object sender, RoutedEventArgs e)
+    private async void NavigateUriClicked(object sender, RoutedEventArgs e)
     {
-        Launcher.LaunchUriAsync(new(sender.To<FrameworkElement>().GetTag<string>()));
+        _ = await Launcher.LaunchUriAsync(new(sender.To<FrameworkElement>().GetTag<string>()));
     }
 
     private void ThemeChecked(object sender, RoutedEventArgs e)

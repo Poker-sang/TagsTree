@@ -6,7 +6,7 @@ using TagsTree.Services.ExtensionMethods;
 
 namespace TagsTree.Services;
 
-public class FilesObserver : FileSystemWatcher
+public partial class FilesObserver : FileSystemWatcher
 {
     public FilesObserver()
     {

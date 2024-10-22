@@ -20,7 +20,7 @@ public partial class SettingsViewModel : ObservableObject
         get => AppConfig.FilesObserverEnabled;
         set
         {
-            _ = SetProperty(AppConfig.FilesObserverEnabled, value, AppConfig, (setting, value) => setting.FilesObserverEnabled = value);
+            _ = SetProperty(AppConfig.FilesObserverEnabled, value, AppConfig, (setting, @value) => setting.FilesObserverEnabled = @value);
             OnPropertyChanged(nameof(IsFileObserverItemEnabled));
         }
     }

@@ -71,11 +71,9 @@ public partial class RelationsDataTable : TableDictionary<int, int>
             filesRange = tagViewModel.SubTags.Aggregate(filesRange, (current, subTag) => GetFileModels(subTag, current));
             return filesRange.Where(fileModel => this[tagViewModel.Id, fileModel.Id]);
         }
-        // 唯一需要判断是否能使用路径作为标签的地方
 
-        if (AppContext.AppConfig.PathTagsEnabled)
-            return filesRange.Where(fileModel => fileModel.PathContains(pathTagModel));
-        return [];
+        // 唯一需要判断是否能使用路径作为标签的地方
+        return AppContext.AppConfig.PathTagsEnabled ? filesRange.Where(fileModel => fileModel.PathContains(pathTagModel)) : [];
     }
     public void NewTag(TagViewModel tagViewModel) => AddColumn(tagViewModel.Id);
     public void NewFile(FileModel fileModel) => AddRow(fileModel.Id);

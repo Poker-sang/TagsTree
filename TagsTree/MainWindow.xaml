@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:TagsTree"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="using:TagsTree.Views"
@@ -19,10 +20,10 @@
                 Margin="12"
                 Orientation="Horizontal"
                 Spacing="14">
-                <FontIcon
+                <fluent:SymbolIcon
                     Width="25"
                     Height="25"
-                    Glyph="&#xEA3A;" />
+                    Symbol="CubeTree" />
                 <TextBlock
                     x:Name="TitleTextBlock"
                     VerticalAlignment="Center"
@@ -34,6 +35,7 @@
             x:Name="NavigationView"
             BackRequested="BackRequested"
             IsBackButtonVisible="Visible"
+            IsBackEnabled="{x:Bind Frame.CanGoBack, Mode=OneWay}"
             IsTabStop="False"
             ItemInvoked="ItemInvoked"
             Loaded="Loaded"
@@ -42,29 +44,29 @@
             <NavigationView.MenuItems>
                 <NavigationViewItem
                     Content="主页"
-                    Icon="Home"
+                    Icon="{fluent:SymbolIcon Symbol=Home}"
                     IsEnabled="{x:Bind local:AppContext.SettingViewModel.ConfigSet, Mode=OneWay}"
                     Tag="{x:Bind views:IndexPage.TypeGetter}" />
                 <NavigationViewItem
                     Content="标签管理"
-                    Icon="Tag"
+                    Icon="{fluent:SymbolIcon Symbol=Tag}"
                     IsEnabled="{x:Bind local:AppContext.SettingViewModel.ConfigSet, Mode=OneWay}"
                     Tag="{x:Bind views:TagsManagerPage.TypeGetter}" />
                 <NavigationViewItem
                     Content="文件引入"
-                    Icon="Import"
+                    Icon="{fluent:SymbolIcon Symbol=ArrowImport}"
                     IsEnabled="{x:Bind local:AppContext.SettingViewModel.ConfigSet, Mode=OneWay}"
                     Tag="{x:Bind views:FileImporterPage.TypeGetter}" />
                 <NavigationViewItem
                     Content="为标签添加文件"
-                    Icon="Edit"
+                    Icon="{fluent:SymbolIcon Symbol=EditLineHorizontal3}"
                     IsEnabled="{x:Bind local:AppContext.SettingViewModel.ConfigSet, Mode=OneWay}"
                     Tag="{x:Bind views:SelectTagToEditPage.TypeGetter}" />
             </NavigationView.MenuItems>
             <NavigationView.FooterMenuItems>
                 <NavigationViewItem
                     Content="监控文件"
-                    Icon="View"
+                    Icon="{fluent:SymbolIcon Symbol=EyeTracking}"
                     IsEnabled="{x:Bind local:AppContext.SettingViewModel.IsFileObserverItemEnabled, Mode=OneWay}"
                     Tag="{x:Bind views:FilesObserverPage.TypeGetter}" />
             </NavigationView.FooterMenuItems>

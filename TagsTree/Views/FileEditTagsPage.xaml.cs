@@ -12,12 +12,11 @@ public partial class FileEditTagsPage : Page
 {
     public FileEditTagsPage() => InitializeComponent();
 
-    private readonly FileEditTagsViewModel _vm = new();
+    private FileEditTagsViewModel _vm = null!;
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
-        _vm.IsSaveEnabled = false;
-        _vm.FileViewModel = e.Parameter.To<FileViewModel>();
+        _vm = new(e.Parameter.To<FileViewModel>());
     }
 
     #region 事件处理

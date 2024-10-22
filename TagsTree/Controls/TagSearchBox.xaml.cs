@@ -11,7 +11,7 @@ using WinUI3Utilities.Attributes;
 namespace TagsTree.Controls;
 
 [INotifyPropertyChanged]
-[DependencyProperty<string>("Text", @"""""")]
+[DependencyProperty<string>("Text", "\"\"")]
 [DependencyProperty<TagsTreeDictionary>("TagsSource", DependencyPropertyDefaultValue.Default, IsNullable = true)]
 public partial class TagSearchBox : UserControl
 {
@@ -42,13 +42,13 @@ public partial class TagSearchBox : UserControl
 
     private void QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e)
     {
-        if (Text is "")
+        if (e.QueryText is "")
         {
             ResultChanged.Invoke(AppContext.IdFile.Values);
             return;
         }
 
-        var temp = Text.Split(' ').Select(item => AppContext.Tags.TagsDictionary.GetValueOrDefault(item) ?? new PathTagModel(item)).ToArray();
+        var temp = e.QueryText.Split(' ').Select(item => AppContext.Tags.TagsDictionary.GetValueOrDefault(item) ?? new PathTagModel(item)).ToArray();
         ResultChanged.Invoke(AppContext.Relations.GetFileModels(temp));
     }
 
@@ -62,7 +62,7 @@ public partial class TagSearchBox : UserControl
         AutoSuggestBox.QuerySubmitted += eventHandler;
     }
 
-    public void InvokeQuerySubmitted() => QuerySubmitted(AutoSuggestBox, new AutoSuggestBoxQuerySubmittedEventArgs());
+    public void InvokeQuerySubmitted() => QuerySubmitted(AutoSuggestBox, new());
 
     #endregion
 }

@@ -3,75 +3,59 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:TagsTree.Controls"
+    xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:TagsTree.Views.ViewModels"
     mc:Ignorable="d">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
+    <controls1:DockPanel VerticalSpacing="5">
         <controls:InputContentDialog x:Name="InputName" />
         <CommandBar
-            Grid.Row="0"
-            Grid.Column="1"
+            controls1:DockPanel.Dock="Top"
             DefaultLabelPosition="Collapsed"
             OverflowButtonVisibility="Collapsed">
             <AppBarButton
-                Icon="Add"
                 Click="NewClicked"
+                Icon="{fluent:SymbolIcon Symbol=Add}"
                 ToolTipService.ToolTip="添加" />
             <AppBarButton
-                Icon="MoveToFolder"
                 Click="MoveClicked"
+                Icon="{fluent:SymbolIcon Symbol=TagReset}"
                 ToolTipService.ToolTip="移动" />
             <AppBarButton
-                Icon="Rename"
                 Click="RenameClicked"
+                Icon="{fluent:SymbolIcon Symbol=Rename}"
                 ToolTipService.ToolTip="重命名" />
             <AppBarButton
-                Icon="Remove"
                 Click="DeleteClicked"
+                Icon="{fluent:SymbolIcon Symbol=TagOff}"
                 ToolTipService.ToolTip="删除" />
             <AppBarSeparator />
             <AppBarButton
-                Icon="Save"
-                IsEnabled="{x:Bind _vm.IsSaveEnabled, Mode=OneWay}"
                 Click="SaveClicked"
+                Icon="{fluent:SymbolIcon Symbol=Save}"
+                IsEnabled="{x:Bind Vm.IsSaveEnabled, Mode=OneWay}"
                 ToolTipService.ToolTip="保存" />
         </CommandBar>
         <TextBox
-            Grid.Row="1"
-            Grid.Column="0"
-            Grid.ColumnSpan="2"
+            controls1:DockPanel.Dock="Top"
             PlaceholderText="标签名称"
-            Text="{x:Bind _vm.Name, Mode=TwoWay}"
+            Text="{x:Bind Vm.Name, Mode=TwoWay}"
             TextChanged="NameChanged"
             ToolTipService.ToolTip="不包含\/:*?&quot;&lt;&gt;|,和空白字符且不为空" />
         <controls:TagCompleteBox
-            Grid.Row="2"
-            Grid.Column="0"
-            Grid.ColumnSpan="2"
-            Path="{x:Bind _vm.Path, Mode=TwoWay}"
-            TagsSource="{x:Bind _vm.TagsSource}" />
+            controls1:DockPanel.Dock="Top"
+            Path="{x:Bind Vm.Path, Mode=TwoWay}"
+            TagsSource="{x:Bind Vm.TagsSource}" />
         <TreeView
-            Grid.Row="3"
-            Grid.Column="0"
-            Grid.ColumnSpan="2"
             AllowDrop="True"
             CanDragItems="True"
             DragItemsCompleted="OnDragItemsCompleted"
             DragItemsStarting="OnDragItemsStarting"
             ItemInvoked="TagsOnItemInvoked"
-            ItemsSource="{x:Bind _vm.TagsSource.TagsTree.SubTags, Mode=OneWay}">
+            ItemsSource="{x:Bind Vm.TagsSource.TagsTree.SubTags, Mode=OneWay}">
             <TreeView.ItemTemplate>
                 <DataTemplate x:DataType="viewModels:TagViewModel">
                     <TreeViewItem ItemsSource="{x:Bind SubTags, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind FullName}">
@@ -79,30 +63,30 @@
                         <TreeViewItem.ContextFlyout>
                             <MenuFlyout Placement="TopEdgeAlignedLeft">
                                 <MenuFlyoutItem
-                                    Icon="Add"
-                                    Tag="{x:Bind}"
                                     Click="ContextNewClicked"
+                                    Icon="{fluent:SymbolIcon Symbol=Add}"
+                                    Tag="{x:Bind}"
                                     Text="新建" />
                                 <MenuFlyoutItem
-                                    Icon="Cut"
-                                    Tag="{x:Bind}"
                                     Click="ContextCutClicked"
+                                    Icon="{fluent:SymbolIcon Symbol=Cut}"
+                                    Tag="{x:Bind}"
                                     Text="剪切" />
                                 <MenuFlyoutItem
-                                    Icon="Paste"
-                                    IsEnabled="{x:Bind local:TagsManagerPage.Current._vm.CanPaste, Mode=OneWay}"
-                                    Tag="{x:Bind}"
                                     Click="ContextPasteClicked"
+                                    Icon="{fluent:SymbolIcon Symbol=ClipboardPaste}"
+                                    IsEnabled="{x:Bind local:TagsManagerPage.Current.Vm.CanPaste, Mode=OneWay}"
+                                    Tag="{x:Bind}"
                                     Text="粘贴" />
                                 <MenuFlyoutItem
-                                    Icon="Rename"
-                                    Tag="{x:Bind}"
                                     Click="ContextRenameClicked"
+                                    Icon="{fluent:SymbolIcon Symbol=Rename}"
+                                    Tag="{x:Bind}"
                                     Text="重命名" />
                                 <MenuFlyoutItem
-                                    Icon="Delete"
-                                    Tag="{x:Bind}"
                                     Click="ContextDeleteClicked"
+                                    Icon="{fluent:SymbolIcon Symbol=TagOff}"
+                                    Tag="{x:Bind}"
                                     Text="删除" />
                             </MenuFlyout>
                         </TreeViewItem.ContextFlyout>
@@ -112,16 +96,16 @@
             <TreeView.ContextFlyout>
                 <MenuFlyout Placement="TopEdgeAlignedLeft">
                     <MenuFlyoutItem
-                        Icon="Add"
                         Click="RootContextNewClicked"
+                        Icon="{fluent:SymbolIcon Symbol=Add}"
                         Text="新建" />
                     <MenuFlyoutItem
-                        Icon="Paste"
-                        IsEnabled="{x:Bind _vm.CanPaste, Mode=OneWay}"
                         Click="RootContextPasteClicked"
+                        Icon="{fluent:SymbolIcon Symbol=ClipboardPaste}"
+                        IsEnabled="{x:Bind Vm.CanPaste, Mode=OneWay}"
                         Text="粘贴" />
                 </MenuFlyout>
             </TreeView.ContextFlyout>
         </TreeView>
-    </Grid>
+    </controls1:DockPanel>
 </Page>

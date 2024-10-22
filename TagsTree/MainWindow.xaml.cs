@@ -86,7 +86,7 @@ public sealed partial class MainWindow : Window
     private void ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs e)
     {
         if (e.InvokedItemContainer.Tag is Type item && item != Frame.Content.GetType())
-            Frame.Navigate(item);
+            _ = Frame.Navigate(item);
     }
 
     private void OnPaneChanging(NavigationView sender, object e)

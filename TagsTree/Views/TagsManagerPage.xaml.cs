@@ -4,7 +4,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using TagsTree.Interfaces;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.Views.ViewModels;
@@ -25,7 +24,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
     public static TagsManagerPage Current { get; private set; } = null!;
 
     // TODO: TextBox绑定更新慢
-    private readonly TagsManagerViewModel _vm = new();
+    public readonly TagsManagerViewModel Vm = new();
 
     #region 事件处理
 
@@ -37,7 +36,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
             this.CreateTeachingTip().ShowAndHide($"移动标签 {e.Items[0].To<TagViewModel>().Name} 到原位置", TeachingTipSeverity.Information);
         else
         {
-            _vm.IsSaveEnabled = true;
+            Vm.IsSaveEnabled = true;
             this.CreateTeachingTip().ShowAndHide($"移动标签 {e.Items[0].To<TagViewModel>().Name}");
         }
 
@@ -46,80 +45,80 @@ public partial class TagsManagerPage : Page, ITypeGetter
 
     private void OnDragItemsStarting(TreeView sender, TreeViewDragItemsStartingEventArgs e) => _tempPath = e.Items[0].To<TagViewModel>().Parent;
 
-    private void NameChanged(object sender, TextChangedEventArgs e) => _vm.Name = Regex.Replace(_vm.Name, $@"[{FileSystemHelper.GetInvalidNameChars}]+", "");
+    private void NameChanged(object sender, TextChangedEventArgs e) => Vm.Name = Regex.Replace(Vm.Name, $@"[{FileSystemHelper.GetInvalidNameChars}]+", "");
 
-    private void TagsOnItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs e) => _vm.Path = (e.InvokedItem as TagViewModel)?.FullName ?? _vm.Path;
+    private void TagsOnItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs e) => Vm.Path = (e.InvokedItem as TagViewModel)?.FullName ?? Vm.Path;
 
     private void NewClicked(object sender, RoutedEventArgs e)
     {
-        if (ExistenceCheck(_vm.Path, "标签路径") is not { } pathTagModel)
+        if (ExistenceCheck(Vm.Path, "标签路径") is not { } pathTagModel)
             return;
 
-        var result = NewTagCheck(_vm.Name);
+        var result = NewTagCheck(Vm.Name);
         if (result is not null)
         {
             this.CreateTeachingTip().ShowAndHide(result, TeachingTipSeverity.Error);
             return;
         }
 
-        NewTag(_vm.Name, pathTagModel);
-        _vm.Name = "";
+        NewTag(Vm.Name, pathTagModel);
+        Vm.Name = "";
     }
 
     private void MoveClicked(object sender, RoutedEventArgs e)
     {
-        if (ExistenceCheck(_vm.Path, "标签路径") is not { } pathTagModel)
+        if (ExistenceCheck(Vm.Path, "标签路径") is not { } pathTagModel)
             return;
 
-        if (ExistenceCheck(_vm.Name, "标签名称") is not { } nameTagModel)
+        if (ExistenceCheck(Vm.Name, "标签名称") is not { } nameTagModel)
             return;
 
         MoveTag(nameTagModel, pathTagModel);
-        _vm.Name = "";
+        Vm.Name = "";
     }
 
     private void RenameClicked(object sender, RoutedEventArgs e)
     {
-        if (_vm.Path is "")
+        if (Vm.Path is "")
         {
             this.CreateTeachingTip().ShowAndHide("未输入希望重命名的标签！", TeachingTipSeverity.Error);
             return;
         }
 
-        if (ExistenceCheck(_vm.Path, "标签路径") is not { } pathTagModel)
+        if (ExistenceCheck(Vm.Path, "标签路径") is not { } pathTagModel)
             return;
 
-        var result = NewTagCheck(_vm.Name);
+        var result = NewTagCheck(Vm.Name);
         if (result is not null)
         {
             this.CreateTeachingTip().ShowAndHide(result, TeachingTipSeverity.Error);
             return;
         }
 
-        RenameTag(_vm.Name, pathTagModel);
-        _vm.Name = "";
-        _vm.Path = "";
+        RenameTag(Vm.Name, pathTagModel);
+        Vm.Name = "";
+        Vm.Path = "";
     }
 
     private void DeleteClicked(object sender, RoutedEventArgs e)
     {
-        if (_vm.Path is "")
+        if (Vm.Path is "")
         {
             this.CreateTeachingTip().ShowAndHide("未输入希望删除的标签！", TeachingTipSeverity.Error);
             return;
         }
 
-        if (ExistenceCheck(_vm.Path, "标签路径") is not { } pathTagModel)
+        if (ExistenceCheck(Vm.Path, "标签路径") is not { } pathTagModel)
             return;
 
         DeleteTag(pathTagModel);
-        _vm.Name = "";
+        Vm.Name = "";
     }
 
     private async void SaveClicked(object sender, RoutedEventArgs e)
     {
         await Task.Yield();
-        AppContext.Tags = _vm.TagsSource;
+        AppContext.Tags = Vm.TagsSource;
         AppContext.SaveTags();
         foreach (var (mode, tagViewModel) in _buffer)
             if (mode)
@@ -128,7 +127,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
                 AppContext.Relations.DeleteTag(tagViewModel);
         _buffer.Clear();
         AppContext.SaveRelations();
-        _vm.IsSaveEnabled = false;
+        Vm.IsSaveEnabled = false;
         this.CreateTeachingTip().ShowAndHide("已保存");
     }
 
@@ -143,10 +142,10 @@ public partial class TagsManagerPage : Page, ITypeGetter
     {
         InputName.Load("新建根标签", cd => NewTagCheck(cd.Text), FileSystemHelper.InvalidMode.Name);
         if (!await InputName.ShowAsync())
-            NewTag(InputName.Text, _vm.TagsSource.TagsTree);
+            NewTag(InputName.Text, Vm.TagsSource.TagsTree);
     }
 
-    private void ContextCutClicked(object sender, RoutedEventArgs e) => _vm.ClipBoard = sender.To<FrameworkElement>().GetTag<TagViewModel>();
+    private void ContextCutClicked(object sender, RoutedEventArgs e) => Vm.ClipBoard = sender.To<FrameworkElement>().GetTag<TagViewModel>();
 
     private async void ContextRenameClicked(object sender, RoutedEventArgs e)
     {
@@ -155,9 +154,9 @@ public partial class TagsManagerPage : Page, ITypeGetter
             RenameTag(InputName.Text, sender.To<FrameworkElement>().GetTag<TagViewModel>());
     }
 
-    private void ContextPasteClicked(object sender, RoutedEventArgs e) => MoveTag(_vm.ClipBoard!, sender.To<FrameworkElement>().GetTag<TagViewModel>());
+    private void ContextPasteClicked(object sender, RoutedEventArgs e) => MoveTag(Vm.ClipBoard!, sender.To<FrameworkElement>().GetTag<TagViewModel>());
 
-    private void RootContextPasteClicked(object sender, RoutedEventArgs e) => MoveTag(_vm.ClipBoard!, _vm.TagsSource.TagsTree);
+    private void RootContextPasteClicked(object sender, RoutedEventArgs e) => MoveTag(Vm.ClipBoard!, Vm.TagsSource.TagsTree);
 
     private void ContextDeleteClicked(object sender, RoutedEventArgs e) => DeleteTag(sender.To<FrameworkElement>().GetTag<TagViewModel>());
 
@@ -173,8 +172,8 @@ public partial class TagsManagerPage : Page, ITypeGetter
 
     private void NewTag(string name, TagViewModel path)
     {
-        _buffer.Add(new(true, _vm.TagsSource.AddTag(path, name)));
-        _vm.IsSaveEnabled = true;
+        _buffer.Add(new(true, Vm.TagsSource.AddTag(path, name)));
+        Vm.IsSaveEnabled = true;
         this.CreateTeachingTip().ShowAndHide($"新建标签 {name}");
     }
 
@@ -186,43 +185,43 @@ public partial class TagsManagerPage : Page, ITypeGetter
             return;
         }
 
-        if (name == path || _vm.TagsSource.TagsDictionary.GetValueOrDefault(name.Id)!.HasChildTag(_vm.TagsSource.TagsDictionary.GetValueOrDefault(path.Id)!))
+        if (name == path || Vm.TagsSource.TagsDictionary.GetValueOrDefault(name.Id)!.HasChildTag(Vm.TagsSource.TagsDictionary.GetValueOrDefault(path.Id)!))
         {
             this.CreateTeachingTip().ShowAndHide("禁止将标签移动到自己目录下！", TeachingTipSeverity.Error);
             return;
         }
 
-        _vm.ClipBoard = null;
-        _vm.TagsSource.MoveTag(name, path);
-        _vm.IsSaveEnabled = true;
+        Vm.ClipBoard = null;
+        Vm.TagsSource.MoveTag(name, path);
+        Vm.IsSaveEnabled = true;
         this.CreateTeachingTip().ShowAndHide($"移动标签 {name.Name}");
     }
 
     private void RenameTag(string name, TagViewModel path)
     {
-        _vm.TagsSource.RenameTag(path, name);
-        _vm.IsSaveEnabled = true;
+        Vm.TagsSource.RenameTag(path, name);
+        Vm.IsSaveEnabled = true;
         this.CreateTeachingTip().ShowAndHide($"重命名标签 {name}");
     }
 
     private void DeleteTag(TagViewModel path)
     {
-        _vm.TagsSource.DeleteTag(path);
+        Vm.TagsSource.DeleteTag(path);
         _buffer.Add(new(false, path));
-        _vm.IsSaveEnabled = true;
+        Vm.IsSaveEnabled = true;
         this.CreateTeachingTip().ShowAndHide($"删除标签 {path.Name}");
     }
 
     private string? NewTagCheck(string name)
         => name is ""
             ? "标签名称不能为空！"
-            : name.GetTagViewModel(_vm.TagsSource) is not null
+            : name.GetTagViewModel(Vm.TagsSource) is not null
                 ? "与现有标签重名！"
                 : null;
 
     private TagViewModel? ExistenceCheck(string path, string label)
     {
-        var pathTagModel = path.GetTagViewModel(_vm.TagsSource);
+        var pathTagModel = path.GetTagViewModel(Vm.TagsSource);
         if (pathTagModel is null)
             this.CreateTeachingTip().ShowAndHide($"「{label}」不存在！", TeachingTipSeverity.Error);
         return pathTagModel;

@@ -3,7 +3,6 @@ using System.Linq;
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using TagsTree.Models;
@@ -28,7 +27,6 @@ public sealed partial class TagEditFilesPage : Page
     }
 
     private void ResultChanged(IEnumerable<FileModel> newResult) => _vm.FileViewModels = [.. newResult.Select(fileModel => new FileViewModel(fileModel, _vm.TagViewModel.Parent))];
-
 
     private void Selected(object sender, SelectionChangedEventArgs e)
     {

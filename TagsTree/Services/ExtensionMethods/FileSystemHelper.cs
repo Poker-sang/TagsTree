@@ -1,6 +1,6 @@
 using System;
-using System.Diagnostics;
 using System.IO;
+using Windows.System;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.VisualBasic.FileIO;
 using TagsTree.Interfaces;
@@ -20,91 +20,27 @@ public static class FileSystemHelper
             Inlines = { new Run { Text = alt } }
         };
 
-        hyperlink.Click += (sender, e) =>
-        {
-            App.MainWindow.DispatcherQueue.TryEnqueue(
-                 () =>
-                 {
-                     try
-                     {
-                         var process = new Process
-                         {
-                             StartInfo = new()
-                             {
-                                 FileName = sender.NavigateUri.AbsolutePath,
-                                 UseShellExecute = true
-                             }
-                         };
-                         _ = process.Start();
-                     }
-                     catch
-                     {
-
-                     }
-                 });
-        };
+        hyperlink.Click += async (sender, _) => await Launcher.LaunchUriAsync(new(sender.NavigateUri.AbsolutePath));
 
         return hyperlink;
     }
 
     public static async void Open(this IFullName fullName)
     {
-        try
-        {
-            var process = new Process
-            {
-                StartInfo = new()
-                {
-                    FileName = fullName.FullName,
-                    UseShellExecute = true
-                }
-            };
-            _ = process.Start();
-        }
-        catch (System.ComponentModel.Win32Exception)
-        {
+        if (!await Launcher.LaunchUriAsync(new(fullName.FullName)))
             await ShowContentDialog.Information(true, "找不到文件（夹），源文件可能已被更改");
-        }
     }
 
     public static async void Open(this string fullName)
     {
-        try
-        {
-            using var process = new Process
-            {
-                StartInfo = new()
-                {
-                    FileName = fullName,
-                    UseShellExecute = true
-                }
-            };
-            _ = process.Start();
-        }
-        catch (System.ComponentModel.Win32Exception)
-        {
+        if (!await Launcher.LaunchUriAsync(new(fullName)))
             await ShowContentDialog.Information(true, $"打开路径「{fullName}」时出现错误");
-        }
     }
 
     public static async void OpenDirectory(this IFullName fullName)
     {
-        try
-        {
-            var process = new Process
-            {
-                StartInfo = new()
-                {
-                    FileName = fullName.FullName,
-                    UseShellExecute = true
-                }
-            };
-            _ = process.Start();
-        }
-        catch (System.ComponentModel.Win32Exception)
-        {
+        if (!await Launcher.LaunchUriAsync(new(fullName.FullName)))
             await ShowContentDialog.Information(true, "找不到目录，源文件目录可能已被更改");
-        }
     }
 
     public static void Move(this FileBase fileBase, string newFullName)

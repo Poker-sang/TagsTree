@@ -4,26 +4,23 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:TagsTree.Views.ViewModels"
     mc:Ignorable="d">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <controls:DockPanel>
         <CommandBar
-            Grid.Row="0"
+            controls:DockPanel.Dock="Top"
             DefaultLabelPosition="Collapsed"
             OverflowButtonVisibility="Collapsed">
             <AppBarButton
                 Click="SaveClicked"
-                Icon="Save"
+                Icon="{fluent:SymbolIcon Symbol=Save}"
                 IsEnabled="{x:Bind _vm.IsSaveEnabled, Mode=OneWay}"
                 ToolTipService.ToolTip="保存" />
         </CommandBar>
-        <Grid Grid.Row="1">
+        <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
@@ -72,5 +69,5 @@
                 </controls:GridSplitter.RenderTransform>
             </controls:GridSplitter>
         </Grid>
-    </Grid>
+    </controls:DockPanel>
 </Page>

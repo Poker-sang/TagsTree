@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:TagsTree.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:root="using:TagsTree"
@@ -28,12 +29,14 @@
             </Style.Setters>
         </Style>
     </Page.Resources>
-    <ScrollViewer>
-        <StackPanel>
-            <controls:SettingsExpander Description="应用的主题色" Header="主题">
-                <controls:SettingsExpander.HeaderIcon>
-                    <FontIcon Glyph="&#xE771;" />
-                </controls:SettingsExpander.HeaderIcon>
+    <ScrollView>
+        <StackPanel Margin="20">
+            <!--  基本设置  -->
+            <TextBlock Style="{StaticResource FirstSettingHeaderStyle}" Text="基本设置" />
+            <controls:SettingsExpander
+                Description="应用的主题色"
+                Header="主题"
+                HeaderIcon="{fluent:SymbolIcon Symbol=DarkTheme}">
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard ContentAlignment="Left">
                         <RadioButtons SelectedIndex="{x:Bind Vm.Theme, Mode=TwoWay}">
@@ -56,20 +59,20 @@
                     </controls:SettingsCard>
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
-            <controls:SettingsExpander Description="被归类文件的根目录文件夹" Header="文件路径">
-                <controls:SettingsExpander.HeaderIcon>
-                    <FontIcon Glyph="&#xE8B7;" />
-                </controls:SettingsExpander.HeaderIcon>
+            <controls:SettingsExpander
+                Description="被归类文件的根目录文件夹"
+                Header="文件路径"
+                HeaderIcon="{fluent:SymbolIcon Symbol=Rename}">
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard
-                        ActionIcon="Save"
+                        ActionIcon="{fluent:SymbolIcon Symbol=Save}"
                         Click="LibraryPathSaved"
                         Header="记得点击右侧保存噢x"
                         IsClickEnabled="True">
                         <controls:SettingsCard.Description>
                             <AutoSuggestBox
                                 PlaceholderText="{x:Bind Vm.LibraryPath, Mode=OneWay}"
-                                QueryIcon="More"
+                                QueryIcon="{fluent:SymbolIcon Symbol=MoreHorizontal}"
                                 QuerySubmitted="LibraryPathClicked" />
                         </controls:SettingsCard.Description>
                     </controls:SettingsCard>
@@ -78,50 +81,39 @@
             <controls:SettingsCard
                 Description="将所在路径文件夹名作为标签使用"
                 Header="文件夹标签"
-                HeaderIcon="Tag">
+                HeaderIcon="{fluent:SymbolIcon Symbol=TagMultiple}">
                 <ToggleSwitch IsOn="{x:Bind Vm.PathTagsEnabled, Mode=TwoWay}" />
             </controls:SettingsCard>
             <controls:SettingsCard
                 Description="监控文件路径文件下文件（夹）的变化"
                 Header="监控文件"
-                HeaderIcon="View">
+                HeaderIcon="{fluent:SymbolIcon Symbol=EyeTracking}">
                 <ToggleSwitch IsOn="{x:Bind Vm.FilesObserverEnabled, Mode=TwoWay}" />
             </controls:SettingsCard>
             <controls:SettingsExpander
                 Description="指定文件和标签记录所在的文件夹并进行导入导出的操作"
                 Header="导入导出记录"
-                HeaderIcon="Switch">
+                HeaderIcon="{fluent:SymbolIcon Symbol=FolderList}">
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard
+                        ActionIcon="{fluent:SymbolIcon Symbol=ChevronRight}"
                         Click="ImportClicked"
                         Header="导入"
-                        HeaderIcon="Import"
-                        IsClickEnabled="True">
-                        <controls:SettingsCard.ActionIcon>
-                            <FontIcon Glyph="&#xE8A7;" />
-                        </controls:SettingsCard.ActionIcon>
-                    </controls:SettingsCard>
+                        HeaderIcon="{fluent:SymbolIcon Symbol=ArrowImport}"
+                        IsClickEnabled="True" />
                     <controls:SettingsCard
+                        ActionIcon="{fluent:SymbolIcon Symbol=ChevronRight}"
                         Click="ExportClicked"
                         Header="导出"
-                        IsClickEnabled="True">
-                        <controls:SettingsCard.HeaderIcon>
-                            <FontIcon Glyph="&#xEA52;" />
-                        </controls:SettingsCard.HeaderIcon>
-                        <controls:SettingsCard.ActionIcon>
-                            <FontIcon Glyph="&#xE8A7;" />
-                        </controls:SettingsCard.ActionIcon>
-                    </controls:SettingsCard>
+                        HeaderIcon="{fluent:SymbolIcon Symbol=ArrowExport}"
+                        IsClickEnabled="True" />
                     <controls:SettingsCard
+                        ActionIcon="{fluent:SymbolIcon Symbol=Open}"
                         Click="OpenDirectoryClicked"
                         Description="{x:Bind root:AppContext.AppLocalFolder}"
                         Header="打开"
-                        HeaderIcon="OpenLocal"
-                        IsClickEnabled="True">
-                        <controls:SettingsCard.ActionIcon>
-                            <FontIcon Glyph="&#xE8A7;" />
-                        </controls:SettingsCard.ActionIcon>
-                    </controls:SettingsCard>
+                        HeaderIcon="{fluent:SymbolIcon Symbol=FolderArrowUp}"
+                        IsClickEnabled="True" />
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
             <!--  危险区域  -->
@@ -129,35 +121,30 @@
             <controls:SettingsExpander
                 Description="恢复默认设置并保存"
                 Header="恢复默认设置"
-                HeaderIcon="Refresh">
+                HeaderIcon="{fluent:SymbolIcon Symbol=ArrowReset}">
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard
-                        ActionIcon="Important"
+                        ActionIcon="{fluent:SymbolIcon Symbol=ChevronRight}"
                         Click="SetDefaultAppConfigClicked"
                         Header="确认"
+                        HeaderIcon="{fluent:SymbolIcon Symbol=Important}"
                         IsClickEnabled="True" />
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
             <!--  关于  -->
             <TextBlock Style="{StaticResource SettingHeaderStyle}" Text="关于" />
-            <controls:SettingsExpander Header="关于 TagsTree v1.30">
-                <controls:SettingsExpander.HeaderIcon>
-                    <FontIcon Glyph="&#xE946;" />
-                </controls:SettingsExpander.HeaderIcon>
+            <controls:SettingsExpander Header="关于 TagsTree v1.30" HeaderIcon="{fluent:SymbolIcon Symbol=Info}">
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard
+                        ActionIcon="{fluent:SymbolIcon Symbol=Open}"
                         Click="NavigateUriClicked"
                         Description="poker_sang@outlook.com"
                         Header="邮箱"
-                        HeaderIcon="Mail"
+                        HeaderIcon="{fluent:SymbolIcon Symbol=Mail}"
                         IsClickEnabled="True"
-                        Tag="{x:Bind rs:ConstantStrings.MailUri}">
-                        <!--<PathIcon Data="{x:Bind rs:ConstantStrings.OutlookSvgPath}" />显示不正确不知道为什么-->
-                        <controls:SettingsCard.ActionIcon>
-                            <FontIcon Glyph="&#xE8A7;" />
-                        </controls:SettingsCard.ActionIcon>
-                    </controls:SettingsCard>
+                        Tag="{x:Bind rs:ConstantStrings.MailUri}" />
                     <controls:SettingsCard
+                        ActionIcon="{fluent:SymbolIcon Symbol=Open}"
                         Click="NavigateUriClicked"
                         Description="扑克"
                         Header="作者"
@@ -166,11 +153,9 @@
                         <controls:SettingsCard.HeaderIcon>
                             <PathIcon Data="{x:Bind rs:ConstantStrings.GitHubSvgPath}" />
                         </controls:SettingsCard.HeaderIcon>
-                        <controls:SettingsCard.ActionIcon>
-                            <FontIcon Glyph="&#xE8A7;" />
-                        </controls:SettingsCard.ActionIcon>
                     </controls:SettingsCard>
                     <controls:SettingsCard
+                        ActionIcon="{fluent:SymbolIcon Symbol=Open}"
                         Click="NavigateUriClicked"
                         Description="2639914082"
                         Header="QQ"
@@ -179,36 +164,25 @@
                         <controls:SettingsCard.HeaderIcon>
                             <PathIcon Data="{x:Bind rs:ConstantStrings.QqSvgPath}" />
                         </controls:SettingsCard.HeaderIcon>
-                        <controls:SettingsCard.ActionIcon>
-                            <FontIcon Glyph="&#xE8A7;" />
-                        </controls:SettingsCard.ActionIcon>
                     </controls:SettingsCard>
                     <controls:SettingsCard
+                        ActionIcon="{fluent:SymbolIcon Symbol=Open}"
                         Click="NavigateUriClicked"
                         Description="TagsTree"
                         Header="仓库"
-                        HeaderIcon="Library"
+                        HeaderIcon="{fluent:SymbolIcon Symbol=Box}"
                         IsClickEnabled="True"
-                        Tag="{x:Bind rs:ConstantStrings.RepositoryUri}">
-                        <controls:SettingsCard.ActionIcon>
-                            <FontIcon Glyph="&#xE8A7;" />
-                        </controls:SettingsCard.ActionIcon>
-                    </controls:SettingsCard>
+                        Tag="{x:Bind rs:ConstantStrings.RepositoryUri}" />
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
             <controls:SettingsCard
+                ActionIcon="{fluent:SymbolIcon Symbol=Open}"
                 Click="NavigateUriClicked"
                 Description="GNU General Public License v3.0"
                 Header="License"
+                HeaderIcon="{fluent:SymbolIcon Symbol=CheckmarkStarburst}"
                 IsClickEnabled="True"
-                Tag="{x:Bind rs:ConstantStrings.LicenseUri}">
-                <controls:SettingsCard.HeaderIcon>
-                    <PathIcon Data="{x:Bind rs:ConstantStrings.GnuSvgPath}" />
-                </controls:SettingsCard.HeaderIcon>
-                <controls:SettingsCard.ActionIcon>
-                    <FontIcon Glyph="&#xE8A7;" />
-                </controls:SettingsCard.ActionIcon>
-            </controls:SettingsCard>
+                Tag="{x:Bind rs:ConstantStrings.LicenseUri}" />
         </StackPanel>
-    </ScrollViewer>
+    </ScrollView>
 </Page>

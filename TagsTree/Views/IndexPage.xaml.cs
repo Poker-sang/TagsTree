@@ -16,7 +16,7 @@ public sealed partial class IndexPage : Page, ITypeGetter
 
     #region 事件处理
 
-    private void QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e) => App.MainWindow.GotoPage<TagSearchFilesPage>(TagSearchBox.Text);
+    private static void QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e) => App.MainWindow.GotoPage<TagSearchFilesPage>(e.QueryText);
 
     #endregion
 }
