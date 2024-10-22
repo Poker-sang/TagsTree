@@ -32,7 +32,7 @@
                         <MenuFlyoutItem
                             x:Name="SelectFiles"
                             IsEnabled="{x:Bind _vm.Processed, Mode=OneWay}"
-                            Tapped="ImportTapped"
+                            Click="ImportClicked"
                             Text="文件">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE7C3;" />
@@ -41,7 +41,7 @@
                         <MenuFlyoutItem
                             x:Name="SelectFolders"
                             IsEnabled="{x:Bind _vm.Processed, Mode=OneWay}"
-                            Tapped="ImportTapped"
+                            Click="ImportClicked"
                             Text="文件夹">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE8B7;" />
@@ -59,7 +59,7 @@
                         <MenuFlyoutItem
                             x:Name="PathFiles"
                             IsEnabled="{x:Bind _vm.Processed, Mode=OneWay}"
-                            Tapped="ImportTapped"
+                            Click="ImportClicked"
                             Text="文件">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE7C3;" />
@@ -68,7 +68,7 @@
                         <MenuFlyoutItem
                             x:Name="PathFolders"
                             IsEnabled="{x:Bind _vm.Processed, Mode=OneWay}"
-                            Tapped="ImportTapped"
+                            Click="ImportClicked"
                             Text="文件夹">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE8B7;" />
@@ -77,7 +77,7 @@
                         <MenuFlyoutItem
                             x:Name="PathBoth"
                             IsEnabled="{x:Bind _vm.Processed, Mode=OneWay}"
-                            Tapped="ImportTapped"
+                            Click="ImportClicked"
                             Text="全部">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE8A9;" />
@@ -90,18 +90,18 @@
                 x:Name="All"
                 Icon="SelectAll"
                 IsEnabled="{x:Bind _vm.Processed, Mode=OneWay}"
-                Tapped="ImportTapped"
+                Click="ImportClicked"
                 ToolTipService.ToolTip="全部引入：引入选择的目录下所有深度所有文件" />
             <AppBarSeparator />
             <AppBarButton
                 Icon="Delete"
                 IsEnabled="{x:Bind _vm.DeleteSaveEnabled, Mode=OneWay}"
-                Tapped="DeleteTapped"
+                Click="DeleteClicked"
                 ToolTipService.ToolTip="清空" />
             <AppBarButton
                 Icon="Save"
                 IsEnabled="{x:Bind _vm.DeleteSaveEnabled, Mode=OneWay}"
-                Tapped="SaveTapped"
+                Click="SaveClicked"
                 ToolTipService.ToolTip="保存" />
         </CommandBar>
         <ProgressBar
@@ -126,7 +126,7 @@
                             <MenuFlyout>
                                 <MenuFlyoutItem
                                     Icon="Remove"
-                                    Tapped="ContextDeleteTapped"
+                                    Click="ContextDeleteClicked"
                                     Text="移除" />
                             </MenuFlyout>
                         </Setter.Value>

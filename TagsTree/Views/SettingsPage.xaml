@@ -63,14 +63,14 @@
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard
                         ActionIcon="Save"
+                        Click="LibraryPathSaved"
                         Header="记得点击右侧保存噢x"
-                        IsClickEnabled="True"
-                        Tapped="LibraryPathSaved">
+                        IsClickEnabled="True">
                         <controls:SettingsCard.Description>
                             <AutoSuggestBox
                                 PlaceholderText="{x:Bind Vm.LibraryPath, Mode=OneWay}"
                                 QueryIcon="More"
-                                QuerySubmitted="LibraryPathTapped" />
+                                QuerySubmitted="LibraryPathClicked" />
                         </controls:SettingsCard.Description>
                     </controls:SettingsCard>
                 </controls:SettingsExpander.Items>
@@ -93,18 +93,18 @@
                 HeaderIcon="Switch">
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard
+                        Click="ImportClicked"
                         Header="导入"
                         HeaderIcon="Import"
-                        IsClickEnabled="True"
-                        Tapped="ImportTapped">
+                        IsClickEnabled="True">
                         <controls:SettingsCard.ActionIcon>
                             <FontIcon Glyph="&#xE8A7;" />
                         </controls:SettingsCard.ActionIcon>
                     </controls:SettingsCard>
                     <controls:SettingsCard
+                        Click="ExportClicked"
                         Header="导出"
-                        IsClickEnabled="True"
-                        Tapped="ExportTapped">
+                        IsClickEnabled="True">
                         <controls:SettingsCard.HeaderIcon>
                             <FontIcon Glyph="&#xEA52;" />
                         </controls:SettingsCard.HeaderIcon>
@@ -113,11 +113,11 @@
                         </controls:SettingsCard.ActionIcon>
                     </controls:SettingsCard>
                     <controls:SettingsCard
+                        Click="OpenDirectoryClicked"
                         Description="{x:Bind root:AppContext.AppLocalFolder}"
                         Header="打开"
                         HeaderIcon="OpenLocal"
-                        IsClickEnabled="True"
-                        Tapped="OpenDirectoryTapped">
+                        IsClickEnabled="True">
                         <controls:SettingsCard.ActionIcon>
                             <FontIcon Glyph="&#xE8A7;" />
                         </controls:SettingsCard.ActionIcon>
@@ -133,9 +133,9 @@
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard
                         ActionIcon="Important"
+                        Click="SetDefaultAppConfigClicked"
                         Header="确认"
-                        IsClickEnabled="True"
-                        Tapped="SetDefaultAppConfigTapped" />
+                        IsClickEnabled="True" />
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
             <!--  关于  -->
@@ -146,23 +146,23 @@
                 </controls:SettingsExpander.HeaderIcon>
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard
+                        Click="NavigateUriClicked"
                         Description="poker_sang@outlook.com"
                         Header="邮箱"
                         HeaderIcon="Mail"
                         IsClickEnabled="True"
-                        Tag="{x:Bind rs:ConstantStrings.MailUri}"
-                        Tapped="NavigateUriTapped">
+                        Tag="{x:Bind rs:ConstantStrings.MailUri}">
                         <!--<PathIcon Data="{x:Bind rs:ConstantStrings.OutlookSvgPath}" />显示不正确不知道为什么-->
                         <controls:SettingsCard.ActionIcon>
                             <FontIcon Glyph="&#xE8A7;" />
                         </controls:SettingsCard.ActionIcon>
                     </controls:SettingsCard>
                     <controls:SettingsCard
+                        Click="NavigateUriClicked"
                         Description="扑克"
                         Header="作者"
                         IsClickEnabled="True"
-                        Tag="{x:Bind rs:ConstantStrings.AuthorUri}"
-                        Tapped="NavigateUriTapped">
+                        Tag="{x:Bind rs:ConstantStrings.AuthorUri}">
                         <controls:SettingsCard.HeaderIcon>
                             <PathIcon Data="{x:Bind rs:ConstantStrings.GitHubSvgPath}" />
                         </controls:SettingsCard.HeaderIcon>
@@ -171,11 +171,11 @@
                         </controls:SettingsCard.ActionIcon>
                     </controls:SettingsCard>
                     <controls:SettingsCard
+                        Click="NavigateUriClicked"
                         Description="2639914082"
                         Header="QQ"
                         IsClickEnabled="True"
-                        Tag="{x:Bind rs:ConstantStrings.QqUri}"
-                        Tapped="NavigateUriTapped">
+                        Tag="{x:Bind rs:ConstantStrings.QqUri}">
                         <controls:SettingsCard.HeaderIcon>
                             <PathIcon Data="{x:Bind rs:ConstantStrings.QqSvgPath}" />
                         </controls:SettingsCard.HeaderIcon>
@@ -184,12 +184,12 @@
                         </controls:SettingsCard.ActionIcon>
                     </controls:SettingsCard>
                     <controls:SettingsCard
+                        Click="NavigateUriClicked"
                         Description="TagsTree"
                         Header="仓库"
                         HeaderIcon="Library"
                         IsClickEnabled="True"
-                        Tag="{x:Bind rs:ConstantStrings.RepositoryUri}"
-                        Tapped="NavigateUriTapped">
+                        Tag="{x:Bind rs:ConstantStrings.RepositoryUri}">
                         <controls:SettingsCard.ActionIcon>
                             <FontIcon Glyph="&#xE8A7;" />
                         </controls:SettingsCard.ActionIcon>
@@ -197,11 +197,11 @@
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
             <controls:SettingsCard
+                Click="NavigateUriClicked"
                 Description="GNU General Public License v3.0"
                 Header="License"
                 IsClickEnabled="True"
-                Tag="{x:Bind rs:ConstantStrings.LicenseUri}"
-                Tapped="NavigateUriTapped">
+                Tag="{x:Bind rs:ConstantStrings.LicenseUri}">
                 <controls:SettingsCard.HeaderIcon>
                     <PathIcon Data="{x:Bind rs:ConstantStrings.GnuSvgPath}" />
                 </controls:SettingsCard.HeaderIcon>

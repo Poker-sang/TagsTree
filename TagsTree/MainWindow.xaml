@@ -12,6 +12,7 @@
         <Border
             x:Name="TitleBar"
             Height="{x:Bind NavigationView.CompactPaneLength}"
+            Margin="48,0,0,0"
             VerticalAlignment="Top"
             IsHitTestVisible="True">
             <StackPanel

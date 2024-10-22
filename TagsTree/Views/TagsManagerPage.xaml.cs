@@ -50,7 +50,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
 
     private void TagsOnItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs e) => _vm.Path = (e.InvokedItem as TagViewModel)?.FullName ?? _vm.Path;
 
-    private void NewTapped(object sender, TappedRoutedEventArgs e)
+    private void NewClicked(object sender, RoutedEventArgs e)
     {
         if (ExistenceCheck(_vm.Path, "标签路径") is not { } pathTagModel)
             return;
@@ -66,7 +66,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
         _vm.Name = "";
     }
 
-    private void MoveTapped(object sender, TappedRoutedEventArgs e)
+    private void MoveClicked(object sender, RoutedEventArgs e)
     {
         if (ExistenceCheck(_vm.Path, "标签路径") is not { } pathTagModel)
             return;
@@ -78,7 +78,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
         _vm.Name = "";
     }
 
-    private void RenameTapped(object sender, TappedRoutedEventArgs e)
+    private void RenameClicked(object sender, RoutedEventArgs e)
     {
         if (_vm.Path is "")
         {
@@ -101,7 +101,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
         _vm.Path = "";
     }
 
-    private void DeleteTapped(object sender, TappedRoutedEventArgs e)
+    private void DeleteClicked(object sender, RoutedEventArgs e)
     {
         if (_vm.Path is "")
         {
@@ -116,7 +116,7 @@ public partial class TagsManagerPage : Page, ITypeGetter
         _vm.Name = "";
     }
 
-    private async void SaveTapped(object sender, TappedRoutedEventArgs e)
+    private async void SaveClicked(object sender, RoutedEventArgs e)
     {
         await Task.Yield();
         AppContext.Tags = _vm.TagsSource;
@@ -132,34 +132,34 @@ public partial class TagsManagerPage : Page, ITypeGetter
         this.CreateTeachingTip().ShowAndHide("已保存");
     }
 
-    private async void ContextNewTapped(object sender, TappedRoutedEventArgs e)
+    private async void ContextNewClicked(object sender, RoutedEventArgs e)
     {
         InputName.Load($"新建子标签 {sender.To<FrameworkElement>().GetTag<TagViewModel>().Name}", cd => NewTagCheck(cd.Text), FileSystemHelper.InvalidMode.Name);
         if (!await InputName.ShowAsync())
             NewTag(InputName.Text, sender.To<FrameworkElement>().GetTag<TagViewModel>());
     }
 
-    private async void RootContextNewTapped(object sender, TappedRoutedEventArgs e)
+    private async void RootContextNewClicked(object sender, RoutedEventArgs e)
     {
         InputName.Load("新建根标签", cd => NewTagCheck(cd.Text), FileSystemHelper.InvalidMode.Name);
         if (!await InputName.ShowAsync())
             NewTag(InputName.Text, _vm.TagsSource.TagsTree);
     }
 
-    private void ContextCutTapped(object sender, TappedRoutedEventArgs e) => _vm.ClipBoard = sender.To<FrameworkElement>().GetTag<TagViewModel>();
+    private void ContextCutClicked(object sender, RoutedEventArgs e) => _vm.ClipBoard = sender.To<FrameworkElement>().GetTag<TagViewModel>();
 
-    private async void ContextRenameTapped(object sender, TappedRoutedEventArgs e)
+    private async void ContextRenameClicked(object sender, RoutedEventArgs e)
     {
         InputName.Load($"标签重命名 {sender.To<FrameworkElement>().GetTag<TagViewModel>().Name}", cd => NewTagCheck(cd.Text), FileSystemHelper.InvalidMode.Name);
         if (!await InputName.ShowAsync())
             RenameTag(InputName.Text, sender.To<FrameworkElement>().GetTag<TagViewModel>());
     }
 
-    private void ContextPasteTapped(object sender, TappedRoutedEventArgs e) => MoveTag(_vm.ClipBoard!, sender.To<FrameworkElement>().GetTag<TagViewModel>());
+    private void ContextPasteClicked(object sender, RoutedEventArgs e) => MoveTag(_vm.ClipBoard!, sender.To<FrameworkElement>().GetTag<TagViewModel>());
 
-    private void RootContextPasteTapped(object sender, TappedRoutedEventArgs e) => MoveTag(_vm.ClipBoard!, _vm.TagsSource.TagsTree);
+    private void RootContextPasteClicked(object sender, RoutedEventArgs e) => MoveTag(_vm.ClipBoard!, _vm.TagsSource.TagsTree);
 
-    private void ContextDeleteTapped(object sender, TappedRoutedEventArgs e) => DeleteTag(sender.To<FrameworkElement>().GetTag<TagViewModel>());
+    private void ContextDeleteClicked(object sender, RoutedEventArgs e) => DeleteTag(sender.To<FrameworkElement>().GetTag<TagViewModel>());
 
     #endregion
 

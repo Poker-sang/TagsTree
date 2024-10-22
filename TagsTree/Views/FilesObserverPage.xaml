@@ -21,11 +21,11 @@
             <AppBarButton
                 Icon="Remove"
                 IsEnabled="{x:Bind _vm.IsMultipleItems, Mode=OneWay}"
-                Tapped="DeleteRangeTapped"
+                Click="DeleteRangeClicked"
                 ToolTipService.ToolTip="删除范围" />
             <AppBarButton
                 IsEnabled="{x:Bind _vm.IsListNotEmpty, Mode=OneWay}"
-                Tapped="MergeAllTapped"
+                Click="MergeAllClicked"
                 ToolTipService.ToolTip="合并全部">
                 <AppBarButton.Icon>
                     <FontIcon Glyph="&#xEA3C;" />
@@ -34,18 +34,18 @@
             <AppBarButton
                 Icon="Accept"
                 IsEnabled="{x:Bind _vm.IsListNotEmpty, Mode=OneWay}"
-                Tapped="ApplyAllTapped"
+                Click="ApplyAllClicked"
                 ToolTipService.ToolTip="应用全部更改" />
             <AppBarButton
                 Icon="Delete"
                 IsEnabled="{x:Bind _vm.IsListNotEmpty, Mode=OneWay}"
-                Tapped="DeleteAllTapped"
+                Click="DeleteAllClicked"
                 ToolTipService.ToolTip="清除全部" />
             <AppBarSeparator />
             <AppBarButton
                 Icon="Save"
                 IsEnabled="{x:Bind _vm.IsSaveEnabled, Mode=OneWay}"
-                Tapped="SaveAllTapped"
+                Click="SaveAllClicked"
                 ToolTipService.ToolTip="暂存更改" />
         </CommandBar>
         <uiControls:DataGrid
@@ -59,19 +59,19 @@
                         <AppBarButton
                             Icon="Accept"
                             Label="应用本条"
-                            Tapped="ContextApplyTapped" />
+                            Click="ContextApplyClicked" />
                         <AppBarButton
                             Icon="Remove"
                             Label="删除本条"
-                            Tapped="ContextDeleteTapped" />
+                            Click="ContextDeleteClicked" />
                         <AppBarButton
                             Icon="Upload"
                             Label="删除本条及更小序号项"
-                            Tapped="ContextDeleteBeforeTapped" />
+                            Click="ContextDeleteBeforeClicked" />
                         <AppBarButton
                             Icon="Download"
                             Label="删除本条及更大序号项"
-                            Tapped="ContextDeleteAfterTapped" />
+                            Click="ContextDeleteAfterClicked" />
                     </CommandBar>
                 </DataTemplate>
             </uiControls:DataGrid.RowDetailsTemplate>
@@ -150,7 +150,7 @@
             Grid.RowSpan="2"
             CloseButtonText="取消"
             DefaultButton="Close"
-            PrimaryButtonClick="DeleteRangeConfirmTapped"
+            PrimaryButtonClick="DeleteRangeConfirmClicked"
             PrimaryButtonText="确认">
             <controls:RangeSelector
                 Maximum="{x:Bind local:FilesObserverPage.Vm.LastId, Mode=OneWay}"

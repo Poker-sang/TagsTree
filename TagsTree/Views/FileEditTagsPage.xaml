@@ -18,9 +18,9 @@
             DefaultLabelPosition="Collapsed"
             OverflowButtonVisibility="Collapsed">
             <AppBarButton
+                Click="SaveClicked"
                 Icon="Save"
                 IsEnabled="{x:Bind _vm.IsSaveEnabled, Mode=OneWay}"
-                Tapped="SaveTapped"
                 ToolTipService.ToolTip="保存" />
         </CommandBar>
         <Grid Grid.Row="1">
@@ -37,7 +37,7 @@
                 <TreeView.ItemTemplate>
                     <DataTemplate x:DataType="viewModels:TagViewModel">
                         <TreeViewItem
-                            DoubleTapped="AddTagTapped"
+                            DoubleTapped="AddTagClicked"
                             ItemsSource="{x:Bind SubTags}"
                             Tag="{x:Bind}"
                             ToolTipService.ToolTip="{x:Bind FullName}">
@@ -53,7 +53,7 @@
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="viewModels:TagViewModel">
                         <ListViewItem
-                            DoubleTapped="DeleteTagTapped"
+                            DoubleTapped="DeleteTagClicked"
                             Tag="{x:Bind}"
                             ToolTipService.ToolTip="{x:Bind FullName}">
                             <TextBlock Text="{x:Bind Name}" />

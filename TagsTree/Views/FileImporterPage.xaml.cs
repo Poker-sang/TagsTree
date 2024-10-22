@@ -24,7 +24,7 @@ public partial class FileImporterPage : Page, ITypeGetter
 
     #region 事件处理
 
-    private async void ImportTapped(object sender, TappedRoutedEventArgs e)
+    private async void ImportClicked(object sender, RoutedEventArgs e)
     {
         _vm.Processing = true;
         await Task.Yield();
@@ -97,9 +97,9 @@ public partial class FileImporterPage : Page, ITypeGetter
         _vm.Processing = false;
     }
 
-    private void DeleteTapped(object sender, TappedRoutedEventArgs e) => _vm.FileViewModels.Clear();
+    private void DeleteClicked(object sender, RoutedEventArgs e) => _vm.FileViewModels.Clear();
 
-    private void SaveTapped(object sender, TappedRoutedEventArgs e)
+    private void SaveClicked(object sender, RoutedEventArgs e)
     {
         var saved = 0;
         _vm.Processing = true;
@@ -122,7 +122,7 @@ public partial class FileImporterPage : Page, ITypeGetter
         _vm.FileViewModels.Clear();
     }
 
-    private void ContextDeleteTapped(object sender, TappedRoutedEventArgs e)
+    private void ContextDeleteClicked(object sender, RoutedEventArgs e)
     {
         foreach (var fileViewModel in FileImporterDataGird.SelectedItems.Cast<FileViewModel>())
             _ = _vm.FileViewModels.Remove(fileViewModel);

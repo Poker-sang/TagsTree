@@ -9,6 +9,7 @@ using TagsTree.Services;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.Views.ViewModels;
 using Windows.ApplicationModel.DataTransfer;
+using Microsoft.UI.Xaml;
 using WinUI3Utilities;
 
 namespace TagsTree.Views;
@@ -23,20 +24,20 @@ public partial class FilePropertiesPage : Page
 
     protected override void OnNavigatedTo(NavigationEventArgs e) => _vm.FileViewModel = e.Parameter.To<FileViewModel>();
 
-    private void OpenTapped(object sender, TappedRoutedEventArgs e) => _vm.FileViewModel.Open();
+    private void OpenClicked(object sender, RoutedEventArgs e) => _vm.FileViewModel.Open();
 
-    private void OpenExplorerTapped(object sender, TappedRoutedEventArgs e) => _vm.FileViewModel.OpenDirectory();
+    private void OpenExplorerClicked(object sender, RoutedEventArgs e) => _vm.FileViewModel.OpenDirectory();
 
-    private void EditTagsTapped(object sender, TappedRoutedEventArgs e) => App.MainWindow.GotoPage<FileEditTagsPage>(_vm.FileViewModel);
+    private void EditTagsClicked(object sender, RoutedEventArgs e) => App.MainWindow.GotoPage<FileEditTagsPage>(_vm.FileViewModel);
 
-    private async void RemoveTapped(object sender, TappedRoutedEventArgs e)
+    private async void RemoveClicked(object sender, RoutedEventArgs e)
     {
         if (!await ShowContentDialog.Warning("是否从软件移除该文件？"))
             return;
         Remove(_vm.FileViewModel);
     }
 
-    private async void RenameTapped(object sender, TappedRoutedEventArgs e)
+    private async void RenameClicked(object sender, RoutedEventArgs e)
     {
         InputName.Load($"文件重命名 {_vm.FileViewModel.Name}", cd =>
         {
@@ -61,7 +62,7 @@ public partial class FilePropertiesPage : Page
         _vm.RaiseOnPropertyChanged();
     }
 
-    private async void MoveTapped(object sender, TappedRoutedEventArgs e)
+    private async void MoveClicked(object sender, RoutedEventArgs e)
     {
         if (await App.MainWindow.PickSingleFolderAsync() is not { } folder)
             return;
@@ -89,7 +90,7 @@ public partial class FilePropertiesPage : Page
         _vm.RaiseOnPropertyChanged();
     }
 
-    private async void DeleteTapped(object sender, TappedRoutedEventArgs e)
+    private async void DeleteClicked(object sender, RoutedEventArgs e)
     {
         if (!await ShowContentDialog.Warning("是否删除该文件？"))
             return;
@@ -97,7 +98,7 @@ public partial class FilePropertiesPage : Page
         Remove(_vm.FileViewModel);
     }
 
-    private void CopyTapped(object sender, TappedRoutedEventArgs e)
+    private void CopyClicked(object sender, RoutedEventArgs e)
     {
         var dataPackage = new DataPackage();
         dataPackage.SetText(sender.To<SettingsCard>().Header.To<string>());

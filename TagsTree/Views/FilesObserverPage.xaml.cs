@@ -29,7 +29,7 @@ public sealed partial class FilesObserverPage : Page, ITypeGetter
 
     #region 事件处理
 
-    private async void ContextApplyTapped(object sender, TappedRoutedEventArgs e)
+    private async void ContextApplyClicked(object sender, RoutedEventArgs e)
     {
         var fileChanged = sender.To<FrameworkElement>().GetDataContext<FileChanged>();
         if (FileViewModel.IsValidPath(fileChanged.Path))
@@ -56,13 +56,13 @@ public sealed partial class FilesObserverPage : Page, ITypeGetter
         this.CreateTeachingTip().ShowAndHide("已应用一项并保存");
     }
 
-    private void ContextDeleteTapped(object sender, TappedRoutedEventArgs e)
+    private void ContextDeleteClicked(object sender, RoutedEventArgs e)
     {
         _ = _vm.FilesChangedList.Remove(sender.To<FrameworkElement>().GetDataContext<FileChanged>());
         this.CreateTeachingTip().ShowAndHide("已删除一项");
     }
 
-    private void ContextDeleteBeforeTapped(object sender, TappedRoutedEventArgs e)
+    private void ContextDeleteBeforeClicked(object sender, RoutedEventArgs e)
     {
         if (sender.To<FrameworkElement>().GetDataContext<FileChanged>() == _vm.FilesChangedList[^1])
         {
@@ -76,7 +76,7 @@ public sealed partial class FilesObserverPage : Page, ITypeGetter
         this.CreateTeachingTip().ShowAndHide($"已删除序号{id}及之前项");
     }
 
-    private void ContextDeleteAfterTapped(object sender, TappedRoutedEventArgs e)
+    private void ContextDeleteAfterClicked(object sender, RoutedEventArgs e)
     {
         if (sender.To<FrameworkElement>().GetDataContext<FileChanged>() == _vm.FilesChangedList[0])
         {
@@ -90,7 +90,7 @@ public sealed partial class FilesObserverPage : Page, ITypeGetter
         this.CreateTeachingTip().ShowAndHide($"已删除序号{id}及之后项");
     }
 
-    private void DeleteRangeConfirmTapped(ContentDialog sender, ContentDialogButtonClickEventArgs e)
+    private void DeleteRangeConfirmClicked(ContentDialog sender, ContentDialogButtonClickEventArgs e)
     {
         var rs = sender.Content.To<RangeSelector>();
         var count = 0;
@@ -108,9 +108,9 @@ public sealed partial class FilesObserverPage : Page, ITypeGetter
         this.CreateTeachingTip().ShowAndHide($"已删除{count}项");
     }
 
-    private async void DeleteRangeTapped(object sender, TappedRoutedEventArgs e) => await CdDeleteRange.ShowAsync();
+    private async void DeleteRangeClicked(object sender, RoutedEventArgs e) => await CdDeleteRange.ShowAsync();
 
-    private async void ApplyAllTapped(object sender, TappedRoutedEventArgs e)
+    private async void ApplyAllClicked(object sender, RoutedEventArgs e)
     {
         MergeAll();
         var nameFile = new Dictionary<string, FileModel>();
@@ -158,21 +158,21 @@ public sealed partial class FilesObserverPage : Page, ITypeGetter
         this.CreateTeachingTip().ShowAndHide("已全部应用并保存");
     }
 
-    private void MergeAllTapped(object sender, TappedRoutedEventArgs e)
+    private void MergeAllClicked(object sender, RoutedEventArgs e)
     {
         MergeAll();
         Save();
         this.CreateTeachingTip().ShowAndHide("已全部合并并保存");
     }
 
-    private void DeleteAllTapped(object sender, TappedRoutedEventArgs e)
+    private void DeleteAllClicked(object sender, RoutedEventArgs e)
     {
         ClearAll();
         Save();
         this.CreateTeachingTip().ShowAndHide("已全部清除并保存");
     }
 
-    private void SaveAllTapped(object sender, TappedRoutedEventArgs e)
+    private void SaveAllClicked(object sender, RoutedEventArgs e)
     {
         Save();
         this.CreateTeachingTip().ShowAndHide("已保存");

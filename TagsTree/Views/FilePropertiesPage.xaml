@@ -20,35 +20,35 @@
             <AppBarButton
                 Icon="OpenFile"
                 IsEnabled="{x:Bind _vm.FileViewModel.Exists, Mode=OneWay}"
-                Tapped="OpenTapped"
+                Click="OpenClicked"
                 ToolTipService.ToolTip="打开" />
             <AppBarButton
                 Icon="OpenLocal"
-                Tapped="OpenExplorerTapped"
+                Click="OpenExplorerClicked"
                 ToolTipService.ToolTip="打开文件夹" />
             <AppBarButton
                 Icon="Remove"
-                Tapped="RemoveTapped"
+                Click="RemoveClicked"
                 ToolTipService.ToolTip="移除" />
             <AppBarButton
                 Icon="Edit"
-                Tapped="EditTagsTapped"
+                Click="EditTagsClicked"
                 ToolTipService.ToolTip="更改标签" />
             <AppBarSeparator />
             <AppBarButton
                 Icon="Rename"
                 IsEnabled="{x:Bind _vm.FileViewModel.Exists, Mode=OneWay}"
-                Tapped="RenameTapped"
+                Click="RenameClicked"
                 ToolTipService.ToolTip="重命名" />
             <AppBarButton
                 Icon="MoveToFolder"
                 IsEnabled="{x:Bind _vm.FileViewModel.Exists, Mode=OneWay}"
-                Tapped="MoveTapped"
+                Click="MoveClicked"
                 ToolTipService.ToolTip="移动" />
             <AppBarButton
                 Icon="Delete"
                 IsEnabled="{x:Bind _vm.FileViewModel.Exists, Mode=OneWay}"
-                Tapped="DeleteTapped"
+                Click="DeleteClicked"
                 ToolTipService.ToolTip="删除" />
         </CommandBar>
         <ScrollViewer Grid.Row="1">
@@ -63,28 +63,28 @@
                         Description="名称"
                         Header="{x:Bind _vm.FileViewModel.Name, Mode=OneWay}"
                         IsClickEnabled="True"
-                        Tapped="CopyTapped" />
+                        Click="CopyClicked" />
                     <uiControls:SettingsCard
                         ActionIcon="Copy"
                         ActionIconToolTip="复制到剪切板"
                         Description="路径"
                         Header="{x:Bind _vm.FileViewModel.PartialPath, Mode=OneWay}"
                         IsClickEnabled="True"
-                        Tapped="CopyTapped" />
+                        Click="CopyClicked" />
                     <uiControls:SettingsCard
                         ActionIcon="Copy"
                         ActionIconToolTip="复制到剪切板"
                         Description="类型"
                         Header="{x:Bind _vm.FileViewModel.Extension, Mode=OneWay}"
                         IsClickEnabled="True"
-                        Tapped="CopyTapped" />
+                        Click="CopyClicked" />
                     <uiControls:SettingsCard
                         ActionIcon="Copy"
                         ActionIconToolTip="复制到剪切板"
                         Description="标签"
                         Header="{x:Bind _vm.FileViewModel.Tags, Mode=OneWay}"
                         IsClickEnabled="True"
-                        Tapped="CopyTapped" />
+                        Click="CopyClicked" />
                     <uiControls:SettingsCard
                         ActionIcon="Copy"
                         ActionIconToolTip="复制到剪切板"
@@ -92,7 +92,7 @@
                         Header="{x:Bind _vm.FileViewModel.DateOfModification, Mode=OneWay}"
                         IsClickEnabled="True"
                         IsEnabled="{x:Bind _vm.FileViewModel.Exists, Mode=OneWay}"
-                        Tapped="CopyTapped" />
+                        Click="CopyClicked" />
                     <uiControls:SettingsCard
                         ActionIcon="Copy"
                         ActionIconToolTip="复制到剪切板"
@@ -100,7 +100,7 @@
                         Header="{x:Bind _vm.FileViewModel.Size, Mode=OneWay}"
                         IsClickEnabled="True"
                         IsEnabled="{x:Bind _vm.FileViewModel.Exists, Mode=OneWay}"
-                        Tapped="CopyTapped" />
+                        Click="CopyClicked" />
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>

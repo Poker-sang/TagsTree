@@ -1,4 +1,5 @@
 using System;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using TagsTree.Interfaces;
@@ -21,7 +22,7 @@ public partial class SelectTagToEditPage : Page, ITypeGetter
 
     private void TagsOnItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs e) => _vm.Path = e.InvokedItem.To<TagViewModel?>()?.FullName ?? _vm.Path;
 
-    private async void ConfirmTapped(object sender, TappedRoutedEventArgs e)
+    private async void ConfirmClicked(object sender, RoutedEventArgs e)
     {
         if (_vm.Path.GetTagViewModel() is not { } pathTagModel)
         {

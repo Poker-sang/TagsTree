@@ -27,25 +27,25 @@
             OverflowButtonVisibility="Collapsed">
             <AppBarButton
                 Icon="Add"
-                Tapped="NewTapped"
+                Click="NewClicked"
                 ToolTipService.ToolTip="添加" />
             <AppBarButton
                 Icon="MoveToFolder"
-                Tapped="MoveTapped"
+                Click="MoveClicked"
                 ToolTipService.ToolTip="移动" />
             <AppBarButton
                 Icon="Rename"
-                Tapped="RenameTapped"
+                Click="RenameClicked"
                 ToolTipService.ToolTip="重命名" />
             <AppBarButton
                 Icon="Remove"
-                Tapped="DeleteTapped"
+                Click="DeleteClicked"
                 ToolTipService.ToolTip="删除" />
             <AppBarSeparator />
             <AppBarButton
                 Icon="Save"
                 IsEnabled="{x:Bind _vm.IsSaveEnabled, Mode=OneWay}"
-                Tapped="SaveTapped"
+                Click="SaveClicked"
                 ToolTipService.ToolTip="保存" />
         </CommandBar>
         <TextBox
@@ -81,28 +81,28 @@
                                 <MenuFlyoutItem
                                     Icon="Add"
                                     Tag="{x:Bind}"
-                                    Tapped="ContextNewTapped"
+                                    Click="ContextNewClicked"
                                     Text="新建" />
                                 <MenuFlyoutItem
                                     Icon="Cut"
                                     Tag="{x:Bind}"
-                                    Tapped="ContextCutTapped"
+                                    Click="ContextCutClicked"
                                     Text="剪切" />
                                 <MenuFlyoutItem
                                     Icon="Paste"
                                     IsEnabled="{x:Bind local:TagsManagerPage.Current._vm.CanPaste, Mode=OneWay}"
                                     Tag="{x:Bind}"
-                                    Tapped="ContextPasteTapped"
+                                    Click="ContextPasteClicked"
                                     Text="粘贴" />
                                 <MenuFlyoutItem
                                     Icon="Rename"
                                     Tag="{x:Bind}"
-                                    Tapped="ContextRenameTapped"
+                                    Click="ContextRenameClicked"
                                     Text="重命名" />
                                 <MenuFlyoutItem
                                     Icon="Delete"
                                     Tag="{x:Bind}"
-                                    Tapped="ContextDeleteTapped"
+                                    Click="ContextDeleteClicked"
                                     Text="删除" />
                             </MenuFlyout>
                         </TreeViewItem.ContextFlyout>
@@ -113,12 +113,12 @@
                 <MenuFlyout Placement="TopEdgeAlignedLeft">
                     <MenuFlyoutItem
                         Icon="Add"
-                        Tapped="RootContextNewTapped"
+                        Click="RootContextNewClicked"
                         Text="新建" />
                     <MenuFlyoutItem
                         Icon="Paste"
                         IsEnabled="{x:Bind _vm.CanPaste, Mode=OneWay}"
-                        Tapped="RootContextPasteTapped"
+                        Click="RootContextPasteClicked"
                         Text="粘贴" />
                 </MenuFlyout>
             </TreeView.ContextFlyout>

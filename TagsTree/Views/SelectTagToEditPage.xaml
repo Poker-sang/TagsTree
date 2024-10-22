@@ -24,7 +24,7 @@
             OverflowButtonVisibility="Collapsed">
             <AppBarButton
                 Icon="Accept"
-                Tapped="ConfirmTapped"
+                Click="ConfirmClicked"
                 ToolTipService.ToolTip="确定" />
         </CommandBar>
         <controls:TagCompleteBox

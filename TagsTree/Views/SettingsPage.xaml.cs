@@ -1,11 +1,10 @@
 using System;
-using System.Diagnostics;
 using System.IO;
+using Windows.System;
 using CommunityToolkit.WinUI.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using TagsTree.Interfaces;
 using TagsTree.Services.ExtensionMethods;
 using TagsTree.Views.ViewModels;
@@ -32,17 +31,9 @@ public partial class SettingsPage : Page, ITypeGetter
 
     #region 事件处理
 
-    private void NavigateUriTapped(object sender, TappedRoutedEventArgs e)
+    private void NavigateUriClicked(object sender, RoutedEventArgs e)
     {
-        using var process = new Process
-        {
-            StartInfo = new()
-            {
-                FileName = sender.To<FrameworkElement>().GetTag<string>(),
-                UseShellExecute = true
-            }
-        };
-        _ = process.Start();
+        Launcher.LaunchUriAsync(new(sender.To<FrameworkElement>().GetTag<string>()));
     }
 
     private void ThemeChecked(object sender, RoutedEventArgs e)
@@ -60,24 +51,24 @@ public partial class SettingsPage : Page, ITypeGetter
         AppContext.AppConfig.Theme = selectedTheme.To<int>();
     }
 
-    private async void LibraryPathTapped(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e)
+    private async void LibraryPathClicked(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e)
         => sender.Text = (await App.MainWindow.PickSingleFolderAsync())?.Path;
 
-    private async void ExportTapped(object sender, TappedRoutedEventArgs e)
+    private async void ExportClicked(object sender, RoutedEventArgs e)
     {
         if (await App.MainWindow.PickSingleFolderAsync() is { } folder)
             AppContext.AppLocalFolder.Copy(folder.Path);
     }
 
-    private async void ImportTapped(object sender, TappedRoutedEventArgs e)
+    private async void ImportClicked(object sender, RoutedEventArgs e)
     {
         if (await App.MainWindow.PickSingleFolderAsync() is { } folder)
             folder.Path.Copy(AppContext.AppLocalFolder);
     }
 
-    private void OpenDirectoryTapped(object sender, TappedRoutedEventArgs e) => AppContext.AppLocalFolder.Open();
+    private void OpenDirectoryClicked(object sender, RoutedEventArgs e) => AppContext.AppLocalFolder.Open();
 
-    private async void LibraryPathSaved(object sender, TappedRoutedEventArgs e)
+    private async void LibraryPathSaved(object sender, RoutedEventArgs e)
     {
         var asb = sender.To<SettingsCard>().Description.To<AutoSuggestBox>();
         if (!Directory.Exists(asb.Text))
@@ -95,7 +86,7 @@ public partial class SettingsPage : Page, ITypeGetter
         await App.MainWindow.ConfigIsSet();
     }
 
-    private void SetDefaultAppConfigTapped(object sender, TappedRoutedEventArgs e)
+    private void SetDefaultAppConfigClicked(object sender, RoutedEventArgs e)
     {
         AppContext.SetDefaultAppConfig();
         OnPropertyChanged(nameof(Vm));

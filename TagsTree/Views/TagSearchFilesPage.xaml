@@ -38,10 +38,10 @@
                     <Setter Property="ContextFlyout">
                         <Setter.Value>
                             <MenuFlyout>
-                                <MenuFlyoutItem Tapped="ContextOpenTapped" Text="打开" />
-                                <MenuFlyoutItem Tapped="ContextOpenExplorerTapped" Text="打开文件夹" />
-                                <MenuFlyoutItem Tapped="ContextRemoveTapped" Text="移除" />
-                                <MenuFlyoutItem Tapped="ContextPropertiesTapped" Text="属性" />
+                                <MenuFlyoutItem Click="ContextOpenClicked" Text="打开" />
+                                <MenuFlyoutItem Click="ContextOpenExplorerClicked" Text="打开文件夹" />
+                                <MenuFlyoutItem Click="ContextRemoveClicked" Text="移除" />
+                                <MenuFlyoutItem Click="ContextPropertiesClicked" Text="属性" />
                             </MenuFlyout>
                         </Setter.Value>
                     </Setter>

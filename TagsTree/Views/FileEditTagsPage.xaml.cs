@@ -22,7 +22,7 @@ public partial class FileEditTagsPage : Page
 
     #region 事件处理
 
-    private async void AddTagTapped(object sender, DoubleTappedRoutedEventArgs e)
+    private async void AddTagClicked(object sender, DoubleTappedRoutedEventArgs e)
     {
         var newTag = sender.To<FrameworkElement>().GetTag<TagViewModel>();
         foreach (var tagExisted in _vm.VirtualTags)
@@ -52,13 +52,13 @@ public partial class FileEditTagsPage : Page
         _vm.IsSaveEnabled = true;
     }
 
-    private void DeleteTagTapped(object sender, DoubleTappedRoutedEventArgs e)
+    private void DeleteTagClicked(object sender, DoubleTappedRoutedEventArgs e)
     {
         _ = _vm.VirtualTags.Remove(sender.To<FrameworkElement>().GetTag<TagViewModel>());
         _vm.IsSaveEnabled = true;
     }
 
-    private void SaveTapped(object sender, TappedRoutedEventArgs e)
+    private void SaveClicked(object sender, RoutedEventArgs e)
     {
         foreach (var tag in AppContext.Tags.TagsDictionaryValues)
             AppContext.Relations[tag.Id, _vm.FileViewModel.Id] = _vm.VirtualTags.Contains(tag);

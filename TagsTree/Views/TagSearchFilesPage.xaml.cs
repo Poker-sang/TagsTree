@@ -36,11 +36,11 @@ public partial class TagSearchFilesPage : Page
 
     private void QuerySubmitted(AutoSuggestBox autoSuggestBox, AutoSuggestBoxQuerySubmittedEventArgs e) => _vm.FileViewModels = autoSuggestBox.Text is "" ? _vm.ResultCallBack : RelationsDataTable.FuzzySearchName(autoSuggestBox.Text, _vm.ResultCallBack);
 
-    private void ContextOpenTapped(object sender, TappedRoutedEventArgs e) => sender.To<FrameworkElement>().GetDataContext<FileViewModel>().Open();
+    private void ContextOpenClicked(object sender, RoutedEventArgs e) => sender.To<FrameworkElement>().GetDataContext<FileViewModel>().Open();
 
-    private void ContextOpenExplorerTapped(object sender, TappedRoutedEventArgs e) => sender.To<FrameworkElement>().GetDataContext<FileViewModel>().OpenDirectory();
+    private void ContextOpenExplorerClicked(object sender, RoutedEventArgs e) => sender.To<FrameworkElement>().GetDataContext<FileViewModel>().OpenDirectory();
 
-    private async void ContextRemoveTapped(object sender, TappedRoutedEventArgs e)
+    private async void ContextRemoveClicked(object sender, RoutedEventArgs e)
     {
         var fileViewModel = sender.To<FrameworkElement>().GetDataContext<FileViewModel>();
         // 打开确认框会关闭菜单，导致DataContext变为null，所以提前记录
@@ -50,7 +50,7 @@ public partial class TagSearchFilesPage : Page
         _ = _vm.FileViewModels.Remove(fileViewModel);
     }
 
-    private void ContextPropertiesTapped(object sender, TappedRoutedEventArgs e) => App.MainWindow.GotoPage<FilePropertiesPage>(sender.To<FrameworkElement>().GetDataContext<FileViewModel>());
+    private void ContextPropertiesClicked(object sender, RoutedEventArgs e) => App.MainWindow.GotoPage<FilePropertiesPage>(sender.To<FrameworkElement>().GetDataContext<FileViewModel>());
 
     private void ContextPropertiesDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
     {
