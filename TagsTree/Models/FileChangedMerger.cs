@@ -5,13 +5,13 @@ namespace TagsTree.Models;
 
 public class FileChangedMerger
 {
-    private List<FileChanged> Create { get; } = new();
+    private List<FileChanged> Create { get; } = [];
 
-    private List<FileChanged> Move { get; } = new();
+    private List<FileChanged> Move { get; } = [];
 
-    private List<FileChanged> Rename { get; } = new();
+    private List<FileChanged> Rename { get; } = [];
 
-    private List<FileChanged> Delete { get; } = new();
+    private List<FileChanged> Delete { get; } = [];
 
     private bool IsExisted { get; set; } = true;
 

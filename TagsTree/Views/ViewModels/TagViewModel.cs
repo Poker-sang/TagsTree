@@ -30,7 +30,7 @@ public partial class TagViewModel : TagModel
         set => BaseParent = value;
     }
 
-    public ObservableCollection<TagViewModel> SubTags { get; set; } = new();
+    public ObservableCollection<TagViewModel> SubTags { get; set; } = [];
 
     /// <summary>
     /// 反序列化专用，不要调用该构造器

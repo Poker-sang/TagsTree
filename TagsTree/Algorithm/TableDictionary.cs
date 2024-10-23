@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,15 +8,18 @@ namespace TagsTree.Algorithm;
 
 public class TableDictionary<TColumn, TRow> where TColumn : IParsable<TColumn> where TRow : IParsable<TRow>
 {
-    public Dictionary<TColumn, int> Columns = new();
-    public Dictionary<TRow, int> Rows = new();
-    public List<List<bool>> Table = new();
+    public readonly Dictionary<TColumn, int> Columns = [];
+
+    public readonly Dictionary<TRow, int> Rows = [];
+
+    public readonly List<List<bool>> Table = [];
 
     public List<bool> this[TColumn column]
     {
         get => Table[Columns[column]];
         set => Table[Columns[column]] = value;
     }
+
     public bool this[TColumn column, TRow row]
     {
         get => this[column][Rows[row]];
@@ -31,12 +34,14 @@ public class TableDictionary<TColumn, TRow> where TColumn : IParsable<TColumn> w
             temp.Add(false);
         Table.Add(temp);
     }
+
     public void AddRow(TRow row)
     {
         Rows[row] = Rows.Count;
         foreach (var list in Table)
             list.Add(false);
     }
+
     public void RemoveColumn(TColumn column)
     {
         var index = Columns[column];
@@ -46,6 +51,7 @@ public class TableDictionary<TColumn, TRow> where TColumn : IParsable<TColumn> w
             if (value > index)
                 --Columns[key];
     }
+
     public void RemoveRow(TRow row)
     {
         var index = Rows[row];
@@ -72,7 +78,7 @@ public class TableDictionary<TColumn, TRow> where TColumn : IParsable<TColumn> w
             var columns = line.Split(',');
             var column = TColumn.Parse(columns[0], null);
             Columns[column] = Columns.Count;
-            Table.Add(new());
+            Table.Add([]);
             foreach (var c in columns[1])
                 this[column].Add(c is '1');
         }

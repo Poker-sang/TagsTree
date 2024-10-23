@@ -9,7 +9,7 @@ using WinUI3Utilities.Attributes;
 
 namespace TagsTree.Controls;
 
-[DependencyProperty<string>("Text", @"""""")]
+[DependencyProperty<string>("Text", "\"\"")]
 public partial class InputContentDialog : UserControl
 {
     private readonly InputContentDialogViewModels _vm = new();
@@ -37,11 +37,14 @@ public partial class InputContentDialog : UserControl
 
         Text = text;
     }
+
     /// <summary>
     /// 是否取消这次输入
     /// </summary>
     private bool _canceled;
+
     private Func<InputContentDialog, string?> _judge = null!;
+
     private string _invalidRegex = "";
 
     #region 事件处理

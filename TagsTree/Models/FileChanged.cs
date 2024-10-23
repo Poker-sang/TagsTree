@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
 using System.Text.Json.Serialization;
 using TagsTree.Services;
@@ -11,6 +11,7 @@ public class FileChanged : FileBase
     public static int Num { get; set; } = 1;
 
     public ChangedType Type { get; }
+
     public string Remark { get; }
 
     public string DisplayType => Type switch
@@ -21,6 +22,7 @@ public class FileChanged : FileBase
         ChangedType.Delete => nameof(ChangedType.Delete),
         _ => ""
     };
+
     [JsonIgnore]
     public string DisplayRemark => Type switch
     {
@@ -28,6 +30,7 @@ public class FileChanged : FileBase
         ChangedType.Rename => "旧名称：" + Remark,
         _ => Remark
     };
+
     [JsonIgnore]
     public string OldFullName => Type switch
     {
@@ -37,6 +40,7 @@ public class FileChanged : FileBase
     };
 
     public static ObservableCollection<FileChanged> Deserialize(string path) => Serialization.Deserialize<ObservableCollection<FileChanged>>(path);
+
     public static void Serialize(string path, ObservableCollection<FileChanged> collection) => Serialization.Serialize(path, collection);
 
     public enum ChangedType
@@ -56,6 +60,7 @@ public class FileChanged : FileBase
         Type = type;
         Remark = remark;
     }
+
     /// <summary>
     /// 反序列化专用，不要调用该构造器
     /// </summary>

@@ -75,6 +75,7 @@ public class FileModel : FileBase, IFileModel
     [JsonIgnore] public string Extension => IsFolder ? "文件夹" : Name.Split('.', StringSplitOptions.RemoveEmptyEntries)[^1].ToUpper(CultureInfo.CurrentCulture);
 
     [JsonIgnore] public bool Exists => Directory.Exists(FullName) || File.Exists(FullName);
+
     [JsonIgnore]
     public string Tags
     {
@@ -84,6 +85,7 @@ public class FileModel : FileBase, IFileModel
             return tags is "" ? "" : tags[1..];
         }
     }
+
     [JsonIgnore] public IEnumerable<string> PathTags => PartialPath is "..." ? Enumerable.Empty<string>() : PartialPath[4..].Split('\\', StringSplitOptions.RemoveEmptyEntries); //PartialPath不会是空串
 
     public bool PathContains(PathTagModel pathTag) => PartialPath is not "..." && (PartialPath[3..] + "\\").Contains($"\\{pathTag.Name}\\");

@@ -41,16 +41,27 @@ public class FileViewModel : ObservableObject, IFileModel
     #region FileModel
 
     public int Id => FileModel.Id is -1 ? ThrowHelper.Exception<int>() : FileModel.Id;
+
     public string Name => FileModel.Name;
+
     public string Path => FileModel.Path;
+
     public string FullName => FileModel.FullName;
+
     public string Extension => FileModel.Extension;
+
     public bool Exists => FileModel.Exists;
+
     public string Tags => FileModel.Tags;
+
     public IEnumerable<string> PathTags => FileModel.PathTags;
+
     public string PartialPath => FileModel.PartialPath;
+
     public bool IsFolder => FileModel.IsFolder;
+
     public bool PathContains(PathTagModel pathTag) => FileModel.PathContains(pathTag);
+
     public IEnumerable<TagViewModel> GetAncestorTags(TagViewModel parentTag) => FileModel.GetAncestorTags(parentTag);
 
     #endregion
@@ -64,6 +75,7 @@ public class FileViewModel : ObservableObject, IFileModel
             return value;
         }
     }
+
     public ImageSource Icon => this.GetIcon();
 
     public string DateOfModification => FileModel.Exists ? FileSystemInfo.LastWriteTime.ToString(CultureInfo.CurrentCulture) : "";

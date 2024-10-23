@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using TagsTree.Services;
 
 namespace TagsTree.Algorithm;
@@ -8,22 +8,27 @@ namespace TagsTree.Algorithm;
 /// </summary>
 public class BidirectionalDictionary<TKey, TValue> where TKey : notnull where TValue : notnull
 {
-    private readonly Dictionary<TKey, TValue> _dict1 = new();
-    private readonly Dictionary<TValue, TKey> _dict2 = new();
+    private readonly Dictionary<TKey, TValue> _dict1 = [];
+
+    private readonly Dictionary<TValue, TKey> _dict2 = [];
+
     public int Count => _dict1.Count;
+
     public Dictionary<TKey, TValue>.KeyCollection Keys => _dict1.Keys;
+
     public Dictionary<TValue, TKey>.KeyCollection Values => _dict2.Keys;
+
     public TValue this[TKey key]
     {
         get => _dict1[key];
         set
         {
-            if (_dict1.ContainsKey(key))
+            if (!_dict1.TryAdd(key, value))
                 return;
-            _dict1[key] = value;
             _dict2[value] = key;
         }
     }
+
     public TKey this[TValue key]
     {
         get => _dict2[key];
@@ -35,24 +40,29 @@ public class BidirectionalDictionary<TKey, TValue> where TKey : notnull where TV
             _dict2[key] = value;
         }
     }
+
     public bool Contains(TKey key) => _dict1.ContainsKey(key);
+
     public bool Contains(TValue key) => _dict2.ContainsKey(key);
+
     public bool Remove(TKey key)
     {
-        if (!_dict1.ContainsKey(key))
+        if (!_dict1.TryGetValue(key, out var value))
             return false;
-        _ = _dict2.Remove(_dict1[key]);
+        _ = _dict2.Remove(value);
         _ = _dict1.Remove(key);
         return true;
     }
+
     public bool Remove(TValue key)
     {
-        if (!_dict2.ContainsKey(key))
+        if (!_dict2.TryGetValue(key, out var value))
             return false;
-        _ = _dict1.Remove(_dict2[key]);
+        _ = _dict1.Remove(value);
         _ = _dict2.Remove(key);
         return true;
     }
+
     public void Deserialize(string path)
     {
         _dict1.Clear();
@@ -63,5 +73,6 @@ public class BidirectionalDictionary<TKey, TValue> where TKey : notnull where TV
             _dict2[value] = key;
         }
     }
+
     public void Serialize(string path) => Serialization.Serialize(path, _dict1);
 }

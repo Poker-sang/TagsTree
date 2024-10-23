@@ -50,8 +50,9 @@ public partial class TagSearchBox : UserControl
             return;
         }
 
-        var temp = queryText.Split(' ').Select(item => AppContext.Tags.TagsDictionary.GetValueOrDefault(item) ?? new PathTagModel(item)).ToArray();
-        ResultChanged.Invoke(AppContext.Relations.GetFileModels(temp));
+        var temp = queryText.Split(' ').Select(item => 
+            AppContext.Tags.TagsDictionary.GetValueOrDefault(item) ?? new PathTagModel(item)).ToArray();
+        ResultChanged.Invoke(RelationsDataTable.GetFileModels(temp));
     }
 
     #endregion

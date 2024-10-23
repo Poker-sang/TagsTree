@@ -16,5 +16,5 @@ public partial class FileImporterViewModel : ObservableObject
 
     public bool DeleteSaveEnabled => !Processing && FileViewModels.Count is not 0;
 
-    [ObservableProperty] private ObservableCollection<FileViewModel> _fileViewModels = new();
+    [ObservableProperty] private ObservableCollection<FileViewModel> _fileViewModels = [];
 }

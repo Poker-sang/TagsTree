@@ -132,6 +132,7 @@ public static class IconsHelper
         }
 
         public readonly string Extension = extension;
+
         public Action CallBack = callBack;
     }
 
@@ -158,5 +159,5 @@ public static class IconsHelper
     /// <summary>
     /// 图标字典，键是扩展名，值是图标
     /// </summary>
-    private static readonly Dictionary<string, ImageSource?> _iconList = new();
+    private static readonly Dictionary<string, ImageSource?> _iconList = [];
 }

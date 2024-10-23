@@ -17,9 +17,13 @@ public class PathTagModel(string name)
 public class TagModel : PathTagModel, IFullName
 {
     [JsonIgnore] private static int Num { get; set; } = 1;
+
     public int Id { get; }
+
     [JsonIgnore] protected TagModel? BaseParent { get; set; }
+
     [JsonIgnore] public string Path => BaseParent is null ? "" : BaseParent.FullName;
+
     [JsonIgnore] public string FullName => (Path is "" ? "" : Path + '\\') + Name;
 
     protected TagModel(int id, string name) : base(name)

@@ -21,9 +21,13 @@ public partial class RelationsDataTable : TableDictionary<int, int>
         get => base[tag.Id, fileModel.Id];
         set => base[tag.Id, fileModel.Id] = value;
     }
+
     private Dictionary<int, int> Tags => Columns;
+
     private Dictionary<int, int> Files => Rows;
+
     public int TagsCount => Tags.Count;
+
     public int FilesCount => Files.Count;
 
     public IEnumerable<TagViewModel> GetTags(int fileId) => Tags.Where(pair => base[pair.Key, fileId]).Select(pair => AppContext.Tags.TagsDictionary[pair.Key]);
@@ -54,30 +58,33 @@ public partial class RelationsDataTable : TableDictionary<int, int>
         precise.AddRange(part.Select(item => item.FileViewModel));
         return [..precise];
     }
-    public IEnumerable<FileModel> GetFileModels(ICollection<PathTagModel>? tags = null)
+
+    public static IEnumerable<FileModel> GetFileModels(ICollection<PathTagModel>? tags = null)
     {
         IEnumerable<FileModel> filesRange = AppContext.IdFile.Values;
         if (tags is null or { Count: 0 })
             return filesRange;
-        var individualTags = new Dictionary<PathTagModel, bool>();
-        foreach (var tag in tags.Where(tag => !individualTags.ContainsKey(tag)))
-            individualTags[tag] = true;
-        return individualTags.Keys.Aggregate(filesRange, (current, pathTagModel) => GetFileModels(pathTagModel, current));
+        var individualTags = tags.ToHashSet();
+        return individualTags.Aggregate(filesRange, (current, pathTagModel) => GetFileModels(pathTagModel, current));
     }
-    private IEnumerable<FileModel> GetFileModels(PathTagModel pathTagModel, IEnumerable<FileModel> filesRange)
+
+    private static IEnumerable<FileModel> GetFileModels(PathTagModel pathTagModel, IEnumerable<FileModel> filesRange)
     {
         if (pathTagModel is TagViewModel tagViewModel)
         {
-            filesRange = tagViewModel.SubTags.Aggregate(filesRange, (current, subTag) => GetFileModels(subTag, current));
-            return filesRange.Where(fileModel => this[tagViewModel.Id, fileModel.Id]);
+            return filesRange.Where(fileModel => fileModel.HasTag(tagViewModel) is not false);
         }
 
         // 唯一需要判断是否能使用路径作为标签的地方
         return AppContext.AppConfig.PathTagsEnabled ? filesRange.Where(fileModel => fileModel.PathContains(pathTagModel)) : [];
     }
+
     public void NewTag(TagViewModel tagViewModel) => AddColumn(tagViewModel.Id);
+
     public void NewFile(FileModel fileModel) => AddRow(fileModel.Id);
+
     public void DeleteTag(TagViewModel tagViewModel) => RemoveColumn(tagViewModel.Id);
+
     public void DeleteFile(FileModel fileModel) => RemoveRow(fileModel.Id);
 
     public void Reload()

@@ -23,7 +23,7 @@ public sealed partial class TagEditFilesPage : Page
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
         _vm.TagViewModel = e.Parameter.To<TagViewModel>();
-        _vm.FileViewModels = [.. AppContext.Relations.GetFileModels().Select(fileModel => new FileViewModel(fileModel, _vm.TagViewModel))];
+        _vm.FileViewModels = [.. RelationsDataTable.GetFileModels().Select(fileModel => new FileViewModel(fileModel, _vm.TagViewModel))];
     }
 
     private void ResultChanged(IEnumerable<FileModel> newResult) => _vm.FileViewModels = [.. newResult.Select(fileModel => new FileViewModel(fileModel, _vm.TagViewModel.Parent))];
