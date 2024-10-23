@@ -21,10 +21,12 @@ public partial class TagSearchFilesPage : Page
         _vm = new();
         _current = this;
         InitializeComponent();
-        TbSearch.InvokeQuerySubmitted();
     }
 
-    protected override void OnNavigatedTo(NavigationEventArgs e) => TbSearch.Text = e.Parameter.To<string>();
+    protected override void OnNavigatedTo(NavigationEventArgs e)
+    {
+        TbSearch.SubmitQuery(TbSearch.Text = e.Parameter.To<string>());
+    }
 
     private readonly TagSearchFilesViewModel _vm;
 
@@ -34,7 +36,7 @@ public partial class TagSearchFilesPage : Page
 
     private void TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e) => sender.Text = Regex.Replace(sender.Text, $@"[{FileSystemHelper.GetInvalidNameChars} ]+", "");
 
-    private void QuerySubmitted(AutoSuggestBox autoSuggestBox, AutoSuggestBoxQuerySubmittedEventArgs e) => _vm.FileViewModels = autoSuggestBox.Text is "" ? _vm.ResultCallBack : RelationsDataTable.FuzzySearchName(autoSuggestBox.Text, _vm.ResultCallBack);
+    private void QuerySubmitted(AutoSuggestBox autoSuggestBox, AutoSuggestBoxQuerySubmittedEventArgs e) => _vm.FileViewModels = e.QueryText is "" ? _vm.ResultCallBack : RelationsDataTable.FuzzySearchName(e.QueryText, _vm.ResultCallBack);
 
     private void ContextOpenClicked(object sender, RoutedEventArgs e) => sender.To<FrameworkElement>().GetDataContext<FileViewModel>().Open();
 

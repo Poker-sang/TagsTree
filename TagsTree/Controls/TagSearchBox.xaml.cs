@@ -40,15 +40,17 @@ public partial class TagSearchBox : UserControl
         sender.ItemsSource = Text.TagSuggest(' ', TagsSource);
     }
 
-    private void QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e)
+    private void QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e) => SubmitQuery(e.QueryText);
+
+    public void SubmitQuery(string queryText)
     {
-        if (e.QueryText is "")
+        if (queryText is "")
         {
             ResultChanged.Invoke(AppContext.IdFile.Values);
             return;
         }
 
-        var temp = e.QueryText.Split(' ').Select(item => AppContext.Tags.TagsDictionary.GetValueOrDefault(item) ?? new PathTagModel(item)).ToArray();
+        var temp = queryText.Split(' ').Select(item => AppContext.Tags.TagsDictionary.GetValueOrDefault(item) ?? new PathTagModel(item)).ToArray();
         ResultChanged.Invoke(AppContext.Relations.GetFileModels(temp));
     }
 
@@ -61,8 +63,6 @@ public partial class TagSearchBox : UserControl
         AutoSuggestBox.QuerySubmitted -= QuerySubmitted;
         AutoSuggestBox.QuerySubmitted += eventHandler;
     }
-
-    public void InvokeQuerySubmitted() => QuerySubmitted(AutoSuggestBox, new());
 
     #endregion
 }
